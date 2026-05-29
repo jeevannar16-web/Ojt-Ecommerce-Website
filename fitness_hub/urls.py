@@ -5,10 +5,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('users.urls')),          # Home and User related
-    path('exercises/', include('exercises.urls')),
-    path('store/', include('store.urls')),
-    path('inspiration/', include('inspiration.urls')),
+    # path('', include('users.urls')),          # Home and User related
+    # path('exercises/', include('exercises.urls')),
+    # path('store/', include('store.urls')),
+    # path('inspiration/', include('inspiration.urls')),
 ]
 
 # Serve media files during development

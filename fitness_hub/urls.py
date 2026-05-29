@@ -9,6 +9,7 @@ urlpatterns = [
     path('exercises/', include('exercises.urls')),
     path('store/', include('store.urls')),
     path('inspiration/', include('inspiration.urls')),
+
 ]
 
 # Serve media files during development

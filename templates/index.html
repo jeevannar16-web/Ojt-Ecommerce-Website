@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <title>Fitness Hub</title>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+      <h1><a href="Home.html" class="logo">Fitness Hub</a></h1><br>
+      <ul class="menu-links">
+        <li><a href="index.html ">Home</a></li>
+        <li><a href="skill.html">Skills</a></li>
+        <li><a href="diet.html">Diet Plan</a></li>
+        <li><a href="product_list.html">Equipment Store</a></li>
+        <li><a href="progress.html">Progess Tracker</a></li>
+        <li><a href="about.html">About Us</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <section id="home", class="hero">
+  <h2>"Build Strength. Master Skills. Transform Yourself."</h2>
+    <p>Start Your Fitness Journey.</p>
+  <button><a href='workout.html'>Get Started</a></button>
+</section>
+  <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

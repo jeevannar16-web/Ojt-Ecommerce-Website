@@ -1,0 +1,20 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="profile-container">
+    <h2>Welcome, {{ request.user.username }}!</h2>
+    <h3>Your Fitness Profile</h3>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p class="success-msg" style="color: green;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update Metrics</button>
+    </form>
+</div>
+{% endblock %}

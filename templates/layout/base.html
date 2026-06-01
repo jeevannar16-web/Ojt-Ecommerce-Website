@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}ShopNest{% endblock %}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2 family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <style>
+    /* ─── Premium Color Variable Settings ─── */
+    :root {
+      --clr-bg:       #0d0d0d;
+      --clr-surface:  #141414;
+      --clr-card:     #1a1a1a;
+      --clr-border:   #2a2a2a;
+      --clr-accent:   #e8c97e;        /* Warm Gold */
+      --clr-accent2:  #c4783a;        /* Crimson Gold Accents */
+      --clr-text:     #f0ece4;
+      --clr-muted:    #7a756e;
+      --font-display: 'Playfair Display', serif;
+      --font-body:    'DM Sans', sans-serif;
+      --radius:       12px;
+      --nav-h:        72px;
+    }
+
+    /* ─── Structural Reset ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--clr-bg);
+      color: var(--clr-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Subtle Elegant Shimmer Texture Effect */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* ─── Top Strip Info ─── */
+    .announce-bar {
+      background: linear-gradient(90deg, var(--clr-accent2), var(--clr-accent), var(--clr-accent2));
+      background-size: 200% 100%;
+      animation: shimmer 4s linear infinite;
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      padding: 8px 16px;
+      color: #0d0d0d;
+      text-transform: uppercase;
+      z-index: 1001;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* ─── Pure CSS Header Navigation ─── */
+    .main-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      height: var(--nav-h);
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--clr-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+    }
+
+    .nav-left-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent2));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 0 18px rgba(232,201,126,0.3);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .nav-logo:hover .logo-icon {
+      transform: rotate(-8deg) scale(1.08);
+    }
+    .logo-name {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      color: var(--clr-text);
+      line-height: 1;
+    }
+    .logo-name span { color: var(--clr-accent); }
+
+    /* Custom Input Bar Without Bootstrap grid */
+    .nav-search {
+      flex: 1;
+      max-width: 450px;
+      position: relative;
+      margin: 0 20px;
+    }
+    .nav-search input {
+      width: 100%;
+      background: var(--clr-card);
+      border: 1px solid var(--clr-border);
+      border-radius: 50px;
+      padding: 10px 48px 10px 18px;
+      color: var(--clr-text);
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.25s;
+    }
+    .nav-search input:focus { border-color: var(--clr-accent); }
+    .nav-search button {
+      position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+      background: var(--clr-accent);
+      border: none; border-radius: 50px;
+      width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+
+    /* Menu Action Row */
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .nav-icon-btn {
+      background: transparent;
+      border: 1px solid var(--clr-border);
+      border-radius: 50px;
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--clr-text);
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+    }
+    .nav-icon-btn:hover { border-color: var(--clr-accent); color: var(--clr-accent); }
+    
+    .badge-dot {
+      position: absolute; top: 6px; right: 6px;
+      width: 8px; height: 8px;
+      background: var(--clr-accent);
+      border-radius: 50%;
+    }
+
+    /* Auth Link Buttons */
+    .btn-login {
+      color: var(--clr-text);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 8px 16px;
+      border: 1px solid var(--clr-border);
+      border-radius: 50px;
+      transition: border-color 0.2s;
+    }
+    .btn-login:hover { border-color: var(--clr-accent); color: var(--clr-accent); }
+
+    .btn-register {
+      background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent2));
+      color: #0d0d0d;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 8px 20px;
+      border-radius: 50px;
+    }
+
+    /* Pure CSS Native Dropdown Menu */
+    .user-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: var(--clr-card);
+      min-width: 160px;
+      box-shadow: 0px 8px 24px rgba(0,0,0,0.5);
+      border: 1px solid var(--clr-border);
+      border-radius: 8px;
+      z-index: 100;
+      overflow: hidden;
+    }
+    .dropdown-content a, .dropdown-content button {
+      color: var(--clr-text);
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 0.88rem;
+      text-align: left;
+      background: transparent;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+    }
+    .dropdown-content a:hover, .dropdown-content button:hover { background-color: var(--clr-surface); color: var(--clr-accent); }
+    .user-dropdown:hover .dropdown-content { display: block; }
+
+    /* Subcategory Strip using Flexbox */
+    .cat-bar {
+      background: var(--clr-surface);
+      border-bottom: 1px solid var(--clr-border);
+      padding: 0 2rem;
+      display: flex;
+      gap: 24px;
+      overflow-x: auto;
+    }
+    .cat-bar::-webkit-scrollbar { display: none; }
+    .cat-item {
+      padding: 12px 4px;
+      color: var(--clr-muted);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s;
+    }
+    .cat-item:hover, .cat-item.active { color: var(--clr-accent); border-bottom-color: var(--clr-accent); }
+
+    main { flex: 1; position: relative; z-index: 1; }
+
+    /* ─── Pure CSS Multi-Column Footer Layout ─── */
+    footer {
+      background: var(--clr-surface);
+      border-top: 1px solid var(--clr-border);
+      padding: 60px 2rem 30px;
+    }
+    .footer-grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr repeat(2, 1fr) 2fr;
+      gap: 40px;
+    }
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+    .footer-logo { font-family: var(--font-display); font-size: 1.7rem; color: var(--clr-text); margin-bottom: 12px; }
+    .footer-logo span { color: var(--clr-accent); }
+    .footer-tagline { color: var(--clr-muted); font-size: 0.88rem; line-height: 1.6; margin-bottom: 16px; max-width: 260px; }
+    .footer-heading { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--clr-accent); margin-bottom: 16px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { color: var(--clr-muted); text-decoration: none; font-size: 0.88rem; transition: padding 0.2s; }
+    .footer-links a:hover { color: var(--clr-text); padding-left: 4px; }
+    
+    .footer-newsletter { display: flex; margin-top: 12px; }
+    .footer-newsletter input {
+      background: var(--clr-card); border: 1px solid var(--clr-border); border-radius: 8px 0 0 8px;
+      padding: 10px 14px; color: var(--clr-text); font-size: 0.85rem; width: 100%; outline: none;
+    }
+    .footer-newsletter button {
+      background: var(--clr-accent); border: none; border-radius: 0 8px 8px 0;
+      padding: 10px 16px; color: #0d0d0d; font-weight: 600; cursor: pointer;
+    }
+
+    .footer-bottom {
+      max-width: 1280px; margin: 40px auto 0; padding-top: 20px;
+      border-top: 1px solid var(--clr-border);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+      font-size: 0.8rem; color: var(--clr-muted);
+    }
+
+    /* Custom Toast Notification System */
+    .messages-wrap { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+    .msg-toast {
+      background: var(--clr-card); border: 1px solid var(--clr-border); border-left: 4px solid var(--clr-accent);
+      border-radius: 10px; padding: 14px 18px; font-size: 0.88rem; color: var(--clr-text); box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <div class="announce-bar">
+    🎁 Free shipping on orders over $50 &nbsp;·&nbsp; Use code <strong>NEST20</strong> for 20% off
+  </div>
+
+  <nav class="main-nav">
+    <div class="nav-left-brand">
+      <a href="{% url 'home' %}" class="nav-logo">
+        <div class="logo-icon">🪺</div>
+        <div class="logo-name">Shop<span>Nest</span></div>
+      </a>
+    </div>
+
+    <form class="nav-search" action="#" method="GET">
+      <input type="text" name="q" placeholder="Search products, brands…" value="{{ request.GET.q }}">
+      <button type="submit"><i class="bi bi-search"></i></button>
+    </form>
+
+    <div class="nav-actions">
+      <a href="#" class="nav-icon-btn" title="Wishlist">
+        <i class="bi bi-heart"></i>
+        {% if wishlist_count %}<span class="badge-dot"></span>{% endif %}
+      </a>
+
+      <a href="#" class="nav-icon-btn" title="Cart">
+        <i class="bi bi-bag"></i>
+        {% if cart_count %}<span class="badge-dot"></span>{% endif %}
+      </a>
+
+      {% if user.is_authenticated %}
+        <div class="user-dropdown">
+          <button class="nav-icon-btn"><i class="bi bi-person"></i></button>
+          <div class="dropdown-content">
+            <a href="{% url 'profile' %}"><i class="bi bi-person-circle me-2"></i>Profile</a>
+            <a href="#"><i class="bi bi-box-seam me-2"></i>Orders</a>
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" style="color: #ef4444;"><i class="bi bi-box-arrow-right me-2"></i>Logout</button>
+            </form>
+          </div>
+        </div>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn-login">Login</a>
+        <a href="{% url 'register' %}" class="btn-register">Sign Up</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <div class="cat-bar">
+    <a href="{% url 'home' %}" class="cat-item {% if not active_category %}active{% endif %}">All Items</a>
+    {% for category in categories %}
+    <a href="{% url 'home' %}?category={{ category.id }}" class="cat-item {% if request.GET.category == category.id|slugify %}active{% endif %}">
+        {{ category.name }}
+    </a>
+{% endfor %}
+  </div>
+
+  {% if messages %}
+  <div class="messages-wrap">
+    {% for message in messages %}
+      <div class="msg-toast">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Shop<span>Nest</span></div>
+        <p class="footer-tagline">Curated goods, beautifully delivered. Find what moves you.</p>
+      </div>
+      <div>
+        <div class="footer-heading">Shop</div>
+        <ul class="footer-links">
+          <li><a href="#">New Arrivals</a></li>
+          <li><a href="#">Best Sellers</a></li>
+          <li><a href="#">Sale Collection</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Support</div>
+        <ul class="footer-links">
+          <li><a href="#">Help Centre</a></li>
+          <li><a href="#">Track Order</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Stay in the Loop</div>
+        <p style="color: var(--clr-muted); font-size: 0.85rem; line-height: 1.5;">Get early access to exclusive collection drops.</p>
+        <div class="footer-newsletter">
+          <input type="email" placeholder="your@email.com">
+          <button>Subscribe</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© {% now "Y" %} ShopNest. All rights reserved.</p>
+      <p><a href="#" style="color: var(--clr-muted); text-decoration: none;">Privacy Policy</a> · <a href="#" style="color: var(--clr-muted); text-decoration: none;">Terms</a></p>
+    </div>
+  </footer>
+
+  <script>
+    /* Dismiss notifications after 4 seconds smoothly */
+    setTimeout(() => {
+      document.querySelectorAll('.msg-toast').forEach(el => {
+        el.style.transition = 'opacity 0.5s ease';
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 500);
+      });
+    }, 4000);
+  </script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

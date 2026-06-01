@@ -1,0 +1,50 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<div class="container my-5 py-5 text-white">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-uppercase tracking-wider" style="color: #d4af37;">Our Full Catalog</h1>
+        <p class="text-muted">Explore our curated collection of premium active products</p>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for product in products %}
+        <div class="col">
+            <div class="card h-100 bg-dark border-secondary position-relative">
+                {% if product.is_featured %}
+                    <span class="position-absolute top-0 start-0 badge bg-warning text-dark m-2">HOT</span>
+                {% endif %}
+                
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 250px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 250px;">
+                        <i class="bi bi-image text-muted fs-2"></i>
+                    </div>
+                {% endif %}
+
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <small class="text-warning text-uppercase fs-6 d-block mb-1">{{ product.category.name }}</small>
+                        <h5 class="card-title fw-bold text-white mb-2">{{ product.name }}</h5>
+                        <p class="card-text text-muted text-truncate">{{ product.description }}</p>
+                    </div>
+                    <div class="mt-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="fs-4 fw-bold" style="color: #d4af37;">${{ product.price }}</span>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'product_detail' product.id %}" class="btn btn-warning text-dark fw-bold" style="background: #d4af37; border: none;">Shop Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-box-sealer text-muted display-1"></i>
+            <p class="lead text-muted mt-3">No products available in this section yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

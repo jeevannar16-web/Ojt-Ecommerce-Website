@@ -1,0 +1,49 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}My Cart — ShopNest{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 60px auto; padding: 0 2rem;">
+    <h2 style="font-family: var(--font-display); font-size: 2.2rem; margin-bottom: 24px;">Your Shopping <span>Cart</span></h2>
+
+    {% if cart_items %}
+        <div style="background: var(--clr-card); border: 1px solid var(--clr-border); border-radius: var(--radius); padding: 24px; margin-bottom: 30px;">
+            {% for item in cart_items %}
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--clr-border); padding: 16px 0; gap: 20px;">
+                    <div>
+                        <h4 style="font-size: 1.1rem; color: var(--clr-text); margin-bottom: 4px;">{{ item.product.name }}</h4>
+                        <p style="color: var(--clr-muted); font-size: 0.9rem;">Price: ${{ item.product.price }} &nbsp;·&nbsp; Qty: {{ item.quantity }}</p>
+                    </div>
+                    <div style="font-family: var(--font-display); font-size: 1.2rem; color: var(--clr-accent); font-weight: 600;">
+                        ${{ item.total_price }}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 16px;">
+                <span style="font-size: 1.1rem; color: var(--clr-muted);">Grand Total:</span>
+                <span style="font-family: var(--font-display); font-size: 1.8rem; color: var(--clr-accent); font-weight: 700;">${{ total_amount }}</span>
+            </div>
+        </div>
+
+        <form method="POST" action="{% url 'checkout' %}" style="background: var(--clr-card); border: 1px solid var(--clr-border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+            {% csrf_token %}
+            <h3 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--clr-accent);">Shipping Information</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 0.85rem; color: var(--clr-muted);">Shipping Address Details</label>
+                <textarea name="shipping_address" placeholder="Enter your full home delivery address..." rows="3" style="width: 100%; background: var(--clr-bg); border: 1px solid var(--clr-border); border-radius: 6px; padding: 12px; color: white; outline: none; resize: none;" required></textarea>
+            </div>
+
+            <button type="submit" style="background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent2)); color: #0d0d0d; border: none; padding: 14px; border-radius: 50px; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; margin-top: 10px;">
+                Complete Purchase & Place Order
+            </button>
+        </form>
+    {% else %}
+        <div style="text-align: center; padding: 60px 0; color: var(--clr-muted);">
+            <p style="font-size: 1.2rem; margin-bottom: 20px;">Your shopping cart is completely empty.</p>
+            <a href="{% url 'home' %}" style="color: var(--clr-accent); text-decoration: none; font-weight: 600;">Go Back to Storefront →</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

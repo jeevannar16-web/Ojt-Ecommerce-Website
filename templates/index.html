@@ -1,0 +1,251 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}ShopNest — Discover What Moves You{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ─── Hero Custom Styling ─── */
+  .hero {
+    position: relative;
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    padding: 60px 2rem;
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a1209 55%, #0d0d0d 100%);
+  }
+  .hero-container {
+    max-width: 1240px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+  }
+  @media (max-width: 992px) {
+    .hero-container { grid-template-columns: 1fr; text-align: center; }
+    .hero-visual { display: none; }
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(232,201,126,0.1); border: 1px solid rgba(232,201,126,0.2);
+    border-radius: 50px; padding: 6px 14px; font-size: 0.75rem; font-weight: 600;
+    color: var(--clr-accent); margin-bottom: 20px; text-transform: uppercase;
+  }
+  .hero h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1.15; margin-bottom: 20px; }
+  .hero h1 .highlight { color: var(--clr-accent); }
+  .hero-sub { color: var(--clr-muted); font-size: 1.05rem; line-height: 1.6; margin-bottom: 30px; max-width: 480px; }
+  
+  .btn-primary-hero {
+    background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent2));
+    color: #0d0d0d; border-radius: 50px; padding: 14px 32px; font-weight: 700;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 8px 28px rgba(232,201,126,0.25); transition: transform 0.2s;
+  }
+  .btn-primary-hero:hover { transform: translateY(-2px); color: #0d0d0d; }
+
+  /* Hero Side Frame Graphics */
+  .hero-visual { position: relative; display: flex; justify-content: center; }
+  .hero-img-frame {
+    width: 100%; max-width: 380px; aspect-ratio: 4/5; border-radius: 24px;
+    border: 1px solid rgba(232,201,126,0.15); background: var(--clr-card); overflow: hidden;
+  }
+  .hero-img-frame .placeholder-art {
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(160deg, #1a1a1a, #2a1e0a, #1a1a1a); font-size: 4rem;
+  }
+
+  /* ─── Grid Configurations (No Bootstrap) ─── */
+  .section-wrap { max-width: 1240px; margin: 0 auto; padding: 60px 2rem; }
+  .section-label { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--clr-border); padding-bottom: 14px; margin-bottom: 30px; }
+  .section-label h2 { font-family: var(--font-display); font-size: 1.8rem; }
+  .section-label h2 span { color: var(--clr-accent); }
+
+  /* Responsive Grid layouts using pure CSS */
+  .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
+
+  /* ─── Cards Styling ─── */
+  .cat-card {
+    background: var(--clr-card); border: 1px solid var(--clr-border); border-radius: var(--radius);
+    padding: 24px 16px; text-align: center; text-decoration: none; display: flex; flex-direction: column; gap: 8px;
+    transition: transform 0.25s, border-color 0.25s;
+  }
+  .cat-card:hover { transform: translateY(-4px); border-color: var(--clr-accent); }
+  .cat-emoji { font-size: 2rem; }
+  .cat-name { font-size: 0.9rem; font-weight: 600; color: var(--clr-text); }
+  .cat-count { font-size: 0.75rem; color: var(--clr-muted); }
+
+  /* Product Items Cards UI */
+  .card-product {
+    background: var(--clr-card); border: 1px solid var(--clr-border); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s, border-color 0.3s;
+  }
+  .card-product:hover { transform: translateY(-6px); border-color: rgba(232,201,126,0.4); }
+  .card-img-wrap { position: relative; aspect-ratio: 1; background: #111; display: flex; align-items: center; justify-content: center; font-size: 3rem;}
+  .card-badge { position: absolute; top: 12px; left: 12px; background: var(--clr-accent); color: #0d0d0d; font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 20px; text-transform: uppercase; }
+  
+  .card-body-custom { padding: 16px; display: flex; flex-direction: column; flex: 1; }
+  .card-category { font-size: 0.7rem; font-weight: 600; color: var(--clr-accent2); text-transform: uppercase; margin-bottom: 6px; }
+  .card-title-text { font-size: 0.95rem; font-weight: 600; color: var(--clr-text); margin-bottom: 10px; line-height: 1.4; }
+  
+  .card-price-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+  .price-now { font-family: var(--font-display); font-size: 1.2rem; color: var(--clr-accent); font-weight: 700; }
+  .btn-cart { background: var(--clr-accent); border: none; border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .btn-cart:hover { background: var(--clr-accent2); }
+
+  /* ─── Flash Sale Banner Flexbox ─── */
+  .banner-strip {
+    background: linear-gradient(90deg, var(--clr-card) 0%, #1e160a 50%, var(--clr-card) 100%);
+    border: 1px solid var(--clr-border); border-radius: var(--radius); padding: 30px 40px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;
+  }
+  .banner-countdown { display: flex; gap: 12px; }
+  .count-box { background: var(--clr-bg); border: 1px solid var(--clr-border); border-radius: 8px; padding: 8px 12px; text-align: center; min-width: 54px; }
+  .count-num { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: var(--clr-accent); }
+  .count-lbl { font-size: 0.65rem; color: var(--clr-muted); text-transform: uppercase; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+  <div class="hero-container">
+    <div>
+      <div class="hero-eyebrow">New Season Collection</div>
+      <h1>Discover What <span class="highlight">Moves You.</span></h1>
+      <p class="hero-sub">Thousands of curated premium items designed to support your everyday active milestones.</p>
+      <a href="#" class="btn-primary-hero">Shop Collection <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-img-frame">
+        <div class="placeholder-art">🛍</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-wrap">
+  <div class="section-label">
+    <h2>Shop by <span>Category</span></h2>
+  </div>
+  <div class="category-grid">
+    {% for category in categories %}
+      <a href="{% url 'category' category.slug %}" class="cat-card">
+        <div class="cat-emoji">{{ category.icon|default:"🏷" }}</div>
+        <div class="cat-name">{{ category.name }}</div>
+        <div class="cat-count">{{ category.product_count }} items</div>
+      </a>
+    {% empty %}
+      {% for i in "123456"|make_list %}
+        <div class="cat-card" style="opacity: 0.5;">
+          <div class="cat-emoji">🏷</div>
+          <div class="cat-name">Category</div>
+          <div class="cat-count">— Items</div>
+        </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section-wrap" style="padding-top: 0; padding-bottom: 0;">
+  <div class="banner-strip">
+    <div>
+      <h3>Flash Sale — Up to 60% Off</h3>
+      <p style="color: var(--clr-muted); font-size: 0.9rem; margin-top: 4px;">Limited stock promotional offers.</p>
+    </div>
+    <div class="banner-countdown">
+      <div class="count-box"><div class="count-num" id="c-h">00</div><div class="count-lbl">Hrs</div></div>
+      <div class="count-box"><div class="count-num" id="c-m">00</div><div class="count-lbl">Min</div></div>
+      <div class="count-box"><div class="count-num" id="c-s">00</div><div class="count-lbl">Sec</div></div>
+    </div>
+    <a href="#" class="btn-primary-hero">View All Sale</a>
+  </div>
+</section>
+
+<section class="section-wrap">
+  <div class="section-label">
+    <h2>Featured <span>Products</span></h2>
+  </div>
+  <div class="products-grid">
+    {% for product in featured_products %}
+      <div class="card-product">
+        <div class="card-img-wrap">
+          <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:cover;">
+          <div class="card-badge">Hot</div>
+        </div>
+        <div class="card-body-custom">
+          <div class="card-category">{{ product.category.name }}</div>
+          <div class="card-title-text">{{ product.name }}</div>
+          <div class="card-price-row">
+            <span class="price-now">${{ product.price }}</span>
+            <button class="btn-cart" onclick="addToCart({{ product.id }})"><i class="bi bi-bag-plus"></i></button>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      {% for i in "1234"|make_list %}
+        <div class="card-product">
+          <div class="card-img-wrap">📦</div>
+          <div class="card-body-custom">
+            <div class="card-category">Premium Line</div>
+            <div class="card-title-text">Sample Product Architecture</div>
+            <div class="card-price-row">
+              <span class="price-now">$49.99</span>
+              <button class="btn-cart"><i class="bi bi-bag-plus"></i></button>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  /* ─── Native 5.5 Hour Countdown Dynamic Loop ─── */
+  (function() {
+    const end = new Date();
+    end.setHours(end.getHours() + 5, 30, 0, 0);
+    function update() {
+      const diff = Math.max(0, end - Date.now());
+      document.getElementById('c-h').textContent = String(Math.floor(diff / 3600000)).padStart(2,'0');
+      document.getElementById('c-m').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
+      document.getElementById('c-s').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
+    }
+    update();
+    setInterval(update, 1000);
+  })();
+
+  /* ─── Async AJAX Cart Integration Pipeline ─── */
+  async function addToCart(productId) {
+    try {
+      const res = await fetch(`/cart/add/${productId}/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: 1 })
+      });
+      const data = await res.json();
+      if (data.success) { alert('✅ Added to cart successfully!'); }
+    } catch(e) { console.error('Network dispatch exception', e); }
+  }
+
+
+  function addToCart(productId) {
+    fetch(`/store/cart/add/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Added to cart successfully!");
+        } else {
+            alert(data.message || "Please log in first.");
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+{% endblock %}

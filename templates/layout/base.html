@@ -332,10 +332,20 @@
         {% if wishlist_count %}<span class="badge-dot"></span>{% endif %}
       </a>
 
-      <a href="#" class="nav-icon-btn" title="Cart">
-        <i class="bi bi-bag"></i>
-        {% if cart_count %}<span class="badge-dot"></span>{% endif %}
-      </a>
+      
+
+
+     
+
+<a href="{% url 'store:cart' %}" class="nav-icon-btn" title="Cart">
+    <i class="bi bi-bag"></i>
+    {% if cart_count %}
+        <span class="badge-dot"></span>
+    {% endif %}
+</a>
+
+
+
 
       {% if user.is_authenticated %}
         <div class="user-dropdown">

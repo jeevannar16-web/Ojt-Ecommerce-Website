@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{% block title %}ShopNest{% endblock %}</title>
+  <title>{% block title %}Fitness-Hub{% endblock %}</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2 family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -357,7 +357,7 @@
   </nav>
 
   <div class="cat-bar">
-    <a href="{% url 'home' %}" class="cat-item {% if not active_category %}active{% endif %}">All Items</a>
+    <a href="{% url 'store:sale_catalog' %}" class="cat-item {% if not active_category %}active{% endif %}">All Items</a>
     {% for category in categories %}
     <a href="{% url 'home' %}?category={{ category.id }}" class="cat-item {% if request.GET.category == category.id|slugify %}active{% endif %}">
         {{ category.name }}
@@ -380,7 +380,7 @@
   <footer>
     <div class="footer-grid">
       <div>
-        <div class="footer-logo">Shop<span>Nest</span></div>
+        <div class="footer-logo">Fitness<span>Hub</span></div>
         <p class="footer-tagline">Curated goods, beautifully delivered. Find what moves you.</p>
       </div>
       <div>
@@ -409,7 +409,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© {% now "Y" %} ShopNest. All rights reserved.</p>
+      <p>© {% now "Y" %} FitnessHub. All rights reserved.</p>
       <p><a href="#" style="color: var(--clr-muted); text-decoration: none;">Privacy Policy</a> · <a href="#" style="color: var(--clr-muted); text-decoration: none;">Terms</a></p>
     </div>
   </footer>

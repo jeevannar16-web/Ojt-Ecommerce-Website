@@ -88,6 +88,76 @@ def checkout_view(request):
         return redirect('home')
         
     return render(request, 'store/checkout.html', {'cart_items': cart_items})
+
+
+
+
+
+
+
+
+def product_list(request):  # or whatever your primary catalog view function is named
+    """
+    Renders the full inventory catalog and appends promotional 
+    recommendation objects to the bottom shelf context.
+    """
+    products = Product.objects.all()
+    
+    # NEW: Query 4 random products to act as recommendations at the bottom
+    recommendations = Product.objects.all().order_by('?')[:4]
+    
+    context = {
+        'products': products,
+        'recommendations': recommendations,  # Add this line to the context dictionary
+        'title': 'Our Full Catalog'
+    }
+    return render(request, 'store/product_list.html', context)
+
+
 def product_detail(request, product_id):
+    """
+    Displays an individual product's details alongside recommended items 
+    filtered by matching category or item types.
+    """
     product = get_object_or_404(Product, id=product_id)
-    return render(request, 'store/product_detail.html', {'product': product})
+    
+    # 1. Primary Recommendation: Try finding other items in the same category
+    recommendations = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
+    
+    # 2. Fallback: If no other products match that category, show other items in the store so it's not empty
+    if not recommendations.exists():
+        recommendations = Product.objects.exclude(id=product.id)[:4]
+    
+    context = {
+        'product': product,
+        'recommendations': recommendations
+    }
+    return render(request, 'store/product_detail.html', context)
+
+
+
+
+def sale_catalog(request):
+    """
+    Queries catalog items and routes cleanly to the dedicated catalog grid display page.
+    """
+    try:
+        # Check for active promotion markdown filters
+        products = Product.objects.filter(is_sale=True)
+        if not products.exists():
+            products = Product.objects.all()
+    except Exception:
+        products = Product.objects.all()
+
+    # Automatically bundle recommendation objects for the bottom shelf grid layout
+    recommendations = Product.objects.all().order_by('?')[:4]
+
+    context = {
+        'products': products,
+        'recommendations': recommendations,
+        'title': 'Flash Sale Collection',
+        'is_sale_page': True
+    }
+    
+    # CRITICAL FIX HERE: Ensure this points to 'store/product_list.html'
+    return render(request, 'store/product_list.html', context)

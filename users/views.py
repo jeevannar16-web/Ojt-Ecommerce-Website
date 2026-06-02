@@ -7,8 +7,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User 
 from .forms import UserRegistrationForm, UserProfileForm
 
-def home(request):
-    return render(request, 'index.html')
+# def home(request):
+#     return render(request, 'index.html')
 
 
 def register(request):

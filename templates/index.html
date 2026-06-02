@@ -51,13 +51,12 @@
     background: linear-gradient(160deg, #1a1a1a, #2a1e0a, #1a1a1a); font-size: 4rem;
   }
 
-  /* ─── Grid Configurations (No Bootstrap) ─── */
+  /* ─── Grid Configurations ─── */
   .section-wrap { max-width: 1240px; margin: 0 auto; padding: 60px 2rem; }
   .section-label { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--clr-border); padding-bottom: 14px; margin-bottom: 30px; }
   .section-label h2 { font-family: var(--font-display); font-size: 1.8rem; }
   .section-label h2 span { color: var(--clr-accent); }
 
-  /* Responsive Grid layouts using pure CSS */
   .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
   .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
 
@@ -105,6 +104,7 @@
 
 {% block content %}
 
+{% if not is_searching %}
 <section class="hero">
   <div class="hero-container">
     <div>
@@ -127,19 +127,25 @@
   </div>
   <div class="category-grid">
     {% for category in categories %}
-      <a href="{% url 'category' category.slug %}" class="cat-card">
-        <div class="cat-emoji">{{ category.icon|default:"🏷" }}</div>
-        <div class="cat-name">{{ category.name }}</div>
-        <div class="cat-count">{{ category.product_count }} items</div>
-      </a>
-    {% empty %}
-      {% for i in "123456"|make_list %}
-        <div class="cat-card" style="opacity: 0.5;">
-          <div class="cat-emoji">🏷</div>
-          <div class="cat-name">Category</div>
-          <div class="cat-count">— Items</div>
+    <a href="{% url 'home' %}?category={{ category.id }}" class="cat-card">
+        <div class="cat-emoji">
+            {% if category.image %}
+                <img src="{{ category.image.url }}" alt="{{ category.name }}" style="width: 24px; height: 24px;">
+            {% else %}
+                ⚡
+            {% endif %}
         </div>
-      {% endfor %}
+        <div class="cat-name">{{ category.name }}</div>
+        <div class="cat-count">{{ category.products.count }} Items</div>
+    </a>
+    {% empty %}
+        {% for i in "123456"|make_list %}
+            <div class="cat-card" style="opacity: 0.5;">
+                <div class="cat-emoji">🏋️‍♂️</div>
+                <div class="cat-name">Category</div>
+                <div class="cat-count">— Items</div>
+            </div>
+        {% endfor %}
     {% endfor %}
   </div>
 </section>
@@ -158,17 +164,88 @@
     <a href="#" class="btn-primary-hero">View All Sale</a>
   </div>
 </section>
+{% endif %}
 
-<section class="section-wrap">
+<section class="section-wrap" style="{% if is_searching %}padding-top: 40px;{% endif %}">
   <div class="section-label">
-    <h2>Featured <span>Products</span></h2>
+    {% if is_searching %}
+      <h2>Search Results for <span>"{{ search_query }}"</span></h2>
+      <a href="{% url 'home' %}" style="text-decoration: none; font-size: 0.95rem; font-weight: 600; color: var(--clr-accent); display: inline-flex; align-items: center; gap: 6px;">
+        <i class="bi bi-arrow-left"></i> Back to Home
+      </a>
+    {% else %}
+      <h2>Featured <span>Products</span></h2>
+    {% endif %}
+  </div>
+  
+  <div class="products-grid">
+    {% if is_searching %}
+      {% for product in search_results %}
+        <div class="card-product">
+          <div class="card-img-wrap">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:cover;">
+            {% else %}
+              <div style="font-size: 3rem;">📦</div>
+            {% endif %}
+            <div class="card-badge">Hot</div>
+          </div>
+          <div class="card-body-custom">
+            <div class="card-category">{{ product.category.name }}</div>
+            <div class="card-title-text">{{ product.name }}</div>
+            <div class="card-price-row">
+              <span class="price-now">${{ product.price }}</span>
+              <button class="btn-cart" onclick="addToCart({{ product.id }})"><i class="bi bi-bag-plus"></i></button>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 50px 2rem; background: var(--clr-card); border-radius: var(--radius); border: 1px dashed var(--clr-border); margin-bottom: 10px;">
+           <div style="font-size: 3rem; margin-bottom: 12px;">🔍</div>
+           <h4 style="color: var(--clr-text); font-family: var(--font-display); margin-bottom: 6px;">No Exact Matches Found</h4>
+           <p style="color: var(--clr-muted); font-size: 0.9rem; margin-bottom: 20px;">We couldn't find any items matching your exact search keyword.</p>
+           <a href="{% url 'home' %}" style="display: inline-block; color: #0d0d0d; background: var(--clr-accent); padding: 10px 24px; border-radius: 50px; font-weight: 600; text-decoration: none;">Clear Search</a>
+        </div>
+      {% endfor %}
+    {% else %}
+      {% for product in featured_products %}
+        <div class="card-product">
+          <div class="card-img-wrap">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:cover;">
+            {% else %}
+              <div style="font-size: 3rem;">📦</div>
+            {% endif %}
+            <div class="card-badge">Hot</div>
+          </div>
+          <div class="card-body-custom">
+            <div class="card-category">{{ product.category.name }}</div>
+            <div class="card-title-text">{{ product.name }}</div>
+            <div class="card-price-row">
+              <span class="price-now">${{ product.price }}</span>
+              <button class="btn-cart" onclick="addToCart({{ product.id }})"><i class="bi bi-bag-plus"></i></button>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</section>
+
+{% if is_searching %}
+<section class="section-wrap" style="padding-top: 10px; padding-bottom: 80px;">
+  <div class="section-label">
+    <h2>Recommended <span>For You</span></h2>
   </div>
   <div class="products-grid">
-    {% for product in featured_products %}
+    {% for product in recommendations %}
       <div class="card-product">
         <div class="card-img-wrap">
-          <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:cover;">
-          <div class="card-badge">Hot</div>
+          {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:cover;">
+          {% else %}
+            <div style="font-size: 3rem;">📦</div>
+          {% endif %}
         </div>
         <div class="card-body-custom">
           <div class="card-category">{{ product.category.name }}</div>
@@ -180,72 +257,55 @@
         </div>
       </div>
     {% empty %}
-      {% for i in "1234"|make_list %}
-        <div class="card-product">
-          <div class="card-img-wrap">📦</div>
-          <div class="card-body-custom">
-            <div class="card-category">Premium Line</div>
-            <div class="card-title-text">Sample Product Architecture</div>
-            <div class="card-price-row">
-              <span class="price-now">$49.99</span>
-              <button class="btn-cart"><i class="bi bi-bag-plus"></i></button>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
+      <p style="color: var(--clr-muted); font-size: 0.9rem; grid-column: 1 / -1;">No suggestions available right now.</p>
     {% endfor %}
   </div>
 </section>
+{% endif %}
 
 {% endblock %}
 
 {% block extra_js %}
 <script>
-  /* ─── Native 5.5 Hour Countdown Dynamic Loop ─── */
+  /* ─── Native Countdown Timer ─── */
   (function() {
     const end = new Date();
     end.setHours(end.getHours() + 5, 30, 0, 0);
     function update() {
       const diff = Math.max(0, end - Date.now());
-      document.getElementById('c-h').textContent = String(Math.floor(diff / 3600000)).padStart(2,'0');
-      document.getElementById('c-m').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
-      document.getElementById('c-s').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
+      if(document.getElementById('c-h')) {
+        document.getElementById('c-h').textContent = String(Math.floor(diff / 3600000)).padStart(2,'0');
+        document.getElementById('c-m').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
+        document.getElementById('c-s').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
+      }
     }
     update();
     setInterval(update, 1000);
   })();
 
-  /* ─── Async AJAX Cart Integration Pipeline ─── */
+  /* ─── Add to Cart Script ─── */
   async function addToCart(productId) {
     try {
-      const res = await fetch(`/cart/add/${productId}/`, {
+      const res = await fetch(`/store/cart/add/${productId}/`, {
         method: 'POST',
-        headers: { 'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json' },
+        headers: { 
+          'X-CSRFToken': '{{ csrf_token }}', 
+          'Content-Type': 'application/json' 
+        },
         body: JSON.stringify({ quantity: 1 })
       });
+      
       const data = await res.json();
-      if (data.success) { alert('✅ Added to cart successfully!'); }
-    } catch(e) { console.error('Network dispatch exception', e); }
+      
+      if (data.success) { 
+        alert('✅ Added to cart successfully!'); 
+      } else {
+        alert(data.message || "❌ Please log in first.");
+      }
+    } catch(e) { 
+      console.error('Network dispatch exception:', e); 
+      alert('❌ Failed to add item.');
+    }
   }
-
-
-  function addToCart(productId) {
-    fetch(`/store/cart/add/${productId}/`, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': '{{ csrf_token }}',
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert("Added to cart successfully!");
-        } else {
-            alert(data.message || "Please log in first.");
-        }
-    })
-    .catch(error => console.error('Error:', error));
-}
 </script>
 {% endblock %}

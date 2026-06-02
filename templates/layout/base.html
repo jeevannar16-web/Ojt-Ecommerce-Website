@@ -297,21 +297,34 @@
 <body>
 
   <div class="announce-bar">
-    🎁 Free shipping on orders over $50 &nbsp;·&nbsp; Use code <strong>NEST20</strong> for 20% off
+    🎁 Free shipping on orders over $50 &nbsp;·&nbsp; Use code <strong>Fit-Codex</strong> for 20% off
   </div>
 
   <nav class="main-nav">
     <div class="nav-left-brand">
       <a href="{% url 'home' %}" class="nav-logo">
         <div class="logo-icon">🪺</div>
-        <div class="logo-name">Shop<span>Nest</span></div>
+        <div class="logo-name">Fitness<span>Hub</span></div>
       </a>
     </div>
 
-    <form class="nav-search" action="#" method="GET">
-      <input type="text" name="q" placeholder="Search products, brands…" value="{{ request.GET.q }}">
-      <button type="submit"><i class="bi bi-search"></i></button>
-    </form>
+    
+<form action="{% url 'home' %}" method="GET" class="search-form-wrap" style="display: flex; width: 100%; max-width: 600px; margin: 0 auto; gap: 8px;">
+  <input 
+    type="text" 
+    name="q" 
+    placeholder="Search products, brands..." 
+    value="{{ request.GET.q|default:'' }}"
+    style="width: 100%; background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 20px; border-radius: 50px;"
+  >
+  <button type="submit" style="background: var(--clr-accent); border: none; border-radius: 50px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+    <i class="bi bi-search" style="color: #0d0d0d;"></i>
+  </button>
+</form>
+
+
+
+
 
     <div class="nav-actions">
       <a href="#" class="nav-icon-btn" title="Wishlist">

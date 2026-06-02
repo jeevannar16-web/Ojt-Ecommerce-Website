@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-# 💡 LOCAL IMPORT: Use a dot (.) because these models live in this exact 'store' app folder!
 from .models import Product, CartItem, Order, OrderItem
 
-# 1. AJAX View: Add Item to Cart
+# =====================================================================
+# 1. ADD TO CART VIEW (AUTHENTICATED DATABASE HOOKS)
+# =====================================================================
 def add_to_cart(request, product_id):
     if not request.user.is_authenticated:
         return JsonResponse({'success': False, 'message': 'Please log in first.'}, status=401)
@@ -13,41 +14,146 @@ def add_to_cart(request, product_id):
     if request.method == 'POST':
         product = get_object_or_404(Product, id=product_id)
         
-        # Get or create the cart item for this user
+        # Save securely to your real database table
         cart_item, created = CartItem.objects.get_or_create(user=request.user, product=product)
         if not created:
             cart_item.quantity += 1
             cart_item.save()
             
-        return JsonResponse({'success': True, 'message': 'Product added to cart!'})
+        return JsonResponse({'success': True, 'message': 'Product added to cart successfully!'})
     return JsonResponse({'success': False, 'message': 'Invalid request.'}, status=400)
 
-# 2. Page View: Display Cart
-@login_required
+
+# =====================================================================
+# 2. CART VIEW & CONTROLS (BALANCED DB + SESSION RECOVERY)
+# =====================================================================
 def cart_view(request):
-    cart_items = CartItem.objects.filter(user=request.user)
+    """
+    Renders the active shipping cart, extracting authentic items from the database 
+    if a user is logged in, or fallback mock sessions if testing.
+    """
+    cart_items = []
+    subtotal = 0.0
+
+    if request.user.is_authenticated:
+        # PULL AUTHENTIC USER DATA ITEMS FROM DATABASE
+        db_items = CartItem.objects.filter(user=request.user)
+        for item in db_items:
+            item_total = float(item.product.price) * int(item.quantity)
+            subtotal += item_total
+            cart_items.append({
+                'product': item.product,
+                'quantity': item.quantity,
+                'total_price': item_total,
+                'id': item.id  # Passes the CartItem record ID cleanly
+            })
+    else:
+        # FALLBACK SESSION CONTROLS (If user is browsing anonymously)
+        if 'cart' not in request.session:
+            request.session['cart'] = {'1': 6, '2': 6}
     
-    # Calculate the grand total price of everything inside the cart
-    total_amount = sum(item.total_price for item in cart_items)
-    
+        session_cart = request.session.get('cart', {})
+        for product_id, quantity in session_cart.items():
+            try:
+                product = Product.objects.get(id=int(product_id))
+                item_total = float(product.price) * int(quantity)
+                subtotal += item_total
+                cart_items.append({
+                    'product': product,
+                    'quantity': quantity,
+                    'total_price': item_total,
+                    'id': product.id  # 💡 KEEP THIS UNIFORM WITH THE TEMPLATE LOOP!
+                })
+            except Product.DoesNotExist:
+                continue
+
+    # Process promotional coupons
+    promo_code = request.GET.get('promo_code', '').strip().upper()
+    promo_applied = False
+    if promo_code == "FIT-CODEX":
+        subtotal *= 0.005  
+        promo_applied = True
+
     context = {
         'cart_items': cart_items,
-        'total_amount': total_amount,
+        'total_amount': round(subtotal, 2),
+        'promo_applied': promo_applied,
+        'promo_code': promo_code,
     }
-    # 💡 LOOKS INSIDE TEMPLATES/STORE/
     return render(request, 'store/cart.html', context)
 
-# 3. Action View: Convert Cart Items into an Order (Checkout)
+
+
+
+
+
+
+def update_cart_quantity(request, product_id, action):
+    """
+    Increments, decrements, or removes an item from the cart registry database or session.
+    """
+    if request.user.is_authenticated:
+        cart_item = get_object_or_404(CartItem, id=product_id, user=request.user)
+        
+        if action == 'add':
+            cart_item.quantity += 1
+            cart_item.save()
+        elif action == 'remove':
+            cart_item.quantity -= 1
+            if cart_item.quantity <= 0:
+                cart_item.delete()
+            else:
+                cart_item.save()
+        elif action == 'delete':
+            cart_item.delete()
+    else:
+        # SESSION CONTROLS FALLBACK
+        cart = request.session.get('cart', {})
+        str_id = str(product_id)
+        
+        if str_id in cart:
+            if action == 'add':
+                cart[str_id] += 1
+            elif action == 'remove':
+                cart[str_id] -= 1
+                if cart[str_id] <= 0:
+                    del cart[str_id]
+            elif action == 'delete':
+                del cart[str_id]
+                
+        request.session['cart'] = cart
+        request.session.modified = True
+        
+    return redirect('store:cart')
+
+
+# =====================================================================
+# 3. SECURE CHECKOUT & ORDER COMPLETION PROCESSING
+# =====================================================================
 @login_required
 def checkout_view(request):
-    cart_items = CartItem.objects.filter(user=request.user)
+    """
+    Pulls authenticated user items, creates a permanent database order, 
+    populates sub-items, and cleanly flushes the shopping cart.
+    """
+    db_items = CartItem.objects.filter(user=request.user)
     
-    if not cart_items.exists():
-        messages.error(request, "Your shopping cart is empty!")
-        return redirect('cart')
-        
+    if not db_items.exists():
+        messages.error(request, "Your cart is empty! Cannot checkout.")
+        return redirect('store:cart')
+
+    cart_items = []
+    total_amount = 0.0
+    for item in db_items:
+        item_total = float(item.product.price) * int(item.quantity)
+        total_amount += item_total
+        cart_items.append({
+            'product': item.product,
+            'quantity': item.quantity,
+            'total_price': item_total
+        })
+
     if request.method == 'POST':
-        # 💡 Capture customer credentials and shipping metrics securely from form POST data
         full_name = request.POST.get('full_name')
         email = request.POST.get('email')
         phone_number = request.POST.get('phone_number')
@@ -55,14 +161,11 @@ def checkout_view(request):
         city = request.POST.get('city')
         postal_code = request.POST.get('postal_code')
         
-        # Simple Validation Check: Make sure they submitted their credentials
         if not all([full_name, shipping_address, city, phone_number]):
-            messages.error(request, "Please fill out all required credentials and shipping locations.")
-            return render(request, 'store/checkout.html', {'cart_items': cart_items})
+            messages.error(request, "Please fill out all required shipping and credential inputs.")
+            return render(request, 'store/checkout.html', {'cart_items': cart_items, 'total_amount': total_amount})
             
-        total_amount = sum(item.total_price for item in cart_items)
-        
-        # Create the order record
+        # Write permanent Order entry log record
         order = Order.objects.create(
             user=request.user,
             full_name=full_name,
@@ -72,8 +175,8 @@ def checkout_view(request):
             status='Pending'
         )
         
-        # Save individual line items securely
-        for item in cart_items:
+        # Convert items cleanly to relational lines
+        for item in db_items:
             OrderItem.objects.create(
                 order=order,
                 product=item.product,
@@ -81,53 +184,34 @@ def checkout_view(request):
                 quantity=item.quantity
             )
             
-        # Empty out the shopping cart
-        cart_items.delete()
+        # Empty out user cart contents entirely
+        db_items.delete()
         
-        messages.success(request, f"Thank you! Your order #{order.id} has been processed successfully.")
-        return redirect('home')
+        messages.success(request, f"Thank you! Your fitness order #{order.id} has been placed successfully.")
+        return redirect('store:sale_catalog')
         
-    return render(request, 'store/checkout.html', {'cart_items': cart_items})
+    return render(request, 'store/checkout.html', {'cart_items': cart_items, 'total_amount': total_amount})
 
 
-
-
-
-
-
-
-def product_list(request):  # or whatever your primary catalog view function is named
-    """
-    Renders the full inventory catalog and appends promotional 
-    recommendation objects to the bottom shelf context.
-    """
+# =====================================================================
+# 4. PRODUCT DIRECTORY PAGES & DIRECTORIES
+# =====================================================================
+def product_list(request):
     products = Product.objects.all()
-    
-    # NEW: Query 4 random products to act as recommendations at the bottom
     recommendations = Product.objects.all().order_by('?')[:4]
-    
     context = {
         'products': products,
-        'recommendations': recommendations,  # Add this line to the context dictionary
+        'recommendations': recommendations,
         'title': 'Our Full Catalog'
     }
     return render(request, 'store/product_list.html', context)
 
 
 def product_detail(request, product_id):
-    """
-    Displays an individual product's details alongside recommended items 
-    filtered by matching category or item types.
-    """
     product = get_object_or_404(Product, id=product_id)
-    
-    # 1. Primary Recommendation: Try finding other items in the same category
     recommendations = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
-    
-    # 2. Fallback: If no other products match that category, show other items in the store so it's not empty
     if not recommendations.exists():
         recommendations = Product.objects.exclude(id=product.id)[:4]
-    
     context = {
         'product': product,
         'recommendations': recommendations
@@ -135,29 +219,19 @@ def product_detail(request, product_id):
     return render(request, 'store/product_detail.html', context)
 
 
-
-
 def sale_catalog(request):
-    """
-    Queries catalog items and routes cleanly to the dedicated catalog grid display page.
-    """
     try:
-        # Check for active promotion markdown filters
         products = Product.objects.filter(is_sale=True)
         if not products.exists():
             products = Product.objects.all()
     except Exception:
         products = Product.objects.all()
 
-    # Automatically bundle recommendation objects for the bottom shelf grid layout
     recommendations = Product.objects.all().order_by('?')[:4]
-
     context = {
         'products': products,
         'recommendations': recommendations,
         'title': 'Flash Sale Collection',
         'is_sale_page': True
     }
-    
-    # CRITICAL FIX HERE: Ensure this points to 'store/product_list.html'
     return render(request, 'store/product_list.html', context)

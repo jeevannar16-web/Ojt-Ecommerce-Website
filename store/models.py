@@ -72,3 +72,34 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.product.name if self.product else 'Deleted Item'}"
+
+
+
+
+
+
+class FavoriteItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # Prevents a user from favoriting the exact same product multiple times
+        unique_together = ('user', 'product')
+
+    def __clonestr__(self):
+        return f"{self.user.username} favorited {self.product.name}"
+    
+
+
+
+
+
+
+class NewsletterSubscriber(models.Model):
+    # Changed max_index_length to max_length (standard Django field syntax)
+    email = models.EmailField(unique=True, max_length=254)
+    subscribed_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email

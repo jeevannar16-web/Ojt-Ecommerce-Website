@@ -12,4 +12,14 @@ urlpatterns = [
     path('products/<int:product_id>/', views.product_detail, name='product_detail'),
     path('sale/', views.sale_catalog, name='sale_catalog'),
     path('cart/update/<int:product_id>/<str:action>/', views.update_cart_quantity, name='update_cart_quantity'),
+    path('favorites/', views.favorites_list, name='favorites_list'),
+    path('favorites/toggle/<int:product_id>/', views.toggle_favorite, name='toggle_favorite'),
+
+    path('newsletter/subscribe/', views.newsletter_subscribe, name='newsletter_subscribe'),
+
+
+
+
+    
+
 ]

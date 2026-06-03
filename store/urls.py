@@ -16,7 +16,7 @@ urlpatterns = [
     path('favorites/toggle/<int:product_id>/', views.toggle_favorite, name='toggle_favorite'),
 
     path('newsletter/subscribe/', views.newsletter_subscribe, name='newsletter_subscribe'),
-
+    path('orders/', views.order_history_view, name='order_history'),
 
 
 

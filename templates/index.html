@@ -40,29 +40,13 @@
   }
   .btn-primary-hero:hover { transform: translateY(-2px); color: #0d0d0d; }
 
-  /* Hero Side Frame Graphics */
   .hero-visual { position: relative; display: flex; justify-content: center; }
-  
-  /* Upgraded Aesthetic Card Frame Container */
   .hero-img-frame {
-    width: 100%;
-    max-width: 500px;
-    height: 420px;
-    border-radius: 24px;
-    border: 1px solid rgba(232,201,126,0.2);
-    background: #111;
-    overflow: hidden;
-    box-shadow: 0 20px 45px rgba(0,0,0,0.7);
-    position: relative;
+    width: 100%; max-width: 500px; height: 420px; border-radius: 24px;
+    border: 1px solid rgba(232,201,126,0.2); background: #111;
+    overflow: hidden; box-shadow: 0 20px 45px rgba(0,0,0,0.7); position: relative;
   }
-  
-  .composite-showcase-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(0.9) contrast(1.05);
-    display: block;
-  }
+  .composite-showcase-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9) contrast(1.05); display: block; }
 
   /* ─── Grid Configurations ─── */
   .section-wrap { max-width: 1240px; margin: 0 auto; padding: 60px 2rem; }
@@ -73,7 +57,7 @@
   .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
   .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
 
-  /* ─── Cards Styling ─── */
+  /* ─── Category Cards ─── */
   .cat-card {
     background: var(--clr-card); border: 1px solid var(--clr-border); border-radius: var(--radius);
     padding: 24px 16px; text-align: center; text-decoration: none; display: flex; flex-direction: column; gap: 8px;
@@ -84,25 +68,63 @@
   .cat-name { font-size: 0.9rem; font-weight: 600; color: var(--clr-text); }
   .cat-count { font-size: 0.75rem; color: var(--clr-muted); }
 
-  /* Product Items Cards UI */
+  /* ─── Product Card Core Design ─── */
   .card-product {
     background: var(--clr-card); border: 1px solid var(--clr-border); border-radius: var(--radius);
     overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s, border-color 0.3s;
   }
-  .card-product:hover { transform: translateY(-6px); border-color: rgba(232,201,126,0.4); }
-  .card-img-wrap { position: relative; aspect-ratio: 1; background: #111; display: flex; align-items: center; justify-content: center; font-size: 3rem;}
-  .card-badge { position: absolute; top: 12px; left: 12px; background: var(--clr-accent); color: #0d0d0d; font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 20px; text-transform: uppercase; }
+  .card-product:hover { transform: translateY(-6px); border-color: rgba(232,201,126,0.3); }
+  .card-img-wrap { position: relative; aspect-ratio: 1; background: #111; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+  .card-product:hover .card-img-wrap img { transform: scale(1.04); }
+  .card-badge { position: absolute; top: 12px; left: 12px; background: var(--clr-accent); color: #0d0d0d; font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 20px; text-transform: uppercase; z-index: 2; }
   
   .card-body-custom { padding: 16px; display: flex; flex-direction: column; flex: 1; }
   .card-category { font-size: 0.7rem; font-weight: 600; color: var(--clr-accent2); text-transform: uppercase; margin-bottom: 6px; }
-  .card-title-text { font-size: 0.95rem; font-weight: 600; color: var(--clr-text); margin-bottom: 10px; line-height: 1.4; }
+  .card-title-text { font-size: 0.95rem; font-weight: 600; color: var(--clr-text); margin-bottom: 12px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.8em; }
   
   .card-price-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
-  .price-now { font-family: var(--font-display); font-size: 1.2rem; color: var(--clr-accent); font-weight: 700; }
-  .btn-cart { background: var(--clr-accent); border: none; border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-  .btn-cart:hover { background: var(--clr-accent2); }
+  .price-now { font-family: var(--font-display); font-size: 1.25rem; color: var(--clr-accent); font-weight: 700; }
+  
+  /* ─── Aesthetic Actions Group Layout ─── */
+  .actions-group { display: flex; gap: 8px; align-items: center; }
+  
+  .btn-fav { 
+    background: rgba(255,255,255,0.03); 
+    border: 1px solid rgba(255, 255, 255, 0.12); 
+    color: rgba(255,255,255,0.85); 
+    width: 38px; height: 38px;
+    border-radius: 10px; 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+    cursor: pointer; 
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+  }
+  .btn-fav i { font-size: 1.1rem; transition: transform 0.2s; }
+  .btn-fav:hover { border-color: rgba(255, 255, 255, 0.3); background: rgba(255,255,255,0.08); }
+  .btn-fav:active i { transform: scale(0.8); }
+  
+  /* 🔥 Fully Crimson Red Animated Section Wrapper State */
+  .btn-fav.favorited {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.45);
+    animation: heartPop 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
 
-  /* ─── Flash Sale Banner Flexbox ─── */
+  @keyframes heartPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+
+  .btn-cart { background: var(--clr-accent); border: none; border-radius: 10px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #0d0d0d; transition: background 0.2s, transform 0.2s; }
+  .btn-cart i { font-size: 1.1rem; }
+  .btn-cart:hover { background: var(--clr-accent2); transform: translateY(-1px); }
+
+  /* ─── Flash Sale Strip ─── */
   .banner-strip {
     background: linear-gradient(90deg, var(--clr-card) 0%, #1e160a 50%, var(--clr-card) 100%);
     border: 1px solid var(--clr-border); border-radius: var(--radius); padding: 30px 40px;
@@ -128,9 +150,7 @@
     </div>
     <div class="hero-visual">
       <div class="hero-img-frame">
-         <img src="{% static 'hero.png' %}" 
-              alt="FitnessHub Premium Overview" 
-              class="composite-showcase-img">
+         <img src="{% static 'hero.png' %}" alt="FitnessHub Premium Overview" class="composite-showcase-img">
       </div>
     </div>
   </div>
@@ -181,6 +201,10 @@
 </section>
 {% endif %}
 
+
+
+
+
 <section class="section-wrap" style="{% if is_searching %}padding-top: 40px;{% endif %}">
   <div class="section-label">
     {% if is_searching %}
@@ -199,7 +223,7 @@
         <div class="card-product">
           <div class="card-img-wrap">
             {% if product.image %}
-              <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:cover;">
+              <img src="{{ product.image.url }}" alt="{{ product.name }}">
             {% else %}
               <div style="font-size: 3rem;">📦</div>
             {% endif %}
@@ -210,7 +234,18 @@
             <div class="card-title-text">{{ product.name }}</div>
             <div class="card-price-row">
               <span class="price-now">${{ product.price }}</span>
-              <button class="btn-cart" onclick="addToCart({{ product.id }})"><i class="bi bi-bag-plus"></i></button>
+              <div class="actions-group">
+                <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }})">
+                    {% if product.id in global_favorited_ids %}
+                        <i class="bi bi-heart-fill"></i>
+                    {% else %}
+                        <i class="bi bi-heart"></i>
+                    {% endif %}
+                </button>
+                <button type="button" class="btn-cart" onclick="addToCart(event, {{ product.id }})">
+                    <i class="bi bi-bag-plus"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -227,7 +262,7 @@
         <div class="card-product">
           <div class="card-img-wrap">
             {% if product.image %}
-              <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:cover;">
+              <img src="{{ product.image.url }}" alt="{{ product.name }}">
             {% else %}
               <div style="font-size: 3rem;">📦</div>
             {% endif %}
@@ -238,16 +273,44 @@
             <div class="card-title-text">{{ product.name }}</div>
             <div class="card-price-row">
               <span class="price-now">${{ product.price }}</span>
-              <button class="btn-cart" onclick="addToCart({{ product.id }})"><i class="bi bi-bag-plus"></i></button>
+              <div class="actions-group">
+                <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }})">
+                    {% if product.id in global_favorited_ids %}
+                        <i class="bi bi-heart-fill"></i>
+                    {% else %}
+                        <i class="bi bi-heart"></i>
+                    {% endif %}
+                </button>
+                <button type="button" class="btn-cart" onclick="addToCart(event, {{ product.id }})">
+                    <i class="bi bi-bag-plus"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       {% endfor %}
     {% endif %}
   </div>
+
+
+
+
+  
 </section>
 
+
+
+
+
+
+
+
+
+
+
 {% if is_searching %}
+
+
 <section class="section-wrap" style="padding-top: 10px; padding-bottom: 80px;">
   <div class="section-label">
     <h2>Recommended <span>For You</span></h2>
@@ -257,7 +320,7 @@
       <div class="card-product">
         <div class="card-img-wrap">
           {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:cover;">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
           {% else %}
             <div style="font-size: 3rem;">📦</div>
           {% endif %}
@@ -267,7 +330,18 @@
           <div class="card-title-text">{{ product.name }}</div>
           <div class="card-price-row">
             <span class="price-now">${{ product.price }}</span>
-            <button class="btn-cart" onclick="addToCart({{ product.id }})"><i class="bi bi-bag-plus"></i></button>
+            <div class="actions-group">
+              <button type="button" class="btn-fav {% if product.id in user_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }})">
+                  {% if product.id in user_favorited_ids %}
+                      <i class="bi bi-heart-fill"></i>
+                  {% else %}
+                      <i class="bi bi-heart"></i>
+                  {% endif %}
+              </button>
+              <button type="button" class="btn-cart" onclick="addToCart(event, {{ product.id }})">
+                  <i class="bi bi-bag-plus"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -282,45 +356,121 @@
 
 {% block extra_js %}
 <script>
-  /* ─── Native Countdown Timer ─── */
-  (function() {
-    const end = new Date();
-    end.setHours(end.getHours() + 5, 30, 0, 0);
-    function update() {
-      const diff = Math.max(0, end - Date.now());
-      if(document.getElementById('c-h')) {
-        document.getElementById('c-h').textContent = String(Math.floor(diff / 3600000)).padStart(2,'0');
-        document.getElementById('c-m').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
-        document.getElementById('c-s').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
-      }
-    }
-    update();
-    setInterval(update, 1000);
-  })();
 
-  /* ─── Add to Cart Script ─── */
-  async function addToCart(productId) {
-    try {
-      const res = await fetch(`/store/cart/add/${productId}/`, {
-        method: 'POST',
-        headers: { 
-          'X-CSRFToken': '{{ csrf_token }}', 
-          'Content-Type': 'application/json' 
-        },
-        body: JSON.stringify({ quantity: 1 })
-      });
-      
-      const data = await res.json();
-      
-      if (data.success) { 
-        alert('✅ Added to cart successfully!'); 
-      } else {
-        alert(data.message || "❌ Please log in first.");
-      }
-    } catch(e) { 
-      console.error('Network dispatch exception:', e); 
-      alert('❌ Failed to add item.');
+
+// Secure cookie helper function
+
+
+
+
+
+function toggleFavorite(event, productId, isWishlistPage = false) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
     }
-  }
+    if (!productId) return;
+
+    // 1. Locate components inside the document layout
+    const buttons = document.querySelectorAll(`[onclick*="toggleFavorite"][onclick*="${productId}"]`);
+    const badges = document.querySelectorAll('.global-fav-count');
+
+    // 2. Identify active structural state to alter classes
+    let isAdding = true;
+    buttons.forEach(btn => {
+        if (btn.classList.contains('favorited')) {
+            isAdding = false;
+        }
+    });
+
+    if (isWishlistPage) {
+        isAdding = false;
+    }
+
+    // 3. Update heart fills immediately across all product grids
+    buttons.forEach(btn => {
+        const icon = btn.querySelector('i');
+        if (isAdding) {
+            btn.classList.add('favorited');
+            if (icon) icon.className = 'bi bi-heart-fill';
+        } else {
+            btn.classList.remove('favorited');
+            if (icon) icon.className = 'bi bi-heart';
+        }
+    });
+
+    // 4. Update the navbar navigation indicators
+    badges.forEach(badge => {
+        let currentCount = parseInt(badge.textContent.trim()) || 0;
+        badge.textContent = isAdding ? currentCount + 1 : Math.max(0, currentCount - 1);
+    });
+
+    // 5. Drop card container gracefully if unhearted directly inside favorites section tab
+    if (!isAdding && isWishlistPage) {
+        const cardElement = document.getElementById(`wishlist-item-${productId}`);
+        if (cardElement) {
+            cardElement.style.transition = 'all 0.25s ease';
+            cardElement.style.opacity = '0';
+            cardElement.style.transform = 'scale(0.9)';
+            setTimeout(() => { 
+                cardElement.remove();
+                const remainingCards = document.querySelectorAll('[id^="wishlist-item-"]');
+                if (remainingCards.length === 0) {
+                    window.location.reload();
+                }
+            }, 250);
+        }
+    }
+
+    // 6. Connect asynchronously to your existing Django backend endpoint path route
+    fetch(`/store/favorites/toggle/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.status === 401) {
+            window.location.href = '/users/login/';
+            return;
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Adjust elements if backend state varies from optimistic UI update
+        if (data && data.status) {
+            buttons.forEach(btn => {
+                const icon = btn.querySelector('i');
+                if (data.status === 'added') {
+                    btn.classList.add('favorited');
+                    if (icon) icon.className = 'bi bi-heart-fill';
+                } else if (data.status === 'removed') {
+                    btn.classList.remove('favorited');
+                    if (icon) icon.className = 'bi bi-heart';
+                }
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error handling wishlist toggle:', error);
+        window.location.reload();
+    });
+}
+
+function getCookie(name) {
+    let value = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                value = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return value || "";
+}
 </script>
 {% endblock %}

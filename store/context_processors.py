@@ -1,4 +1,4 @@
-from .models import FavoriteItem, CartItem, Product
+from .models import FavoriteItem, CartItem, Product 
 
 def cart_and_wishlist_counts(request):
     if request.user.is_authenticated:
@@ -43,4 +43,18 @@ def category_list_processor(request):
             
     return {
         'global_categories': unique_categories
+    }
+
+
+
+def cart_counter(request):
+    """Calculates global item quantities by looking directly at CartItem rows."""
+    cart_count = 0
+    if request.user.is_authenticated:
+        # Sum the quantities of all active cart rows for the current user
+        user_items = CartItem.objects.filter(user=request.user)
+        cart_count = sum(item.quantity for item in user_items)
+        
+    return {
+        'cart_count': cart_count
     }

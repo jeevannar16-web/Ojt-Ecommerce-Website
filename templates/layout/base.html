@@ -344,21 +344,19 @@
 
 
 
-
-     
-
-<a href="{% url 'store:cart' %}" class="nav-icon-btn" title="Cart">
+<a href="{% url 'store:cart' %}" class="nav-icon-btn position-relative" title="Cart" style="text-decoration: none;">
     <i class="bi bi-bag"></i>
-    {% if cart_count %}
-        <span class="badge-dot"></span>
+    {% if cart_count > 0 %}
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger" 
+              style="font-size: 0.65rem; padding: 3px 6px; transform: translate(-30%, -30%) !important; border: 1px solid #090909; line-height: 1;">
+            {{ cart_count }}
+        </span>
     {% endif %}
 </a>
+ 
 
 
 
-
-
-</div>
 
 
 
@@ -367,7 +365,16 @@
           <button class="nav-icon-btn"><i class="bi bi-person"></i></button>
           <div class="dropdown-content">
             <a href="{% url 'profile' %}"><i class="bi bi-person-circle me-2"></i>Profile</a>
-            <a href="#"><i class="bi bi-box-seam me-2"></i>Orders</a>
+
+
+
+
+<li>
+    <a class="dropdown-item" href="{% url 'store:order_history' %}">
+        📦 Orders
+    </a>
+</li>
+
             <form method="post" action="{% url 'logout' %}">
               {% csrf_token %}
               <button type="submit" style="color: #ef4444;"><i class="bi bi-box-arrow-right me-2"></i>Logout</button>
@@ -375,6 +382,10 @@
           </div>
         </div>
       {% else %}
+
+
+
+
         <a href="{% url 'login' %}" class="btn-login">Login</a>
         <a href="{% url 'register' %}" class="btn-register">Sign Up</a>
       {% endif %}

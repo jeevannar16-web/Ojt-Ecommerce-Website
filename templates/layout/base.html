@@ -680,25 +680,42 @@ function toggleFavorite(event, productId, btn) {
     if (event) event.preventDefault();
     if (!productId || !btn) return;
 
-    // Use btn directly — no querySelector needed
     const icon = btn.querySelector('i');
+    const span = btn.querySelector('span');
     const isCurrentlyFavorited = btn.classList.contains('favorited');
+
+    // Trigger pop animation
+    btn.classList.remove('pop');
+    void btn.offsetWidth; // reflow to restart animation
+    btn.classList.add('pop');
+
+    // Floating heart particle (only when adding)
+    if (!isCurrentlyFavorited) {
+        const particle = document.createElement('span');
+        particle.className = 'heart-particle';
+        particle.textContent = '♥';
+        particle.style.left = Math.random() * 60 + 20 + '%';
+        btn.appendChild(particle);
+        setTimeout(() => particle.remove(), 800);
+    }
 
     if (isCurrentlyFavorited) {
         btn.classList.remove('favorited');
         if (icon) icon.className = 'bi bi-heart';
-        btn.style.background = 'rgba(255,255,255,0.03)';
-        btn.style.border = '1px solid rgba(255,255,255,0.12)';
-        btn.style.color = 'rgba(255,255,255,0.85)';
+        if (span) span.textContent = 'Wishlist';
+        // For non-detail buttons
+        btn.style.background = '';
+        btn.style.border = '';
+        btn.style.color = '';
     } else {
         btn.classList.add('favorited');
         if (icon) icon.className = 'bi bi-heart-fill';
-        btn.style.background = '#ef4444';
-        btn.style.border = '1px solid #ef4444';
-        btn.style.color = 'white';
+        if (span) span.textContent = 'Wishlisted';
+        btn.style.background = '';
+        btn.style.border = '';
+        btn.style.color = '';
     }
 
-    // Send request to server
     fetch(`/store/favorites/toggle/${productId}/`, {
         method: 'POST',
         headers: {

@@ -274,7 +274,9 @@
             <div class="card-price-row">
               <span class="price-now">${{ product.price }}</span>
               <div class="actions-group">
-                <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }})">
+
+                <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }} ,this)">
+
                     {% if product.id in global_favorited_ids %}
                         <i class="bi bi-heart-fill"></i>
                     {% else %}

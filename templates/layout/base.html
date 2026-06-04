@@ -676,33 +676,27 @@ function addToCart(event, productId) {
     });
 }
 // ==================== TOGGLE FAVORITE (FULLY FIXED) ====================
-function toggleFavorite(event, productId) {
+function toggleFavorite(event, productId, btn) {
     if (event) event.preventDefault();
-    if (!productId) return;
+    if (!productId || !btn) return;
 
-    // Find all favorite buttons for this product (works on home + detail page)
-    const buttons = document.querySelectorAll(`button[onclick*="toggleFavorite(${productId}"]`);
+    // Use btn directly — no querySelector needed
+    const icon = btn.querySelector('i');
+    const isCurrentlyFavorited = btn.classList.contains('favorited');
 
-    buttons.forEach(btn => {
-        const icon = btn.querySelector('i');
-        const isCurrentlyFavorited = btn.classList.contains('favorited');
-
-        if (isCurrentlyFavorited) {
-            // Remove favorite
-            btn.classList.remove('favorited');
-            if (icon) icon.className = 'bi bi-heart';
-            btn.style.background = 'rgba(255,255,255,0.03)';
-            btn.style.border = '1px solid rgba(255,255,255,0.12)';
-            btn.style.color = 'rgba(255,255,255,0.85)';
-        } else {
-            // Add favorite
-            btn.classList.add('favorited');
-            if (icon) icon.className = 'bi bi-heart-fill';
-            btn.style.background = '#ef4444';
-            btn.style.border = '1px solid #ef4444';
-            btn.style.color = 'white';
-        }
-    });
+    if (isCurrentlyFavorited) {
+        btn.classList.remove('favorited');
+        if (icon) icon.className = 'bi bi-heart';
+        btn.style.background = 'rgba(255,255,255,0.03)';
+        btn.style.border = '1px solid rgba(255,255,255,0.12)';
+        btn.style.color = 'rgba(255,255,255,0.85)';
+    } else {
+        btn.classList.add('favorited');
+        if (icon) icon.className = 'bi bi-heart-fill';
+        btn.style.background = '#ef4444';
+        btn.style.border = '1px solid #ef4444';
+        btn.style.color = 'white';
+    }
 
     // Send request to server
     fetch(`/store/favorites/toggle/${productId}/`, {
@@ -715,7 +709,6 @@ function toggleFavorite(event, productId) {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            // Update navbar favorites count
             const favCount = document.querySelector('.global-fav-count');
             if (favCount && data.total_favorites !== undefined) {
                 favCount.textContent = data.total_favorites;

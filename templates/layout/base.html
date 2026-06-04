@@ -342,22 +342,14 @@
       
 
 
-
-
-<a href="{% url 'store:cart' %}" class="nav-icon-btn position-relative" title="Cart" style="text-decoration: none;">
+<a href="{% url 'store:cart' %}" ...>
     <i class="bi bi-bag"></i>
-    {% if cart_count > 0 %}
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger" 
-              style="font-size: 0.65rem; padding: 3px 6px; transform: translate(-30%, -30%) !important; border: 1px solid #090909; line-height: 1;">
-            {{ cart_count }}
-        </span>
-    {% endif %}
+    <span id="cart-count" 
+          class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger"
+          style="font-size: 0.65rem; padding: 3px 6px; border: 1px solid #090909; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;">
+        {{ cart_count }}
+    </span>
 </a>
- 
-
-
-
-
 
 
       {% if user.is_authenticated %}
@@ -631,7 +623,7 @@
   </style>
 
  <script>
-function getCookie(name) {
+  function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
@@ -647,9 +639,10 @@ function getCookie(name) {
 }
 
 // ADD TO CART - Instant
+// ==================== ADD TO CART (FIXED) ====================
 function addToCart(event, productId) {
     if (event) event.preventDefault();
-    
+
     fetch(`/store/cart/add/${productId}/`, {
         method: 'POST',
         headers: {
@@ -660,18 +653,19 @@ function addToCart(event, productId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert(data.message || 'Added to bag!');
-            
-            // Update cart count instantly (no refresh)
-            const cartBadge = document.querySelector('.cart-count-badge');
-            if (cartBadge && data.cart_count !== undefined) {
-                cartBadge.textContent = data.cart_count;
+            // Show nice message instead of alert
+            showToast(data.message || 'Added to bag!');
+
+            // ✅ Update cart count in navbar instantly
+            const cartCountEl = document.getElementById('cart-count');
+            if (cartCountEl && data.cart_count !== undefined) {
+                cartCountEl.textContent = data.cart_count;
             }
         }
     })
     .catch(error => {
         console.error(error);
-        alert('Failed to add to cart');
+        showToast('Failed to add to cart', true);
     });
 }
 
@@ -680,17 +674,25 @@ function toggleFavorite(event, productId) {
     if (event) event.preventDefault();
     if (!productId) return;
 
+    // Instant visual feedback on all buttons with this product
     const buttons = document.querySelectorAll(`button[onclick*="toggleFavorite(${productId}"]`);
     
-    // Instant visual update
     buttons.forEach(btn => {
         const icon = btn.querySelector('i');
-        if (btn.classList.contains('favorited')) {
+        const isFavorited = btn.classList.contains('favorited');
+
+        if (isFavorited) {
             btn.classList.remove('favorited');
             if (icon) icon.className = 'bi bi-heart';
+            btn.style.background = 'none';
+            btn.style.borderColor = 'rgba(255,255,255,0.2)';
+            btn.style.color = '#fff';
         } else {
             btn.classList.add('favorited');
             if (icon) icon.className = 'bi bi-heart-fill';
+            btn.style.background = 'rgba(239, 68, 68, 0.1)';
+            btn.style.borderColor = '#ef4444';
+            btn.style.color = '#ef4444';
         }
     });
 
@@ -702,8 +704,36 @@ function toggleFavorite(event, productId) {
         }
     })
     .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // ✅ Update favorites count in navbar
+            const favCountEl = document.querySelector('.global-fav-count');
+            if (favCountEl && data.total_favorites !== undefined) {
+                favCountEl.textContent = data.total_favorites;
+            }
+        }
+    })
     .catch(error => console.error(error));
 }
+
+// Simple toast function (you can improve later)
+function showToast(message, isError = false) {
+    const container = document.getElementById('single-toast-container');
+    if (!container) return alert(message);
+
+    const toast = document.createElement('div');
+    toast.className = `custom-animated-toast theme-${isError ? 'warning' : 'success'}`;
+    toast.innerHTML = `<span>${message}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => toast.classList.add('reveal-slide'), 10);
+    setTimeout(() => {
+        toast.style.transition = 'all 0.4s ease';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 400);
+    }, 2500);
+}
+
 </script>
   {% block extra_js %}{% endblock %}
 

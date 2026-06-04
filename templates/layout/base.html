@@ -623,7 +623,7 @@
   </style>
 
  <script>
-  function getCookie(name) {
+function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
@@ -638,8 +638,7 @@
     return cookieValue;
 }
 
-// ADD TO CART - Instant
-// ==================== ADD TO CART (FIXED) ====================
+// ==================== ADD TO CART ====================
 function addToCart(event, productId) {
     if (event) event.preventDefault();
 
@@ -650,52 +649,51 @@ function addToCart(event, productId) {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
         if (data.success) {
-            // Show nice message instead of alert
             showToast(data.message || 'Added to bag!');
 
-            // ✅ Update cart count in navbar instantly
-            const cartCountEl = document.getElementById('cart-count');
-            if (cartCountEl && data.cart_count !== undefined) {
-                cartCountEl.textContent = data.cart_count;
+            // Update cart count instantly
+            const cartBadge = document.getElementById('cart-count');
+            if (cartBadge && data.cart_count !== undefined) {
+                cartBadge.textContent = data.cart_count;
             }
         }
     })
-    .catch(error => {
-        console.error(error);
-        showToast('Failed to add to cart', true);
-    });
+    .catch(() => showToast('Failed to add to cart', true));
 }
 
-// TOGGLE FAVORITE - Instant (no refresh)
+// ==================== TOGGLE FAVORITE (FULLY FIXED) ====================
 function toggleFavorite(event, productId) {
     if (event) event.preventDefault();
     if (!productId) return;
 
-    // Instant visual feedback on all buttons with this product
+    // Find all favorite buttons for this product (works on home + detail page)
     const buttons = document.querySelectorAll(`button[onclick*="toggleFavorite(${productId}"]`);
-    
+
     buttons.forEach(btn => {
         const icon = btn.querySelector('i');
-        const isFavorited = btn.classList.contains('favorited');
+        const isCurrentlyFavorited = btn.classList.contains('favorited');
 
-        if (isFavorited) {
+        if (isCurrentlyFavorited) {
+            // Remove favorite
             btn.classList.remove('favorited');
             if (icon) icon.className = 'bi bi-heart';
-            btn.style.background = 'none';
-            btn.style.borderColor = 'rgba(255,255,255,0.2)';
-            btn.style.color = '#fff';
+            btn.style.background = 'rgba(255,255,255,0.03)';
+            btn.style.border = '1px solid rgba(255,255,255,0.12)';
+            btn.style.color = 'rgba(255,255,255,0.85)';
         } else {
+            // Add favorite
             btn.classList.add('favorited');
             if (icon) icon.className = 'bi bi-heart-fill';
-            btn.style.background = 'rgba(239, 68, 68, 0.1)';
-            btn.style.borderColor = '#ef4444';
-            btn.style.color = '#ef4444';
+            btn.style.background = '#ef4444';
+            btn.style.border = '1px solid #ef4444';
+            btn.style.color = 'white';
         }
     });
 
+    // Send request to server
     fetch(`/store/favorites/toggle/${productId}/`, {
         method: 'POST',
         headers: {
@@ -703,20 +701,20 @@ function toggleFavorite(event, productId) {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
         if (data.success) {
-            // ✅ Update favorites count in navbar
-            const favCountEl = document.querySelector('.global-fav-count');
-            if (favCountEl && data.total_favorites !== undefined) {
-                favCountEl.textContent = data.total_favorites;
+            // Update navbar favorites count
+            const favCount = document.querySelector('.global-fav-count');
+            if (favCount && data.total_favorites !== undefined) {
+                favCount.textContent = data.total_favorites;
             }
         }
     })
-    .catch(error => console.error(error));
+    .catch(err => console.error(err));
 }
 
-// Simple toast function (you can improve later)
+// Toast notification
 function showToast(message, isError = false) {
     const container = document.getElementById('single-toast-container');
     if (!container) return alert(message);
@@ -731,9 +729,8 @@ function showToast(message, isError = false) {
         toast.style.transition = 'all 0.4s ease';
         toast.style.opacity = '0';
         setTimeout(() => toast.remove(), 400);
-    }, 2500);
+    }, 2400);
 }
-
 </script>
   {% block extra_js %}{% endblock %}
 
@@ -741,6 +738,49 @@ function showToast(message, isError = false) {
 <div id="single-toast-container" style="position: fixed; bottom: 30px; right: 30px; z-index: 10000;"></div>
 
 <style>
+
+
+
+
+
+
+
+
+  /* === Premium Animated Favorite Button === */
+.btn-fav {
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-fav.favorited {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.5);
+    animation: heartPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes heartPop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.4); }
+    70% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+/* Cart Badge - More Premium Look */
+#cart-count {
+    background: #ef4444;
+    color: white;
+    font-weight: 700;
+    font-size: 0.65rem;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #0d0d0d;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+}
   /* Premium Dark Theme Slide Notification Container */
   .custom-animated-toast {
       min-width: 340px;

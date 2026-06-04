@@ -1,0 +1,342 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}Fitness-hub— Discover What Moves You{% endblock %}
+
+{% block extra_css %}
+<style> 
+  /* ─── Hero Custom Styling ─── */
+  .hero {
+    position: relative;
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    padding: 60px 2rem;
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a1209 55%, #0d0d0d 100%);
+  }
+  .hero-container {
+    max-width: 1240px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+  }
+  @media (max-width: 992px) {
+    .hero-container { grid-template-columns: 1fr; text-align: center; }
+    .hero-visual { display: none; }
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(232,201,126,0.1); border: 1px solid rgba(232,201,126,0.2);
+    border-radius: 50px; padding: 6px 14px; font-size: 0.75rem; font-weight: 600;
+    color: var(--clr-accent); margin-bottom: 20px; text-transform: uppercase;
+  }
+  .hero h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1.15; margin-bottom: 20px; }
+  .hero h1 .highlight { color: var(--clr-accent); }
+  .hero-sub { color: var(--clr-muted); font-size: 1.05rem; line-height: 1.6; margin-bottom: 30px; max-width: 480px; }
+  
+  .btn-primary-hero {
+    background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent2));
+    color: #0d0d0d; border-radius: 50px; padding: 14px 32px; font-weight: 700;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 8px 28px rgba(232,201,126,0.25); transition: transform 0.2s;
+  }
+  .btn-primary-hero:hover { transform: translateY(-2px); color: #0d0d0d; }
+
+  .hero-visual { position: relative; display: flex; justify-content: center; }
+  .hero-img-frame {
+    width: 100%; max-width: 500px; height: 420px; border-radius: 24px;
+    border: 1px solid rgba(232,201,126,0.2); background: #111;
+    overflow: hidden; box-shadow: 0 20px 45px rgba(0,0,0,0.7); position: relative;
+  }
+  .composite-showcase-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9) contrast(1.05); display: block; }
+
+  /* ─── Grid Configurations ─── */
+  .section-wrap { max-width: 1240px; margin: 0 auto; padding: 60px 2rem; }
+  .section-label { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--clr-border); padding-bottom: 14px; margin-bottom: 30px; }
+  .section-label h2 { font-family: var(--font-display); font-size: 1.8rem; }
+  .section-label h2 span { color: var(--clr-accent); }
+
+  .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
+
+  /* ─── Category Cards ─── */
+  .cat-card {
+    background: var(--clr-card); border: 1px solid var(--clr-border); border-radius: var(--radius);
+    padding: 24px 16px; text-align: center; text-decoration: none; display: flex; flex-direction: column; gap: 8px;
+    transition: transform 0.25s, border-color 0.25s;
+  }
+  .cat-card:hover { transform: translateY(-4px); border-color: var(--clr-accent); }
+  .cat-emoji { font-size: 2rem; }
+  .cat-name { font-size: 0.9rem; font-weight: 600; color: var(--clr-text); }
+  .cat-count { font-size: 0.75rem; color: var(--clr-muted); }
+
+  /* ─── Product Card Core Design ─── */
+  .card-product {
+    background: var(--clr-card); border: 1px solid var(--clr-border); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s, border-color 0.3s;
+  }
+  .card-product:hover { transform: translateY(-6px); border-color: rgba(232,201,126,0.3); }
+  .card-img-wrap { position: relative; aspect-ratio: 1; background: #111; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+  .card-product:hover .card-img-wrap img { transform: scale(1.04); }
+  .card-badge { position: absolute; top: 12px; left: 12px; background: var(--clr-accent); color: #0d0d0d; font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 20px; text-transform: uppercase; z-index: 2; }
+  
+  .card-body-custom { padding: 16px; display: flex; flex-direction: column; flex: 1; }
+  .card-category { font-size: 0.7rem; font-weight: 600; color: var(--clr-accent2); text-transform: uppercase; margin-bottom: 6px; }
+  .card-title-text { font-size: 0.95rem; font-weight: 600; color: var(--clr-text); margin-bottom: 12px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.8em; }
+  
+  .card-price-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+  .price-now { font-family: var(--font-display); font-size: 1.25rem; color: var(--clr-accent); font-weight: 700; }
+  
+  /* ─── Aesthetic Actions Group Layout ─── */
+  .actions-group { display: flex; gap: 8px; align-items: center; }
+  
+  .btn-fav { 
+    background: rgba(255,255,255,0.03); 
+    border: 1px solid rgba(255, 255, 255, 0.12); 
+    color: rgba(255,255,255,0.85); 
+    width: 38px; height: 38px;
+    border-radius: 10px; 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+    cursor: pointer; 
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+  }
+  .btn-fav i { font-size: 1.1rem; transition: transform 0.2s; }
+  .btn-fav:hover { border-color: rgba(255, 255, 255, 0.3); background: rgba(255,255,255,0.08); }
+  .btn-fav:active i { transform: scale(0.8); }
+  
+  /* 🔥 Fully Crimson Red Animated Section Wrapper State */
+  .btn-fav.favorited {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.45);
+    animation: heartPop 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+
+  @keyframes heartPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+
+  .btn-cart { background: var(--clr-accent); border: none; border-radius: 10px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #0d0d0d; transition: background 0.2s, transform 0.2s; }
+  .btn-cart i { font-size: 1.1rem; }
+  .btn-cart:hover { background: var(--clr-accent2); transform: translateY(-1px); }
+
+  /* ─── Flash Sale Strip ─── */
+  .banner-strip {
+    background: linear-gradient(90deg, var(--clr-card) 0%, #1e160a 50%, var(--clr-card) 100%);
+    border: 1px solid var(--clr-border); border-radius: var(--radius); padding: 30px 40px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;
+  }
+  .banner-countdown { display: flex; gap: 12px; }
+  .count-box { background: var(--clr-bg); border: 1px solid var(--clr-border); border-radius: 8px; padding: 8px 12px; text-align: center; min-width: 54px; }
+  .count-num { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: var(--clr-accent); }
+  .count-lbl { font-size: 0.65rem; color: var(--clr-muted); text-transform: uppercase; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% if not is_searching %}
+<section class="hero">
+  <div class="hero-container">
+    <div>
+      <div class="hero-eyebrow">New Season Collection</div>
+      <h1>Discover What <span class="highlight">Moves You.</span></h1>
+      <p class="hero-sub">Thousands of curated premium items designed to support your everyday active milestones.</p>
+      <a href="{% url 'store:product_list' %}" class="btn-primary-hero">Shop Collection <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-img-frame">
+         <img src="{% static 'hero.png' %}" alt="FitnessHub Premium Overview" class="composite-showcase-img">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-wrap">
+  <div class="section-label">
+    <h2>Shop by <span>Category</span></h2>
+  </div>
+  <div class="category-grid">
+    {% for category in categories %}
+    <a href="{% url 'home' %}?category={{ category.id }}" class="cat-card">
+        <div class="cat-emoji">
+            {% if category.image %}
+                <img src="{{ category.image.url }}" alt="{{ category.name }}" style="width: 24px; height: 24px;">
+            {% else %}
+                ⚡
+            {% endif %}
+        </div>
+        <div class="cat-name">{{ category.name }}</div>
+        <div class="cat-count">{{ category.products.count }} Items</div>
+    </a>
+    {% empty %}
+        {% for i in "123456"|make_list %}
+            <div class="cat-card" style="opacity: 0.5;">
+                <div class="cat-emoji">🏋️‍♂️</div>
+                <div class="cat-name">Category</div>
+                <div class="cat-count">— Items</div>
+            </div>
+        {% endfor %}
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section-wrap" style="padding-top: 0; padding-bottom: 0;">
+  <div class="banner-strip">
+    <div>
+      <h3>Flash Sale — Up to 60% Off</h3>
+      <p style="color: var(--clr-muted); font-size: 0.9rem; margin-top: 4px;">Limited stock promotional offers.</p>
+    </div>
+    <div class="banner-countdown">
+      <div class="count-box"><div class="count-num" id="c-h">00</div><div class="count-lbl">Hrs</div></div>
+      <div class="count-box"><div class="count-num" id="c-m">00</div><div class="count-lbl">Min</div></div>
+      <div class="count-box"><div class="count-num" id="c-s">00</div><div class="count-lbl">Sec</div></div>
+    </div>
+    <a href="{% url 'store:sale_catalog' %}" class="btn-primary-hero">View All Sale</a>
+  </div>
+</section>
+{% endif %}
+
+
+
+
+
+<section class="section-wrap" style="{% if is_searching %}padding-top: 40px;{% endif %}">
+  <div class="section-label">
+    {% if is_searching %}
+      <h2>Search Results for <span>"{{ search_query }}"</span></h2>
+      <a href="{% url 'home' %}" style="text-decoration: none; font-size: 0.95rem; font-weight: 600; color: var(--clr-accent); display: inline-flex; align-items: center; gap: 6px;">
+        <i class="bi bi-arrow-left"></i> Back to Home
+      </a>
+    {% else %}
+      <h2>Featured <span>Products</span></h2>
+    {% endif %}
+  </div>
+  
+  <div class="products-grid">
+    {% if is_searching %}
+      {% for product in search_results %}
+        <div class="card-product">
+          <div class="card-img-wrap">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+              <div style="font-size: 3rem;">📦</div>
+            {% endif %}
+            <div class="card-badge">Hot</div>
+          </div>
+          <div class="card-body-custom">
+            <div class="card-category">{{ product.category.name }}</div>
+            <div class="card-title-text">{{ product.name }}</div>
+            <div class="card-price-row">
+              <span class="price-now">${{ product.price }}</span>
+              <div class="actions-group">
+                <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }})">
+                    {% if product.id in global_favorited_ids %}
+                        <i class="bi bi-heart-fill"></i>
+                    {% else %}
+                        <i class="bi bi-heart"></i>
+                    {% endif %}
+                </button>
+                <button type="button" class="btn-cart" onclick="addToCart(event, {{ product.id }})">
+                    <i class="bi bi-bag-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 50px 2rem; background: var(--clr-card); border-radius: var(--radius); border: 1px dashed var(--clr-border); margin-bottom: 10px;">
+           <div style="font-size: 3rem; margin-bottom: 12px;">🔍</div>
+           <h4 style="color: var(--clr-text); font-family: var(--font-display); margin-bottom: 6px;">No Exact Matches Found</h4>
+           <p style="color: var(--clr-muted); font-size: 0.9rem; margin-bottom: 20px;">We couldn't find any items matching your exact search keyword.</p>
+           <a href="{% url 'home' %}" style="display: inline-block; color: #0d0d0d; background: var(--clr-accent); padding: 10px 24px; border-radius: 50px; font-weight: 600; text-decoration: none;">Clear Search</a>
+        </div>
+      {% endfor %}
+    {% else %}
+      {% for product in featured_products %}
+        <div class="card-product">
+          <div class="card-img-wrap">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+              <div style="font-size: 3rem;">📦</div>
+            {% endif %}
+            <div class="card-badge">Hot</div>
+          </div>
+          <div class="card-body-custom">
+            <div class="card-category">{{ product.category.name }}</div>
+            <div class="card-title-text">{{ product.name }}</div>
+            <div class="card-price-row">
+              <span class="price-now">${{ product.price }}</span>
+              <div class="actions-group">
+                <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }})">
+                    {% if product.id in global_favorited_ids %}
+                        <i class="bi bi-heart-fill"></i>
+                    {% else %}
+                        <i class="bi bi-heart"></i>
+                    {% endif %}
+                </button>
+                <button type="button" class="btn-cart" onclick="addToCart(event, {{ product.id }})">
+                    <i class="bi bi-bag-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</section>
+
+{% if is_searching %}
+<section class="section-wrap" style="padding-top: 10px; padding-bottom: 80px;">
+  <div class="section-label">
+    <h2>Recommended <span>For You</span></h2>
+  </div>
+  <div class="products-grid">
+    {% for product in recommendations %}
+      <div class="card-product">
+        <div class="card-img-wrap">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+          {% else %}
+            <div style="font-size: 3rem;">📦</div>
+          {% endif %}
+        </div>
+        <div class="card-body-custom">
+          <div class="card-category">{{ product.category.name }}</div>
+          <div class="card-title-text">{{ product.name }}</div>
+          <div class="card-price-row">
+            <span class="price-now">${{ product.price }}</span>
+            <div class="actions-group">
+              <button type="button" class="btn-fav {% if product.id in user_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }})">
+                  {% if product.id in user_favorited_ids %}
+                      <i class="bi bi-heart-fill"></i>
+                  {% else %}
+                      <i class="bi bi-heart"></i>
+                  {% endif %}
+              </button>
+              <button type="button" class="btn-cart" onclick="addToCart(event, {{ product.id }})">
+                  <i class="bi bi-bag-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p style="color: var(--clr-muted); font-size: 0.9rem; grid-column: 1 / -1;">No suggestions available right now.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- JavaScript is now loaded from base.html. No need to duplicate here. -->
+{% endblock %}

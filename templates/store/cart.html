@@ -1,0 +1,96 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}My Cart — FitnessHub{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 60px auto; padding: 0 2rem; font-family: sans-serif; color: #fff;">
+    <h2 style="font-family: var(--font-display); font-size: 2.2rem; margin-bottom: 24px;">Your Shopping <span style="color: #d4af37;">Cart</span></h2>
+
+    {% if cart_items %}
+        
+        <div style="background: var(--clr-card, #121212); border: 1px solid var(--clr-border, rgba(255, 255, 255, 0.05)); padding: 1.5rem; border-radius: var(--radius, 12px); margin-bottom: 2rem;">
+            <form method="GET" action="" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                <div style="flex-grow: 1; min-width: 250px;">
+                    <label style="color: #888; font-size: 0.8rem; text-transform: uppercase; display: block; margin-bottom: 0.5rem;">Have a Promo Code?</label>
+                    <input type="text" name="promo_code" value="{{ promo_code|default:'' }}" placeholder="e.g. FIT-CODEX" style="width: 100%; background: var(--clr-bg, #1a1a1a); border: 1px solid rgba(212, 175, 55, 0.3); padding: 0.75rem; border-radius: 6px; color: #fff; outline: none;">
+                </div>
+                <button type="submit" style="background: transparent; border: 1px solid #d4af37; color: #d4af37; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; margin-top: 1.3rem;">
+                    Apply
+                </button>
+            </form>
+
+            {% if promo_applied %}
+                <p style="color: #2a9d8f; font-size: 0.85rem; margin: 0.75rem 0 0 0; font-weight: bold;">✓ Code applied successfully!</p>
+            {% endif %}
+        </div>
+
+        {% if total_amount <= 20.0 %}
+        <div style="background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; padding: 1.25rem; border-radius: 8px; margin-bottom: 2rem; font-size: 0.9rem; line-height: 1.4;">
+            💡 <strong>Micro-Order Status unlocked!</strong> Your total is under <strong>$20.00</strong>. 
+            <br><span style="color: #d4af37;">Tip: Use code <strong style="letter-spacing: 1px;">FIT-CODEX</strong> to apply a threshold tester clearance markdown!</span>
+        </div>
+        {% endif %}
+
+        <div style="background: var(--clr-card, #121212); border: 1px solid var(--clr-border, rgba(255,255,255,0.05)); border-radius: var(--radius, 12px); padding: 24px; margin-bottom: 30px;">
+
+            {% for item in cart_items %}
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 16px 0; gap: 20px;">
+                <div>
+                    <h4 style="font-size: 1.1rem; color: #fff; margin: 0 0 4px 0;">{{ item.product.name }}</h4>
+                    
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.6rem;">
+                        <span style="color: #888; font-size: 0.9rem;">Price: ${{ item.product.price }}</span>
+                        <span style="color: rgba(255,255,255,0.15);">|</span>
+                        
+                        <a href="{% url 'store:update_cart_quantity' item.id 'remove' %}" style="text-decoration: none; color: #fff; background: rgba(255,255,255,0.06); width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-weight: bold; font-size: 0.9rem;">-</a>
+                        
+                        <span style="color: #fff; font-weight: bold; font-size: 0.95rem; min-width: 18px; text-align: center;">{{ item.quantity }}</span>
+                        
+                        <a href="{% url 'store:update_cart_quantity' item.id 'add' %}" style="text-decoration: none; color: #fff; background: rgba(255,255,255,0.06); width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-weight: bold; font-size: 0.9rem;">+</a>
+                        
+                        <span style="color: rgba(255,255,255,0.15);">|</span>
+                        
+                        <a href="{% url 'store:update_cart_quantity' item.id 'delete' %}" style="text-decoration: none; color: #ef4444; font-size: 0.8rem; text-transform: uppercase; font-weight: 700;">Remove</a>
+                    </div>
+                </div>
+                
+                <div style="font-family: var(--font-display); font-size: 1.2rem; color: #d4af37; font-weight: 600;">
+                    ${{ item.total_price }}
+                </div>
+            </div>
+            {% endfor %}
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <span style="font-size: 1.1rem; color: var(--clr-muted, #888);">Grand Total:</span>
+                <span style="font-family: var(--font-display); font-size: 1.8rem; color: var(--clr-accent, #d4af37); font-weight: 700;">${{ total_amount }}</span>
+            </div>
+        </div>
+
+        <form method="POST" action="{% url 'store:checkout' %}" style="background: var(--clr-card, #121212); border: 1px solid var(--clr-border, rgba(255,255,255,0.05)); border-radius: var(--radius, 12px); padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+            {% csrf_token %}
+            <h3 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--clr-accent, #d4af37); margin: 0;">Shipping Information</h3>
+            
+            <input type="hidden" name="full_name" value="{{ request.user.get_full_name|default:request.user.username }}">
+            <input type="hidden" name="email" value="{{ request.user.email }}">
+            <input type="hidden" name="phone_number" value="Not Provided">
+            <input type="hidden" name="city" value="Online Store Delivery">
+            <input type="hidden" name="postal_code" value="00000">
+
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 0.85rem; color: var(--clr-muted, #888);">Shipping Address Details</label>
+                <textarea name="shipping_address" placeholder="Enter your full home delivery address..." rows="3" style="width: 100%; background: var(--clr-bg, #1a1a1a); border: 1px solid var(--clr-border, rgba(255,255,255,0.1)); border-radius: 6px; padding: 12px; color: white; outline: none; resize: none;" required></textarea>
+            </div>
+
+            <button type="submit" style="background: #d4af37; color: #0d0d0d; border: none; padding: 14px; border-radius: 50px; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; margin-top: 10px; letter-spacing: 0.5px;">
+                Complete Purchase & Place Order
+            </button>
+        </form>
+
+    {% else %}
+        <div style="text-align: center; padding: 60px 0; color: var(--clr-muted, #888);">
+            <p style="font-size: 1.2rem; margin-bottom: 20px;">Your shopping cart is completely empty.</p>
+            <a href="{% url 'store:sale_catalog' %}" style="color: #d4af37; text-decoration: none; font-weight: 600;">Go Back to Storefront →</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -342,14 +342,14 @@
       
 
 
-<a href="{% url 'store:cart' %}" ...>
+<a href="{% url 'store:cart' %}" class="nav-icon-btn position-relative" title="Cart" style="text-decoration: none;">
     <i class="bi bi-bag"></i>
     <span id="cart-count" 
-          class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger"
-          style="font-size: 0.65rem; padding: 3px 6px; border: 1px solid #090909; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;">
+          style="position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; font-size: 0.7rem; font-weight: 700; min-width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #0d0d0d; box-shadow: 0 2px 8px rgba(239,68,68,0.4);">
         {{ cart_count }}
     </span>
 </a>
+
 
 
       {% if user.is_authenticated %}
@@ -623,7 +623,8 @@
   </style>
 
  <script>
-function getCookie(name) {
+
+  function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
@@ -642,6 +643,10 @@ function getCookie(name) {
 function addToCart(event, productId) {
     if (event) event.preventDefault();
 
+    // Prevent multiple clicks
+    const btn = event.currentTarget;
+    if (btn) btn.disabled = true;
+
     fetch(`/store/cart/add/${productId}/`, {
         method: 'POST',
         headers: {
@@ -649,21 +654,27 @@ function addToCart(event, productId) {
             'Content-Type': 'application/json'
         }
     })
-    .then(res => res.json())
+    .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showToast(data.message || 'Added to bag!');
-
             // Update cart count instantly
             const cartBadge = document.getElementById('cart-count');
             if (cartBadge && data.cart_count !== undefined) {
                 cartBadge.textContent = data.cart_count;
             }
+
+            // Show only ONE toast at a time
+            showSingleToast(data.message || 'Added to bag!');
         }
     })
-    .catch(() => showToast('Failed to add to cart', true));
+    .catch(error => {
+        console.error(error);
+        showSingleToast('Failed to add to cart', true);
+    })
+    .finally(() => {
+        if (btn) btn.disabled = false;
+    });
 }
-
 // ==================== TOGGLE FAVORITE (FULLY FIXED) ====================
 function toggleFavorite(event, productId) {
     if (event) event.preventDefault();
@@ -731,6 +742,12 @@ function showToast(message, isError = false) {
         setTimeout(() => toast.remove(), 400);
     }, 2400);
 }
+
+
+
+
+
+
 </script>
   {% block extra_js %}{% endblock %}
 

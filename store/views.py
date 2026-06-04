@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Sum
 # Change lines 5-6 inside store/views.py to exactly this:
 
 import json
@@ -19,6 +20,7 @@ from django.core.validators import validate_email
 # =====================================================================
 # 1. ADD TO CART VIEW (AUTHENTICATED DATABASE HOOKS)
 # =====================================================================
+
 @login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -33,10 +35,15 @@ def add_to_cart(request, product_id):
         cart_item.quantity += 1
         cart_item.save()
     
+    # ✅ FIX: Sum quantities instead of counting rows
+    total_cart_items = CartItem.objects.filter(
+        user=request.user
+    ).aggregate(total=Sum('quantity'))['total'] or 0
+    
     return JsonResponse({
         'success': True,
         'message': f'{product.name} added to your bag!',
-        'cart_count': CartItem.objects.filter(user=request.user).count()
+        'cart_count': total_cart_items
     })
 # =====================================================================
 # 2. CART VIEW & CONTROLS (BALANCED DB + SESSION RECOVERY)

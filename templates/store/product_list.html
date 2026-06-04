@@ -1,0 +1,233 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .catalog-fade-in {
+        animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .product-card-premium {
+        background: #121212;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 20px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                    border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .product-card-premium:hover {
+        transform: translateY(-8px);
+        border-color: rgba(212, 175, 55, 0.4);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(212, 175, 55, 0.05);
+    }
+
+    .image-zoom-container {
+        position: relative;
+        width: 100%;
+        height: 280px;
+        background: #181818;
+        overflow: hidden;
+    }
+
+    .image-zoom-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .product-card-premium:hover .image-zoom-container img {
+        transform: scale(1.06);
+    }
+
+    .btn-shop-luxury {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 0.8rem;
+        letter-spacing: 1.5px;
+        color: #d4af37;
+        background: transparent;
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        padding: 0.9rem 0;
+        border-radius: 10px;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .product-card-premium:hover .btn-shop-luxury {
+        color: #0a0a0a;
+        background: #d4af37;
+        border-color: #d4af37;
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
+    }
+
+    .badge-luxury-tag {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        z-index: 2;
+        background: linear-gradient(135deg, #d4af37 0%, #b3922e 100%);
+        color: #0d0d0d;
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 6px;
+        letter-spacing: 1px;
+    }
+
+    .rec-card-premium {
+        flex: 1 1 220px;
+        max-width: 260px;
+        background: #0f0f0f;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .rec-card-premium:hover {
+        border-color: rgba(212, 175, 55, 0.25);
+        transform: scale(1.03);
+        background: #141414;
+    }
+</style>
+
+<div id="catalog-top" style="background: radial-gradient(circle at top, #161616 0%, #0a0a0a 100%); min-height: 100vh; padding: 5rem 0 8rem 0; font-family: system-ui, -apple-system, sans-serif; color: #fff;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+        
+        <div class="catalog-fade-in" style="text-align: center; margin-bottom: 5rem; animation-delay: 0.1s;">
+            <span style="text-transform: uppercase; font-weight: 800; font-size: 0.8rem; color: #d4af37; letter-spacing: 4px; display: block; margin-bottom: 0.75rem;">
+                FitnessHub Elite Equipment
+            </span>
+            
+            {% if is_search %}
+                <h1 style="font-size: 2.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin: 0; color: #fff;">
+                    Search Results for <span style="color: #d4af37;">"{{ request.GET.search }}"</span>
+                </h1>
+                <a href="{% url 'store:product_list' %}" style="display: inline-block; margin-top: 1rem; color: #a0a0a0; text-decoration: none; font-size: 0.85rem; border-bottom: 1px dashed #555; padding-bottom: 2px; transition: color 0.2s;" onmouseover="this.style.color='#d4af37'" onmouseout="this.style.color='#a0a0a0'">
+                    ← Clear Filters & Return to Full Catalog
+                </a>
+            {% else %}
+                <h1 style="font-size: 2.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin: 0; color: #fff;">
+                    {{ title|default:"Our Full Catalog" }}
+                </h1>
+            {% endif %}
+            
+            <div style="width: 40px; height: 3px; background: #d4af37; margin: 1.5rem auto; border-radius: 2px;"></div>
+        </div>
+
+        <div class="catalog-fade-in" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; animation-delay: 0.2s;">
+            <h3 style="font-size: 1rem; font-weight: 700; text-transform: uppercase; color: #888; letter-spacing: 2px; margin: 0;">
+                Available Products Collection ({{ products|length }})
+            </h3>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2.5rem; margin-bottom: 6rem;">
+            {% for product in products %}
+            <div class="product-card-premium catalog-fade-in" style="animation-delay: calc(0.08s * {{ forloop.index }} + 0.2s);">
+                
+                <div class="image-zoom-container">
+                    {% if product.is_sale or is_sale_page %}
+                        <span class="badge-luxury-tag">Offer</span>
+                    {% elif product.price > 200 %}
+                        <span class="badge-luxury-tag" style="background: #fff; color: #000;">Premium</span>
+                    {% endif %}
+                    
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <div style="width: 100%; height: 100%; background: #1a1a1a; display: flex; align-items: center; justify-content: center; color: #444; font-size: 0.9rem;">No Image Attached</div>
+                    {% endif %}
+                </div>
+
+                <div style="padding: 1.75rem; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; background: linear-gradient(180deg, #121212 0%, #0e0e0e 100%);">
+                    <div style="margin-bottom: 1.5rem;">
+                        <span style="color: #d4af37; text-transform: uppercase; font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; display: block; margin-bottom: 0.5rem;">
+                            {{ product.category.name|default:"Equipment" }}
+                        </span>
+                        <h5 style="color: #fff; font-weight: 700; font-size: 1.25rem; margin: 0; line-height: 1.4; letter-spacing: -0.2px;">
+                            {{ product.name }}
+                        </h5>
+                    </div>
+                    
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.25rem; border-top: 1px solid rgba(255,255,255,0.03); padding-top: 1rem;">
+                            <span style="color: #666; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Price</span>
+                            <span style="font-size: 1.4rem; font-weight: 800; color: #fff;">${{ product.price }}</span>
+                        </div>
+                        <a href="{% url 'store:product_detail' product.id %}" class="btn-shop-luxury">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="catalog-fade-in" style="grid-column: 1 / -1; text-align: center; padding: 6rem 2rem; background: #111; border-radius: 20px; border: 1px dashed rgba(255,255,255,0.06);">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">📦</div>
+                <h3 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.3rem;">No Gear Matches This View</h3>
+                <p style="color: #666; max-width: 400px; margin: 0 auto 1.5rem auto; font-size: 0.95rem; line-height: 1.6;">We couldn't locate items under this filter. Try clearing criteria searches or jump directly to our full catalog.</p>
+                <a href="{% url 'store:product_list' %}" style="color: #0d0d0d; background: #d4af37; font-weight: 700; text-decoration: none; padding: 10px 24px; border-radius: 8px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; display: inline-block;">Reset Catalog View</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if recommendations %}
+        <div class="catalog-fade-in" style="margin-top: 10rem; padding-top: 5rem; border-top: 1px solid rgba(255,255,255,0.04); animation-delay: 0.4s;">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <span style="text-transform: uppercase; font-weight: 700; font-size: 0.75rem; color: #d4af37; letter-spacing: 3px; display: block; margin-bottom: 0.5rem;">
+                    Curated For Your Goals
+                </span>
+                <h3 style="font-size: 1.75rem; font-weight: 800; text-transform: uppercase; color: #fff; letter-spacing: 0.5px; margin: 0;">
+                    🔥 Recommended For You
+                </h3>
+                <div style="width: 30px; height: 2px; background: #d4af37; margin: 1rem auto; border-radius: 1px;"></div>
+            </div>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center;">
+                {% for rec in recommendations %}
+                <div class="rec-card-premium">
+                    <div style="height: 160px; background: #161616; position: relative; overflow: hidden;">
+                        {% if rec.image %}
+                            <img src="{{ rec.image.url }}" alt="{{ rec.name }}" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.85;">
+                        {% endif %}
+                    </div>
+                    <div style="padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; background: #0c0c0c;">
+                        <div style="margin-bottom: 1rem;">
+                            <h6 style="color: #fff; margin: 0 0 0.25rem 0; font-weight: 700; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                {{ rec.name }}
+                            </h6>
+                            <span style="color: #d4af37; font-weight: 700; font-size: 0.9rem;">${{ rec.price }}</span>
+                        </div>
+                        <a href="{% url 'store:product_detail' rec.id %}" style="display: block; text-align: center; text-decoration: none; color: #0d0d0d; background: #d4af37; padding: 0.6rem 0; border-radius: 8px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: background 0.2s;" onmouseover="this.style.background='#fff'" onmouseout="this.style.background='#d4af37'">
+                            View Gear
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

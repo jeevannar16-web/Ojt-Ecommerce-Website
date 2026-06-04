@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Fitness Hub</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h2 {
+            color: #333333;
+            margin-bottom: 24px;
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        p {
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            color: #334155;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        /* Modern Show Password Checkbox Row */
+        .show-password-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .show-password-row input {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        .show-password-row label {
+            margin-bottom: 0;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+        }
+
+        .helptext, ul.helptext {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+            padding-left: 14px;
+            line-height: 1.4;
+        }
+
+        /* Error Text Styling from your screenshot */
+        ul.errorlist, .errorlist li {
+            list-style: none;
+            color: #ef4444;
+            font-size: 13px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        button {
+            width: 100%;
+            background-color: #3b82f6;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2563eb;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .login-link a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <h2>Join the Fitness Hub</h2>
+
+
+    {% if messages %}
+    {% for message in messages %}
+        <div class="errorlist" style="color: #ef4444; font-weight: 600; text-align: center; margin-bottom: 15px;">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+
+    
+    <form method="POST" id="registerForm">
+        {% csrf_token %}
+        {{ form.as_p }}
+        
+        <div class="show-password-row">
+            <input type="checkbox" id="togglePassword">
+            <label for="togglePassword">Show Password</label>
+        </div>
+
+        <button type="submit">Sign Up</button>
+    </form>
+    
+    <div class="login-link">
+        Already have an account? <a href="{% url 'login' %}">Log In</a>
+    </div>
+</div>
+
+<script>
+    // JavaScript to cycle field attributes between 'password' and 'text'
+    document.getElementById('togglePassword').addEventListener('change', function() {
+        const passwordFields = document.querySelectorAll('input[type="password"], input[data-is-password="true"]');
+        
+        passwordFields.forEach(field => {
+            if (this.checked) {
+                field.type = 'text';
+                // Mark it so we can find it again when hiding
+                field.setAttribute('data-is-password', 'true');
+            } else {
+                field.type = 'password';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

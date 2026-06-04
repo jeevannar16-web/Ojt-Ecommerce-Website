@@ -291,26 +291,9 @@
       {% endfor %}
     {% endif %}
   </div>
-
-
-
-
-  
 </section>
 
-
-
-
-
-
-
-
-
-
-
 {% if is_searching %}
-
-
 <section class="section-wrap" style="padding-top: 10px; padding-bottom: 80px;">
   <div class="section-label">
     <h2>Recommended <span>For You</span></h2>
@@ -355,122 +338,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-
-
-// Secure cookie helper function
-
-
-
-
-
-function toggleFavorite(event, productId, isWishlistPage = false) {
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-    if (!productId) return;
-
-    // 1. Locate components inside the document layout
-    const buttons = document.querySelectorAll(`[onclick*="toggleFavorite"][onclick*="${productId}"]`);
-    const badges = document.querySelectorAll('.global-fav-count');
-
-    // 2. Identify active structural state to alter classes
-    let isAdding = true;
-    buttons.forEach(btn => {
-        if (btn.classList.contains('favorited')) {
-            isAdding = false;
-        }
-    });
-
-    if (isWishlistPage) {
-        isAdding = false;
-    }
-
-    // 3. Update heart fills immediately across all product grids
-    buttons.forEach(btn => {
-        const icon = btn.querySelector('i');
-        if (isAdding) {
-            btn.classList.add('favorited');
-            if (icon) icon.className = 'bi bi-heart-fill';
-        } else {
-            btn.classList.remove('favorited');
-            if (icon) icon.className = 'bi bi-heart';
-        }
-    });
-
-    // 4. Update the navbar navigation indicators
-    badges.forEach(badge => {
-        let currentCount = parseInt(badge.textContent.trim()) || 0;
-        badge.textContent = isAdding ? currentCount + 1 : Math.max(0, currentCount - 1);
-    });
-
-    // 5. Drop card container gracefully if unhearted directly inside favorites section tab
-    if (!isAdding && isWishlistPage) {
-        const cardElement = document.getElementById(`wishlist-item-${productId}`);
-        if (cardElement) {
-            cardElement.style.transition = 'all 0.25s ease';
-            cardElement.style.opacity = '0';
-            cardElement.style.transform = 'scale(0.9)';
-            setTimeout(() => { 
-                cardElement.remove();
-                const remainingCards = document.querySelectorAll('[id^="wishlist-item-"]');
-                if (remainingCards.length === 0) {
-                    window.location.reload();
-                }
-            }, 250);
-        }
-    }
-
-    // 6. Connect asynchronously to your existing Django backend endpoint path route
-    fetch(`/store/favorites/toggle/${productId}/`, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': getCookie('csrftoken'),
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => {
-        if (response.status === 401) {
-            window.location.href = '/users/login/';
-            return;
-        }
-        return response.json();
-    })
-    .then(data => {
-        // Adjust elements if backend state varies from optimistic UI update
-        if (data && data.status) {
-            buttons.forEach(btn => {
-                const icon = btn.querySelector('i');
-                if (data.status === 'added') {
-                    btn.classList.add('favorited');
-                    if (icon) icon.className = 'bi bi-heart-fill';
-                } else if (data.status === 'removed') {
-                    btn.classList.remove('favorited');
-                    if (icon) icon.className = 'bi bi-heart';
-                }
-            });
-        }
-    })
-    .catch(error => {
-        console.error('Error handling wishlist toggle:', error);
-        window.location.reload();
-    });
-}
-
-function getCookie(name) {
-    let value = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                value = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return value || "";
-}
-</script>
+<!-- JavaScript is now loaded from base.html. No need to duplicate here. -->
 {% endblock %}

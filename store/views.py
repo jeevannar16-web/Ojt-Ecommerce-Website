@@ -22,20 +22,22 @@ from django.core.validators import validate_email
 @login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-
-    # Fetch or create the individual cart item line directly linked to the user
+    
     cart_item, created = CartItem.objects.get_or_create(
         user=request.user,
         product=product,
         defaults={'quantity': 1}
     )
-
+    
     if not created:
         cart_item.quantity += 1
         cart_item.save()
-
-    return redirect(request.META.get('HTTP_REFERER', 'store:index'))
-
+    
+    return JsonResponse({
+        'success': True,
+        'message': f'{product.name} added to your bag!',
+        'cart_count': CartItem.objects.filter(user=request.user).count()
+    })
 # =====================================================================
 # 2. CART VIEW & CONTROLS (BALANCED DB + SESSION RECOVERY)
 # =====================================================================
@@ -276,26 +278,33 @@ def sale_catalog(request):
 
 # =====================================================================
 # 6. WISHLIST / FAVORITES PROCESSING LOGIC
-# =====================================================================
+
+
+
+@login_required
 def toggle_favorite(request, product_id):
-    """Asynchronously adds or removes an item from favorites"""
-    if not request.user.is_authenticated:
-        return JsonResponse({'success': False, 'message': 'Please log in first.'}, status=401)
-        
-    if request.method == 'POST':
-        product = get_object_or_404(Product, id=product_id)
-        favorite_exists = FavoriteItem.objects.filter(user=request.user, product=product).exists()
-        
-        if favorite_exists:
-            FavoriteItem.objects.filter(user=request.user, product=product).delete()
-            total_favorites = FavoriteItem.objects.filter(user=request.user).count()
-            return JsonResponse({'success': True, 'action': 'removed', 'total_favorites': total_favorites, 'message': 'Removed from favorites!'})
-        else:
-            FavoriteItem.objects.create(user=request.user, product=product)
-            total_favorites = FavoriteItem.objects.filter(user=request.user).count()
-            return JsonResponse({'success': True, 'action': 'added', 'total_favorites': total_favorites, 'message': 'Added to favorites!'})
-            
-    return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=400)
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=400)
+    
+    product = get_object_or_404(Product, id=product_id)
+    favorite = FavoriteItem.objects.filter(user=request.user, product=product)
+    
+    if favorite.exists():
+        favorite.delete()
+        action = 'removed'
+    else:
+        FavoriteItem.objects.create(user=request.user, product=product)
+        action = 'added'
+    
+    total_favorites = FavoriteItem.objects.filter(user=request.user).count()
+    
+    return JsonResponse({
+        'success': True,
+        'action': action,
+        'total_favorites': total_favorites
+    })
+
+
 
 
 @login_required(login_url='/users/login/')

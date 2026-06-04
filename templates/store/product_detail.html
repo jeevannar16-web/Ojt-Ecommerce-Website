@@ -66,26 +66,31 @@
 
                 <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
                     {% if product.stock > 0 %}
-                        <button type="button" class="btn-cart" onclick="addToCart(event, {{ product.id }})" style="background: #d4af37; border: none; color: #0d0d0d; padding: 14px 32px; border-radius: 8px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.25s ease;">
-                            ADD TO BAG
-                        </button>
+                       
                         
-                        <button type="button" id="detail-fav-btn" class="btn-fav" onclick="toggleFavorite(event, {{ product.id }})" 
-                                style="background: {% if is_favorited %}rgba(239, 68, 68, 0.1){% else %}none{% endif %}; 
-                                       border: 1px solid {% if is_favorited %}#ef4444{% else %}rgba(255,255,255,0.2){% endif %}; 
-                                       color: {% if is_favorited %}#ef4444{% else %}#fff{% endif %}; 
-                                       height: 48px; width: 52px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.3rem; cursor: pointer; transition: all 0.25s ease;">
-                            <i id="detail-fav-icon" class="{% if is_favorited %}bi bi-heart-fill{% else %}bi bi-heart{% endif %}"></i>
-                        </button>
-                    {% endif %}
+                        <!-- ADD TO BAG -->
+<button type="button" onclick="addToCart(event, {{ product.id }})" 
+        style="background: #d4af37; color: #0d0d0d; padding: 14px 32px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+    ADD TO BAG
+</button>
+
+<!-- FAVORITE -->
+<button type="button" id="detail-fav-btn" onclick="toggleFavorite(event, {{ product.id }})"
+        style="background: {% if is_favorited %}rgba(239, 68, 68, 0.1){% else %}none{% endif %}; 
+               border: 1px solid {% if is_favorited %}#ef4444{% else %}rgba(255,255,255,0.2){% endif %}; 
+               color: {% if is_favorited %}#ef4444{% else %}#fff{% endif %}; 
+               height: 48px; width: 52px; border-radius: 8px; cursor: pointer;">
+    <i id="detail-fav-icon" class="{% if is_favorited %}bi bi-heart-fill{% else %}bi bi-heart{% endif %}"></i>
+</button>
                     
-                    <a href="{% url 'store:product_list' %}" class="btn-catalog" style="text-decoration: none; padding: 14px 28px; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 8px; font-weight: bold; text-transform: uppercase; font-size: 0.9rem; transition: all 0.25s ease;">
+                    <a href="{% url 'store:product_list' %}" class="btn-catalog" style="text-decoration: none; padding: 14px 28px; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 8px; font-weight: bold; text-transform: uppercase; font-size: 0.9rem;">
                         RETURN TO CATALOG
                     </a>
                 </div>
             </div>
         </div>
 
+        <!-- You May Also Like -->
         <div style="margin-top: 6rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 4rem;">
             <h3 style="font-size: 1.3rem; font-weight: bold; margin-bottom: 2.5rem; text-transform: uppercase; letter-spacing: 1.5px; color: #fff;">
                 You May Also Like
@@ -102,12 +107,10 @@
                     </div>
                     <div style="padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1;">
                         <div style="margin-bottom: 1.25rem;">
-                            <h5 style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.35rem 0; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
-                                {{ rec.name }}
-                            </h5>
+                            <h5 style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.35rem 0;">{{ rec.name }}</h5>
                             <span style="color: #d4af37; font-weight: bold; font-size: 1.05rem;">${{ rec.price }}</span>
                         </div>
-                        <a href="{% url 'store:product_detail' rec.id %}" style="display: block; width: 100%; text-align: center; text-decoration: none; color: #fff; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1); padding: 0.6rem 0; border-radius: 8px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; transition: all 0.2s;">
+                        <a href="{% url 'store:product_detail' rec.id %}" style="display: block; width: 100%; text-align: center; text-decoration: none; color: #fff; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1); padding: 0.6rem 0; border-radius: 8px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">
                             View Item
                         </a>
                     </div>
@@ -126,92 +129,5 @@
 <div style="display: none;">
     {% csrf_token %}
 </div>
-
-<script>
-function toggleFavorite(event, productId) {
-    if (event) event.preventDefault();
-    
-    const favBtn = document.getElementById('detail-fav-btn');
-    const favIcon = document.getElementById('detail-fav-icon');
-    if (!favBtn || !favIcon) return;
-
-    // Fast spring visual scale pop effect
-    favIcon.style.transform = 'scale(1.25)';
-    setTimeout(() => favIcon.style.transform = 'scale(1)', 150);
-
-    // Dynamic endpoint target address mapping configuration
-    const targetUrl = `/store/favorite/toggle/${productId}/`;
-
-    fetch(targetUrl, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => {
-        if (response.status === 401) {
-            alert('Please login first to curate your personal wishlist catalog!');
-            window.location.href = '/users/login/';
-            return;
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data && data.success) {
-            if (data.action === 'added') {
-                // Style Active Favorited State UI
-                favIcon.className = 'bi bi-heart-fill';
-                favBtn.style.color = '#ef4444';
-                favBtn.style.borderColor = '#ef4444';
-                favBtn.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
-            } else {
-                // Style Unfavorited Default State UI
-                navSyncCountBubble(data.total_favorites);
-                favIcon.className = 'bi bi-heart';
-                favBtn.style.color = '#fff';
-                favBtn.style.borderColor = 'rgba(255,255,255,0.2)';
-                favBtn.style.backgroundColor = 'transparent';
-            }
-        }
-    })
-    .catch(error => console.error('Error handling wishlist storage update request:', error));
-}
-
-function addToCart(event, productId) {
-    if (event) event.preventDefault();
-    const targetUrl = `/store/cart/add/${productId}/`;
-    
-    fetch(targetUrl, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => {
-        if (response.status === 401) {
-            window.location.href = '/users/login/';
-            return;
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data && data.success) {
-            alert(data.message || 'Product successfully cataloged into your shopping bag collection!');
-        } else if (data) {
-            alert(data.message || 'Operation could not complete.');
-        }
-    })
-    .catch(error => console.error('Error writing item insertion logs into database:', error));
-}
-
-function navSyncCountBubble(count) {
-    const bubbles = document.querySelectorAll('.global-fav-count');
-    bubbles.forEach(el => {
-        if (count !== undefined) el.textContent = count;
-    });
-}
-</script>
 
 {% endblock %}

@@ -235,14 +235,17 @@
             <div class="card-price-row">
               <span class="price-now">${{ product.price }}</span>
               <div class="actions-group">
-                <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }})">
+
+
+                <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }},this)">
                     {% if product.id in global_favorited_ids %}
                         <i class="bi bi-heart-fill"></i>
                     {% else %}
                         <i class="bi bi-heart"></i>
                     {% endif %}
                 </button>
-                <button type="button" class="btn-cart" onclick="addToCart(event, {{ product.id }})">
+
+                <button type="button" class="btn-cart" onclick="addToCart(event, {{ product.id }},this)">
                     <i class="bi bi-bag-plus"></i>
                 </button>
               </div>
@@ -256,6 +259,7 @@
            <p style="color: var(--clr-muted); font-size: 0.9rem; margin-bottom: 20px;">We couldn't find any items matching your exact search keyword.</p>
            <a href="{% url 'home' %}" style="display: inline-block; color: #0d0d0d; background: var(--clr-accent); padding: 10px 24px; border-radius: 50px; font-weight: 600; text-decoration: none;">Clear Search</a>
         </div>
+
       {% endfor %}
     {% else %}
       {% for product in featured_products %}
@@ -274,7 +278,9 @@
             <div class="card-price-row">
               <span class="price-now">${{ product.price }}</span>
               <div class="actions-group">
-                <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }})">
+
+                <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }} ,this)">
+
                     {% if product.id in global_favorited_ids %}
                         <i class="bi bi-heart-fill"></i>
                     {% else %}
@@ -314,14 +320,19 @@
           <div class="card-price-row">
             <span class="price-now">${{ product.price }}</span>
             <div class="actions-group">
-              <button type="button" class="btn-fav {% if product.id in user_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }})">
+
+
+              
+              <button type="button" class="btn-fav {% if product.id in user_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }},this)">
                   {% if product.id in user_favorited_ids %}
                       <i class="bi bi-heart-fill"></i>
                   {% else %}
                       <i class="bi bi-heart"></i>
                   {% endif %}
               </button>
-              <button type="button" class="btn-cart" onclick="addToCart(event, {{ product.id }})">
+
+
+              <button type="button" class="btn-cart" onclick="addToCart(event, {{ product.id }},this)">
                   <i class="bi bi-bag-plus"></i>
               </button>
             </div>

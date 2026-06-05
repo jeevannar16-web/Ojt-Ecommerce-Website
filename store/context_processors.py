@@ -1,4 +1,6 @@
 from .models import FavoriteItem, CartItem, Product 
+from .models import Category
+from django.db.models import Sum
 
 def cart_and_wishlist_counts(request):
     if request.user.is_authenticated:
@@ -57,4 +59,31 @@ def cart_counter(request):
         
     return {
         'cart_count': cart_count
+    }
+
+
+
+
+
+def global_context(request):
+    global_categories = Category.objects.all()
+
+    cart_count = 0
+    global_favorited_ids = []
+
+    if request.user.is_authenticated:
+        cart_count = CartItem.objects.filter(
+            user=request.user
+        ).aggregate(total=Sum('quantity'))['total'] or 0
+
+        global_favorited_ids = list(
+            FavoriteItem.objects.filter(
+                user=request.user
+            ).values_list('product_id', flat=True)
+        )
+
+    return {
+        'global_categories': global_categories,
+        'cart_count': cart_count,
+        'global_favorited_ids': global_favorited_ids,
     }

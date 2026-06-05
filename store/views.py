@@ -3,28 +3,21 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Sum
-# Change lines 5-6 inside store/views.py to exactly this:
-
 import json
 from django.views.decorators.csrf import csrf_protect
 from .models import Category, Product, CartItem, Order, OrderItem, FavoriteItem, NewsletterSubscriber
- 
-
 from django.db import IntegrityError
-
-
 import re 
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
 # =====================================================================
-# 1. ADD TO CART VIEW (AUTHENTICATED DATABASE HOOKS)
+# 1. ADD TO CART
 # =====================================================================
 @login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
-    # Check stock first
     if product.stock <= 0:
         return JsonResponse({
             'success': False,
@@ -41,11 +34,10 @@ def add_to_cart(request, product_id):
         cart_item.quantity += 1
         cart_item.save()
 
-    # Decrease stock by 1 each click
+    # Decrease stock when added to cart
     product.stock -= 1
     product.save()
 
-   
     total_cart_items = CartItem.objects.filter(
         user=request.user
     ).aggregate(total=Sum('quantity'))['total'] or 0
@@ -56,8 +48,9 @@ def add_to_cart(request, product_id):
         'cart_count': total_cart_items,
         'new_stock': product.stock
     })
+
 # =====================================================================
-# 2. CART VIEW & CONTROLS (BALANCED DB + SESSION RECOVERY)
+# 2. CART VIEW
 # =====================================================================
 def cart_view(request):
     cart_items = []
@@ -72,12 +65,9 @@ def cart_view(request):
                 'product': item.product,
                 'quantity': item.quantity,
                 'total_price': item_total,
-                'id': item.id  
+                'id': item.id
             })
     else:
-        if 'cart' not in request.session:
-            request.session['cart'] = {'1': 6, '2': 6}
-    
         session_cart = request.session.get('cart', {})
         for product_id, quantity in session_cart.items():
             try:
@@ -88,48 +78,50 @@ def cart_view(request):
                     'product': product,
                     'quantity': quantity,
                     'total_price': item_total,
-                    'id': product.id  
+                    'id': product.id
                 })
             except Product.DoesNotExist:
                 continue
 
     promo_code = request.GET.get('promo_code', '').strip().upper()
     promo_applied = False
-    
     if promo_code == "FIT-CODEX":
-        subtotal = float(subtotal) * 0.80  
+        subtotal = float(subtotal) * 0.80
         promo_applied = True
 
     context = {
         'cart_items': cart_items,
-        'grand_total': round(subtotal, 2),  
+        'grand_total': round(subtotal, 2),
         'total_amount': round(subtotal, 2),
         'promo_applied': promo_applied,
         'promo_code': promo_code,
     }
     return render(request, 'store/cart.html', context)
 
+# =====================================================================
+# 3. UPDATE CART QUANTITY — stock restores on remove/delete
+# =====================================================================
 def update_cart_quantity(request, product_id, action):
     if request.user.is_authenticated:
         cart_item = get_object_or_404(CartItem, id=product_id, user=request.user)
-        product = cart_item.product  # ← get the product
+        product = cart_item.product
 
         if action == 'add':
-            if product.stock > 0:  # only add if stock available
+            if product.stock > 0:
                 cart_item.quantity += 1
                 cart_item.save()
                 product.stock -= 1
                 product.save()
         elif action == 'remove':
             cart_item.quantity -= 1
-            product.stock += 1  # ← restore stock
+            product.stock += 1  # restore 1 unit
             product.save()
             if cart_item.quantity <= 0:
                 cart_item.delete()
             else:
                 cart_item.save()
         elif action == 'delete':
-            product.stock += cart_item.quantity  # ← restore ALL quantity
+            product.stock += cart_item.quantity  # restore all units
             product.save()
             cart_item.delete()
     else:
@@ -150,12 +142,12 @@ def update_cart_quantity(request, product_id, action):
     return redirect('store:cart')
 
 # =====================================================================
-# 3. SECURE CHECKOUT & ORDER COMPLETION PROCESSING
+# 4. CHECKOUT — stock already decreased at cart stage, no change needed
 # =====================================================================
 @login_required
 def checkout_view(request):
     db_items = CartItem.objects.filter(user=request.user)
-    
+
     if not db_items.exists():
         messages.error(request, "Your cart is empty! Cannot checkout.")
         return redirect('store:cart')
@@ -178,11 +170,11 @@ def checkout_view(request):
         shipping_address = request.POST.get('shipping_address')
         city = request.POST.get('city')
         postal_code = request.POST.get('postal_code')
-        
+
         if not all([full_name, shipping_address, city, phone_number]):
             messages.error(request, "Please fill out all required shipping and credential inputs.")
             return render(request, 'store/checkout.html', {'cart_items': cart_items, 'total_amount': total_amount})
-            
+
         import uuid
         generated_order_number = uuid.uuid4().hex[:10].upper()
 
@@ -195,7 +187,7 @@ def checkout_view(request):
             total_amount=total_amount,
             status='Pending'
         )
-        
+
         for item in db_items:
             OrderItem.objects.create(
                 order=order,
@@ -203,42 +195,36 @@ def checkout_view(request):
                 price=item.product.price,
                 quantity=item.quantity
             )
-            # ✅ restore stock when order is placed
-            item.product.stock += item.quantity
-            item.product.save()
-            
+            # ✅ NO stock change here — already decreased when added to cart
+
         db_items.delete()
         messages.success(request, f"Thank you! Your fitness order #{order.id} has been placed successfully.")
         return redirect('store:order_history')
-        
+
     return render(request, 'store/checkout.html', {'cart_items': cart_items, 'total_amount': total_amount})
 
-
 # =====================================================================
-# 4. ORDER SEGREGATION TRACKING VIEWS (RECENT AND UPCOMING)
+# 5. ORDER HISTORY
 # =====================================================================
-
 @login_required
 def order_history_view(request):
-    """Sorts and routes active processing vs complete history logs."""
     user_orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    
-    # 🌟 FIX: Delivered/Cancelled go to history; EVERYTHING else defaults to active tracking
     recent_orders = user_orders.filter(status__in=['Delivered', 'Cancelled'])
     upcoming_orders = user_orders.exclude(status__in=['Delivered', 'Cancelled'])
-    
     context = {
         'upcoming_orders': upcoming_orders,
         'recent_orders': recent_orders,
     }
     return render(request, 'store/order_tracking.html', context)
-# 5. PRODUCT DIRECTORY PAGES & DIRECTORIES
+
+# =====================================================================
+# 6. PRODUCT PAGES
 # =====================================================================
 def product_list(request):
     products = Product.objects.all()
     title = "Our Full Catalog"
     is_search = False
-    
+
     category_id = request.GET.get('category')
     if category_id:
         try:
@@ -255,7 +241,6 @@ def product_list(request):
         is_search = True
 
     recommendations = Product.objects.all().order_by('?')[:4]
-    
     context = {
         'products': products,
         'recommendations': recommendations,
@@ -270,15 +255,15 @@ def product_detail(request, product_id):
     recommendations = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
     if not recommendations.exists():
         recommendations = Product.objects.exclude(id=product.id)[:4]
-        
+
     is_favorited = False
     if request.user.is_authenticated:
         is_favorited = FavoriteItem.objects.filter(user=request.user, product=product).exists()
-        
+
     context = {
         'product': product,
         'recommendations': recommendations,
-        'is_favorited': is_favorited  
+        'is_favorited': is_favorited
     }
     return render(request, 'store/product_detail.html', context)
 
@@ -300,36 +285,30 @@ def sale_catalog(request):
     }
     return render(request, 'store/product_list.html', context)
 
-
 # =====================================================================
-# 6. WISHLIST / FAVORITES PROCESSING LOGIC
-
-
-
+# 7. FAVORITES
+# =====================================================================
 @login_required
 def toggle_favorite(request, product_id):
     if request.method != 'POST':
         return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=400)
-    
+
     product = get_object_or_404(Product, id=product_id)
     favorite = FavoriteItem.objects.filter(user=request.user, product=product)
-    
+
     if favorite.exists():
         favorite.delete()
         action = 'removed'
     else:
         FavoriteItem.objects.create(user=request.user, product=product)
         action = 'added'
-    
+
     total_favorites = FavoriteItem.objects.filter(user=request.user).count()
-    
     return JsonResponse({
         'success': True,
         'action': action,
         'total_favorites': total_favorites
     })
-
-
 
 
 @login_required(login_url='/users/login/')
@@ -338,62 +317,20 @@ def favorites_list(request):
         try:
             data = json.loads(request.body)
             product_id = data.get('product_id')
-            
             favorite_item = FavoriteItem.objects.filter(user=request.user, product_id=product_id)
             if favorite_item.exists():
                 favorite_item.delete()
-                
             total_favorites = FavoriteItem.objects.filter(user=request.user).count()
             return JsonResponse({'status': 'deleted', 'total_favorites': total_favorites})
-            
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
-            
+
     favorite_items = FavoriteItem.objects.filter(user=request.user)
     return render(request, 'store/favorites.html', {'favorite_items': favorite_items})
 
-
 # =====================================================================
-# 7. NEWSLETTER SUBSCRIPTION LOGIC
+# 8. CANCEL ORDER — restores stock
 # =====================================================================
-@csrf_protect
-def newsletter_subscribe(request):
-    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        try:
-            data = json.loads(request.body)
-            email = data.get('email', '').strip().lower()
-            
-            if not email:
-                return JsonResponse({'status': 'error', 'message': 'Email address is required.'}, status=400)
-            
-            strict_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-            if not re.match(strict_pattern, email):
-                return JsonResponse({'status': 'error', 'message': 'Please enter a valid email with a standard domain (e.g., @gmail.com).'}, status=200)
-
-            try:
-                validate_email(email)
-            except ValidationError:
-                return JsonResponse({'status': 'error', 'message': 'Invalid email formatting detected.'}, status=200)
-                
-            if NewsletterSubscriber.objects.filter(email=email).exists():
-                return JsonResponse({'status': 'info', 'message': 'You are already a valued VIP insider!'}, status=200)
-                
-            NewsletterSubscriber.objects.create(email=email)
-            return JsonResponse({'status': 'success', 'message': 'Welcome to the inner circle! Access granted.'}, status=201)
-            
-        except IntegrityError:
-            return JsonResponse({'status': 'info', 'message': 'You are already a valued VIP insider!'}, status=200)
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': 'An unexpected processing fault occurred.'}, status=200)
-            
-    return JsonResponse({'status': 'error', 'message': 'Invalid subscription request method.'}, status=400)
-
-
-
-
-
-
-
 @login_required
 def cancel_order(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
@@ -403,7 +340,7 @@ def cancel_order(request, order_id):
         return redirect('store:order_history')
 
     # Restore stock for each item
-    for item in order.items.all():  # ← FIXED
+    for item in order.items.all():
         item.product.stock += item.quantity
         item.product.save()
 
@@ -412,3 +349,38 @@ def cancel_order(request, order_id):
 
     messages.success(request, f"Order #{order.order_number} cancelled. Stock restored.")
     return redirect('store:order_history')
+
+# =====================================================================
+# 9. NEWSLETTER
+# =====================================================================
+@csrf_protect
+def newsletter_subscribe(request):
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        try:
+            data = json.loads(request.body)
+            email = data.get('email', '').strip().lower()
+
+            if not email:
+                return JsonResponse({'status': 'error', 'message': 'Email address is required.'}, status=400)
+
+            strict_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+            if not re.match(strict_pattern, email):
+                return JsonResponse({'status': 'error', 'message': 'Please enter a valid email with a standard domain (e.g., @gmail.com).'}, status=200)
+
+            try:
+                validate_email(email)
+            except ValidationError:
+                return JsonResponse({'status': 'error', 'message': 'Invalid email formatting detected.'}, status=200)
+
+            if NewsletterSubscriber.objects.filter(email=email).exists():
+                return JsonResponse({'status': 'info', 'message': 'You are already a valued VIP insider!'}, status=200)
+
+            NewsletterSubscriber.objects.create(email=email)
+            return JsonResponse({'status': 'success', 'message': 'Welcome to the inner circle! Access granted.'}, status=201)
+
+        except IntegrityError:
+            return JsonResponse({'status': 'info', 'message': 'You are already a valued VIP insider!'}, status=200)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': 'An unexpected processing fault occurred.'}, status=200)
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid subscription request method.'}, status=400)

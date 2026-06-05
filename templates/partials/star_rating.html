@@ -1,0 +1,10 @@
+<div class="star-rating" style="margin-bottom: 6px;">
+  {% for i in "12345" %}
+    {% if forloop.counter <= product.rating %}
+      <i class="bi bi-star-fill" style="color: #e8c97e; font-size: 0.8rem;"></i>
+    {% else %}
+      <i class="bi bi-star" style="color: #555; font-size: 0.8rem;"></i>
+    {% endif %}
+  {% endfor %}
+  <span style="color: var(--clr-muted); font-size: 0.75rem; margin-left: 4px;">({{ product.rating }})</span>
+</div>

@@ -43,6 +43,15 @@
                             <div>
                                 <span class="status-pill status-{{ order.status|lower }}">{{ order.get_status_display }}</span>
                             </div>
+                            {% if order.status == 'Pending' or order.status == 'Processing' %}
+                            <div>
+                                <a href="{% url 'store:cancel_order' order.id %}"
+                                   onclick="return confirm('Cancel this order? Stock will be restored.')"
+                                   style="display: inline-block; padding: 8px 18px; background: rgba(231,76,60,0.1); color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); border-radius: 8px; font-size: 0.78rem; font-weight: 700; text-decoration: none; text-transform: uppercase; letter-spacing: 1px;">
+                                    ✕ Cancel Order
+                                </a>
+                            </div>
+                            {% endif %}
                         </div>
 
                         <div class="items-ordered-section">
@@ -135,9 +144,6 @@
 </div>
 
 <style>
-/* =============================================================
-   💎 PREMIUM MULTI-TRACK DESIGN OVERLAYS
-   ============================================================= */
 .premium-tracking-wrapper {
     position: relative;
     min-height: 90vh;
@@ -148,7 +154,6 @@
     padding: 60px 20px;
     overflow: hidden;
 }
-
 .bg-glow-orb {
     position: absolute;
     width: 600px;
@@ -160,7 +165,6 @@
     filter: blur(80px);
     z-index: 1;
 }
-
 .luxury-grid-matrix {
     position: absolute;
     inset: 0;
@@ -170,17 +174,13 @@
     z-index: 2;
     mask-image: radial-gradient(circle at center, black, transparent 90%);
 }
-
 .tracking-container {
     position: relative;
     z-index: 5;
     width: 100%;
     max-width: 900px;
 }
-
-.dashboard-header {
-    margin-bottom: 25px;
-}
+.dashboard-header { margin-bottom: 25px; }
 .tracking-badge {
     display: inline-block;
     font-size: 0.65rem;
@@ -209,14 +209,12 @@
     font-size: 0.9rem;
     margin: 6px 0 0 0;
 }
-
 .premium-divider {
     border: 0;
     height: 1px;
     background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.06) 75%, rgba(255,255,255,0) 100%);
     margin: 30px 0 40px 0;
 }
-
 .section-title-label {
     font-size: 0.95rem;
     text-transform: uppercase;
@@ -225,7 +223,6 @@
     margin-bottom: 20px;
     padding-left: 5px;
 }
-
 .order-master-card {
     background: rgba(18, 18, 18, 0.6);
     backdrop-filter: blur(20px);
@@ -236,12 +233,10 @@
     margin-bottom: 25px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.4);
 }
-
 .history-archive-card {
     background: rgba(13, 13, 14, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.02);
 }
-
 .order-summary-header {
     display: flex;
     flex-wrap: wrap;
@@ -265,7 +260,6 @@
     font-weight: 600;
 }
 .gold-text { color: #d4af37; }
-
 .status-pill {
     font-size: 0.72rem;
     font-weight: 700;
@@ -278,10 +272,7 @@
 .status-shipped { background: rgba(155, 89, 182, 0.1); color: #9b59b6; }
 .status-delivered { background: rgba(46, 204, 113, 0.1); color: #2ecc71; }
 .status-cancelled { background: rgba(231, 76, 60, 0.1); color: #e74c3c; }
-
-.items-ordered-section {
-    margin: 25px 0 10px 0;
-}
+.items-ordered-section { margin: 25px 0 10px 0; }
 .items-ordered-section h4 {
     font-size: 0.8rem;
     color: #555555;
@@ -313,21 +304,9 @@
     justify-content: center;
     border-radius: 8px;
 }
-.item-details {
-    display: flex;
-    flex-direction: column;
-}
-.item-name {
-    color: #ffffff;
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-.item-meta {
-    color: #666666;
-    font-size: 0.78rem;
-    margin-top: 2px;
-}
-
+.item-details { display: flex; flex-direction: column; }
+.item-name { color: #ffffff; font-size: 0.9rem; font-weight: 600; }
+.item-meta { color: #666666; font-size: 0.78rem; margin-top: 2px; }
 .timeline-tracking-track {
     display: flex;
     justify-content: space-between;
@@ -368,16 +347,12 @@
     color: #444444;
     transition: color 0.3s;
 }
-
 .active-step .step-dot {
     background: #d4af37;
     border-color: #090909;
     box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
 }
-.active-step .step-title {
-    color: #ffffff;
-}
-
+.active-step .step-title { color: #ffffff; }
 .empty-tracking-card {
     text-align: center;
     padding: 50px 30px;

@@ -109,26 +109,32 @@ def cart_view(request):
     }
     return render(request, 'store/cart.html', context)
 
-
 def update_cart_quantity(request, product_id, action):
     if request.user.is_authenticated:
         cart_item = get_object_or_404(CartItem, id=product_id, user=request.user)
-        
+        product = cart_item.product  # ← get the product
+
         if action == 'add':
-            cart_item.quantity += 1
-            cart_item.save()
+            if product.stock > 0:  # only add if stock available
+                cart_item.quantity += 1
+                cart_item.save()
+                product.stock -= 1
+                product.save()
         elif action == 'remove':
             cart_item.quantity -= 1
+            product.stock += 1  # ← restore stock
+            product.save()
             if cart_item.quantity <= 0:
                 cart_item.delete()
             else:
                 cart_item.save()
         elif action == 'delete':
+            product.stock += cart_item.quantity  # ← restore ALL quantity
+            product.save()
             cart_item.delete()
     else:
         cart = request.session.get('cart', {})
         str_id = str(product_id)
-        
         if str_id in cart:
             if action == 'add':
                 cart[str_id] += 1
@@ -138,12 +144,10 @@ def update_cart_quantity(request, product_id, action):
                     del cart[str_id]
             elif action == 'delete':
                 del cart[str_id]
-                
         request.session['cart'] = cart
         request.session.modified = True
-        
-    return redirect('store:cart')
 
+    return redirect('store:cart')
 
 # =====================================================================
 # 3. SECURE CHECKOUT & ORDER COMPLETION PROCESSING
@@ -199,6 +203,9 @@ def checkout_view(request):
                 price=item.product.price,
                 quantity=item.quantity
             )
+            # ✅ restore stock when order is placed
+            item.product.stock += item.quantity
+            item.product.save()
             
         db_items.delete()
         messages.success(request, f"Thank you! Your fitness order #{order.id} has been placed successfully.")
@@ -384,3 +391,24 @@ def newsletter_subscribe(request):
 
 
 
+
+
+
+@login_required
+def cancel_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    if order.status not in ['Pending', 'Processing']:
+        messages.error(request, "This order cannot be cancelled.")
+        return redirect('store:order_history')
+
+    # Restore stock for each item
+    for item in order.items.all():  # ← FIXED
+        item.product.stock += item.quantity
+        item.product.save()
+
+    order.status = 'Cancelled'
+    order.save()
+
+    messages.success(request, f"Order #{order.order_number} cancelled. Stock restored.")
+    return redirect('store:order_history')

@@ -14,8 +14,14 @@ from django.core.validators import validate_email
 # =====================================================================
 # 1. ADD TO CART
 # =====================================================================
-@login_required
 def add_to_cart(request, product_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({
+            'success': False,
+            'requires_login': True,
+            'message': 'Please sign in to add items to your bag.'
+        }, status=401)
+
     product = get_object_or_404(Product, id=product_id)
 
     if product.stock <= 0:

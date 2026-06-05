@@ -105,7 +105,6 @@
   .btn-fav:hover { border-color: rgba(255, 255, 255, 0.3); background: rgba(255,255,255,0.08); }
   .btn-fav:active i { transform: scale(0.8); }
   
-  /* 🔥 Fully Crimson Red Animated Section Wrapper State */
   .btn-fav.favorited {
     background: #ef4444 !important;
     border-color: #ef4444 !important;
@@ -161,32 +160,26 @@
     <h2>Shop by <span>Category</span></h2>
   </div>
   <div class="category-grid">
-
-
-
-
-
-
     {% for category in categories %}
-  <a href="{% url 'store:product_list' %}?category={{ category.id }}" class="cat-card">
+      <a href="{% url 'store:product_list' %}?category={{ category.id }}" class="cat-card">
         <div class="cat-emoji">
-            {% if category.image %}
-                <img src="{{ category.image.url }}" alt="{{ category.name }}" style="width: 24px; height: 24px;">
-            {% else %}
-                ⚡
-            {% endif %}
+          {% if category.image %}
+            <img src="{{ category.image.url }}" alt="{{ category.name }}" style="width: 24px; height: 24px;">
+          {% else %}
+            ⚡
+          {% endif %}
         </div>
         <div class="cat-name">{{ category.name }}</div>
         <div class="cat-count">{{ category.products.count }} Items</div>
-    </a>
+      </a>
     {% empty %}
-        {% for i in "123456"|make_list %}
-            <div class="cat-card" style="opacity: 0.5;">
-                <div class="cat-emoji">🏋️‍♂️</div>
-                <div class="cat-name">Category</div>
-                <div class="cat-count">— Items</div>
-            </div>
-        {% endfor %}
+      {% for i in "123456"|make_list %}
+        <div class="cat-card" style="opacity: 0.5;">
+          <div class="cat-emoji">🏋️‍♂️</div>
+          <div class="cat-name">Category</div>
+          <div class="cat-count">— Items</div>
+        </div>
+      {% endfor %}
     {% endfor %}
   </div>
 </section>
@@ -205,25 +198,16 @@
     <a href="{% url 'store:sale_catalog' %}" class="btn-primary-hero">View All Sale</a>
   </div>
 </section>
-
 {% endif %}
-
-
-
-
 
 <section class="section-wrap" style="{% if is_searching %}padding-top: 40px;{% endif %}">
   <div class="section-label">
     {% if is_searching %}
       <h2>Search Results for <span>"{{ search_query }}"</span></h2>
-
-
       <a href="{% url 'home' %}" style="text-decoration: none; font-size: 0.95rem; font-weight: 600; color: var(--clr-accent); display: inline-flex; align-items: center; gap: 6px;">
-
         <i class="bi bi-arrow-left"></i> Back to Home
       </a>
     {% else %}
-
       <h2>Featured <span>Products</span></h2>
     {% endif %}
   </div>
@@ -231,8 +215,7 @@
   <div class="products-grid">
     {% if is_searching %}
       {% for product in search_results %}
-       <a href="{% url 'store:product_detail' product.id %}" style="text-decoration: none;">
-        <div class="card-product">
+        <div class="card-product" style="cursor: pointer;" onclick="window.location.href='{% url 'store:product_detail' product.id %}'">
           <div class="card-img-wrap">
             {% if product.image %}
               <img src="{{ product.image.url }}" alt="{{ product.name }}">
@@ -243,22 +226,22 @@
           </div>
           <div class="card-body-custom">
             <div class="card-category">{{ product.category.name }}</div>
+            {% include 'partials/star_rating.html' %}
             <div class="card-title-text">{{ product.name }}</div>
             <div class="card-price-row">
               <span class="price-now">${{ product.price }}</span>
               <div class="actions-group">
-
-
-                <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }},this)">
-                    {% if product.id in global_favorited_ids %}
-                        <i class="bi bi-heart-fill"></i>
-                    {% else %}
-                        <i class="bi bi-heart"></i>
-                    {% endif %}
+                <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}"
+                  onclick="event.stopPropagation(); toggleFavorite(event, {{ product.id }}, this)">
+                  {% if product.id in global_favorited_ids %}
+                    <i class="bi bi-heart-fill"></i>
+                  {% else %}
+                    <i class="bi bi-heart"></i>
+                  {% endif %}
                 </button>
-
-                <button type="button" class="btn-cart" onclick="addToCart(event, {{ product.id }},this)">
-                    <i class="bi bi-bag-plus"></i>
+                <button type="button" class="btn-cart"
+                  onclick="event.stopPropagation(); addToCart(event, {{ product.id }}, this)">
+                  <i class="bi bi-bag-plus"></i>
                 </button>
               </div>
             </div>
@@ -266,19 +249,16 @@
         </div>
       {% empty %}
         <div style="grid-column: 1 / -1; text-align: center; padding: 50px 2rem; background: var(--clr-card); border-radius: var(--radius); border: 1px dashed var(--clr-border); margin-bottom: 10px;">
-           <div style="font-size: 3rem; margin-bottom: 12px;">🔍</div>
-           <h4 style="color: var(--clr-text); font-family: var(--font-display); margin-bottom: 6px;">No Exact Matches Found</h4>
-           <p style="color: var(--clr-muted); font-size: 0.9rem; margin-bottom: 20px;">We couldn't find any items matching your exact search keyword.</p>
-           <a href="{% url 'home' %}" style="display: inline-block; color: #0d0d0d; background: var(--clr-accent); padding: 10px 24px; border-radius: 50px; font-weight: 600; text-decoration: none;">Clear Search</a>
+          <div style="font-size: 3rem; margin-bottom: 12px;">🔍</div>
+          <h4 style="color: var(--clr-text); font-family: var(--font-display); margin-bottom: 6px;">No Exact Matches Found</h4>
+          <p style="color: var(--clr-muted); font-size: 0.9rem; margin-bottom: 20px;">We couldn't find any items matching your exact search keyword.</p>
+          <a href="{% url 'home' %}" style="display: inline-block; color: #0d0d0d; background: var(--clr-accent); padding: 10px 24px; border-radius: 50px; font-weight: 600; text-decoration: none;">Clear Search</a>
         </div>
-        </a"
-
       {% endfor %}
-    {% else %}
 
+    {% else %}
       {% for product in featured_products %}
-      <a href="{% url 'store:product_detail' product.id %}" style="text-decoration: none;">
-        <div class="card-product">
+        <div class="card-product" style="cursor: pointer;" onclick="window.location.href='{% url 'store:product_detail' product.id %}'">
           <div class="card-img-wrap">
             {% if product.image %}
               <img src="{{ product.image.url }}" alt="{{ product.name }}">
@@ -289,27 +269,27 @@
           </div>
           <div class="card-body-custom">
             <div class="card-category">{{ product.category.name }}</div>
+            {% include 'partials/star_rating.html' %}
             <div class="card-title-text">{{ product.name }}</div>
             <div class="card-price-row">
               <span class="price-now">${{ product.price }}</span>
               <div class="actions-group">
-
-                <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }} ,this)">
-
-                    {% if product.id in global_favorited_ids %}
-                        <i class="bi bi-heart-fill"></i>
-                    {% else %}
-                        <i class="bi bi-heart"></i>
-                    {% endif %}
+                <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}"
+                  onclick="event.stopPropagation(); toggleFavorite(event, {{ product.id }}, this)">
+                  {% if product.id in global_favorited_ids %}
+                    <i class="bi bi-heart-fill"></i>
+                  {% else %}
+                    <i class="bi bi-heart"></i>
+                  {% endif %}
                 </button>
-                <button type="button" class="btn-cart" onclick="addToCart(event, {{ product.id }})">
-                    <i class="bi bi-bag-plus"></i>
+                <button type="button" class="btn-cart"
+                  onclick="event.stopPropagation(); addToCart(event, {{ product.id }}, this)">
+                  <i class="bi bi-bag-plus"></i>
                 </button>
               </div>
             </div>
           </div>
         </div>
-      </a>
       {% endfor %}
     {% endif %}
   </div>
@@ -321,9 +301,8 @@
     <h2>Recommended <span>For You</span></h2>
   </div>
   <div class="products-grid">
-
     {% for product in recommendations %}
-      <div class="card-product">
+      <div class="card-product" style="cursor: pointer;" onclick="window.location.href='{% url 'store:product_detail' product.id %}'">
         <div class="card-img-wrap">
           {% if product.image %}
             <img src="{{ product.image.url }}" alt="{{ product.name }}">
@@ -333,21 +312,22 @@
         </div>
         <div class="card-body-custom">
           <div class="card-category">{{ product.category.name }}</div>
+          {% include 'partials/star_rating.html' %}
           <div class="card-title-text">{{ product.name }}</div>
           <div class="card-price-row">
             <span class="price-now">${{ product.price }}</span>
             <div class="actions-group">
-
-
-              <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }},this)">
-    {% if product.id in global_favorited_ids %}
-        <i class="bi bi-heart-fill"></i>
-    {% else %}
-        <i class="bi bi-heart"></i>
-    {% endif %}
-</button>
-              <button type="button" class="btn-cart" onclick="addToCart(event, {{ product.id }},this)">
-                  <i class="bi bi-bag-plus"></i>
+              <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}"
+                onclick="event.stopPropagation(); toggleFavorite(event, {{ product.id }}, this)">
+                {% if product.id in global_favorited_ids %}
+                  <i class="bi bi-heart-fill"></i>
+                {% else %}
+                  <i class="bi bi-heart"></i>
+                {% endif %}
+              </button>
+              <button type="button" class="btn-cart"
+                onclick="event.stopPropagation(); addToCart(event, {{ product.id }}, this)">
+                <i class="bi bi-bag-plus"></i>
               </button>
             </div>
           </div>
@@ -364,7 +344,6 @@
 
 {% block extra_js %}
 <script>
-
 function startCountdown() {
     let endTime = localStorage.getItem('saleEndTime');
     if (!endTime || Date.now() > parseInt(endTime)) {
@@ -388,5 +367,4 @@ function startCountdown() {
 }
 startCountdown();
 </script>
-
 {% endblock %}

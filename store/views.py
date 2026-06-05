@@ -20,30 +20,41 @@ from django.core.validators import validate_email
 # =====================================================================
 # 1. ADD TO CART VIEW (AUTHENTICATED DATABASE HOOKS)
 # =====================================================================
-
 @login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    
+
+    # Check stock first
+    if product.stock <= 0:
+        return JsonResponse({
+            'success': False,
+            'message': 'This item is out of stock!'
+        })
+
     cart_item, created = CartItem.objects.get_or_create(
         user=request.user,
         product=product,
         defaults={'quantity': 1}
     )
-    
+
     if not created:
         cart_item.quantity += 1
         cart_item.save()
-    
-    # ✅ FIX: Sum quantities instead of counting rows
+
+    # Decrease stock by 1 each click
+    product.stock -= 1
+    product.save()
+
+   
     total_cart_items = CartItem.objects.filter(
         user=request.user
     ).aggregate(total=Sum('quantity'))['total'] or 0
-    
+
     return JsonResponse({
         'success': True,
         'message': f'{product.name} added to your bag!',
-        'cart_count': total_cart_items
+        'cart_count': total_cart_items,
+        'new_stock': product.stock
     })
 # =====================================================================
 # 2. CART VIEW & CONTROLS (BALANCED DB + SESSION RECOVERY)

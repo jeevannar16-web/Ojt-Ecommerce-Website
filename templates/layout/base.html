@@ -663,6 +663,7 @@ function showSingleToast(message, isError = false) {
 }
 
 // ==================== ADD TO CART ====================
+// ==================== ADD TO CART ====================
 function addToCart(event, productId) {
     if (event) event.preventDefault();
 
@@ -676,8 +677,15 @@ function addToCart(event, productId) {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        if (response.status === 401) {
+            window.location.href = '{% url "register" %}';
+            return null;
+        }
+        return response.json();
+    })
     .then(data => {
+        if (!data) return;
         if (data.success) {
             const cartBadge = document.getElementById('cart-count');
             if (cartBadge && data.cart_count !== undefined) {
@@ -720,7 +728,6 @@ function addToCart(event, productId) {
         }
     });
 }
-
 // ==================== TOGGLE FAVORITE ====================
 function toggleFavorite(event, productId, btn) {
     if (event) event.preventDefault();

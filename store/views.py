@@ -10,6 +10,10 @@ from django.db import IntegrityError
 import re 
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+from django.db.models import Avg
+
+from .models import Review
+
 
 # =====================================================================
 # 1. ADD TO CART
@@ -255,24 +259,63 @@ def product_list(request):
     }
     return render(request, 'store/product_list.html', context)
 
-
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    recommendations = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
+    recommendations = Product.objects.filter(
+        category=product.category
+    ).exclude(id=product.id)[:4]
+    
     if not recommendations.exists():
         recommendations = Product.objects.exclude(id=product.id)[:4]
 
     is_favorited = False
+    user_review = None
+    has_purchased = False
+
     if request.user.is_authenticated:
-        is_favorited = FavoriteItem.objects.filter(user=request.user, product=product).exists()
+        is_favorited = FavoriteItem.objects.filter(
+            user=request.user, 
+            product=product
+        ).exists()
+        
+        user_review = Review.objects.filter(
+            user=request.user, 
+            product=product
+        ).first()
+        
+        has_purchased = OrderItem.objects.filter(
+            order__user=request.user,
+            order__status='Delivered',
+            product=product
+        ).exists()
+
+    reviews = Review.objects.filter(
+        product=product
+    ).select_related('user').order_by('-created_at')
+    
+    total_reviews = reviews.count()
+
+    # calculate rating breakdown (for progress bars)
+    rating_breakdown = {}
+    for i in range(1, 6):
+        count = reviews.filter(rating=i).count()
+        percentage = round((count / total_reviews) * 100) if total_reviews > 0 else 0
+        rating_breakdown[i] = {
+            'count': count,
+            'percentage': percentage
+        }
 
     context = {
         'product': product,
         'recommendations': recommendations,
-        'is_favorited': is_favorited
+        'is_favorited': is_favorited,
+        'reviews': reviews,
+        'total_reviews': total_reviews,
+        'user_review': user_review,
+        'has_purchased': has_purchased,
+        'rating_breakdown': rating_breakdown,
     }
     return render(request, 'store/product_detail.html', context)
-
 
 def sale_catalog(request):
     try:
@@ -390,3 +433,64 @@ def newsletter_subscribe(request):
             return JsonResponse({'status': 'error', 'message': 'An unexpected processing fault occurred.'}, status=200)
 
     return JsonResponse({'status': 'error', 'message': 'Invalid subscription request method.'}, status=400)
+
+
+@login_required
+def submit_review(request, product_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False}, status=400)
+
+    product = get_object_or_404(Product, id=product_id)
+
+    has_purchased = OrderItem.objects.filter(
+        order__user=request.user,
+        order__status='Delivered',
+        product=product
+    ).exists()
+
+    if not has_purchased:
+        return JsonResponse({
+            'success': False,
+            'message': 'You can only review products from delivered orders.'
+        })
+
+    data = json.loads(request.body)
+    rating = int(data.get('rating', 0))
+    comment = data.get('comment', '').strip()
+
+    if not 1 <= rating <= 5:
+        return JsonResponse({'success': False, 'message': 'Invalid rating.'})
+
+
+    from .models import Review
+  
+
+    review, created = Review.objects.update_or_create(
+        user=request.user,
+        product=product,
+        defaults={'rating': rating, 'comment': comment}
+    )
+
+    avg = Review.objects.filter(product=product).aggregate(Avg('rating'))['rating__avg']
+    product.rating = round(avg, 1)
+    product.save()
+
+    total_reviews = Review.objects.filter(product=product).count()
+
+    return JsonResponse({
+        'success': True,
+        'message': 'Review submitted successfully!',
+        'new_rating': float(product.rating),
+        'total_reviews': total_reviews,
+        'created': created
+    })
+
+
+
+
+
+
+
+
+
+

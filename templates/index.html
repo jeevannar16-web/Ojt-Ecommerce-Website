@@ -231,6 +231,7 @@
   <div class="products-grid">
     {% if is_searching %}
       {% for product in search_results %}
+       <a href="{% url 'store:product_detail' product.id %}" style="text-decoration: none;">
         <div class="card-product">
           <div class="card-img-wrap">
             {% if product.image %}
@@ -270,11 +271,13 @@
            <p style="color: var(--clr-muted); font-size: 0.9rem; margin-bottom: 20px;">We couldn't find any items matching your exact search keyword.</p>
            <a href="{% url 'home' %}" style="display: inline-block; color: #0d0d0d; background: var(--clr-accent); padding: 10px 24px; border-radius: 50px; font-weight: 600; text-decoration: none;">Clear Search</a>
         </div>
+        </a"
 
       {% endfor %}
     {% else %}
 
       {% for product in featured_products %}
+      <a href="{% url 'store:product_detail' product.id %}" style="text-decoration: none;">
         <div class="card-product">
           <div class="card-img-wrap">
             {% if product.image %}
@@ -306,6 +309,7 @@
             </div>
           </div>
         </div>
+      </a>
       {% endfor %}
     {% endif %}
   </div>

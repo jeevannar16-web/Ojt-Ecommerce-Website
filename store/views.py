@@ -388,21 +388,29 @@ def product_detail(request, product_id):
     }
     return render(request, 'store/product_detail.html', context)
 def sale_catalog(request):
-    try:
-        products = Product.objects.filter(is_sale=True)
-        if not products.exists():
-            products = Product.objects.all()
-    except Exception:
-        products = Product.objects.all()
+    # Fetch existing filter/sort items if they exist in GET parameters
+    price_min = request.GET.get('price_min', '')
+    price_max = request.GET.get('price_max', '')
+    active_sort = request.GET.get('sort', '')
 
-    recommendations = Product.objects.all().order_by('?')[:4]
+    # ... Your existing query filters logic goes here ...
+    products = Product.objects.filter(is_sale=True)
+    recommendations = Product.objects.filter(is_featured=True)[:4]
+
     context = {
         'products': products,
         'recommendations': recommendations,
         'title': 'Flash Sale Collection',
-        'is_sale_page': True
+        'is_sale_page': True,
+        
+        # ADD THESE TO YOUR CONTEXT BLOCK:
+        'price_min': price_min,
+        'price_max': price_max,
+        'active_sort': active_sort,
     }
     return render(request, 'store/product_list.html', context)
+
+
 
 # =====================================================================
 # 7. FAVORITES

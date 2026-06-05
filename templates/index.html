@@ -161,8 +161,14 @@
     <h2>Shop by <span>Category</span></h2>
   </div>
   <div class="category-grid">
+
+
+
+
+
+
     {% for category in categories %}
-    <a href="{% url 'home' %}?category={{ category.id }}" class="cat-card">
+  <a href="{% url 'store:product_list' %}?category={{ category.id }}" class="cat-card">
         <div class="cat-emoji">
             {% if category.image %}
                 <img src="{{ category.image.url }}" alt="{{ category.name }}" style="width: 24px; height: 24px;">
@@ -210,10 +216,14 @@
   <div class="section-label">
     {% if is_searching %}
       <h2>Search Results for <span>"{{ search_query }}"</span></h2>
+
+
       <a href="{% url 'home' %}" style="text-decoration: none; font-size: 0.95rem; font-weight: 600; color: var(--clr-accent); display: inline-flex; align-items: center; gap: 6px;">
+
         <i class="bi bi-arrow-left"></i> Back to Home
       </a>
     {% else %}
+
       <h2>Featured <span>Products</span></h2>
     {% endif %}
   </div>
@@ -307,6 +317,7 @@
     <h2>Recommended <span>For You</span></h2>
   </div>
   <div class="products-grid">
+
     {% for product in recommendations %}
       <div class="card-product">
         <div class="card-img-wrap">
@@ -324,16 +335,13 @@
             <div class="actions-group">
 
 
-              
-              <button type="button" class="btn-fav {% if product.id in user_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }},this)">
-                  {% if product.id in user_favorited_ids %}
-                      <i class="bi bi-heart-fill"></i>
-                  {% else %}
-                      <i class="bi bi-heart"></i>
-                  {% endif %}
-              </button>
-
-
+              <button type="button" class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}" onclick="toggleFavorite(event, {{ product.id }},this)">
+    {% if product.id in global_favorited_ids %}
+        <i class="bi bi-heart-fill"></i>
+    {% else %}
+        <i class="bi bi-heart"></i>
+    {% endif %}
+</button>
               <button type="button" class="btn-cart" onclick="addToCart(event, {{ product.id }},this)">
                   <i class="bi bi-bag-plus"></i>
               </button>
@@ -351,5 +359,30 @@
 {% endblock %}
 
 {% block extra_js %}
-<!-- JavaScript is now loaded from base.html. No need to duplicate here. -->
+<script>
+
+function startCountdown() {
+    let endTime = localStorage.getItem('saleEndTime');
+    if (!endTime || Date.now() > parseInt(endTime)) {
+        endTime = Date.now() + 24 * 60 * 60 * 1000;
+        localStorage.setItem('saleEndTime', endTime);
+    }
+
+    setInterval(() => {
+        const diff = parseInt(endTime) - Date.now();
+        if (diff <= 0) {
+            endTime = Date.now() + 24 * 60 * 60 * 1000;
+            localStorage.setItem('saleEndTime', endTime);
+        }
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        document.getElementById('c-h').textContent = String(h).padStart(2, '0');
+        document.getElementById('c-m').textContent = String(m).padStart(2, '0');
+        document.getElementById('c-s').textContent = String(s).padStart(2, '0');
+    }, 1000);
+}
+startCountdown();
+</script>
+
 {% endblock %}

@@ -624,7 +624,7 @@
 
  <script>
 
-  function getCookie(name) {
+ function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
@@ -639,11 +639,33 @@
     return cookieValue;
 }
 
+// ==================== TOAST ====================
+function showToast(message, isError = false) {
+    const container = document.getElementById('single-toast-container');
+    if (!container) return alert(message);
+
+    const toast = document.createElement('div');
+    toast.className = `custom-animated-toast theme-${isError ? 'warning' : 'success'}`;
+    toast.innerHTML = `<span>${message}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => toast.classList.add('reveal-slide'), 10);
+    setTimeout(() => {
+        toast.style.transition = 'all 0.4s ease';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 400);
+    }, 2400);
+}
+
+// alias so both names work
+function showSingleToast(message, isError = false) {
+    showToast(message, isError);
+}
+
 // ==================== ADD TO CART ====================
 function addToCart(event, productId) {
     if (event) event.preventDefault();
 
-    // Prevent multiple clicks
     const btn = event.currentTarget;
     if (btn) btn.disabled = true;
 
@@ -657,25 +679,41 @@ function addToCart(event, productId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Update cart count instantly
             const cartBadge = document.getElementById('cart-count');
             if (cartBadge && data.cart_count !== undefined) {
                 cartBadge.textContent = data.cart_count;
             }
 
-            // Show only ONE toast at a time
-            showSingleToast(data.message || 'Added to bag!');
+            const stockEl = document.getElementById('stock-count');
+            if (stockEl && data.new_stock !== undefined) {
+                stockEl.textContent = data.new_stock;
+
+                if (data.new_stock <= 0) {
+                    btn.disabled = true;
+                    btn.textContent = 'Out of Stock';
+                    btn.style.background = '#444';
+                    btn.style.cursor = 'not-allowed';
+                    return;
+                }
+            }
+
+            showToast(data.message || 'Added to bag!');
+        } else {
+            showToast(data.message || 'Cannot add more!', true);
         }
     })
     .catch(error => {
         console.error(error);
-        showSingleToast('Failed to add to cart', true);
+        showToast('Failed to add to cart', true);
     })
     .finally(() => {
-        if (btn) btn.disabled = false;
+        if (btn && !btn.textContent.includes('Out of Stock')) {
+            btn.disabled = false;
+        }
     });
 }
-// ==================== TOGGLE FAVORITE (FULLY FIXED) ====================
+
+// ==================== TOGGLE FAVORITE ====================
 function toggleFavorite(event, productId, btn) {
     if (event) event.preventDefault();
     if (!productId || !btn) return;
@@ -684,12 +722,10 @@ function toggleFavorite(event, productId, btn) {
     const span = btn.querySelector('span');
     const isCurrentlyFavorited = btn.classList.contains('favorited');
 
-    // Trigger pop animation
     btn.classList.remove('pop');
-    void btn.offsetWidth; // reflow to restart animation
+    void btn.offsetWidth;
     btn.classList.add('pop');
 
-    // Floating heart particle (only when adding)
     if (!isCurrentlyFavorited) {
         const particle = document.createElement('span');
         particle.className = 'heart-particle';
@@ -703,7 +739,6 @@ function toggleFavorite(event, productId, btn) {
         btn.classList.remove('favorited');
         if (icon) icon.className = 'bi bi-heart';
         if (span) span.textContent = 'Wishlist';
-        // For non-detail buttons
         btn.style.background = '';
         btn.style.border = '';
         btn.style.color = '';
@@ -734,28 +769,6 @@ function toggleFavorite(event, productId, btn) {
     })
     .catch(err => console.error(err));
 }
-
-// Toast notification
-function showToast(message, isError = false) {
-    const container = document.getElementById('single-toast-container');
-    if (!container) return alert(message);
-
-    const toast = document.createElement('div');
-    toast.className = `custom-animated-toast theme-${isError ? 'warning' : 'success'}`;
-    toast.innerHTML = `<span>${message}</span>`;
-    container.appendChild(toast);
-
-    setTimeout(() => toast.classList.add('reveal-slide'), 10);
-    setTimeout(() => {
-        toast.style.transition = 'all 0.4s ease';
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 400);
-    }, 2400);
-}
-
-
-
-
 
 
 </script>

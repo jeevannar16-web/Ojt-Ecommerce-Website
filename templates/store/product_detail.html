@@ -52,15 +52,19 @@
                 <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 12px; display: inline-block; min-width: 280px; margin-bottom: 2.5rem;">
                     <span style="color: #888; font-size: 0.75rem; display: block; margin-bottom: 0.25rem; text-transform: uppercase;">Availability Status</span>
                     {% if product.stock > 0 %}
-                        <span style="color: #2ec4b6; font-weight: bold; display: flex; align-items: center;">
-                            <span style="width: 8px; height: 8px; background: #2ec4b6; border-radius: 50%; display: inline-block; margin-right: 8px;"></span>
-                            In Stock ({{ product.stock }} units ready)
-                        </span>
+
+                        <!-- FIND your stock display and add id="stock-count" -->
+<span style="color: #2ec4b6; font-weight: bold; display: flex; align-items: center;">
+    <span style="width: 8px; height: 8px; background: #2ec4b6; border-radius: 50%; display: inline-block; margin-right: 8px;"></span>
+    In Stock (<span id="stock-count">{{ product.stock }}</span> units ready)
+</span>
                     {% else %}
+
                         <span style="color: #e63946; font-weight: bold; display: flex; align-items: center;">
                             <span style="width: 8px; height: 8px; background: #e63946; border-radius: 50%; display: inline-block; margin-right: 8px;"></span>
                             Out of Stock
                         </span>
+                        
                     {% endif %}
                 </div>
 

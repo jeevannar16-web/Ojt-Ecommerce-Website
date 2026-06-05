@@ -27,6 +27,14 @@ class Product(models.Model):
     is_sale = models.BooleanField(default=False)
     rating = models.DecimalField(max_digits=3, decimal_places=1, default=0.0,
         validators=[MinValueValidator(0.0), MaxValueValidator(5.0)])
+    
+    # INDENTATION FIXED: This is now correctly inside the Product class
+    size = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Comma-separated sizes, e.g. S,M,L,XL or 5kg,10kg,20kg"
+    )
 
     def __str__(self):
         return self.name
@@ -93,6 +101,7 @@ class FavoriteItem(models.Model):
     def __str__(self):
         return f"{self.user.username} favorited {self.product.name}"
     
+
 
 # 6. NEWSLETTER MODEL
 class NewsletterSubscriber(models.Model):

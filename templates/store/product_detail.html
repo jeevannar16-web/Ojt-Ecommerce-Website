@@ -1,4 +1,6 @@
+
 {% extends 'layout/base.html' %}
+{% load store_extras %}
 {% block content %}
 
 <style>
@@ -351,26 +353,91 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
-                    {% if product.stock > 0 %}
-                        <button type="button" class="btn-add-bag" onclick="addToCart(event, {{ product.id }})">
-                            ADD TO BAG
-                        </button>
-                        <button type="button"
-                                onclick="toggleFavorite(event, {{ product.id }}, this)"
-                                class="detail-fav-btn {% if is_favorited %}favorited{% endif %}">
-                            <i class="{% if is_favorited %}bi bi-heart-fill{% else %}bi bi-heart{% endif %}"></i>
-                            <span>{% if is_favorited %}Wishlisted{% else %}Wishlist{% endif %}</span>
-                        </button>
-                    {% endif %}
-                    <a href="{% url 'store:product_list' %}"
-                       class="btn-catalog"
-                       style="text-decoration: none; padding: 14px 28px; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 8px; font-weight: bold; text-transform: uppercase; font-size: 0.9rem;">
-                        RETURN TO CATALOG
-                    </a>
-                </div>
+
+               <!-- Action Buttons -->
+<div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center;">
+    {% if product.stock > 0 %}
+
+        {% if product.size %}
+        <!-- Size selector -->
+        <div style="width:100%; margin-bottom:0.5rem;">
+            <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:#888; margin-bottom:0.75rem;">
+                Select Size
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;" id="size-selector">
+
+                {% for raw_sz in product.size|split:"," %}
+    {# 2. Use a unique variable name inside the 'with' block to avoid overriding conflict #}
+    {% with sz=raw_sz|trim %}
+    <button type="button"
+            onclick="selectSize(this, '{{ sz }}')"
+            class="size-btn"
+            style="padding:8px 18px; border-radius:8px;
+                   border:1px solid rgba(255,255,255,0.12);
+                   background:transparent; color:#aaa;
+                   font-size:0.82rem; font-weight:600;
+                   cursor:pointer; transition:all 0.2s;
+                   font-family:inherit;">
+        {{ sz }}
+    </button>
+    {% endwith %}
+{% endfor %}
+            </div>
+            <div id="size-error" style="color:#e63946; font-size:0.78rem; margin-top:6px; display:none;">
+                Please select a size before adding to bag.
             </div>
         </div>
+        <input type="hidden" id="selected-size" value="">
+        {% endif %}
+
+        <button type="button" class="btn-add-bag" onclick="addToCartWithSize(event, {{ product.id }})">
+            ADD TO BAG
+        </button>
+        <button type="button"
+                onclick="toggleFavorite(event, {{ product.id }}, this)"
+                class="detail-fav-btn {% if is_favorited %}favorited{% endif %}">
+            <i class="{% if is_favorited %}bi bi-heart-fill{% else %}bi bi-heart{% endif %}"></i>
+            <span>{% if is_favorited %}Wishlisted{% else %}Wishlist{% endif %}</span>
+        </button>
+    {% endif %}
+    <a href="{% url 'store:product_list' %}"
+       class="btn-catalog"
+       style="text-decoration:none; padding:14px 28px; border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:8px; font-weight:bold; text-transform:uppercase; font-size:0.9rem;">
+        RETURN TO CATALOG
+    </a>
+</div>
+
+<style>
+.size-btn:hover {
+    border-color: rgba(212,175,55,0.5) !important;
+    color: #d4af37 !important;
+    background: rgba(212,175,55,0.06) !important;
+}
+.size-btn.selected {
+    border-color: #d4af37 !important;
+    background: #d4af37 !important;
+    color: #0d0d0d !important;
+}
+</style>
+
+<script>
+function selectSize(btn, size) {
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    document.getElementById('selected-size').value = size;
+    document.getElementById('size-error') && (document.getElementById('size-error').style.display = 'none');
+}
+
+function addToCartWithSize(event, productId) {
+    const sizeInput = document.getElementById('selected-size');
+    const hasSizes = document.getElementById('size-selector');
+    if (hasSizes && sizeInput && !sizeInput.value) {
+        document.getElementById('size-error').style.display = 'block';
+        return;
+    }
+    addToCart(event, productId);
+}
+</script>
 
         <!-- ─── Reviews Section ─── -->
         <div class="review-section">

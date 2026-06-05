@@ -14,6 +14,9 @@ from django.db.models import Avg
 
 from .models import Review
 
+from django.db.models import Count
+
+
 
 # =====================================================================
 # 1. ADD TO CART
@@ -239,8 +242,9 @@ def product_list(request):
     if category_id:
         try:
             products = products.filter(category_id=int(category_id))
-            if products.exists():
-                title = f"Elite {products.first().category.name} Collection"
+            cat = Category.objects.filter(id=int(category_id)).first()
+            if cat:
+                title = f"Elite {cat.name} Collection"
         except (ValueError, TypeError):
             pass
 
@@ -250,14 +254,69 @@ def product_list(request):
         title = f'Search Results for "{search_query}"'
         is_search = True
 
+    price_min = request.GET.get('price_min', '').strip()
+    price_max = request.GET.get('price_max', '').strip()
+    if price_min:
+        try:
+            products = products.filter(price__gte=float(price_min))
+        except ValueError:
+            pass
+    if price_max:
+        try:
+            products = products.filter(price__lte=float(price_max))
+        except ValueError:
+            pass
+
+    selected_types = request.GET.getlist('type')
+    if selected_types:
+        products = products.filter(category__name__in=selected_types)
+
+    only_available = request.GET.get('available') == '1'
+    if only_available:
+        products = products.filter(stock__gt=0)
+
+    goal = request.GET.get('goal', '').strip()
+    GOAL_MAP = {
+        'muscle': ['Dumbbells', 'Barbells', 'Weight Plates', 'Kettlebells'],
+        'home':   ['Resistance Bands', 'Pull-Up Bars', 'Yoga Mats'],
+        'loss':   ['Cardio', 'Resistance Bands', 'Jump Ropes'],
+        'cardio': ['Cardio', 'Treadmills', 'Rowing Machines'],
+    }
+    if goal and goal in GOAL_MAP:
+        products = products.filter(category__name__in=GOAL_MAP[goal])
+
+    # ── Sorting ──
+    sort = request.GET.get('sort', '')
+    SORT_MAP = {
+        'price_asc':   'price',
+        'price_desc':  '-price',
+        'rating_desc': '-rating',
+        'name_asc':    'name',
+        'newest':      '-id',
+    }
+    if sort in SORT_MAP:
+        products = products.order_by(SORT_MAP[sort])
+
+    all_categories = Category.objects.filter(products__isnull=False).distinct()
     recommendations = Product.objects.all().order_by('?')[:4]
+
     context = {
         'products': products,
         'recommendations': recommendations,
         'title': title,
         'is_search': is_search,
+        'all_categories': all_categories,
+        'selected_types': selected_types,
+        'price_min': price_min,
+        'price_max': price_max,
+        'only_available': only_available,
+        'active_goal': goal,
+        'active_category_id': category_id or '',
+        'active_sort': sort,
     }
     return render(request, 'store/product_list.html', context)
+
+
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -295,15 +354,26 @@ def product_detail(request, product_id):
     
     total_reviews = reviews.count()
 
-    # calculate rating breakdown (for progress bars)
+    # Calculate rating breakdown efficiently
+    # Group by rating and count them in a single query
+    rating_counts = reviews.values('rating').annotate(count=Count('id'))
+    counts_dict = {item['rating']: item['count'] for item in rating_counts}
+
     rating_breakdown = {}
     for i in range(1, 6):
-        count = reviews.filter(rating=i).count()
+        count = counts_dict.get(i, 0)
         percentage = round((count / total_reviews) * 100) if total_reviews > 0 else 0
         rating_breakdown[i] = {
             'count': count,
             'percentage': percentage
         }
+
+    # --- FIX FOR THE TEMPLATE ERROR ---
+    # Convert comma-separated string to a list, stripping any accidental whitespace
+    if product.size:
+        size_list = [sz.strip() for sz in product.size.split(',') if sz.strip()]
+    else:
+        size_list = []
 
     context = {
         'product': product,
@@ -314,25 +384,33 @@ def product_detail(request, product_id):
         'user_review': user_review,
         'has_purchased': has_purchased,
         'rating_breakdown': rating_breakdown,
+        'size_list': size_list,  # Added to context
     }
     return render(request, 'store/product_detail.html', context)
-
 def sale_catalog(request):
-    try:
-        products = Product.objects.filter(is_sale=True)
-        if not products.exists():
-            products = Product.objects.all()
-    except Exception:
-        products = Product.objects.all()
+    # Fetch existing filter/sort items if they exist in GET parameters
+    price_min = request.GET.get('price_min', '')
+    price_max = request.GET.get('price_max', '')
+    active_sort = request.GET.get('sort', '')
 
-    recommendations = Product.objects.all().order_by('?')[:4]
+    # ... Your existing query filters logic goes here ...
+    products = Product.objects.filter(is_sale=True)
+    recommendations = Product.objects.filter(is_featured=True)[:4]
+
     context = {
         'products': products,
         'recommendations': recommendations,
         'title': 'Flash Sale Collection',
-        'is_sale_page': True
+        'is_sale_page': True,
+        
+        # ADD THESE TO YOUR CONTEXT BLOCK:
+        'price_min': price_min,
+        'price_max': price_max,
+        'active_sort': active_sort,
     }
     return render(request, 'store/product_list.html', context)
+
+
 
 # =====================================================================
 # 7. FAVORITES

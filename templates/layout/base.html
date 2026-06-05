@@ -688,13 +688,21 @@ function addToCart(event, productId) {
             if (stockEl && data.new_stock !== undefined) {
                 stockEl.textContent = data.new_stock;
 
-                if (data.new_stock <= 0) {
-                    btn.disabled = true;
-                    btn.textContent = 'Out of Stock';
-                    btn.style.background = '#444';
-                    btn.style.cursor = 'not-allowed';
-                    return;
-                }
+               if (data.new_stock <= 0) {
+    btn.disabled = true;
+    btn.textContent = 'Out of Stock';
+    btn.style.background = '#444';
+    btn.style.cursor = 'not-allowed';
+    const statusDisplay = document.getElementById('stock-status-display');
+    if (statusDisplay) {
+        statusDisplay.innerHTML = `
+            <span style="color: #e63946; font-weight: bold; display: flex; align-items: center;">
+                <span style="width: 8px; height: 8px; background: #e63946; border-radius: 50%; display: inline-block; margin-right: 8px;"></span>
+                Out of Stock
+            </span>`;
+    }
+    return;
+}
             }
 
             showToast(data.message || 'Added to bag!');

@@ -59,6 +59,7 @@ TEMPLATES = [
                 'store.context_processors.cart_and_wishlist_counts',
                 'store.context_processors.category_list_processor',
                 'store.context_processors.cart_counter',
+                'store.context_processors.global_context',
             ],
         },
     },

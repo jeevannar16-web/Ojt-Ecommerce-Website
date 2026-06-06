@@ -1,0 +1,533 @@
+[
+{
+    "model": "store.category",
+    "pk": 1,
+    "fields": {
+        "name": "Cardio Machine",
+        "image": "category_images/david-marioni-hl4nBYQO3F0-unsplash.jpg"
+    }
+},
+{
+    "model": "store.category",
+    "pk": 2,
+    "fields": {
+        "name": "Wearables & Tech",
+        "image": "category_images/istockphoto-496032142-1024x1024.jpg"
+    }
+},
+{
+    "model": "store.category",
+    "pk": 3,
+    "fields": {
+        "name": "Yoga & Mindfulness",
+        "image": "category_images/istockphoto-907251312-1024x1024.jpg"
+    }
+},
+{
+    "model": "store.category",
+    "pk": 4,
+    "fields": {
+        "name": "Lose Weight / Burn Fat",
+        "image": "category_images/nexa-black-gu4bdVTq0CU-unsplash.jpg"
+    }
+},
+{
+    "model": "store.category",
+    "pk": 5,
+    "fields": {
+        "name": "Build Muscle / Strength",
+        "image": "category_images/andrey-khoviakov-jcc2r_QY58w-unsplash.jpg"
+    }
+},
+{
+    "model": "store.category",
+    "pk": 6,
+    "fields": {
+        "name": "Supplements & Nutrition",
+        "image": "category_images/lyfefuel-phY30gaxqS8-unsplash.jpg"
+    }
+},
+{
+    "model": "store.category",
+    "pk": 7,
+    "fields": {
+        "name": "Recovery & Wellness",
+        "image": "category_images/istockphoto-2169273729-1024x1024.jpg"
+    }
+},
+{
+    "model": "store.category",
+    "pk": 8,
+    "fields": {
+        "name": "Recovery & Mobility",
+        "image": "category_images/ahmad-sCXhCATmCo4-unsplash.jpg"
+    }
+},
+{
+    "model": "store.category",
+    "pk": 9,
+    "fields": {
+        "name": "Strength Training",
+        "image": "category_images/brian-wangenheim-175WMFRMoOA-unsplash.jpg"
+    }
+},
+{
+    "model": "store.category",
+    "pk": 10,
+    "fields": {
+        "name": "Outdoor & Adventure Fitness",
+        "image": "category_images/nexa-black-gu4bdVTq0CU-unsplash_CDzL2Rl.jpg"
+    }
+},
+{
+    "model": "store.category",
+    "pk": 11,
+    "fields": {
+        "name": "Yoga, Pilates & Flexibility",
+        "image": "category_images/alexandra-tran-fS3tGOkp0xY-unsplash.jpg"
+    }
+},
+{
+    "model": "store.category",
+    "pk": 12,
+    "fields": {
+        "name": "Sleep Optimization",
+        "image": "category_images/alexandra-tran-fS3tGOkp0xY-unsplash_VsImwUC.jpg"
+    }
+},
+{
+    "model": "store.category",
+    "pk": 13,
+    "fields": {
+        "name": "Posture & Mobility",
+        "image": "category_images/nexa-black-gu4bdVTq0CU-unsplash_YsFNP4N.jpg"
+    }
+},
+{
+    "model": "store.category",
+    "pk": 14,
+    "fields": {
+        "name": "Hydration & Electrolytes",
+        "image": ""
+    }
+},
+{
+    "model": "store.category",
+    "pk": 15,
+    "fields": {
+        "name": "Kettlebells & Specialty Weights",
+        "image": ""
+    }
+},
+{
+    "model": "store.category",
+    "pk": 16,
+    "fields": {
+        "name": "Activewear & Gym Clothing",
+        "image": ""
+    }
+},
+{
+    "model": "store.category",
+    "pk": 17,
+    "fields": {
+        "name": "Bodyweight & Calisthenics",
+        "image": ""
+    }
+},
+{
+    "model": "store.category",
+    "pk": 18,
+    "fields": {
+        "name": "Vitamins, Minerals & Daily Health",
+        "image": ""
+    }
+},
+{
+    "model": "store.category",
+    "pk": 19,
+    "fields": {
+        "name": "Pre-Workout & Performance",
+        "image": ""
+    }
+},
+{
+    "model": "store.product",
+    "pk": 1,
+    "fields": {
+        "category": 1,
+        "name": "Cardio",
+        "price": "350.00",
+        "stock": 86,
+        "description": "A machine for the proper health",
+        "image": "products/david-marioni-hl4nBYQO3F0-unsplash.jpg",
+        "is_featured": true,
+        "is_sale": true,
+        "rating": "3.0",
+        "size": null
+    }
+},
+{
+    "model": "store.product",
+    "pk": 2,
+    "fields": {
+        "category": 2,
+        "name": "Digital Watch",
+        "price": "450.00",
+        "stock": 11,
+        "description": "A watch with a lot of feature in it . Good for daily life",
+        "image": "products/istockphoto-496032142-1024x1024.jpg",
+        "is_featured": true,
+        "is_sale": true,
+        "rating": "1.5",
+        "size": null
+    }
+},
+{
+    "model": "store.order",
+    "pk": 1,
+    "fields": {
+        "user": 1,
+        "order_number": "7865BC2B48",
+        "full_name": "jeevan",
+        "email": "",
+        "shipping_address": "hi, Online Store Delivery (ZIP: 00000)",
+        "total_amount": "3150.00",
+        "status": "Cancelled",
+        "created_at": "2026-06-04T23:50:07.259Z"
+    }
+},
+{
+    "model": "store.order",
+    "pk": 2,
+    "fields": {
+        "user": 1,
+        "order_number": "34759F0DD3",
+        "full_name": "jeevan",
+        "email": "",
+        "shipping_address": "hi\r\n\r\n, Online Store Delivery (ZIP: 00000)",
+        "total_amount": "18900.00",
+        "status": "Cancelled",
+        "created_at": "2026-06-05T00:15:15.379Z"
+    }
+},
+{
+    "model": "store.order",
+    "pk": 3,
+    "fields": {
+        "user": 1,
+        "order_number": "B7A80F6721",
+        "full_name": "jeevan",
+        "email": "",
+        "shipping_address": "hi, Online Store Delivery (ZIP: 00000)",
+        "total_amount": "350.00",
+        "status": "Cancelled",
+        "created_at": "2026-06-05T00:59:42.709Z"
+    }
+},
+{
+    "model": "store.order",
+    "pk": 4,
+    "fields": {
+        "user": 1,
+        "order_number": "E097C177E7",
+        "full_name": "jeevan",
+        "email": "",
+        "shipping_address": "hi, Online Store Delivery (ZIP: 00000)",
+        "total_amount": "1750.00",
+        "status": "Cancelled",
+        "created_at": "2026-06-05T01:07:26.965Z"
+    }
+},
+{
+    "model": "store.order",
+    "pk": 5,
+    "fields": {
+        "user": 1,
+        "order_number": "96DAEB707F",
+        "full_name": "jeevan",
+        "email": "",
+        "shipping_address": "hi, Online Store Delivery (ZIP: 00000)",
+        "total_amount": "1750.00",
+        "status": "Cancelled",
+        "created_at": "2026-06-05T01:10:37.519Z"
+    }
+},
+{
+    "model": "store.order",
+    "pk": 6,
+    "fields": {
+        "user": 1,
+        "order_number": "9AA0AC987F",
+        "full_name": "jeevan",
+        "email": "",
+        "shipping_address": "hi, Online Store Delivery (ZIP: 00000)",
+        "total_amount": "1750.00",
+        "status": "Cancelled",
+        "created_at": "2026-06-05T01:11:53.999Z"
+    }
+},
+{
+    "model": "store.order",
+    "pk": 7,
+    "fields": {
+        "user": 1,
+        "order_number": "17B952A8C0",
+        "full_name": "jeevan",
+        "email": "",
+        "shipping_address": "hi, Online Store Delivery (ZIP: 00000)",
+        "total_amount": "1750.00",
+        "status": "Cancelled",
+        "created_at": "2026-06-05T01:18:40.863Z"
+    }
+},
+{
+    "model": "store.order",
+    "pk": 8,
+    "fields": {
+        "user": 1,
+        "order_number": "01615D4620",
+        "full_name": "jeevan",
+        "email": "",
+        "shipping_address": "hi, Online Store Delivery (ZIP: 00000)",
+        "total_amount": "3500.00",
+        "status": "Cancelled",
+        "created_at": "2026-06-05T01:19:09.101Z"
+    }
+},
+{
+    "model": "store.order",
+    "pk": 9,
+    "fields": {
+        "user": 1,
+        "order_number": "9607A4830E",
+        "full_name": "jeevan",
+        "email": "",
+        "shipping_address": "hello, Online Store Delivery (ZIP: 00000)",
+        "total_amount": "700.00",
+        "status": "Cancelled",
+        "created_at": "2026-06-05T03:29:58.269Z"
+    }
+},
+{
+    "model": "store.order",
+    "pk": 10,
+    "fields": {
+        "user": 1,
+        "order_number": "15FE3D57EC",
+        "full_name": "jeevan",
+        "email": "",
+        "shipping_address": "hi, Online Store Delivery (ZIP: 00000)",
+        "total_amount": "350.00",
+        "status": "Cancelled",
+        "created_at": "2026-06-05T04:53:59.538Z"
+    }
+},
+{
+    "model": "store.order",
+    "pk": 11,
+    "fields": {
+        "user": 1,
+        "order_number": "A4779C79B3",
+        "full_name": "jeevan",
+        "email": "",
+        "shipping_address": "hi, Online Store Delivery (ZIP: 00000)",
+        "total_amount": "450.00",
+        "status": "Cancelled",
+        "created_at": "2026-06-05T06:03:06.908Z"
+    }
+},
+{
+    "model": "store.order",
+    "pk": 12,
+    "fields": {
+        "user": 1,
+        "order_number": "E7E8666623",
+        "full_name": "jeevan",
+        "email": "",
+        "shipping_address": "hi, Online Store Delivery (ZIP: 00000)",
+        "total_amount": "350.00",
+        "status": "Delivered",
+        "created_at": "2026-06-05T06:14:30.127Z"
+    }
+},
+{
+    "model": "store.order",
+    "pk": 13,
+    "fields": {
+        "user": 1,
+        "order_number": "522C8B83B1",
+        "full_name": "jeevan",
+        "email": "",
+        "shipping_address": "hi, Online Store Delivery (ZIP: 00000)",
+        "total_amount": "700.00",
+        "status": "Cancelled",
+        "created_at": "2026-06-05T06:20:23.463Z"
+    }
+},
+{
+    "model": "store.order",
+    "pk": 14,
+    "fields": {
+        "user": 1,
+        "order_number": "627E4418B1",
+        "full_name": "jeevan",
+        "email": "",
+        "shipping_address": "hi, Online Store Delivery (ZIP: 00000)",
+        "total_amount": "8050.00",
+        "status": "Delivered",
+        "created_at": "2026-06-05T13:50:07.815Z"
+    }
+},
+{
+    "model": "store.orderitem",
+    "pk": 1,
+    "fields": {
+        "order": 1,
+        "product": 1,
+        "price": "350.00",
+        "quantity": 9
+    }
+},
+{
+    "model": "store.orderitem",
+    "pk": 2,
+    "fields": {
+        "order": 2,
+        "product": 1,
+        "price": "350.00",
+        "quantity": 54
+    }
+},
+{
+    "model": "store.orderitem",
+    "pk": 3,
+    "fields": {
+        "order": 3,
+        "product": 1,
+        "price": "350.00",
+        "quantity": 1
+    }
+},
+{
+    "model": "store.orderitem",
+    "pk": 4,
+    "fields": {
+        "order": 4,
+        "product": 1,
+        "price": "350.00",
+        "quantity": 5
+    }
+},
+{
+    "model": "store.orderitem",
+    "pk": 5,
+    "fields": {
+        "order": 5,
+        "product": 1,
+        "price": "350.00",
+        "quantity": 5
+    }
+},
+{
+    "model": "store.orderitem",
+    "pk": 6,
+    "fields": {
+        "order": 6,
+        "product": 1,
+        "price": "350.00",
+        "quantity": 5
+    }
+},
+{
+    "model": "store.orderitem",
+    "pk": 7,
+    "fields": {
+        "order": 7,
+        "product": 1,
+        "price": "350.00",
+        "quantity": 5
+    }
+},
+{
+    "model": "store.orderitem",
+    "pk": 8,
+    "fields": {
+        "order": 8,
+        "product": 1,
+        "price": "350.00",
+        "quantity": 10
+    }
+},
+{
+    "model": "store.orderitem",
+    "pk": 9,
+    "fields": {
+        "order": 9,
+        "product": 1,
+        "price": "350.00",
+        "quantity": 2
+    }
+},
+{
+    "model": "store.orderitem",
+    "pk": 10,
+    "fields": {
+        "order": 10,
+        "product": 1,
+        "price": "350.00",
+        "quantity": 1
+    }
+},
+{
+    "model": "store.orderitem",
+    "pk": 11,
+    "fields": {
+        "order": 11,
+        "product": 2,
+        "price": "450.00",
+        "quantity": 1
+    }
+},
+{
+    "model": "store.orderitem",
+    "pk": 12,
+    "fields": {
+        "order": 12,
+        "product": 1,
+        "price": "350.00",
+        "quantity": 1
+    }
+},
+{
+    "model": "store.orderitem",
+    "pk": 13,
+    "fields": {
+        "order": 13,
+        "product": 1,
+        "price": "350.00",
+        "quantity": 2
+    }
+},
+{
+    "model": "store.orderitem",
+    "pk": 14,
+    "fields": {
+        "order": 14,
+        "product": 1,
+        "price": "350.00",
+        "quantity": 23
+    }
+},
+{
+    "model": "store.review",
+    "pk": 1,
+    "fields": {
+        "product": 1,
+        "user": 1,
+        "rating": 3,
+        "comment": "i like this one",
+        "created_at": "2026-06-05T06:19:40.982Z"
+    }
+}
+]

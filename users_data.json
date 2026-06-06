@@ -1,0 +1,20 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$vskeyas87HdPGVSd1XeDNh$pGmGPlKZ3BfyAyCyj7HfgiPfMnETeQZmUUc+YgF8k0A=",
+        "last_login": "2026-06-06T04:16:00.312Z",
+        "is_superuser": true,
+        "username": "jeevan",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2026-06-04T11:46:27.134Z",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]

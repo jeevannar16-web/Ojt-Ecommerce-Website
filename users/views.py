@@ -6,6 +6,7 @@ from django.contrib import messages
 # 💡 IMPORT THE USER MODEL SO DJANGO CAN CREATE ACCOUNTS:
 from django.contrib.auth.models import User 
 from .forms import UserRegistrationForm, UserProfileForm
+from .models import Profile  # 💡 IMPORTED PROFILE MODEL HERE
 
 # def home(request):
 #     return render(request, 'index.html')
@@ -66,14 +67,18 @@ def user_login(request):
 
 @login_required
 def profile(request):
+    # Safely grab the user's profile database row or create it if it doesn't exist
+    user_profile, created = Profile.objects.get_or_create(user=request.user)
+
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=request.user.profile)
+        form = UserProfileForm(request.POST, instance=user_profile)
         if form.is_valid():
             form.save()
             messages.success(request, "Profile updated successfully!")
             return redirect('profile')
     else:
-        form = UserProfileForm(instance=request.user.profile)
+        form = UserProfileForm(instance=user_profile)
+        
     return render(request, 'users/profile.html', {'form': form})
 
 def user_logout(request):

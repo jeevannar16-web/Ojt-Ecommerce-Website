@@ -28,7 +28,7 @@ urlpatterns = [
 # 1. The main frontend layout dashboard workspace route
     path('curation/', views.curation_workspace, name='curation_workspace'),
     
-    # 2. The universal API route that saves product/category images and updates store.json
+    # 2. Ensure your handling endpoint route matches your HTML form action
     path('curation/update-asset/', views.update_curation_asset, name='update_curation_asset'),
 
 

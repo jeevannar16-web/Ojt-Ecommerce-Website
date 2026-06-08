@@ -77,6 +77,11 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s;
+    /* ✅ FIX: Ensures broken alt text does not overflow the container bounds */
+    display: block;
+    font-size: 0.01px;
+    color: transparent;
+    text-indent: -9999px;
   }
   
   .card-product:hover .card-img-wrap img {
@@ -223,7 +228,8 @@
 
         <div class="card-img-wrap">
           {% if fav_item.product.image %}
-            <img src="{{ fav_item.product.image.url }}" alt="{{ fav_item.product.name }}">
+            <img src="{{ fav_item.product.image.url }}" alt="{{ fav_item.product.name }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <div style="font-size: 3rem; display: none;">📦</div>
           {% else %}
             <div style="font-size: 3rem;">📦</div>
           {% endif %}
@@ -264,13 +270,10 @@ function removeWishlistItem(event, productId) {
     const cardElement = document.getElementById(`wishlist-item-${productId}`);
     if (!cardElement) return;
 
-    // Fast visual fade out animation state allocation tracking
     cardElement.classList.add('removing');
 
-    // ✅ FIXED: Points exactly to your matching backend name target parameter pattern mapping layout
     const targetUrl = "{% url 'store:favorites_list' %}";
 
-    // Dispatches the item request transaction parameters directly through the payload structure body
     fetch(targetUrl, {
         method: 'POST',
         headers: {
@@ -287,11 +290,9 @@ function removeWishlistItem(event, productId) {
         return response.json();
     })
     .then(data => {
-        // Complete structural removal following visual transition completion context (400ms)
         setTimeout(() => {
             cardElement.remove();
             
-            // Sync globally shared counter counts in header layout navigation template bubbles
             const favCounterElements = document.querySelectorAll('.global-fav-count');
             favCounterElements.forEach(el => {
                 if (data.total_favorites !== undefined) {
@@ -302,7 +303,6 @@ function removeWishlistItem(event, productId) {
                 }
             });
 
-            // Re-render empty placeholder graphics state instantly if card count reaches zero
             const gridContainer = document.getElementById('wishlist-main-grid');
             if (gridContainer && gridContainer.querySelectorAll('.card-product').length === 0) {
                 const emptyTemplate = document.getElementById('empty-state-template').innerHTML;
@@ -313,7 +313,6 @@ function removeWishlistItem(event, productId) {
     })
     .catch(error => {
         console.error('Error removing favorite product sequence context execution failure:', error);
-        // Error handling fallback: Restores item on card back to screen if request execution drops out
         cardElement.classList.remove('removing');
     });
 }

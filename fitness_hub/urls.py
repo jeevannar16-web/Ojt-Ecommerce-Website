@@ -8,11 +8,13 @@ urlpatterns = [
    
     
     path('admin/', admin.site.urls),
-     path('', include('homepages.urls')),
+    
+    path('', include('homepages.urls')),
     path('users/', include('users.urls')),
-    path('store/', include('store.urls')),
+  
     path('inspiration/', include('inspiration.urls')),
     path('exercises/', include('exercises.urls')),
+     path('store/', include('store.urls')),
 ]
 
 if settings.DEBUG:

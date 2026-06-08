@@ -3,8 +3,8 @@
     "model": "auth.user",
     "pk": 1,
     "fields": {
-        "password": "pbkdf2_sha256$720000$vskeyas87HdPGVSd1XeDNh$pGmGPlKZ3BfyAyCyj7HfgiPfMnETeQZmUUc+YgF8k0A=",
-        "last_login": "2026-06-06T04:16:00.312Z",
+        "password": "pbkdf2_sha256$720000$Y6rq9tdvLyfz6zBT6dzVHL$0WRZIu80qE30m8LeFSgPnQu+m9TmXTOW2PGgc1NJYcs=",
+        "last_login": null,
         "is_superuser": true,
         "username": "jeevan",
         "first_name": "",
@@ -12,7 +12,25 @@
         "email": "",
         "is_staff": true,
         "is_active": true,
-        "date_joined": "2026-06-04T11:46:27.134Z",
+        "date_joined": "2026-06-08T02:55:41.317Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$XJ0VTEf20c8g6iKWema1S5$wjVZOmmwjCYTtxBG7/KLdAC4zCzZbvEfyEBLBxAeZic=",
+        "last_login": "2026-06-08T02:58:10.173Z",
+        "is_superuser": false,
+        "username": "jeevan1",
+        "first_name": "",
+        "last_name": "",
+        "email": "j@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-06-08T02:58:09.898Z",
         "groups": [],
         "user_permissions": []
     }

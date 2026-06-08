@@ -446,6 +446,7 @@ def toggle_favorite(request, product_id):
 
 
 @login_required(login_url='/users/login/')
+
 def favorites_list(request):
     if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         try:
@@ -569,101 +570,89 @@ def submit_review(request, product_id):
         'total_reviews': total_reviews,
         'created': created
     })
-
-
-
-# 1. Main Curation Board View
 def curation_workspace(request):
-    products = Product.objects.all().order_by('id')
-    return render(request, 'store/curation.html', {'products': products})
-
-
-# Helper Function: Automatically rewrites the store.json file with updated paths
-def sync_database_to_json_fixture():
-    fixtures = []
+    current_id = request.GET.get('id')
     
-    # Export categories first to satisfy database foreign keys constraint order
-    for cat in Category.objects.all():
-        cat_img = str(cat.image) if cat.image else ""
-        fixtures.append({
-            "model": "store.category",
-            "pk": cat.id,
-            "fields": {
-                "name": cat.name,
-                "image": cat_img
-            }
-        })
-        
-    # Export products downstream with current updates
-    for prod in Product.objects.all():
-        prod_img = str(prod.image) if prod.image else ""
-        fixtures.append({
-            "model": "store.product",
-            "pk": prod.id,
-            "fields": {
-                "category": prod.category.id if prod.category else None,
-                "name": prod.name,
-                "price": str(prod.price),
-                "stock": prod.stock,
-                "description": prod.description,
-                "image": prod_img,
-                "is_featured": prod.is_featured,
-                "is_sale": prod.is_sale,
-                "rating": str(prod.rating),
-                "size": prod.size
-            }
-        })
-        
-    # Overwrites your store.json file on your disk path
-    fixture_path = os.path.join(settings.BASE_DIR, 'store.json')
-    with open(fixture_path, 'w') as f:
-        json.dump(fixtures, f, indent=2)
+    if current_id:
+        try:
+            product = Product.objects.get(id=current_id)
+        except Product.DoesNotExist:
+            product = None
+    else:
+        product = Product.objects.exclude(image__contains='curated_prod_').order_by('id').first()
 
+    prev_product = None
+    next_product = None
+    if product:
+        prev_product = Product.objects.filter(id__lt=product.id).order_by('-id').first()
+        next_product = Product.objects.filter(id__gt=product.id).order_by('id').first()
 
-# 2. Universal API Endpoint: Handles saving to products/ or category_images/ folders
+    total = Product.objects.count()
+    curated = Product.objects.filter(image__contains='curated_prod_').count()
+
+    # Current position: how many products have id <= current product
+    current_position = 0
+    if product:
+        current_position = Product.objects.filter(id__lte=product.id).count()
+
+    context = {
+        'product': product,
+        'prev_product': prev_product,
+        'next_product': next_product,
+        'total': total,
+        'curated': curated,
+        'current_position': current_position,
+    }
+    return render(request, 'store/curation.html', context)
+
 @csrf_exempt
+
 def update_curation_asset(request):
     if request.method == 'POST':
+        next_id = None
         try:
-            data = json.loads(request.body)
-            product = Product.objects.get(id=data.get('id'))
-            image_data = data.get('image')
-            target_type = data.get('target_type', 'product')  # 'product' or 'category'
+            product_id = request.POST.get('id')
+            image_data = request.POST.get('image')
+            target_type = request.POST.get('target_type', 'product')
 
-            if not image_data.startswith('data:image'):
-                return JsonResponse({'status': 'error', 'message': 'Invalid image data format'}, status=400)
+            if product_id and image_data:
+                product = Product.objects.get(id=product_id)
 
-            # Decode browser base64 clipboard data stream
-            format, imgstr = image_data.split(';base64,')
-            ext = format.split('/')[-1]
-            raw_binary_file = ContentFile(base64.b64decode(imgstr))
+                if image_data.startswith('data:image'):
+                    format, imgstr = image_data.split(';base64,')
+                    ext = format.split('/')[-1]
+                    raw_binary_file = ContentFile(base64.b64decode(imgstr))
 
-            if target_type == 'category':
-                if not product.category:
-                    return JsonResponse({'status': 'error', 'message': 'This product has no assigned category'}, status=400)
-                
-                category = product.category
-                file_name = f"curated_cat_{category.id}.{ext}"
-                
-                # Natively triggers category ImageField upload_to='category_images/'
-                category.image.save(file_name, raw_binary_file, save=True)
-                message = "Successfully saved to category_images/ and synced store.json!"
-            
-            else:
-                file_name = f"curated_prod_{product.id}.{ext}"
-                
-                # Natively triggers product ImageField upload_to='products/'
-                product.image.save(file_name, raw_binary_file, save=True)
-                message = "Successfully saved to products/ and synced store.json!"
+                    if target_type == 'category' and product.category:
+                        category = product.category
+                        file_name = f"curated_cat_{category.id}.{ext}"
+                        category.image.save(file_name, raw_binary_file, save=True)
+                    else:
+                        file_name = f"curated_prod_{product.id}.{ext}"
+                        product.image.save(file_name, raw_binary_file, save=True)
+                        product.save()
 
-            # Instantly mirror current updates back out to store.json file on disk
-            sync_database_to_json_fixture()
+                   
 
-            return JsonResponse({'status': 'success', 'message': message})
-            
-        except Product.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Product missing'}, status=404)
+                    # Next uncurated product (no curated_prod_ in image path)
+                    next_product = Product.objects.exclude(
+                        image__contains='curated_prod_'
+                    ).filter(id__gt=product.id).order_by('id').first()
+
+                    # If none ahead, wrap around from beginning
+                    if not next_product:
+                        next_product = Product.objects.exclude(
+                            image__contains='curated_prod_'
+                        ).order_by('id').first()
+
+                    if next_product:
+                        next_id = next_product.id
+
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-            
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+            print(f"Error: {e}")
+
+        if next_id:
+            return redirect(f'/store/curation/?id={next_id}')
+        return redirect('/store/curation/')
+
+    return redirect('/store/curation/')

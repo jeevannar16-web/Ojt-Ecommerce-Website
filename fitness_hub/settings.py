@@ -60,6 +60,7 @@ TEMPLATES = [
                 'store.context_processors.category_list_processor',
                 'store.context_processors.cart_counter',
                 'store.context_processors.global_context',
+
             ],
         },
     },
@@ -89,6 +90,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -98,3 +100,19 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
 LOGIN_URL = 'login'
+
+
+
+
+
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:9000',
+    'http://127.0.0.1:9000',
+]
+
+# Session Configuration
+SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_HTTPONLY = True
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'

@@ -23,4 +23,13 @@ urlpatterns = [
     path('orders/cancel/<int:order_id>/', views.cancel_order, name='cancel_order'),
     path('products/<int:product_id>/review/', views.submit_review, name='submit_review'),
 
+
+
+# 1. The main frontend layout dashboard workspace route
+    path('curation/', views.curation_workspace, name='curation_workspace'),
+    
+    # 2. The universal API route that saves product/category images and updates store.json
+    path('curation/update-asset/', views.update_curation_asset, name='update_curation_asset'),
+
+
 ]

@@ -4,7 +4,7 @@
 {% block content %}
 <style>
     @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
+        from { opacity: 0; transform: translateY(20px); } 
         to   { opacity: 1; transform: translateY(0); }
     }
     .catalog-fade-in { animation: fadeInUp 0.5s cubic-bezier(0.16,1,0.3,1) both; }
@@ -184,7 +184,6 @@
 <div style="background:radial-gradient(circle at top,#161616 0%,#0a0a0a 100%); min-height:100vh; padding:4rem 0 8rem; font-family:system-ui,-apple-system,sans-serif; color:#fff;">
 <div style="max-width:1280px; margin:0 auto; padding:0 2rem;">
 
-    <!-- Header -->
     <div class="catalog-fade-in" style="text-align:center; margin-bottom:2.5rem;">
         <span style="text-transform:uppercase; font-weight:800; font-size:0.72rem; color:#d4af37; letter-spacing:4px; display:block; margin-bottom:0.5rem;">FitnessHub Elite Equipment</span>
         {% if is_search %}
@@ -195,7 +194,6 @@
         <div style="width:36px; height:3px; background:#d4af37; margin:1.1rem auto 0; border-radius:2px;"></div>
     </div>
 
-    <!-- Goal tabs -->
     <div class="goal-tabs catalog-fade-in">
         {% with base_params="price_min="|add:price_min|add:"&price_max="|add:price_max|add:"&sort="|add:active_sort %}
         <a href="?{{ base_params }}" class="goal-tab {% if not active_goal %}active{% endif %}">All</a>
@@ -206,10 +204,8 @@
         {% endwith %}
     </div>
 
-    <!-- Layout -->
     <div style="display:flex; gap:2.5rem; align-items:flex-start;">
 
-        <!-- Sidebar -->
         <form method="GET" action="" id="filter-form">
             {% if request.GET.search %}<input type="hidden" name="search" value="{{ request.GET.search }}">{% endif %}
             {% if active_category_id %}<input type="hidden" name="category" value="{{ active_category_id }}">{% endif %}
@@ -219,24 +215,15 @@
             <div class="filter-sidebar catalog-fade-in">
                 <div style="font-size:0.88rem; font-weight:800; text-transform:uppercase; letter-spacing:2px; color:#fff;">Filters</div>
 
-
-
-                
-                <!-- Price -->
-<div class="fsec-title" style="margin-top:1rem;">Price Range</div>
-<div style="display:flex; flex-direction:column; gap:8px;">
-    <input type="number" name="price_min" class="price-input"
-           placeholder="$ Min" value="{{ price_min }}" min="0"
-           style="width:100%; background:#1a1a1a; border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:8px 12px; color:#fff; font-size:0.82rem; outline:none; box-sizing:border-box;">
-    <input type="number" name="price_max" class="price-input"
-           placeholder="$ Max" value="{{ price_max }}" min="0"
-           style="width:100%; background:#1a1a1a; border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:8px 12px; color:#fff; font-size:0.82rem; outline:none; box-sizing:border-box;">
-</div>
-
-
-
-
-
+                <div class="fsec-title" style="margin-top:1rem;">Price Range</div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <input type="number" name="price_min" class="price-input"
+                           placeholder="$ Min" value="{{ price_min }}" min="0"
+                           style="width:100%; background:#1a1a1a; border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:8px 12px; color:#fff; font-size:0.82rem; outline:none; box-sizing:border-box;">
+                    <input type="number" name="price_max" class="price-input"
+                           placeholder="$ Max" value="{{ price_max }}" min="0"
+                           style="width:100%; background:#1a1a1a; border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:8px 12px; color:#fff; font-size:0.82rem; outline:none; box-sizing:border-box;">
+                </div>
 
                 <hr class="f-divider">
 
@@ -263,10 +250,8 @@
             </div>
         </form>
 
-        <!-- Right col -->
         <div style="flex:1; min-width:0;">
 
-            <!-- Sort bar -->
             <div class="sort-bar catalog-fade-in">
                 <span class="sort-label">Sort by</span>
                 <div class="sort-pills">
@@ -289,7 +274,6 @@
                 <span style="font-size:0.78rem; color:#555; margin-left:auto; flex-shrink:0;">{{ products|length }} item{{ products|length|pluralize }}</span>
             </div>
 
-            <!-- Grid -->
             <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1.75rem;">
                 {% for product in products %}
                 <div class="pcard catalog-fade-in" style="animation-delay:calc(0.05s * {{ forloop.index }});">
@@ -297,8 +281,9 @@
                         {% if product.is_sale %}<span class="pcard-badge">Sale</span>
                         {% elif product.price > 200 %}<span class="pcard-badge" style="background:#fff;color:#000;">Premium</span>
                         {% endif %}
+                        
                         {% if product.image %}
-                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                            <img src="{% if 'http' in product.image.name or 'http' in product.image %}{% if product.image.name %}{{ product.image.name }}{% else %}{{ product.image }}{% endif %}{% else %}{{ product.image.url }}{% endif %}" alt="{{ product.name }}">
                         {% else %}
                             <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#2a2a2a;font-size:2.5rem;">📦</div>
                         {% endif %}
@@ -343,7 +328,6 @@
         </div>
     </div>
 
-    <!-- Recommendations -->
     {% if recommendations %}
     <div class="catalog-fade-in" style="margin-top:7rem;padding-top:4rem;border-top:1px solid rgba(255,255,255,0.04);">
         <div style="text-align:center;margin-bottom:3rem;">
@@ -355,7 +339,11 @@
             {% for rec in recommendations %}
             <div class="rec-card">
                 <div style="height:145px;background:#161616;overflow:hidden;">
-                    {% if rec.image %}<img src="{{ rec.image.url }}" alt="{{ rec.name }}" style="width:100%;height:100%;object-fit:cover;opacity:0.85;">{% endif %}
+                    {% if rec.image %}
+                        <img src="{% if 'http' in rec.image.name or 'http' in rec.image %}{% if rec.image.name %}{{ rec.image.name }}{% else %}{{ rec.image }}{% endif %}{% else %}{{ rec.image.url }}{% endif %}" alt="{{ rec.name }}" style="width:100%;height:100%;object-fit:cover;opacity:0.85;">
+                    {% else %}
+                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#2a2a2a;font-size:1.5rem;">📦</div>
+                    {% endif %}
                 </div>
                 <div style="padding:1rem;display:flex;flex-direction:column;flex-grow:1;justify-content:space-between;">
                     <div style="margin-bottom:0.75rem;">

@@ -667,18 +667,26 @@
     </svg>
   </button>
 
+
+
   <script>
+  /* ── Utility ── */
   function getCookie(name) {
-    let v = null;
-    if (document.cookie) {
-      document.cookie.split(';').forEach(c => {
-        c = c.trim();
-        if (c.startsWith(name + '=')) v = decodeURIComponent(c.slice(name.length + 1));
-      });
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
     }
-    return v;
+    return cookieValue;
   }
 
+  /* ── Toast ── */
   function showToast(message, isError = false) {
     const container = document.getElementById('single-toast-container');
     if (!container) { alert(message); return; }
@@ -693,59 +701,135 @@
       setTimeout(() => toast.remove(), 400);
     }, 2600);
   }
-  function showSingleToast(m, e) { showToast(m, e); }
 
-  function addToCart(event, productId) {
-    if (event) event.preventDefault();
-    const btn = event && event.currentTarget;
+  /* ════════════════════════════════════════════════════════════════
+     ADD TO CART - FIXED VERSION
+  ════════════════════════════════════════════════════════════════ */
+  function addToCart(event, productId, btnEl) {
+    if (event) event.stopPropagation();
+
+    const btn = btnEl || (event && event.currentTarget) || null;
+
     if (btn) btn.disabled = true;
+
+    // Get CSRF token
+    const csrfToken = getCookie('csrftoken');
+    console.log('Adding to cart - Product ID:', productId);
+    console.log('CSRF Token found:', !!csrfToken);
+
+    // Validate CSRF token exists
+    if (!csrfToken) {
+      showToast('Security error: CSRF token missing. Please refresh the page.', true);
+      if (btn) btn.disabled = false;
+      return;
+    }
+
     fetch('/store/cart/add/' + productId + '/', {
       method: 'POST',
-      headers: { 'X-CSRFToken': getCookie('csrftoken'), 'Content-Type': 'application/json' }
+      headers: {
+        'X-CSRFToken': csrfToken,
+        'Content-Type': 'application/json'
+      },
+      credentials: 'same-origin'
     })
-    .then(r => {
-      if (r.status === 401) { window.location.href = '{% url "register" %}'; return null; }
-      return r.json();
+    .then(response => {
+      console.log('Response status:', response.status);
+      
+      if (response.status === 401) {
+        window.location.href = '/users/login/';
+        return null;
+      }
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      return response.json();
     })
     .then(data => {
       if (!data) return;
+
+      console.log('Cart response:', data);
+
       if (data.success) {
+        // Update cart badge
         const badge = document.getElementById('cart-count');
-        if (badge && data.cart_count !== undefined) badge.textContent = data.cart_count;
+        if (badge && data.cart_count !== undefined) {
+          badge.textContent = data.cart_count;
+        }
+
+        // Handle stock depletion
         const stockEl = document.getElementById('stock-count');
         if (stockEl && data.new_stock !== undefined) {
           stockEl.textContent = data.new_stock;
           if (data.new_stock <= 0) {
-            if (btn) { btn.disabled = true; btn.textContent = 'Out of Stock'; btn.style.background = '#444'; btn.style.cursor = 'not-allowed'; }
+            if (btn) {
+              btn.disabled = true;
+              btn.textContent = 'Out of Stock';
+              btn.style.background = '#444';
+              btn.style.cursor = 'not-allowed';
+            }
             const sd = document.getElementById('stock-status-display');
-            if (sd) sd.innerHTML = '<span style="color:#e63946;font-weight:bold;display:flex;align-items:center;"><span style="width:8px;height:8px;background:#e63946;border-radius:50%;display:inline-block;margin-right:8px;"></span>Out of Stock</span>';
+            if (sd) {
+              sd.innerHTML = '<span style="color:#e63946;font-weight:bold;display:flex;align-items:center;"><span style="width:8px;height:8px;background:#e63946;border-radius:50%;display:inline-block;margin-right:8px;"></span>Out of Stock</span>';
+            }
             return;
           }
         }
-        showToast(data.message || 'Added to bag!');
+
+        // Cart icon pop animation
+        const cartIcon = document.getElementById('cart-count');
+        if (cartIcon) {
+          cartIcon.style.transform = 'scale(1.4)';
+          setTimeout(() => { cartIcon.style.transform = ''; }, 250);
+        }
+
+        showToast(data.message || '✓ Added to bag!');
       } else {
-        showToast(data.message || 'Cannot add more!', true);
+        showToast(data.message || 'Cannot add more of this item!', true);
       }
     })
-    .catch(() => showToast('Failed to add to cart', true))
-    .finally(() => { if (btn && !btn.textContent.includes('Out of Stock')) btn.disabled = false; });
+    .catch(error => {
+      console.error('Fetch error:', error);
+      showToast('❌ Network error: ' + error.message, true);
+    })
+    .finally(() => {
+      if (btn && !btn.textContent.includes('Out of Stock')) {
+        btn.disabled = false;
+      }
+    });
   }
 
+  /* ════════════════════════════════════════════════════════════════
+     TOGGLE FAVOURITE - FIXED VERSION
+  ════════════════════════════════════════════════════════════════ */
   function toggleFavorite(event, productId, btn) {
-    if (event) event.preventDefault();
-    if (!productId || !btn) return;
+    if (event) event.stopPropagation();
+    if (!productId || !btn) {
+      console.error('Missing productId or button element');
+      return;
+    }
+
     const icon = btn.querySelector('i');
     const span = btn.querySelector('span');
     const wasFav = btn.classList.contains('favorited');
-    btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
+
+    console.log('Toggling favorite - Product ID:', productId, 'Was favorited:', wasFav);
+
+    // Optimistic UI update
+    btn.classList.remove('pop');
+    void btn.offsetWidth;
+    btn.classList.add('pop');
+
     if (!wasFav) {
       const p = document.createElement('span');
       p.className = 'heart-particle';
       p.textContent = '♥';
-      p.style.cssText = 'position:absolute;font-size:0.75rem;color:#ef4444;pointer-events:none;animation:floatHeart 0.8s ease forwards;left:' + (Math.random()*60+20) + '%';
+      p.style.cssText = 'position:absolute;font-size:0.75rem;color:#ef4444;pointer-events:none;animation:floatHeart 0.8s ease forwards;left:' + (Math.random() * 60 + 20) + '%';
       btn.appendChild(p);
       setTimeout(() => p.remove(), 800);
     }
+
     if (wasFav) {
       btn.classList.remove('favorited');
       if (icon) icon.className = 'bi bi-heart';
@@ -755,19 +839,72 @@
       if (icon) icon.className = 'bi bi-heart-fill';
       if (span) span.textContent = 'Wishlisted';
     }
-    btn.style.background = btn.style.border = btn.style.color = '';
+
+    // Get CSRF token
+    const csrfToken = getCookie('csrftoken');
+    console.log('CSRF Token found:', !!csrfToken);
+
+    if (!csrfToken) {
+      showToast('Security error: CSRF token missing. Please refresh the page.', true);
+      if (wasFav) {
+        btn.classList.add('favorited');
+        if (icon) icon.className = 'bi bi-heart-fill';
+      } else {
+        btn.classList.remove('favorited');
+        if (icon) icon.className = 'bi bi-heart';
+      }
+      return;
+    }
+
+    // Sync with server
     fetch('/store/favorites/toggle/' + productId + '/', {
       method: 'POST',
-      headers: { 'X-CSRFToken': getCookie('csrftoken'), 'Content-Type': 'application/json' }
+      headers: {
+        'X-CSRFToken': csrfToken,
+        'Content-Type': 'application/json'
+      },
+      credentials: 'same-origin'
     })
-    .then(r => r.json())
+    .then(response => {
+      console.log('Favorite response status:', response.status);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      return response.json();
+    })
     .then(data => {
+      console.log('Favorite response:', data);
+      
       if (data.success) {
         const c = document.querySelector('.global-fav-count');
-        if (c && data.total_favorites !== undefined) c.textContent = data.total_favorites;
+        if (c && data.total_favorites !== undefined) {
+          c.textContent = data.total_favorites;
+        }
+        showToast(data.message || '✓ Updated!');
+      } else {
+        if (wasFav) {
+          btn.classList.add('favorited');
+          if (icon) icon.className = 'bi bi-heart-fill';
+        } else {
+          btn.classList.remove('favorited');
+          if (icon) icon.className = 'bi bi-heart';
+        }
+        showToast(data.message || 'Something went wrong.', true);
       }
     })
-    .catch(e => console.error(e));
+    .catch(error => {
+      console.error('Fetch error:', error);
+      if (wasFav) {
+        btn.classList.add('favorited');
+        if (icon) icon.className = 'bi bi-heart-fill';
+      } else {
+        btn.classList.remove('favorited');
+        if (icon) icon.className = 'bi bi-heart';
+      }
+      showToast('❌ Network error: ' + error.message, true);
+    });
   }
 
   /* ── Category nav ── */
@@ -823,15 +960,11 @@
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const docH = document.documentElement.scrollHeight - window.innerHeight;
       const pct = docH > 0 ? Math.min(scrollTop / docH, 1) : 0;
-
-      // Dynamic: show after 30% of viewport height
       if (scrollTop > window.innerHeight * 0.3) {
         btn.classList.add('btt-visible');
       } else {
         btn.classList.remove('btt-visible');
       }
-
-      // Progress arc
       if (arc) arc.style.strokeDashoffset = CIRCUM * (1 - pct);
     }
 
@@ -846,7 +979,8 @@
 
     updateScroll();
   })();
-  </script>
+</script>
+
 
   {% block extra_js %}{% endblock %}
 

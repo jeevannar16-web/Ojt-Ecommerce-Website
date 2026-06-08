@@ -184,9 +184,7 @@
       to   { opacity: 1; transform: translateX(0); }
     }
 
-    /* ════════════════════════════════════════
-       ANIMATED CATEGORY NAV
-    ════════════════════════════════════════ */
+    /* ════ ANIMATED CATEGORY NAV ════ */
     .elite-nav-wrap {
       position: sticky;
       top: 72px;
@@ -196,7 +194,6 @@
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
-
     .elite-nav-inner {
       display: flex;
       align-items: center;
@@ -204,7 +201,6 @@
       margin: 0 auto;
       position: relative;
     }
-
     .elite-nav-inner::before,
     .elite-nav-inner::after {
       content: '';
@@ -226,7 +222,6 @@
     }
     .elite-nav-inner.show-left-fade::before  { opacity: 1; }
     .elite-nav-inner.show-right-fade::after  { opacity: 1; }
-
     .elite-nav-arrow {
       flex-shrink: 0;
       width: 40px; height: 52px;
@@ -237,7 +232,6 @@
     }
     .elite-nav-arrow:hover { color: #d4af37; }
     .elite-nav-arrow:disabled { opacity: 0.18; cursor: default; pointer-events: none; }
-
     .elite-nav-track {
       display: flex;
       align-items: center;
@@ -250,7 +244,6 @@
       padding: 0 4px;
     }
     .elite-nav-track::-webkit-scrollbar { display: none; }
-
     .elite-cat-all {
       flex-shrink: 0;
       padding: 5px 16px;
@@ -277,7 +270,6 @@
       border-color: rgba(212,175,55,0.45);
       color: #d4af37;
     }
-
     .elite-cat-item {
       flex-shrink: 0;
       display: flex;
@@ -296,17 +288,14 @@
       transition: color 0.3s cubic-bezier(0.16,1,0.3,1);
       border-bottom: 2px solid transparent;
     }
-
     .elite-cat-item .ecat-icon {
       font-size: 1.2rem;
       line-height: 1;
       display: block;
       transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
     }
-
     .elite-cat-item:hover { color: #d4af37; }
     .elite-cat-item:hover .ecat-icon { transform: translateY(-4px) scale(1.18); }
-
     .elite-cat-item::after {
       content: '';
       position: absolute;
@@ -316,13 +305,11 @@
       background: linear-gradient(90deg, #d4af37, #f3e5ab, #d4af37);
       border-radius: 2px 2px 0 0;
       box-shadow: 0 0 10px rgba(212,175,55,0.55);
-      transition: left  0.35s cubic-bezier(0.16,1,0.3,1),
-                  right 0.35s cubic-bezier(0.16,1,0.3,1);
+      transition: left 0.35s cubic-bezier(0.16,1,0.3,1), right 0.35s cubic-bezier(0.16,1,0.3,1);
     }
     .elite-cat-item:hover::after,
     .elite-cat-item.active-cat::after { left: 12px; right: 12px; }
     .elite-cat-item.active-cat { color: #d4af37; }
-
     .elite-cat-item::before {
       content: attr(data-label);
       position: absolute;
@@ -381,7 +368,6 @@
       display: flex; align-items: center; justify-content: center;
       border: 2px solid #0d0d0d; box-shadow: 0 2px 8px rgba(239,68,68,0.4);
     }
-
     .luxury-toast {
       min-width: 320px; padding: 16px 24px; background: #111111; color: #ffffff;
       font-family: system-ui,-apple-system,sans-serif; font-size: 0.9rem; font-weight: 600;
@@ -396,6 +382,88 @@
     .luxury-toast.status-info    { border-left: 4px solid #3498db; }
     .luxury-toast.status-error   { border-left: 4px solid #e74c3c; }
     .footer-newsletter input:focus { border-color: #d4af37 !important; outline: none; }
+
+    /* ════ BACK TO TOP ════ */
+    #btt-btn {
+      position: fixed;
+      bottom: 32px;
+      right: 28px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(232,201,126,0.25);
+      border-radius: 50px;
+      padding: 8px 14px 8px 8px;
+      color: #e8c97e;
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      overflow: visible;
+      opacity: 0;
+      transform: translateY(20px) scale(0.92);
+      pointer-events: none;
+      transition: opacity 0.4s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.4s cubic-bezier(0.16,1,0.3,1),
+                  border-color 0.3s,
+                  box-shadow 0.3s;
+    }
+    #btt-btn.btt-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    #btt-btn:hover {
+      border-color: rgba(232,201,126,0.65);
+      box-shadow: 0 0 28px rgba(232,201,126,0.2), 0 8px 32px rgba(0,0,0,0.5);
+      transform: translateY(-3px) scale(1.04);
+    }
+    #btt-btn:active { transform: translateY(0) scale(0.97); }
+    #btt-btn .btt-icon-wrap {
+      width: 30px; height: 30px;
+      background: linear-gradient(135deg, #e8c97e, #c4783a);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; color: #0d0d0d;
+      flex-shrink: 0;
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow: 0 0 14px rgba(232,201,126,0.35);
+    }
+    #btt-btn:hover .btt-icon-wrap {
+      transform: translateY(-3px) rotate(-15deg);
+    }
+    #btt-btn .btt-ring {
+      position: absolute;
+      left: 8px; top: 50%;
+      transform: translateY(-50%);
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      border: 2px solid rgba(232,201,126,0.35);
+      animation: bttRing 2.2s ease-out infinite;
+      pointer-events: none;
+    }
+    @keyframes bttRing {
+      0%   { transform: translateY(-50%) scale(1); opacity: 0.5; }
+      100% { transform: translateY(-50%) scale(2.0); opacity: 0; }
+    }
+    #btt-btn .btt-arc {
+      position: absolute;
+      width: 40px; height: 40px;
+      left: 4px; top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    @keyframes floatHeart {
+      0%   { opacity:1; transform:translateY(0) scale(1); }
+      100% { opacity:0; transform:translateY(-40px) scale(0.5); }
+    }
+    .heart-particle { position:absolute; pointer-events:none; }
   </style>
 
   {% block extra_css %}{% endblock %}
@@ -428,7 +496,6 @@
     </form>
 
     <div class="nav-actions">
-
       <a href="{% url 'store:favorites_list' %}"
          style="position:relative; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:#fff; transition:all 0.2s;"
          onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
@@ -471,74 +538,50 @@
   <!-- ANIMATED CATEGORY NAV -->
   <div class="elite-nav-wrap">
     <div class="elite-nav-inner" id="elite-nav-inner">
-
       <button class="elite-nav-arrow" id="nav-prev" onclick="eliteSlide(-1)" aria-label="Scroll left" disabled>
         <i class="bi bi-chevron-left" style="font-size:0.9rem;"></i>
       </button>
-
       <div class="elite-nav-track" id="elite-nav-track">
-
         <a href="{% url 'store:product_list' %}"
            class="elite-cat-all {% if not request.GET.category %}active-cat{% endif %}">
           All Items
         </a>
-
-
-
-
-
-      {% for category in global_categories %}
-<a href="{% url 'store:product_list' %}?category={{ category.id }}"
-   class="elite-cat-item {% if request.GET.category == category.id|slugify %}active-cat{% endif %}"
-   data-label="{{ category.name }}">
-  <span class="ecat-icon" style="font-size:1.3rem; line-height:1;">
-    {% with name=category.name|lower %}
-      {% if "cardio" in name %}🏃
-      {% elif "wearable" in name or "tech" in name %}⌚
-      {% elif "yoga" in name or "mindful" in name or "pilates" in name or "flexibility" in name %}🧘
-      {% elif "weight" in name and "loss" in name %}⚖️
-      {% elif "muscle" in name or "strength" in name or "barbell" in name %}🏋️
-      {% elif "supplement" in name or "nutrition" in name or "vitamin" in name %}💊
-      {% elif "recovery" in name or "wellness" in name %}🛁
-      {% elif "mobility" in name %}🤸
-      {% elif "outdoor" in name or "adventure" in name %}🏕️
-      {% elif "sleep" in name %}😴
-      {% elif "posture" in name %}🦾
-      {% elif "hydration" in name or "electrolyte" in name %}💧
-      {% elif "kettlebell" in name or "specialty" in name %}🔔
-      {% elif "activewear" in name or "clothing" in name %}👕
-      {% elif "bodyweight" in name or "calisthenics" in name %}💪
-      {% elif "pre-workout" in name or "performance" in name %}⚡
-      {% elif "dumbbell" in name %}🏋️
-      {% elif "resistance" in name or "band" in name %}🪢
-      {% elif "pull" in name %}🏗️
-      {% else %}⚡
-      {% endif %}
-    {% endwith %}
-  </span>
-  <span>{{ category.name }}</span>
-</a>
-{% endfor %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        {% for category in global_categories %}
+          <a href="{% url 'store:product_list' %}?category={{ category.id }}"
+             class="elite-cat-item {% if request.GET.category == category.id|slugify %}active-cat{% endif %}"
+             data-label="{{ category.name }}">
+            <span class="ecat-icon" style="font-size:1.3rem; line-height:1;">
+              {% with name=category.name|lower %}
+                {% if "cardio" in name %}🏃
+                {% elif "wearable" in name or "tech" in name %}⌚
+                {% elif "yoga" in name or "mindful" in name or "pilates" in name or "flexibility" in name %}🧘
+                {% elif "weight" in name and "loss" in name %}⚖️
+                {% elif "muscle" in name or "strength" in name or "barbell" in name %}🏋️
+                {% elif "supplement" in name or "nutrition" in name or "vitamin" in name %}💊
+                {% elif "recovery" in name or "wellness" in name %}🛁
+                {% elif "mobility" in name %}🤸
+                {% elif "outdoor" in name or "adventure" in name %}🏕️
+                {% elif "sleep" in name %}😴
+                {% elif "posture" in name %}🦾
+                {% elif "hydration" in name or "electrolyte" in name %}💧
+                {% elif "kettlebell" in name or "specialty" in name %}🔔
+                {% elif "activewear" in name or "clothing" in name %}👕
+                {% elif "bodyweight" in name or "calisthenics" in name %}💪
+                {% elif "pre-workout" in name or "performance" in name %}⚡
+                {% elif "dumbbell" in name %}🏋️
+                {% elif "resistance" in name or "band" in name %}🪢
+                {% elif "pull" in name %}🏗️
+                {% else %}⚡
+                {% endif %}
+              {% endwith %}
+            </span>
+            <span>{{ category.name }}</span>
+          </a>
+        {% endfor %}
       </div>
-
       <button class="elite-nav-arrow" id="nav-next" onclick="eliteSlide(1)" aria-label="Scroll right">
         <i class="bi bi-chevron-right" style="font-size:0.9rem;"></i>
       </button>
-
     </div>
   </div>
 
@@ -600,6 +643,30 @@
   <div id="single-toast-container"
        style="position:fixed; bottom:30px; right:30px; z-index:10000; display:flex; flex-direction:column; gap:10px;"></div>
 
+  <!-- ════ BACK TO TOP BUTTON ════ -->
+  <button id="btt-btn" aria-label="Back to top" title="Back to top">
+    <div class="btt-icon-wrap">
+      <i class="bi bi-arrow-up"></i>
+    </div>
+    <span class="btt-label">Top</span>
+    <div class="btt-ring"></div>
+    <svg class="btt-arc" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="22" cy="22" r="19" stroke="rgba(232,201,126,0.12)" stroke-width="2"/>
+      <circle class="btt-arc-fill" cx="22" cy="22" r="19"
+              stroke="url(#bttGrad)" stroke-width="2"
+              stroke-linecap="round"
+              stroke-dasharray="119.4"
+              stroke-dashoffset="119.4"
+              style="transform:rotate(-90deg);transform-origin:center;"/>
+      <defs>
+        <linearGradient id="bttGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="#e8c97e"/>
+          <stop offset="100%" stop-color="#c4783a"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </button>
+
   <script>
   function getCookie(name) {
     let v = null;
@@ -632,7 +699,6 @@
     if (event) event.preventDefault();
     const btn = event && event.currentTarget;
     if (btn) btn.disabled = true;
-
     fetch('/store/cart/add/' + productId + '/', {
       method: 'POST',
       headers: { 'X-CSRFToken': getCookie('csrftoken'), 'Content-Type': 'application/json' }
@@ -671,9 +737,7 @@
     const icon = btn.querySelector('i');
     const span = btn.querySelector('span');
     const wasFav = btn.classList.contains('favorited');
-
     btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
-
     if (!wasFav) {
       const p = document.createElement('span');
       p.className = 'heart-particle';
@@ -682,7 +746,6 @@
       btn.appendChild(p);
       setTimeout(() => p.remove(), 800);
     }
-
     if (wasFav) {
       btn.classList.remove('favorited');
       if (icon) icon.className = 'bi bi-heart';
@@ -693,7 +756,6 @@
       if (span) span.textContent = 'Wishlisted';
     }
     btn.style.background = btn.style.border = btn.style.color = '';
-
     fetch('/store/favorites/toggle/' + productId + '/', {
       method: 'POST',
       headers: { 'X-CSRFToken': getCookie('csrftoken'), 'Content-Type': 'application/json' }
@@ -708,15 +770,14 @@
     .catch(e => console.error(e));
   }
 
+  /* ── Category nav ── */
   (function () {
     const track = document.getElementById('elite-nav-track');
     const inner = document.getElementById('elite-nav-inner');
     const prev  = document.getElementById('nav-prev');
     const next  = document.getElementById('nav-next');
     if (!track) return;
-
     const STEP = 300;
-
     function sync() {
       const atStart = track.scrollLeft < 4;
       const atEnd   = track.scrollLeft > track.scrollWidth - track.clientWidth - 4;
@@ -725,17 +786,13 @@
       inner.classList.toggle('show-left-fade',  !atStart);
       inner.classList.toggle('show-right-fade', !atEnd);
     }
-
     window.eliteSlide = function (dir) {
       track.scrollBy({ left: dir * STEP, behavior: 'smooth' });
     };
-
     track.addEventListener('scroll', sync, { passive: true });
     window.addEventListener('resize', sync);
-
     const active = track.querySelector('.elite-cat-item.active-cat');
     if (active) setTimeout(() => active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }), 250);
-
     let dragging = false, startX = 0, scrollStart = 0;
     track.addEventListener('mousedown', e => {
       dragging = true; track.style.cursor = 'grabbing';
@@ -747,25 +804,51 @@
       e.preventDefault();
       track.scrollLeft = scrollStart - (e.pageX - track.offsetLeft - startX) * 1.3;
     });
-
     track.setAttribute('tabindex', '0');
     track.addEventListener('keydown', e => {
       if (e.key === 'ArrowRight') eliteSlide(1);
       if (e.key === 'ArrowLeft')  eliteSlide(-1);
     });
-
     sync();
+  })();
+
+  /* ── Back to Top ── */
+  (function () {
+    const btn = document.getElementById('btt-btn');
+    if (!btn) return;
+    const arc = btn.querySelector('.btt-arc-fill');
+    const CIRCUM = 119.4;
+
+    function updateScroll() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docH = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docH > 0 ? Math.min(scrollTop / docH, 1) : 0;
+
+      // Dynamic: show after 30% of viewport height
+      if (scrollTop > window.innerHeight * 0.3) {
+        btn.classList.add('btt-visible');
+      } else {
+        btn.classList.remove('btt-visible');
+      }
+
+      // Progress arc
+      if (arc) arc.style.strokeDashoffset = CIRCUM * (1 - pct);
+    }
+
+    window.addEventListener('scroll', updateScroll, { passive: true });
+
+    btn.addEventListener('click', function () {
+      btn.style.transition = 'transform 0.15s ease';
+      btn.style.transform = 'translateY(4px) scale(0.94)';
+      setTimeout(() => { btn.style.transition = ''; btn.style.transform = ''; }, 150);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    updateScroll();
   })();
   </script>
 
-  <style>
-  @keyframes floatHeart {
-    0%   { opacity:1; transform:translateY(0) scale(1); }
-    100% { opacity:0; transform:translateY(-40px) scale(0.5); }
-  }
-  .heart-particle { position:absolute; pointer-events:none; }
-  </style>
-
   {% block extra_js %}{% endblock %}
+
 </body>
 </html>

@@ -155,7 +155,6 @@
   </div>
 </section>
 
-
 <section class="section-wrap">
   <div class="section-label">
     <h2>Shop by <span>Category</span></h2>
@@ -168,10 +167,9 @@
     {% for category in categories %}
     <a href="{% url 'store:product_list' %}?category={{ category.id }}" class="cat-card">
         
-        <!-- Image if exists, else smart emoji based on name -->
         <div class="cat-img-wrap">
           {% if category.image %}
-            <img src="{{ category.image.url }}" alt="{{ category.name }}">
+            <img src="{% if 'http' in category.image.name %}{{ category.image.name }}{% else %}{{ category.image.url }}{% endif %}" alt="{{ category.name }}">
           {% else %}
             <div class="cat-emoji-fallback">
               {% with name=category.name|lower %}
@@ -204,7 +202,6 @@
           <div class="cat-count">{{ category.products.count }} Items</div>
         </div>
 
-        <!-- Hover arrow -->
         <div class="cat-arrow">
           <i class="bi bi-arrow-right"></i>
         </div>
@@ -364,10 +361,6 @@
 }
 </style>
 
-
-
-
-
 <section class="section-wrap" style="padding-top: 0; padding-bottom: 0;">
   <div class="banner-strip">
     <div>
@@ -402,7 +395,7 @@
         <div class="card-product" style="cursor: pointer;" onclick="window.location.href='{% url 'store:product_detail' product.id %}'">
           <div class="card-img-wrap">
             {% if product.image %}
-              <img src="{{ product.image.url }}" alt="{{ product.name }}">
+              <img src="{% if 'http' in product.image.name %}{{ product.image.name }}{% else %}{{ product.image.url }}{% endif %}" alt="{{ product.name }}">
             {% else %}
               <div style="font-size: 3rem;">📦</div>
             {% endif %}
@@ -445,7 +438,7 @@
         <div class="card-product" style="cursor: pointer;" onclick="window.location.href='{% url 'store:product_detail' product.id %}'">
           <div class="card-img-wrap">
             {% if product.image %}
-              <img src="{{ product.image.url }}" alt="{{ product.name }}">
+              <img src="{% if 'http' in product.image.name %}{{ product.image.name }}{% else %}{{ product.image.url }}{% endif %}" alt="{{ product.name }}">
             {% else %}
               <div style="font-size: 3rem;">📦</div>
             {% endif %}
@@ -489,7 +482,7 @@
       <div class="card-product" style="cursor: pointer;" onclick="window.location.href='{% url 'store:product_detail' product.id %}'">
         <div class="card-img-wrap">
           {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            <img src="{% if 'http' in product.image.name %}{{ product.image.name }}{% else %}{{ product.image.url }}{% endif %}" alt="{{ product.name }}">
           {% else %}
             <div style="font-size: 3rem;">📦</div>
           {% endif %}

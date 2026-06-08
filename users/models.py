@@ -17,13 +17,24 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
-
-# Auto create profile when user is created
+ # Auto create profile when user is created
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
+    # 1. Skip signal execution completely if loading a fixture
+    if kwargs.get('raw', False):
+        return
+        
     if created:
         Profile.objects.create(user=instance)
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
+    # 2. Skip signal execution completely if loading a fixture
+    if kwargs.get('raw', False):
+        return
+        
+    # 3. Use a try/except block to safely handle missing profiles
+    try:
+        instance.profile.save()
+    except Profile.DoesNotExist:
+        Profile.objects.create(user=instance)

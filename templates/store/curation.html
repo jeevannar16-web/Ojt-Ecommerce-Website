@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitnessHub — Core Curation Workspace</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0f1115;
+            color: #e3e5e8;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding-bottom: 60px;
+        }
+        .header-panel {
+            background-color: #161920;
+            border-bottom: 1px solid #2c313d;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .kbd-pill {
+            background-color: #2b313e;
+            border: 1px solid #454d5e;
+            border-bottom: 3px solid #454d5e;
+            border-radius: 4px;
+            padding: 1px 6px;
+            font-family: monospace;
+            font-size: 0.85em;
+            color: #ffffff;
+        }
+        .product-card {
+            background-color: #161920;
+            border: 2px solid #2c313d;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.2s ease-in-out;
+            position: relative;
+            outline: none;
+            cursor: pointer;
+        }
+        .product-card:focus {
+            border-color: #00b0f4;
+            box-shadow: 0 0 12px rgba(0, 176, 244, 0.4);
+            transform: translateY(-4px);
+        }
+        .img-container {
+            height: 200px;
+            background-color: #0b0c10;
+        }
+        .product-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .card-body-custom {
+            padding: 12px;
+        }
+        .product-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .product-card.marked-good {
+            border-color: #23a55a !important;
+            background-color: #112419;
+        }
+        .badge-good {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #23a55a;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: none;
+            z-index: 10;
+        }
+        .product-card.marked-good .badge-good {
+            display: block;
+        }
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #23a55a;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+            z-index: 2000;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="statusToast" class="toast-notification">Changes Saved!</div>
+
+    <div class="header-panel mb-4 shadow">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center">
+            <div>
+                <h1 class="h5 m-0 text-white fw-bold">🏋️‍♂️ FitnessHub Curation Center</h1>
+                <p class="small text-muted m-0">Navigate layout with <span class="kbd-pill">←</span> <span class="kbd-pill">↑</span> <span class="kbd-pill">→</span> <span class="kbd-pill">↓</span> keys.</p>
+            </div>
+            <div class="d-flex align-items-center gap-3 mt-2 mt-md-0">
+                <div class="small text-muted">
+                    Actions: <span class="kbd-pill">H</span> Approve/Toggle | <span class="kbd-pill">Ctrl+V</span> Paste Product | <span class="kbd-pill">Ctrl+Shift+V</span> Paste Category
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-3" id="productGrid">
+            {% for product in products %}
+            <div class="col">
+                <div class="product-card h-100 {% if product.is_featured %}marked-good{% endif %}" tabindex="0" data-id="{{ product.id }}">
+                    <div class="badge-good">✓ APPROVED</div>
+                    <div class="img-container position-relative">
+                        <img src="{% if product.image %}{{ product.image.url }}{% else %}https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=400{% endif %}" class="product-img" alt="Product">
+                        
+                        <div class="position-absolute bottom-0 start-0 m-2 p-1 bg-dark rounded border border-secondary" style="width: 42px; height: 42px; z-index: 5;">
+                            <img src="{% if product.category.image %}{{ product.category.image.url }}{% else %}https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=100{% endif %}" class="w-100 h-100 cat-thumb-img" style="object-fit: cover;" title="Category: {{ product.category.name }}">
+                        </div>
+                    </div>
+                    <div class="card-body-custom">
+                        <div class="product-name text-white" title="{{ product.name }}">{{ product.name }}</div>
+                        <div class="small text-info fw-bold mb-1">🏷️ {{ product.category.name }}</div>
+                        <div class="small text-muted">ID: #{{ product.id }} | Stock: {{ product.stock }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = Array.from(document.querySelectorAll('.product-card'));
+            if (cards.length > 0) cards[0].focus();
+
+            function showToast(message) {
+                const toast = document.getElementById('statusToast');
+                toast.innerText = message;
+                toast.style.display = 'block';
+                setTimeout(() => { toast.style.display = 'none'; }, 2000);
+            }
+
+            function getItemsPerRow() {
+                if (window.innerWidth >= 992) return 5;
+                if (window.innerWidth >= 768) return 4;
+                return 2;
+            }
+
+            // Keyboard navigation and Approval 'H' Toggle key
+            window.addEventListener('keydown', (e) => {
+                const active = document.activeElement;
+                if (!active || !active.classList.contains('product-card')) return;
+
+                const idx = cards.indexOf(active);
+                let next = idx;
+                const perRow = getItemsPerRow();
+
+                if (e.key === 'ArrowRight' && idx < cards.length - 1) next = idx + 1;
+                if (e.key === 'ArrowLeft' && idx > 0) next = idx - 1;
+                if (e.key === 'ArrowDown' && idx + perRow < cards.length) next = idx + perRow;
+                if (e.key === 'ArrowUp' && idx - perRow >= 0) next = idx - perRow;
+
+                if (next !== idx) {
+                    cards[next].focus();
+                    e.preventDefault();
+                    return;
+                }
+
+                if (e.key.toLowerCase() === 'h') {
+                    const productId = active.getAttribute('data-id');
+                    
+                    fetch('/curation/update-asset/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: productId, action: 'toggle_approved' })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        active.classList.toggle('marked-good');
+                        showToast('Approval State Synced!');
+                    });
+                    e.preventDefault();
+                }
+            });
+
+            // Clipboard Paste Engine (Normal paste vs Shift paste)
+            window.addEventListener('paste', (e) => {
+                const active = document.activeElement;
+                if (!active || !active.classList.contains('product-card')) return;
+
+                const targetType = e.shiftKey ? 'category' : 'product';
+                const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+
+                for (let item of items) {
+                    if (item.type.indexOf('image') !== -1) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            const productId = active.getAttribute('data-id');
+                            const newBase64 = event.target.result;
+
+                            if (targetType === 'category') {
+                                active.querySelector('.cat-thumb-img').src = newBase64;
+                            } else {
+                                active.querySelector('.product-img').src = newBase64;
+                            }
+
+                            fetch('/curation/update-asset/', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ 
+                                    id: productId, 
+                                    image: newBase64,
+                                    target_type: targetType 
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(data => showToast(data.message))
+                            .catch(err => console.error('Error uploading:', err));
+                        };
+                        reader.readAsDataURL(item.getAsFile());
+                        e.preventDefault();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

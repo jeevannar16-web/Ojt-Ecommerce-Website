@@ -30,6 +30,8 @@ urlpatterns = [
     
     # 2. Ensure your handling endpoint route matches your HTML form action
     path('curation/update-asset/', views.update_curation_asset, name='update_curation_asset'),
+    path('curation/category/', views.category_curation_workspace, name='category_curation_workspace'),
+    path('curation/category/update-asset/', views.update_category_asset, name='update_category_asset'),
 
 
 ]

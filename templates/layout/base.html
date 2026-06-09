@@ -78,7 +78,6 @@
     }
 
     .nav-left-brand { display: flex; align-items: center; gap: 12px; }
-
     .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
     .logo-icon {
       width: 38px; height: 38px;
@@ -112,7 +111,6 @@
       padding: 8px 16px; border: 1px solid var(--clr-border); border-radius: 50px; transition: border-color 0.2s;
     }
     .btn-login:hover { border-color: var(--clr-accent); color: var(--clr-accent); }
-
     .btn-register {
       background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent2));
       color: #0d0d0d; text-decoration: none; font-size: 0.88rem;
@@ -135,54 +133,6 @@
     .user-dropdown:hover .dropdown-content { display: block; }
 
     main { flex: 1; position: relative; z-index: 1; }
-
-    footer {
-      background: var(--clr-surface);
-      border-top: 1px solid var(--clr-border);
-      padding: 60px 2rem 30px;
-    }
-    .footer-grid {
-      max-width: 1280px; margin: 0 auto;
-      display: grid; grid-template-columns: 2fr repeat(2, 1fr) 2fr; gap: 40px;
-    }
-    @media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr; } }
-    .footer-logo { font-family: var(--font-display); font-size: 1.7rem; color: var(--clr-text); margin-bottom: 12px; }
-    .footer-logo span { color: var(--clr-accent); }
-    .footer-tagline { color: var(--clr-muted); font-size: 0.88rem; line-height: 1.6; margin-bottom: 16px; max-width: 260px; }
-    .footer-heading { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--clr-accent); margin-bottom: 16px; }
-    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .footer-links a { color: var(--clr-muted); text-decoration: none; font-size: 0.88rem; transition: padding 0.2s; }
-    .footer-links a:hover { color: var(--clr-text); padding-left: 4px; }
-    .footer-newsletter { display: flex; margin-top: 12px; }
-    .footer-newsletter input {
-      background: var(--clr-card); border: 1px solid var(--clr-border); border-radius: 8px 0 0 8px;
-      padding: 10px 14px; color: var(--clr-text); font-size: 0.85rem; width: 100%; outline: none;
-    }
-    .footer-newsletter button {
-      background: var(--clr-accent); border: none; border-radius: 0 8px 8px 0;
-      padding: 10px 16px; color: #0d0d0d; font-weight: 600; cursor: pointer;
-    }
-    .footer-bottom {
-      max-width: 1280px; margin: 40px auto 0; padding-top: 20px;
-      border-top: 1px solid var(--clr-border);
-      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;
-      font-size: 0.8rem; color: var(--clr-muted);
-    }
-
-    .messages-wrap {
-      position: fixed; top: 24px; right: 24px; z-index: 10000;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .msg-toast {
-      background: #111111; border: 1px solid #d4af37; color: #ffffff;
-      padding: 12px 24px; border-radius: 8px; font-size: 0.9rem; font-weight: 600;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      animation: toastIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-    @keyframes toastIn {
-      from { opacity: 0; transform: translateX(50px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
 
     /* ════ ANIMATED CATEGORY NAV ════ */
     .elite-nav-wrap {
@@ -334,6 +284,21 @@
       transform: translateX(-50%) translateY(0);
     }
 
+    .messages-wrap {
+      position: fixed; top: 24px; right: 24px; z-index: 10000;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .msg-toast {
+      background: #111111; border: 1px solid #d4af37; color: #ffffff;
+      padding: 12px 24px; border-radius: 8px; font-size: 0.9rem; font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      animation: toastIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(50px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
     .custom-animated-toast {
       min-width: 340px; padding: 14px 20px;
       background: #141414; color: #ffffff;
@@ -368,20 +333,219 @@
       display: flex; align-items: center; justify-content: center;
       border: 2px solid #0d0d0d; box-shadow: 0 2px 8px rgba(239,68,68,0.4);
     }
-    .luxury-toast {
-      min-width: 320px; padding: 16px 24px; background: #111111; color: #ffffff;
-      font-family: system-ui,-apple-system,sans-serif; font-size: 0.9rem; font-weight: 600;
-      letter-spacing: 0.5px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.04);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.8); display: flex; align-items: center; gap: 12px;
-      transform: translateX(130%);
-      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.5s ease;
-      opacity: 0;
+
+    /* ════ FOOTER ════ */
+    .site-footer {
+      background: #0a0a0a;
+      position: relative;
+      z-index: 1;
     }
-    .luxury-toast.slide-in { transform: translateX(0); opacity: 1; }
-    .luxury-toast.status-success { border-left: 4px solid #d4af37; }
-    .luxury-toast.status-info    { border-left: 4px solid #3498db; }
-    .luxury-toast.status-error   { border-left: 4px solid #e74c3c; }
-    .footer-newsletter input:focus { border-color: #d4af37 !important; outline: none; }
+    .footer-glow-line {
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(232,201,126,0.15) 20%,
+        rgba(232,201,126,0.8) 50%,
+        rgba(232,201,126,0.15) 80%,
+        transparent 100%
+      );
+    }
+    .footer-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 2rem 0;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.8fr;
+      gap: 56px;
+    }
+    @media (max-width: 900px) {
+      .footer-body { grid-template-columns: 1fr 1fr; gap: 36px; }
+    }
+    @media (max-width: 560px) {
+      .footer-body { grid-template-columns: 1fr; gap: 32px; }
+    }
+
+    /* Brand column */
+    .footer-brand-name {
+      font-family: var(--font-display);
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--clr-text);
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+    }
+    .footer-brand-name span { color: var(--clr-accent); }
+    .footer-brand-tagline {
+      color: var(--clr-muted);
+      font-size: 0.84rem;
+      line-height: 1.75;
+      max-width: 230px;
+      margin-bottom: 24px;
+    }
+    .footer-socials { display: flex; gap: 8px; }
+    .footer-social-btn {
+      width: 36px; height: 36px;
+      border-radius: 9px;
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--clr-muted);
+      font-size: 1rem;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .footer-social-btn:hover {
+      border-color: var(--clr-accent);
+      color: var(--clr-accent);
+      background: rgba(232,201,126,0.06);
+    }
+
+    /* Column headings */
+    .footer-col-heading {
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 2.2px;
+      text-transform: uppercase;
+      color: var(--clr-accent);
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .footer-col-heading::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #222;
+    }
+
+    /* Links */
+    .footer-nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .footer-nav-list a {
+      color: var(--clr-muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      display: flex;
+      align-items: center;
+      gap: 0px;
+      transition: color 0.2s, gap 0.2s;
+    }
+    .footer-nav-list a .ft-arrow {
+      color: var(--clr-accent);
+      font-size: 1rem;
+      opacity: 0;
+      transition: opacity 0.2s, margin 0.2s;
+      margin-right: 0;
+    }
+    .footer-nav-list a:hover { color: var(--clr-text); }
+    .footer-nav-list a:hover .ft-arrow { opacity: 1; margin-right: 5px; }
+
+    /* Newsletter box */
+    .footer-nl-box {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 14px;
+      padding: 22px;
+    }
+    .footer-nl-desc {
+      color: var(--clr-muted);
+      font-size: 0.8rem;
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+    .footer-nl-form { display: flex; }
+    .footer-nl-input {
+      flex: 1;
+      background: #0d0d0d;
+      border: 1px solid #2a2a2a;
+      border-right: none;
+      border-radius: 8px 0 0 8px;
+      padding: 10px 14px;
+      color: var(--clr-text);
+      font-size: 0.84rem;
+      font-family: var(--font-body);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .footer-nl-input:focus { border-color: var(--clr-accent); }
+    .footer-nl-btn {
+      background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent2));
+      border: none;
+      border-radius: 0 8px 8px 0;
+      padding: 10px 18px;
+      color: #0d0d0d;
+      font-weight: 700;
+      font-size: 0.82rem;
+      font-family: var(--font-body);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+    .footer-nl-btn:hover { opacity: 0.88; }
+    .footer-nl-badges {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .footer-nl-badge {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 6px;
+      padding: 5px 11px;
+      font-size: 0.72rem;
+      color: var(--clr-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Bottom bar */
+    .footer-bottom-bar {
+      max-width: 1200px;
+      margin: 52px auto 0;
+      border-top: 1px solid #1a1a1a;
+      padding: 22px 2rem 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .footer-copy { font-size: 0.78rem; color: var(--clr-muted); }
+    .footer-promo {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.75rem;
+      color: #444;
+    }
+    .footer-promo-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--clr-accent);
+      display: inline-block;
+      animation: ftPulse 2.2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes ftPulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.7); }
+    }
+    .footer-promo strong { color: var(--clr-accent); }
+    .footer-legal { display: flex; gap: 20px; }
+    .footer-legal a {
+      font-size: 0.78rem;
+      color: var(--clr-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-legal a:hover { color: var(--clr-accent); }
 
     /* ════ BACK TO TOP ════ */
     #btt-btn {
@@ -435,9 +599,7 @@
       transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
       box-shadow: 0 0 14px rgba(232,201,126,0.35);
     }
-    #btt-btn:hover .btt-icon-wrap {
-      transform: translateY(-3px) rotate(-15deg);
-    }
+    #btt-btn:hover .btt-icon-wrap { transform: translateY(-3px) rotate(-15deg); }
     #btt-btn .btt-ring {
       position: absolute;
       left: 8px; top: 50%;
@@ -597,48 +759,152 @@
     {% block content %}{% endblock %}
   </main>
 
-  <footer>
-    <div class="footer-grid">
+
+  <!-- ════ FOOTER ════ -->
+  <footer class="site-footer">
+    <div class="footer-glow-line"></div>
+
+    <div class="footer-body">
+
+      <!-- Col 1: Brand -->
       <div>
-        <div class="footer-logo">Fitness<span>Hub</span></div>
-        <p class="footer-tagline">Curated goods, beautifully delivered. Find what moves you.</p>
+        <div class="footer-brand-name">Fitness<span>Hub</span></div>
+        <p class="footer-brand-tagline">Curated fitness goods, beautifully delivered. Find what moves you.</p>
+        <div class="footer-socials">
+          <a href="#" class="footer-social-btn" aria-label="Twitter" title="Twitter">
+            <i class="bi bi-twitter-x"></i>
+          </a>
+          <a href="#" class="footer-social-btn" aria-label="Instagram" title="Instagram">
+            <i class="bi bi-instagram"></i>
+          </a>
+          <a href="#" class="footer-social-btn" aria-label="LinkedIn" title="LinkedIn">
+            <i class="bi bi-linkedin"></i>
+          </a>
+          <a href="#" class="footer-social-btn" aria-label="YouTube" title="YouTube">
+            <i class="bi bi-youtube"></i>
+          </a>
+        </div>
       </div>
+
+      <!-- Col 2: Shop — only real working URLs -->
       <div>
-        <div class="footer-heading">Shop</div>
-        <ul class="footer-links">
-          <li><a href="#">New Arrivals</a></li>
-          <li><a href="#">Best Sellers</a></li>
-          <li><a href="#">Sale Collection</a></li>
+        <div class="footer-col-heading">Shop</div>
+        <ul class="footer-nav-list">
+          <li>
+            <a href="{% url 'store:product_list' %}">
+              <span class="ft-arrow">›</span>All Products
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'store:sale_catalog' %}">
+              <span class="ft-arrow">›</span>Sale Collection
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'store:favorites_list' %}">
+              <span class="ft-arrow">›</span>My Wishlist
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'store:cart' %}">
+              <span class="ft-arrow">›</span>My Cart
+            </a>
+          </li>
         </ul>
       </div>
+
+      <!-- Col 3: Account — only real working URLs -->
       <div>
-        <div class="footer-heading">Support</div>
-        <ul class="footer-links">
-          <li><a href="#">Help Centre</a></li>
-          <li><a href="#">Track Order</a></li>
-          <li><a href="#">Contact Us</a></li>
+        <div class="footer-col-heading">Account</div>
+        <ul class="footer-nav-list">
+          {% if user.is_authenticated %}
+          <li>
+            <a href="{% url 'profile' %}">
+              <span class="ft-arrow">›</span>My Profile
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'store:order_history' %}">
+              <span class="ft-arrow">›</span>Order History
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'store:cart' %}">
+              <span class="ft-arrow">›</span>Checkout
+            </a>
+          </li>
+          {% else %}
+          <li>
+            <a href="{% url 'login' %}">
+              <span class="ft-arrow">›</span>Login
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'register' %}">
+              <span class="ft-arrow">›</span>Create Account
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'store:cart' %}">
+              <span class="ft-arrow">›</span>View Cart
+            </a>
+          </li>
+          {% endif %}
         </ul>
       </div>
+
+      <!-- Col 4: Newsletter -->
       <div>
-        <div class="footer-heading">Stay in the Loop</div>
-        <p style="color:var(--clr-muted); font-size:0.85rem; line-height:1.5; margin-bottom:1rem;">
-          Get early access to exclusive collection drops.
-        </p>
-        <form id="ajax-newsletter-form" class="footer-newsletter">
-          {% csrf_token %}
-          <input type="email" id="newsletter-email-input" name="email" placeholder="your@email.com" required>
-          <button type="submit" id="newsletter-submit-btn">Subscribe</button>
-        </form>
+        <div class="footer-col-heading">Newsletter</div>
+        <div class="footer-nl-box">
+          <p class="footer-nl-desc">Get early access to exclusive drops and members-only deals.</p>
+          <form id="ajax-newsletter-form" class="footer-nl-form">
+            {% csrf_token %}
+            <input
+              type="email"
+              id="newsletter-email-input"
+              name="email"
+              placeholder="your@email.com"
+              required
+              class="footer-nl-input"
+            >
+            <button type="submit" id="newsletter-submit-btn" class="footer-nl-btn">
+              Subscribe
+            </button>
+          </form>
+          <div class="footer-nl-badges">
+            <div class="footer-nl-badge">
+              <i class="bi bi-shield-check" style="color:var(--clr-accent);"></i>
+              No spam, ever
+            </div>
+            <div class="footer-nl-badge">
+              <i class="bi bi-bell" style="color:var(--clr-accent);"></i>
+              Weekly drops
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /footer-body -->
+
+    <!-- Bottom bar -->
+    <div class="footer-bottom-bar">
+      <p class="footer-copy">© {% now "Y" %} FitnessHub. All rights reserved.</p>
+
+      <div class="footer-promo">
+        <span class="footer-promo-dot"></span>
+        Free shipping over $50 &nbsp;·&nbsp; Code <strong>FIT-CODEX</strong>
+      </div>
+
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookies</a>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p>© {% now "Y" %} FitnessHub. All rights reserved.</p>
-      <p>
-        <a href="#" style="color:var(--clr-muted); text-decoration:none;">Privacy Policy</a> ·
-        <a href="#" style="color:var(--clr-muted); text-decoration:none;">Terms</a>
-      </p>
-    </div>
+
   </footer>
+
 
   <div id="single-toast-container"
        style="position:fixed; bottom:30px; right:30px; z-index:10000; display:flex; flex-direction:column; gap:10px;"></div>
@@ -666,7 +932,6 @@
       </defs>
     </svg>
   </button>
-
 
 
   <script>
@@ -702,125 +967,63 @@
     }, 2600);
   }
 
-  /* ════════════════════════════════════════════════════════════════
-     ADD TO CART - FIXED VERSION
-  ════════════════════════════════════════════════════════════════ */
+  /* ── Add to Cart ── */
   function addToCart(event, productId, btnEl) {
     if (event) event.stopPropagation();
-
     const btn = btnEl || (event && event.currentTarget) || null;
-
     if (btn) btn.disabled = true;
-
-    // Get CSRF token
     const csrfToken = getCookie('csrftoken');
-    console.log('Adding to cart - Product ID:', productId);
-    console.log('CSRF Token found:', !!csrfToken);
-
-    // Validate CSRF token exists
     if (!csrfToken) {
-      showToast('Security error: CSRF token missing. Please refresh the page.', true);
+      showToast('Security error: please refresh the page.', true);
       if (btn) btn.disabled = false;
       return;
     }
-
     fetch('/store/cart/add/' + productId + '/', {
       method: 'POST',
-      headers: {
-        'X-CSRFToken': csrfToken,
-        'Content-Type': 'application/json'
-      },
+      headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' },
       credentials: 'same-origin'
     })
     .then(response => {
-      console.log('Response status:', response.status);
-      
-      if (response.status === 401) {
-        window.location.href = '/users/login/';
-        return null;
-      }
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
+      if (response.status === 401) { window.location.href = '/users/login/'; return null; }
+      if (!response.ok) throw new Error('HTTP ' + response.status);
       return response.json();
     })
     .then(data => {
       if (!data) return;
-
-      console.log('Cart response:', data);
-
       if (data.success) {
-        // Update cart badge
         const badge = document.getElementById('cart-count');
-        if (badge && data.cart_count !== undefined) {
-          badge.textContent = data.cart_count;
-        }
-
-        // Handle stock depletion
+        if (badge && data.cart_count !== undefined) badge.textContent = data.cart_count;
         const stockEl = document.getElementById('stock-count');
         if (stockEl && data.new_stock !== undefined) {
           stockEl.textContent = data.new_stock;
           if (data.new_stock <= 0) {
-            if (btn) {
-              btn.disabled = true;
-              btn.textContent = 'Out of Stock';
-              btn.style.background = '#444';
-              btn.style.cursor = 'not-allowed';
-            }
+            if (btn) { btn.disabled = true; btn.textContent = 'Out of Stock'; btn.style.background = '#444'; btn.style.cursor = 'not-allowed'; }
             const sd = document.getElementById('stock-status-display');
-            if (sd) {
-              sd.innerHTML = '<span style="color:#e63946;font-weight:bold;display:flex;align-items:center;"><span style="width:8px;height:8px;background:#e63946;border-radius:50%;display:inline-block;margin-right:8px;"></span>Out of Stock</span>';
-            }
+            if (sd) sd.innerHTML = '<span style="color:#e63946;font-weight:bold;">Out of Stock</span>';
             return;
           }
         }
-
-        // Cart icon pop animation
         const cartIcon = document.getElementById('cart-count');
-        if (cartIcon) {
-          cartIcon.style.transform = 'scale(1.4)';
-          setTimeout(() => { cartIcon.style.transform = ''; }, 250);
-        }
-
+        if (cartIcon) { cartIcon.style.transform = 'scale(1.4)'; setTimeout(() => { cartIcon.style.transform = ''; }, 250); }
         showToast(data.message || '✓ Added to bag!');
       } else {
         showToast(data.message || 'Cannot add more of this item!', true);
       }
     })
-    .catch(error => {
-      console.error('Fetch error:', error);
-      showToast('❌ Network error: ' + error.message, true);
-    })
-    .finally(() => {
-      if (btn && !btn.textContent.includes('Out of Stock')) {
-        btn.disabled = false;
-      }
-    });
+    .catch(error => { showToast('Network error: ' + error.message, true); })
+    .finally(() => { if (btn && !btn.textContent.includes('Out of Stock')) btn.disabled = false; });
   }
 
-  /* ════════════════════════════════════════════════════════════════
-     TOGGLE FAVOURITE - FIXED VERSION
-  ════════════════════════════════════════════════════════════════ */
+  /* ── Toggle Favourite ── */
   function toggleFavorite(event, productId, btn) {
     if (event) event.stopPropagation();
-    if (!productId || !btn) {
-      console.error('Missing productId or button element');
-      return;
-    }
-
+    if (!productId || !btn) return;
     const icon = btn.querySelector('i');
     const span = btn.querySelector('span');
     const wasFav = btn.classList.contains('favorited');
-
-    console.log('Toggling favorite - Product ID:', productId, 'Was favorited:', wasFav);
-
-    // Optimistic UI update
     btn.classList.remove('pop');
     void btn.offsetWidth;
     btn.classList.add('pop');
-
     if (!wasFav) {
       const p = document.createElement('span');
       p.className = 'heart-particle';
@@ -829,7 +1032,6 @@
       btn.appendChild(p);
       setTimeout(() => p.remove(), 800);
     }
-
     if (wasFav) {
       btn.classList.remove('favorited');
       if (icon) icon.className = 'bi bi-heart';
@@ -839,71 +1041,35 @@
       if (icon) icon.className = 'bi bi-heart-fill';
       if (span) span.textContent = 'Wishlisted';
     }
-
-    // Get CSRF token
     const csrfToken = getCookie('csrftoken');
-    console.log('CSRF Token found:', !!csrfToken);
-
     if (!csrfToken) {
-      showToast('Security error: CSRF token missing. Please refresh the page.', true);
-      if (wasFav) {
-        btn.classList.add('favorited');
-        if (icon) icon.className = 'bi bi-heart-fill';
-      } else {
-        btn.classList.remove('favorited');
-        if (icon) icon.className = 'bi bi-heart';
-      }
+      showToast('Security error: please refresh the page.', true);
       return;
     }
-
-    // Sync with server
     fetch('/store/favorites/toggle/' + productId + '/', {
       method: 'POST',
-      headers: {
-        'X-CSRFToken': csrfToken,
-        'Content-Type': 'application/json'
-      },
+      headers: { 'X-CSRFToken': csrfToken, 'Content-Type': 'application/json' },
       credentials: 'same-origin'
     })
     .then(response => {
-      console.log('Favorite response status:', response.status);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
+      if (!response.ok) throw new Error('HTTP ' + response.status);
       return response.json();
     })
     .then(data => {
-      console.log('Favorite response:', data);
-      
       if (data.success) {
         const c = document.querySelector('.global-fav-count');
-        if (c && data.total_favorites !== undefined) {
-          c.textContent = data.total_favorites;
-        }
+        if (c && data.total_favorites !== undefined) c.textContent = data.total_favorites;
         showToast(data.message || '✓ Updated!');
       } else {
-        if (wasFav) {
-          btn.classList.add('favorited');
-          if (icon) icon.className = 'bi bi-heart-fill';
-        } else {
-          btn.classList.remove('favorited');
-          if (icon) icon.className = 'bi bi-heart';
-        }
+        if (wasFav) { btn.classList.add('favorited'); if (icon) icon.className = 'bi bi-heart-fill'; }
+        else { btn.classList.remove('favorited'); if (icon) icon.className = 'bi bi-heart'; }
         showToast(data.message || 'Something went wrong.', true);
       }
     })
     .catch(error => {
-      console.error('Fetch error:', error);
-      if (wasFav) {
-        btn.classList.add('favorited');
-        if (icon) icon.className = 'bi bi-heart-fill';
-      } else {
-        btn.classList.remove('favorited');
-        if (icon) icon.className = 'bi bi-heart';
-      }
-      showToast('❌ Network error: ' + error.message, true);
+      if (wasFav) { btn.classList.add('favorited'); if (icon) icon.className = 'bi bi-heart-fill'; }
+      else { btn.classList.remove('favorited'); if (icon) icon.className = 'bi bi-heart'; }
+      showToast('Network error: ' + error.message, true);
     });
   }
 
@@ -955,7 +1121,6 @@
     if (!btn) return;
     const arc = btn.querySelector('.btt-arc-fill');
     const CIRCUM = 119.4;
-
     function updateScroll() {
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const docH = document.documentElement.scrollHeight - window.innerHeight;
@@ -967,20 +1132,16 @@
       }
       if (arc) arc.style.strokeDashoffset = CIRCUM * (1 - pct);
     }
-
     window.addEventListener('scroll', updateScroll, { passive: true });
-
     btn.addEventListener('click', function () {
       btn.style.transition = 'transform 0.15s ease';
       btn.style.transform = 'translateY(4px) scale(0.94)';
       setTimeout(() => { btn.style.transition = ''; btn.style.transform = ''; }, 150);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-
     updateScroll();
   })();
-</script>
-
+  </script>
 
   {% block extra_js %}{% endblock %}
 

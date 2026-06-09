@@ -12,6 +12,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.db.models import Avg
 
+
 from .models import Review
 
 from django.db.models import Count
@@ -577,7 +578,7 @@ def submit_review(request, product_id):
 
 
 def curation_workspace(request):
-    """Display the curation workspace with a single product."""
+    """Display the curation workspace with a single product - ALLOW EDITING ANYTIME."""
     current_id = request.GET.get('id')
     
     if current_id:
@@ -586,20 +587,21 @@ def curation_workspace(request):
         except Product.DoesNotExist:
             product = None
     else:
-        # Start with first uncurated product
-        product = Product.objects.exclude(image__contains='curated_prod_').order_by('id').first()
+        # Show FIRST product (not just uncurated) - allows editing anytime
+        product = Product.objects.order_by('id').first()
 
     prev_product = None
     next_product = None
     
     if product:
-        # Get previous product (lower ID, uncurated)
+        # Get previous product
         prev_product = Product.objects.filter(id__lt=product.id).order_by('-id').first()
-        # Get next product (higher ID, uncurated)
+        # Get next product
         next_product = Product.objects.filter(id__gt=product.id).order_by('id').first()
 
     total = Product.objects.count()
-    curated = Product.objects.filter(image__contains='curated_prod_').count()
+    # Count products WITH images (curated)
+    curated = Product.objects.exclude(image='').exclude(image__isnull=True).count()
 
     # Current position: count products with ID <= current product
     current_position = 0
@@ -615,15 +617,17 @@ def curation_workspace(request):
         'current_position': current_position,
     }
     
+    print(f"\n✅ Curation Workspace - Product {product.id if product else 'None'}")
+    print(f"   Position: {current_position}/{total} | Curated: {curated}")
+    
     return render(request, 'store/curation.html', context)
-
 
 
 @csrf_exempt
 def update_curation_asset(request):
     """
     Handle image upload and save it to the product.
-    One image per product only.
+    Allows editing anytime, even if already curated.
     """
     if request.method != "POST":
         return JsonResponse({
@@ -678,42 +682,24 @@ def update_curation_asset(request):
                 "error": f"Image decode error: {str(e)}"
             }, status=400)
 
-        # Save image
+        # Save image - ALLOW RE-EDITING ANYTIME
         if target_type == 'category' and product.category:
             category = product.category
-
             file_name = f"curated_cat_{category.id}.{ext}"
-
-            category.image.save(
-                file_name,
-                raw_binary_file,
-                save=True
-            )
-
+            category.image.save(file_name, raw_binary_file, save=True)
+            print(f"✅ Updated category image: {file_name}")
         else:
             file_name = f"curated_prod_{product.id}.{ext}"
-
-            product.image.save(
-                file_name,
-                raw_binary_file,
-                save=True
-            )
-
+            product.image.save(file_name, raw_binary_file, save=True)
             product.save()
-        print("\n----- DEBUG -----")
-        print("Current Product:", product.id)
+            print(f"✅ Updated product image: {file_name}")
 
-        next_product = Product.objects.exclude(
-            image__contains='curated_prod_'
-        ).filter(
-            id__gt=product.id
-        ).order_by('id').first()
+        # Get next product - SHOW ALL PRODUCTS (not just uncurated)
+        next_product = Product.objects.filter(id__gt=product.id).order_by('id').first()
 
-        # Wrap around
+        # Wrap around to first if at the end
         if not next_product:
-            next_product = Product.objects.exclude(
-                image__contains='curated_prod_'
-            ).order_by('id').first()
+            next_product = Product.objects.order_by('id').first()
 
         if next_product:
             next_url = f"/store/curation/?id={next_product.id}"
@@ -726,9 +712,103 @@ def update_curation_asset(request):
         })
 
     except Exception as e:
-        print("CURATION ERROR:", str(e))
+        print(f"❌ CURATION ERROR: {str(e)}")
+        import traceback
+        traceback.print_exc()
 
         return JsonResponse({
             "success": False,
             "error": str(e)
         }, status=500)
+
+
+def category_curation_workspace(request):
+    """Display category curation workspace - ALLOW EDITING ANYTIME."""
+    current_id = request.GET.get('id')
+
+    if current_id:
+        try:
+            category = Category.objects.get(id=current_id)
+        except Category.DoesNotExist:
+            category = None
+    else:
+        # Show FIRST category (allows editing anytime)
+        category = Category.objects.order_by('id').first()
+
+    prev_category = None
+    next_category = None
+
+    if category:
+        prev_category = Category.objects.filter(id__lt=category.id).order_by('-id').first()
+        next_category = Category.objects.filter(id__gt=category.id).order_by('id').first()
+
+    total = Category.objects.count()
+    current_position = 0
+    if category:
+        current_position = Category.objects.filter(id__lte=category.id).count()
+
+    context = {
+        'category': category,
+        'prev_category': prev_category,
+        'next_category': next_category,
+        'total': total,
+        'current_position': current_position,
+    }
+
+    print(f"\n✅ Category Curation - Category {category.id if category else 'None'}")
+    print(f"   Position: {current_position}/{total}")
+
+    return render(request, 'store/curation_category.html', context)
+
+
+@csrf_exempt
+def update_category_asset(request):
+    """Handle category image upload - ALLOW EDITING ANYTIME."""
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Invalid request method"}, status=405)
+
+    try:
+        category_id = request.POST.get('id')
+        image_data = request.POST.get('image')
+
+        if not category_id or not image_data:
+            return JsonResponse({"success": False, "error": "Missing category ID or image data"}, status=400)
+
+        try:
+            category = Category.objects.get(id=category_id)
+        except Category.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Category not found"}, status=404)
+
+        if not image_data.startswith('data:image'):
+            return JsonResponse({"success": False, "error": "Invalid image format"}, status=400)
+
+        format_part, imgstr = image_data.split(';base64,')
+        ext = format_part.split('/')[-1].lower()
+
+        if ext not in ['png', 'jpg', 'jpeg', 'gif', 'webp']:
+            return JsonResponse({"success": False, "error": f"Unsupported format: {ext}"}, status=400)
+
+        raw_binary_file = ContentFile(base64.b64decode(imgstr))
+        file_name = f"curated_cat_{category.id}.{ext}"
+        category.image.save(file_name, raw_binary_file, save=True)
+        print(f"✅ Updated category image: {file_name}")
+
+        # Get next category - SHOW ALL (not just uncurated)
+        next_category = Category.objects.filter(id__gt=category.id).order_by('id').first()
+        
+        # Wrap around to first if at the end
+        if not next_category:
+            next_category = Category.objects.order_by('id').first()
+
+        if next_category:
+            next_url = f"/store/curation/category/?id={next_category.id}"
+        else:
+            next_url = "/store/curation/category/"
+
+        return JsonResponse({"success": True, "next_url": next_url})
+
+    except Exception as e:
+        print(f"❌ CATEGORY CURATION ERROR: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({"success": False, "error": str(e)}, status=500)

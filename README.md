@@ -50,4 +50,19 @@ Follow these exact terminal commands sequentially to move into your directory, b
 ### 1. Move into the Cloned Repository
 ```bash
 cd Final-Project---Team-Codex
-activate venv and setup.py
+
+On Windows (Command Prompt / PowerShell):
+python3.12 -m venv venv
+venv\Scripts\activate
+
+On macOS / Linux:
+python -m venv venv
+source venv/bin/activate
+
+python setup.py
+
+
+python manage.py runserver 9000
+
+
+

@@ -10,3 +10,7 @@ def split(value, arg):
 @register.filter
 def trim(value):
     return value.strip()
+
+@register.filter
+def dict_key(value, key):
+    return value.get(key)

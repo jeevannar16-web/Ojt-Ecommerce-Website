@@ -1,201 +1,167 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Join Fitness Hub</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+{% extends 'layout/base.html' %}
+{% load static %}
 
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
+{% block title %}Create Account — FitnessHub{% endblock %}
 
-        .register-container {
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 450px;
-        }
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/register.css' %}">
+{% endblock %}
 
-        h2 {
-            color: #333333;
-            margin-bottom: 24px;
-            font-size: 28px;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        p {
-            margin-bottom: 18px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            font-size: 14px;
-            font-weight: 600;
-            color: #4a5568;
-            margin-bottom: 6px;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 15px;
-            transition: all 0.2s ease;
-            color: #334155;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-        }
-
-        /* Modern Show Password Checkbox Row */
-        .show-password-row {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 15px;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .show-password-row input {
-            cursor: pointer;
-            width: 16px;
-            height: 16px;
-        }
-
-        .show-password-row label {
-            margin-bottom: 0;
-            font-weight: 500;
-            color: #64748b;
-            cursor: pointer;
-        }
-
-        .helptext, ul.helptext {
-            font-size: 12px;
-            color: #64748b;
-            margin-top: 4px;
-            padding-left: 14px;
-            line-height: 1.4;
-        }
-
-        /* Error Text Styling from your screenshot */
-        ul.errorlist, .errorlist li {
-            list-style: none;
-            color: #ef4444;
-            font-size: 13px;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-
-        button {
-            width: 100%;
-            background-color: #3b82f6;
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background-color: #2563eb;
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #64748b;
-        }
-
-        .login-link a {
-            color: #3b82f6;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-
-<div class="register-container">
-    <h2>Join the Fitness Hub</h2>
-
+{% block content %}
+<div class="register-wrap">
+  <div class="register-card">
+    <div class="brand">
+      <div class="icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+      </div>
+      <h2>Create Account</h2>
+      <p>Join FitnessHub and start your journey</p>
+    </div>
 
     {% if messages %}
-    {% for message in messages %}
-        <div class="errorlist" style="color: #ef4444; font-weight: 600; text-align: center; margin-bottom: 15px;">
-            {{ message }}
+      {% for message in messages %}
+        <div class="reg-error">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST" class="reg-form">
+      {% csrf_token %}
+      <div class="form-row">
+        <label for="id_username">Username</label>
+        <input type="text" name="username" id="id_username" placeholder="Choose a username" value="{{ remembered.username }}" required maxlength="150">
+      </div>
+      <div class="form-row">
+        <label for="id_email">Email</label>
+        <input type="email" name="email" id="id_email" placeholder="your@email.com" value="{{ remembered.email }}" required>
+      </div>
+      <div class="form-row">
+        <label for="id_password">Password</label>
+        <div class="pwd-field">
+          <input type="password" name="password" id="id_password" placeholder="Create a password" required>
+          <button type="button" class="pwd-toggle" onclick="togglePwd('id_password', this)" tabindex="-1" aria-label="Toggle password visibility">
+            <svg class="eye-icon eye-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+              <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+            </svg>
+            <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
         </div>
-    {% endfor %}
-{% endif %}
-
-
-
-    
-    <form method="POST" id="registerForm">
-        {% csrf_token %}
-        {{ form.as_p }}
-        
-        <div class="show-password-row">
-            <input type="checkbox" id="togglePassword">
-            <label for="togglePassword">Show Password</label>
+        <div class="pwd-strength" id="pwd-strength">
+          <div class="pwd-strength-bar" id="pwd-strength-bar"></div>
+          <div class="pwd-strength-text" id="pwd-strength-text"></div>
         </div>
+      </div>
+      <div class="form-row">
+        <label for="id_password_confirm">Confirm Password</label>
+        <div class="pwd-field">
+          <input type="password" name="password_confirm" id="id_password_confirm" placeholder="Re-enter your password" required>
+          <button type="button" class="pwd-toggle" onclick="togglePwd('id_password_confirm', this)" tabindex="-1" aria-label="Toggle password visibility">
+            <svg class="eye-icon eye-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+              <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+            </svg>
+            <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+        <div class="pwd-match" id="pwd-match"></div>
+      </div>
 
-        <button type="submit">Sign Up</button>
+      <label class="seller-check">
+        <input type="checkbox" name="want_seller" id="id_want_seller">
+        <div class="seller-text">
+          <strong>Become a Seller</strong>
+          <span>List your products on FitnessHub (requires admin approval). <a href="{% url 'store:seller_center' %}" style="color:#d4af37;text-decoration:none;">Learn more →</a></span>
+        </div>
+      </label>
+
+      <button type="submit" class="reg-btn">Create Account</button>
     </form>
-    
-    <div class="login-link">
-        Already have an account? <a href="{% url 'login' %}">Log In</a>
+
+    <div class="social-auth">
+      <div class="social-divider"><span>or sign up with</span></div>
+      <a href="/accounts/google/login/?from=signup" class="google-btn">
+        <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59A14.5 14.5 0 0 1 9.5 24c0-1.59.28-3.14.76-4.59l-7.98-6.19A23.99 23.99 0 0 0 0 24c0 3.77.87 7.35 2.56 10.56l7.97-6.17z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 48 48z"/></svg>
+        Continue with Google
+      </a>
     </div>
+
+    <div class="reg-divider">Already have an account?</div>
+    <p class="reg-footer">
+      <a href="{% url 'login' %}">Sign In</a>
+    </p>
+  </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
 <script>
-    // JavaScript to cycle field attributes between 'password' and 'text'
-    document.getElementById('togglePassword').addEventListener('change', function() {
-        const passwordFields = document.querySelectorAll('input[type="password"], input[data-is-password="true"]');
-        
-        passwordFields.forEach(field => {
-            if (this.checked) {
-                field.type = 'text';
-                // Mark it so we can find it again when hiding
-                field.setAttribute('data-is-password', 'true');
-            } else {
-                field.type = 'password';
-            }
-        });
-    });
-</script>
+function togglePwd(id, btn) {
+  const input = document.getElementById(id);
+  const open = btn.querySelector('.eye-icon:not(.eye-off)');
+  const off = btn.querySelector('.eye-off');
+  if (input.type === 'password') {
+    input.type = 'text';
+    off.style.display = 'none';
+    open.style.display = '';
+  } else {
+    input.type = 'password';
+    open.style.display = 'none';
+    off.style.display = '';
+  }
+}
 
-</body>
-</html>
+const pwdInput = document.getElementById('id_password');
+const confirmInput = document.getElementById('id_password_confirm');
+const bar = document.getElementById('pwd-strength-bar');
+const text = document.getElementById('pwd-strength-text');
+const matchEl = document.getElementById('pwd-match');
+
+const strengthLabels = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
+const strengthColors = ['', '#ef4444', '#f59e0b', '#3b82f6', '#2ecc71', '#10b981'];
+
+pwdInput.addEventListener('input', function() {
+  const val = this.value;
+  let score = 0;
+  if (val.length >= 6) score++;
+  if (val.length >= 10) score++;
+  if (/[a-z]/.test(val) && /[A-Z]/.test(val)) score++;
+  if (/\d/.test(val)) score++;
+  if (/[^a-zA-Z0-9]/.test(val)) score++;
+
+  bar.style.width = (score * 20) + '%';
+  bar.style.background = strengthColors[score] || '';
+  text.textContent = score ? strengthLabels[score] || '' : '';
+  bar.style.background = score ? strengthColors[score] : '';
+
+  if (confirmInput.value) checkMatch();
+});
+
+function checkMatch() {
+  if (!confirmInput.value) {
+    matchEl.textContent = '';
+    return;
+  }
+  if (pwdInput.value === confirmInput.value) {
+    matchEl.textContent = '✓ Passwords match';
+    matchEl.style.color = '#2ecc71';
+  } else {
+    matchEl.textContent = '✗ Passwords do not match';
+    matchEl.style.color = '#ef4444';
+  }
+}
+
+confirmInput.addEventListener('input', checkMatch);
+</script>
+{% endblock %}

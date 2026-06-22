@@ -4,17 +4,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    # 💡 FIX: Route the root domain through lude('homepagthe homepages app URLs file
-   
-    
     path('admin/', admin.site.urls),
-    
+    path('accounts/', include('allauth.urls')),
     path('', include('homepages.urls')),
     path('users/', include('users.urls')),
-  
-    path('inspiration/', include('inspiration.urls')),
-    path('exercises/', include('exercises.urls')),
-     path('store/', include('store.urls')),
+    path('store/', include('store.urls')),
+    path('verify/', include('verification.urls')),
 ]
 
 if settings.DEBUG:

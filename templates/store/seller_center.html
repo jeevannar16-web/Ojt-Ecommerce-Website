@@ -1,0 +1,177 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}Seller Center — Start Selling on FitnessHub{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/seller_center.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="sc-hero">
+  <div class="sc-hero-bg"></div>
+  <div class="sc-hero-content">
+    <span class="sc-badge">Seller Program</span>
+    <h1>Start Selling on <span>FitnessHub</span></h1>
+    <p>Join thousands of sellers reaching millions of fitness-conscious buyers. Build your brand, manage your store, and grow your business.</p>
+    <div class="sc-hero-actions">
+      <a href="{% url 'register' %}" class="sc-btn sc-btn-primary">Start Selling Today</a>
+      <a href="#how-it-works" class="sc-btn sc-btn-outline">Learn More</a>
+    </div>
+    <div class="sc-hero-stats">
+      <div class="sc-stat">
+        <span class="sc-stat-num">{{ seller_count|default:0 }}+</span>
+        <span class="sc-stat-lbl">Active Sellers</span>
+      </div>
+      <div class="sc-stat">
+        <span class="sc-stat-num">{{ product_count|default:0 }}+</span>
+        <span class="sc-stat-lbl">Products Listed</span>
+      </div>
+      <div class="sc-stat">
+        <span class="sc-stat-num">10k+</span>
+        <span class="sc-stat-lbl">Happy Customers</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sc-benefits" id="benefits">
+  <div class="sc-section-header">
+    <h2>Why Sell on FitnessHub?</h2>
+    <p>Everything you need to succeed as an online seller</p>
+  </div>
+  <div class="sc-benefits-grid">
+    <div class="sc-benefit-card">
+      <div class="sc-benefit-icon"><i class="bi bi-currency-dollar"></i></div>
+      <h3>Free to Start</h3>
+      <p>No listing fees, no monthly subscriptions. Pay only when you make a sale. Start your business with zero upfront cost.</p>
+    </div>
+    <div class="sc-benefit-card">
+      <div class="sc-benefit-icon"><i class="bi bi-graph-up-arrow"></i></div>
+      <h3>Easy Management</h3>
+      <p>Powerful seller dashboard to manage products, track orders, and monitor your performance in real time.</p>
+    </div>
+    <div class="sc-benefit-card">
+      <div class="sc-benefit-icon"><i class="bi bi-wallet2"></i></div>
+      <h3>Fast Payments</h3>
+      <p>Get paid quickly after delivery. Transparent pricing with no hidden fees. Your earnings, your control.</p>
+    </div>
+    <div class="sc-benefit-card">
+      <div class="sc-benefit-icon"><i class="bi bi-headset"></i></div>
+      <h3>24/7 Support</h3>
+      <p>Our dedicated seller support team is here to help you every step of the way. From onboarding to scaling up.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sc-how-it-works" id="how-it-works">
+  <div class="sc-section-header">
+    <h2>How It Works</h2>
+    <p>Get started in four simple steps</p>
+  </div>
+  <div class="sc-steps">
+    <div class="sc-step">
+      <div class="sc-step-num">1</div>
+      <div class="sc-step-content">
+        <h3>Create Your Account</h3>
+        <p>Sign up as a seller with your store details. Tell us about your business and what you plan to sell.</p>
+      </div>
+    </div>
+    <div class="sc-step">
+      <div class="sc-step-num">2</div>
+      <div class="sc-step-content">
+        <h3>Get Verified</h3>
+        <p>Our team reviews your application. Once approved, you can start listing products immediately.</p>
+      </div>
+    </div>
+    <div class="sc-step">
+      <div class="sc-step-num">3</div>
+      <div class="sc-step-content">
+        <h3>List Your Products</h3>
+        <p>Add your products with descriptions, prices, and images. Set sizes and manage inventory effortlessly.</p>
+      </div>
+    </div>
+    <div class="sc-step">
+      <div class="sc-step-num">4</div>
+      <div class="sc-step-content">
+        <h3>Start Selling</h3>
+        <p>Receive orders, manage shipments, and grow your business. Track everything from your seller dashboard.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sc-cta">
+  <div class="sc-cta-content">
+    <h2>Ready to Start Selling?</h2>
+    <p>Join FitnessHub today and reach thousands of customers looking for quality fitness products.</p>
+    <div class="sc-cta-actions">
+      {% if user.is_authenticated %}
+        {% if user.profile.is_seller %}
+          <a href="{% url 'store:seller_dashboard' %}" class="sc-btn sc-btn-primary"><i class="bi bi-shop"></i> Go to Seller Dashboard</a>
+        {% elif user.profile.seller_requested %}
+          <a href="{% url 'profile' %}" class="sc-btn sc-btn-primary"><i class="bi bi-clock"></i> Check Application Status</a>
+        {% else %}
+          <a href="{% url 'store:seller_apply' %}" class="sc-btn sc-btn-primary"><i class="bi bi-rocket-takeoff"></i> Apply to Sell</a>
+        {% endif %}
+      {% else %}
+        <a href="{% url 'register' %}" class="sc-btn sc-btn-primary"><i class="bi bi-person-plus"></i> Create Seller Account</a>
+        <a href="{% url 'login' %}" class="sc-btn sc-btn-outline">Already a Seller? Log In</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="sc-faq" id="faq">
+  <div class="sc-section-header">
+    <h2>Frequently Asked Questions</h2>
+  </div>
+  <div class="sc-faq-list">
+    <div class="sc-faq-item">
+      <button class="sc-faq-q" onclick="this.parentElement.classList.toggle('open')">
+        <span>How much does it cost to sell on FitnessHub?</span>
+        <i class="bi bi-chevron-down"></i>
+      </button>
+      <div class="sc-faq-a">
+        <p>It's completely free to join and list products. We take a small commission only when you make a sale. There are no hidden fees or monthly charges.</p>
+      </div>
+    </div>
+    <div class="sc-faq-item">
+      <button class="sc-faq-q" onclick="this.parentElement.classList.toggle('open')">
+        <span>How long does the verification process take?</span>
+        <i class="bi bi-chevron-down"></i>
+      </button>
+      <div class="sc-faq-a">
+        <p>Most applications are reviewed within 24-48 hours. You'll receive a notification once your account is approved or if we need more information.</p>
+      </div>
+    </div>
+    <div class="sc-faq-item">
+      <button class="sc-faq-q" onclick="this.parentElement.classList.toggle('open')">
+        <span>Can I sell both physical and digital products?</span>
+        <i class="bi bi-chevron-down"></i>
+      </button>
+      <div class="sc-faq-a">
+        <p>Currently, FitnessHub supports physical fitness-related products including equipment, apparel, supplements, and accessories.</p>
+      </div>
+    </div>
+    <div class="sc-faq-item">
+      <button class="sc-faq-q" onclick="this.parentElement.classList.toggle('open')">
+        <span>How do I get paid?</span>
+        <i class="bi bi-chevron-down"></i>
+      </button>
+      <div class="sc-faq-a">
+        <p>Payments are processed after order delivery. You can track your earnings in the seller dashboard and withdraw them to your linked account.</p>
+      </div>
+    </div>
+    <div class="sc-faq-item">
+      <button class="sc-faq-q" onclick="this.parentElement.classList.toggle('open')">
+        <span>What if my seller application is declined?</span>
+        <i class="bi bi-chevron-down"></i>
+      </button>
+      <div class="sc-faq-a">
+        <p>If your application is declined, we'll provide a reason. You can address the issues and re-apply at any time through your profile settings.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

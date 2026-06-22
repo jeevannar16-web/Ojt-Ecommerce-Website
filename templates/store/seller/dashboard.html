@@ -1,0 +1,317 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}Seller Dashboard — FitnessHub{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/seller_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="seller-layout">
+  <aside class="seller-sidebar">
+    <div class="brand">
+      <h2>Seller <span>Center</span></h2>
+      <small>{{ request.user.username }}</small>
+      {% if request.user.profile.store_name %}
+      <div class="store-name">{{ request.user.profile.store_name }}</div>
+      {% endif %}
+    </div>
+    <ul class="seller-nav">
+      <li class="nav-label">Main</li>
+      <li><a href="{% url 'store:seller_dashboard' %}" class="active"><i class="bi bi-grid"></i> Dashboard</a></li>
+      <li><a href="{% url 'store:seller_product_list' %}"><i class="bi bi-box-seam"></i> Products</a></li>
+      <li><a href="{% url 'store:seller_orders' %}"><i class="bi bi-truck"></i> Orders</a></li>
+      <li class="nav-label">Store</li>
+      {% if request.user.profile.store_slug %}<li><a href="{% url 'store:seller_storefront' request.user.profile.store_slug %}"><i class="bi bi-shop"></i> My Storefront</a></li>{% endif %}
+      <li class="nav-label">Quick Actions</li>
+      <li><a href="{% url 'store:seller_product_add' %}"><i class="bi bi-plus-lg"></i> Add Product</a></li>
+      <li><a href="{% url 'home' %}"><i class="bi bi-eye"></i> View Site</a></li>
+    </ul>
+  </aside>
+
+  <main class="seller-main">
+    <div class="sd-top-bar">
+      <div>
+        <h1>Dashboard</h1>
+        <p class="page-sub">Welcome back, {{ request.user.username }}. Here's your store performance.</p>
+      </div>
+      <a href="{% url 'store:seller_product_add' %}" class="sd-add-btn"><i class="bi bi-plus-lg"></i> Add Product</a>
+    </div>
+
+    <div class="sd-stats-row-2">
+      <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_product_list' %}'">
+        <div class="sd-quick-stat-icon gold"><i class="bi bi-box-seam"></i></div>
+        <div>
+          <div class="qnum">{{ total_products }}</div>
+          <div class="qlbl">Total Products</div>
+        </div>
+      </div>
+      <div class="sd-quick-stat">
+        <div class="sd-quick-stat-icon blue"><i class="bi bi-graph-up-arrow"></i></div>
+        <div>
+          <div class="qnum">{{ total_units_sold }}</div>
+          <div class="qlbl">Units Sold</div>
+        </div>
+      </div>
+      <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_orders' %}'">
+        <div class="sd-quick-stat-icon green"><i class="bi bi-bag-check"></i></div>
+        <div>
+          <div class="qnum">{{ total_orders }}</div>
+          <div class="qlbl">Orders Received</div>
+        </div>
+      </div>
+      <div class="sd-quick-stat">
+        <div class="sd-quick-stat-icon purple"><i class="bi bi-currency-dollar"></i></div>
+        <div>
+          <div class="qnum">${{ total_revenue|floatformat:0 }}</div>
+          <div class="qlbl">Total Revenue</div>
+        </div>
+      </div>
+      <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_orders' %}'">
+        <div class="sd-quick-stat-icon orange"><i class="bi bi-clock"></i></div>
+        <div>
+          <div class="qnum">{{ pending_orders }}</div>
+          <div class="qlbl">Pending Orders</div>
+        </div>
+      </div>
+      <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_orders' %}'">
+        <div class="sd-quick-stat-icon green"><i class="bi bi-check-circle"></i></div>
+        <div>
+          <div class="qnum">{{ completed_orders }}</div>
+          <div class="qlbl">Delivered</div>
+        </div>
+      </div>
+      <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_product_list' %}?stock=out'">
+        <div class="sd-quick-stat-icon red"><i class="bi bi-exclamation-triangle"></i></div>
+        <div>
+          <div class="qnum">{{ out_of_stock }}</div>
+          <div class="qlbl">Out of Stock</div>
+        </div>
+      </div>
+      <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_product_list' %}?stock=low'">
+        <div class="sd-quick-stat-icon orange"><i class="bi bi-battery-half"></i></div>
+        <div>
+          <div class="qnum">{{ low_stock }}</div>
+          <div class="qlbl">Low Stock</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sd-card-grid">
+      <div class="seller-card">
+        <div class="seller-card-header">
+          <h3><i class="bi bi-trophy"></i> Top Selling Products</h3>
+        </div>
+        <div class="seller-card-body">
+          {% if top_products %}
+          {% with max_sold=top_products.0.total_sold %}
+          {% for p in top_products %}
+          <div class="sd-performance-bar clickable" onclick="location.href='{% url 'store:seller_product_edit' p.product_id %}'" style="cursor:pointer;">
+            <div style="width:36px;height:36px;flex-shrink:0;border-radius:8px;overflow:hidden;background:#0e0e0e;display:flex;align-items:center;justify-content:center;">
+              <i class="bi bi-box" style="color:#555;"></i>
+            </div>
+            <span class="sd-perf-lbl">{{ p.product__name|truncatechars:30 }}</span>
+            <div class="sd-perf-bar-bg">
+              <div class="sd-perf-bar-fill" style="width:{% if max_sold > 0 %}{% widthratio p.total_sold max_sold 100 %}{% else %}0{% endif %}%;background:{% cycle '#d4af37' '#3b82f6' '#2ecc71' '#8b5cf6' '#f57224' %};"></div>
+            </div>
+            <span class="sd-perf-val">{{ p.total_sold }}</span>
+          </div>
+          {% endfor %}
+          {% endwith %}
+          {% else %}
+          <div class="seller-empty">
+            <i class="bi bi-graph-down"></i>
+            <p>No sales data yet. Start selling!</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="seller-card">
+        <div class="seller-card-header">
+          <h3><i class="bi bi-currency-dollar"></i> Revenue by Product</h3>
+        </div>
+        <div class="seller-card-body">
+          {% if top_products %}
+          {% with max_earned=top_products.0.total_earned %}
+          {% for p in top_products %}
+          <div class="sd-performance-bar clickable" onclick="location.href='{% url 'store:seller_product_edit' p.product_id %}'" style="cursor:pointer;">
+            <div style="width:36px;height:36px;flex-shrink:0;border-radius:8px;overflow:hidden;background:#0e0e0e;display:flex;align-items:center;justify-content:center;">
+              <i class="bi bi-currency-dollar" style="color:#d4af37;"></i>
+            </div>
+            <span class="sd-perf-lbl">{{ p.product__name|truncatechars:25 }}</span>
+            <div class="sd-perf-bar-bg">
+              <div class="sd-perf-bar-fill" style="width:{% if max_earned > 0 %}{% widthratio p.total_earned max_earned 100 %}{% else %}0{% endif %}%;background:#d4af37;"></div>
+            </div>
+            <span class="sd-perf-val">${{ p.total_earned|floatformat:0 }}</span>
+          </div>
+          {% endfor %}
+          {% endwith %}
+          {% else %}
+          <div class="seller-empty">
+            <i class="bi bi-currency-dollar"></i>
+            <p>No revenue data yet.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="sd-card-grid">
+      <div class="seller-card">
+        <div class="seller-card-header">
+          <h3><i class="bi bi-clock-history"></i> Recent Orders</h3>
+          <a href="{% url 'store:seller_orders' %}" class="seller-card-link">View All →</a>
+        </div>
+        <div class="sd-order-filter-bar">
+          <a href="{% url 'store:seller_orders' %}" class="pl-filter active">All</a>
+          <a href="{% url 'store:seller_orders' %}?status=Pending" class="pl-filter">Pending</a>
+          <a href="{% url 'store:seller_orders' %}?status=Processing" class="pl-filter">Processing</a>
+          <a href="{% url 'store:seller_orders' %}?status=Shipped" class="pl-filter">Shipped</a>
+          <a href="{% url 'store:seller_orders' %}?status=Delivered" class="pl-filter">Delivered</a>
+          <a href="{% url 'store:seller_orders' %}?status=Cancelled" class="pl-filter">Cancelled</a>
+        </div>
+        <div class="seller-card-body">
+          {% if recent_orders %}
+          <table class="seller-table">
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in recent_orders %}
+              <tr class="clickable-row" onclick="location.href='{% url 'store:seller_orders' %}'">
+                <td style="color:#f0ece4;font-weight:600;">#{{ order.order_number|default:order.id }}</td>
+                <td style="color:#999;font-size:0.78rem;">{{ order.user.username|default:'—' }}</td>
+                <td>
+                  <span class="sd-status" data-status="{{ order.status }}">{{ order.get_status_display }}</span>
+                </td>
+                <td><span style="color:#d4af37;font-weight:600;">${{ order.total_amount }}</span></td>
+                <td style="color:#666;font-size:0.75rem;">{{ order.created_at|date:"M d, Y" }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="seller-empty">
+            <i class="bi bi-truck"></i>
+            <p>No orders yet.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="seller-card">
+        <div class="seller-card-header">
+          <h3><i class="bi bi-box-seam"></i> Recent Products</h3>
+          <a href="{% url 'store:seller_product_list' %}" class="seller-card-link">View All →</a>
+        </div>
+        <div class="sd-order-filter-bar">
+          <a href="{% url 'store:seller_product_list' %}" class="pl-filter active">All</a>
+          <a href="{% url 'store:seller_product_list' %}?stock=low" class="pl-filter">Low Stock</a>
+          <a href="{% url 'store:seller_product_list' %}?stock=out" class="pl-filter">Out of Stock</a>
+          <a href="{% url 'store:seller_product_add' %}" class="pl-filter" style="color:#d4af37;">+ Add New</a>
+        </div>
+        <div class="seller-card-body">
+          {% if recent_products %}
+          <table class="seller-table">
+            <thead>
+              <tr>
+                <th style="width:50px;">Image</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product in recent_products %}
+              <tr>
+                <td>
+                  {% if product.image %}
+                  <img src="{{ product.image.url }}" alt="" style="width:44px;height:44px;object-fit:cover;border-radius:8px;">
+                  {% else %}
+                  <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#0e0e0e;border-radius:8px;color:#333;"><i class="bi bi-box" style="font-size:1.2rem;"></i></div>
+                  {% endif %}
+                </td>
+                <td><a href="{% url 'store:seller_product_edit' product.id %}" class="product-name">{{ product.name|truncatechars:45 }}</a></td>
+                <td style="color:#d4af37;font-weight:600;">${{ product.price }}</td>
+                <td>
+                  {% if product.stock == 0 %}
+                    <span class="sd-stock sd-stock-out">{{ product.stock }}</span>
+                  {% elif product.stock < 5 %}
+                    <span class="sd-stock sd-stock-low">{{ product.stock }}</span>
+                  {% else %}
+                    <span class="sd-stock sd-stock-ok">{{ product.stock }}</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if product.is_sale %}<span class="sd-badge sd-badge-sale">Sale</span>{% endif %}
+                  {% if product.is_featured %}<span class="sd-badge sd-badge-featured">Featured</span>{% endif %}
+                  {% if not product.is_sale and not product.is_featured %}<span style="color:#666;">Active</span>{% endif %}
+                </td>
+                <td><a href="{% url 'store:seller_product_edit' product.id %}" style="color:#3b82f6;font-size:0.75rem;text-decoration:none;font-weight:600;"><i class="bi bi-pencil"></i></a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="seller-empty">
+            <i class="bi bi-box-seam"></i>
+            <p>No products yet. Start adding your first product!</p>
+            <a href="{% url 'store:seller_product_add' %}" class="seller-card-link">Add Product →</a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    {% if total_revenue %}
+    <div class="seller-card">
+      <div class="seller-card-header">
+        <h3><i class="bi bi-bar-chart"></i> Performance Summary</h3>
+      </div>
+      <div class="seller-card-body" style="padding:16px 20px;">
+        <div style="display:flex;flex-wrap:wrap;gap:16px;">
+          <div style="flex:1;min-width:140px;background:#0e0e0e;border-radius:8px;padding:14px 16px;border:1px solid #1a1a1a;">
+            <div style="font-size:0.68rem;color:#777;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Conversion Rate</div>
+            <div style="font-size:1.5rem;font-weight:800;color:#f0ece4;margin-top:4px;">
+              {% if total_products > 0 %}
+                {% widthratio total_orders total_products 100 %}%
+              {% else %}0%{% endif %}
+            </div>
+          </div>
+          <div style="flex:1;min-width:140px;background:#0e0e0e;border-radius:8px;padding:14px 16px;border:1px solid #1a1a1a;">
+            <div style="font-size:0.68rem;color:#777;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Avg Order Value</div>
+            <div style="font-size:1.5rem;font-weight:800;color:#f0ece4;margin-top:4px;">
+              {% if total_orders > 0 %}${{ total_revenue|floatformat:0 }}{% else %}$0{% endif %}
+            </div>
+          </div>
+          <div style="flex:1;min-width:140px;background:#0e0e0e;border-radius:8px;padding:14px 16px;border:1px solid #1a1a1a;">
+            <div style="font-size:0.68rem;color:#777;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Revenue per Unit</div>
+            <div style="font-size:1.5rem;font-weight:800;color:#f0ece4;margin-top:4px;">
+              {% if total_units_sold > 0 %}${{ revenue_per_unit|floatformat:0 }}{% else %}$0{% endif %}
+            </div>
+          </div>
+          <div style="flex:1;min-width:140px;background:#0e0e0e;border-radius:8px;padding:14px 16px;border:1px solid #1a1a1a;">
+            <div style="font-size:0.68rem;color:#777;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Stock Health</div>
+            <div style="font-size:1.5rem;font-weight:800;color:#f0ece4;margin-top:4px;">
+              {% with total=total_products|add:1 %}
+                {% widthratio out_of_stock total 100 %}% OOS
+              {% endwith %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}

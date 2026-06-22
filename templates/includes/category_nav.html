@@ -1,0 +1,49 @@
+  <!-- ANIMATED CATEGORY NAV -->
+  <div class="elite-nav-wrap">
+    <div class="elite-nav-inner" id="elite-nav-inner">
+      <button class="elite-nav-arrow" id="nav-prev" onclick="eliteSlide(-1)" aria-label="Scroll left" disabled>
+        <i class="bi bi-chevron-left" style="font-size:0.9rem;"></i>
+      </button>
+      <div class="elite-nav-track" id="elite-nav-track">
+        <a href="{% url 'store:product_list' %}"
+           class="elite-cat-all {% if not request.GET.category %}active-cat{% endif %}">
+          All Items
+        </a>
+        {% for category in global_categories %}
+          <a href="{% url 'store:product_list' %}?category={{ category.id }}"
+             class="elite-cat-item {% if request.GET.category == category.id|slugify %}active-cat{% endif %}"
+             data-label="{{ category.name }}">
+            <span class="ecat-icon" style="font-size:1.3rem; line-height:1;">
+              {% with name=category.name|lower %}
+                {% if "cardio" in name %}🏃
+                {% elif "wearable" in name or "tech" in name %}⌚
+                {% elif "yoga" in name or "mindful" in name or "pilates" in name or "flexibility" in name %}🧘
+                {% elif "weight" in name and "loss" in name %}⚖️
+                {% elif "muscle" in name or "strength" in name or "barbell" in name %}🏋️
+                {% elif "supplement" in name or "nutrition" in name or "vitamin" in name %}💊
+                {% elif "recovery" in name or "wellness" in name %}🛁
+                {% elif "mobility" in name %}🤸
+                {% elif "outdoor" in name or "adventure" in name %}🏕️
+                {% elif "sleep" in name %}😴
+                {% elif "posture" in name %}🦾
+                {% elif "hydration" in name or "electrolyte" in name %}💧
+                {% elif "kettlebell" in name or "specialty" in name %}🔔
+                {% elif "activewear" in name or "clothing" in name %}👕
+                {% elif "bodyweight" in name or "calisthenics" in name %}💪
+                {% elif "pre-workout" in name or "performance" in name %}⚡
+                {% elif "dumbbell" in name %}🏋️
+                {% elif "resistance" in name or "band" in name %}🪢
+                {% elif "pull" in name %}🏗️
+                {% else %}⚡
+                {% endif %}
+              {% endwith %}
+            </span>
+            <span>{{ category.name }}</span>
+          </a>
+        {% endfor %}
+      </div>
+      <button class="elite-nav-arrow" id="nav-next" onclick="eliteSlide(1)" aria-label="Scroll right">
+        <i class="bi bi-chevron-right" style="font-size:0.9rem;"></i>
+      </button>
+    </div>
+  </div>

@@ -1,0 +1,121 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% load store_filters %}
+
+{% block title %}Activity Log — Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/admin_activity_log.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="brand">
+      <h2>Admin <span>Panel</span></h2>
+      <small>{{ request.user.username }}</small>
+    </div>
+    <ul class="admin-nav">
+      <li class="nav-label">Management</li>
+      <li><a href="{% url 'store:admin_dashboard' %}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+      <li><a href="{% url 'store:admin_activity_log' %}" class="active"><i class="bi bi-clock-history"></i> Activity Log</a></li>
+      <li><a href="{% url 'store:admin_favorites' %}"><i class="bi bi-heart-fill"></i> Favorites</a></li>
+      <li><a href="{% url 'store:admin_cart' %}"><i class="bi bi-bag-plus"></i> Cart</a></li>
+      <li><a href="{% url 'admin:index' %}" target="_blank"><i class="bi bi-gear"></i> Django Admin</a></li>
+      <li><a href="{% url 'admin:auth_user_changelist' %}" target="_blank"><i class="bi bi-people"></i> Users</a></li>
+      <li><a href="{% url 'admin:store_product_changelist' %}" target="_blank"><i class="bi bi-box-seam"></i> Products</a></li>
+      <li><a href="{% url 'admin:store_order_changelist' %}" target="_blank"><i class="bi bi-truck"></i> Orders</a></li>
+      <li class="nav-label">Store</li>
+      <li><a href="{% url 'home' %}"><i class="bi bi-shop"></i> View Site</a></li>
+      <li><a href="{% url 'store:seller_dashboard' %}"><i class="bi bi-shop"></i> Seller View</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main">
+    <h1>Activity Log</h1>
+    <p class="page-sub">Every user action tracked in real time.</p>
+
+    <form method="GET" class="filter-bar">
+      <label>Action</label>
+      <select name="action">
+        <option value="">All Actions</option>
+        {% for code, label in action_types %}
+        <option value="{{ code }}" {% if current_action == code %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+
+      <label>User</label>
+      <input type="text" name="user" placeholder="Search username..." value="{{ current_user }}">
+
+      <label>From</label>
+      <input type="date" name="date_from" value="{{ current_date_from }}">
+      <label>To</label>
+      <input type="date" name="date_to" value="{{ current_date_to }}">
+
+      <button type="submit" class="filter-btn"><i class="bi bi-funnel"></i> Filter</button>
+      <a href="{% url 'store:admin_activity_log' %}" class="filter-reset">Clear</a>
+    </form>
+
+    <div class="al-summary">
+      <span>Total: <b>{{ page_obj.paginator.count }}</b></span>
+    </div>
+
+    <div class="al-table-wrap">
+      <table class="al-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Action</th>
+            <th>Description</th>
+            <th>Details</th>
+            <th>IP</th>
+            <th>When</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in logs %}
+          <tr>
+            <td>
+              {% if log.user %}
+              <span class="al-user">@{{ log.user.username }}</span>
+              {% else %}
+              <span style="color:#555;">—</span>
+              {% endif %}
+            </td>
+            <td><span class="al-action al-action-{{ log.action_type }}">{{ log.get_action_type_display }}</span></td>
+            <td class="al-desc">{{ log.description|default:'—' }}</td>
+            <td>
+              {% if log.details %}
+              <span class="al-details" title="{{ log.details|pretty_json }}">{{ log.details|pretty_json|truncatechars:50 }}</span>
+              {% else %}
+              <span style="color:#333;">—</span>
+              {% endif %}
+            </td>
+            <td class="al-ip">{{ log.ip_address|default:'—' }}</td>
+            <td class="al-time">{{ log.created_at|date:"M d, H:i" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" style="text-align:center;padding:40px;color:#555;">No activity recorded yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% if page_obj.paginator.num_pages > 1 %}
+      <div class="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page=1{% if current_action %}&action={{ current_action }}{% endif %}{% if current_user %}&user={{ current_user }}{% endif %}{% if current_date_from %}&date_from={{ current_date_from }}{% endif %}{% if current_date_to %}&date_to={{ current_date_to }}{% endif %}" class="step">&laquo;&laquo;</a>
+        <a href="?page={{ page_obj.previous_page_number }}{% if current_action %}&action={{ current_action }}{% endif %}{% if current_user %}&user={{ current_user }}{% endif %}{% if current_date_from %}&date_from={{ current_date_from }}{% endif %}{% if current_date_to %}&date_to={{ current_date_to }}{% endif %}" class="step">&laquo;</a>
+        {% endif %}
+        <span class="current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if current_action %}&action={{ current_action }}{% endif %}{% if current_user %}&user={{ current_user }}{% endif %}{% if current_date_from %}&date_from={{ current_date_from }}{% endif %}{% if current_date_to %}&date_to={{ current_date_to }}{% endif %}" class="step">&raquo;</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if current_action %}&action={{ current_action }}{% endif %}{% if current_user %}&user={{ current_user }}{% endif %}{% if current_date_from %}&date_from={{ current_date_from }}{% endif %}{% if current_date_to %}&date_to={{ current_date_to }}{% endif %}" class="step">&raquo;&raquo;</a>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}

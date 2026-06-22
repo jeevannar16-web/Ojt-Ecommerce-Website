@@ -1,0 +1,121 @@
+{% extends 'layout/base.html' %}
+{% block title %}Verify Your Account{% endblock %}
+{% block content %}
+<div style="max-width:520px;margin:40px auto;">
+
+  <div style="text-align:center;margin-bottom:32px;">
+    <h1 style="color:#f0ece4;margin:0;font-size:1.5rem;">Verify Your Account</h1>
+    <p style="color:#777;font-size:0.88rem;margin-top:6px;">Complete verification to access all features.</p>
+  </div>
+
+  {% if email_verified and phone_verified %}
+    <div style="text-align:center;padding:48px 32px;background:#141414;border:1px solid #1f1f1f;border-radius:12px;">
+      <div style="font-size:3rem;color:#2ecc71;margin-bottom:12px;">✓</div>
+      <h2 style="color:#f0ece4;margin:0 0 8px;">All Verified!</h2>
+      <p style="color:#777;margin:0 0 20px;">Your email and phone have been verified.</p>
+      <a href="{% url 'home' %}" style="display:inline-block;padding:12px 32px;border-radius:8px;background:linear-gradient(135deg,#d4af37,#b8962e);color:#0d0d0d;font-weight:700;text-decoration:none;">Continue →</a>
+    </div>
+  {% else %}
+
+  <div style="display:flex;gap:12px;margin-bottom:24px;justify-content:center;">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:20px;background:{% if email_verified %}#0a2e1a;border:1px solid #2ecc71{% else %}#141414;border:1px solid #2a2a2a{% endif %};">
+      <span style="width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:{% if email_verified %}#2ecc71{% else %}#333{% endif %};color:#fff;font-size:0.7rem;font-weight:700;">{% if email_verified %}✓{% else %}1{% endif %}</span>
+      <span style="color:{% if email_verified %}#2ecc71{% else %}#777{% endif %};font-size:0.82rem;font-weight:600;">Email</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:20px;background:{% if phone_verified %}#0a2e1a;border:1px solid #2ecc71{% else %}#141414;border:1px solid #2a2a2a{% endif %};">
+      <span style="width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:{% if phone_verified %}#2ecc71{% else %}#333{% endif %};color:#fff;font-size:0.7rem;font-weight:700;">{% if phone_verified %}✓{% else %}2{% endif %}</span>
+      <span style="color:{% if phone_verified %}#2ecc71{% else %}#777{% endif %};font-size:0.82rem;font-weight:600;">Phone</span>
+    </div>
+  </div>
+
+    {% if not email_verified %}
+  <div style="background:#141414;border:1px solid #1f1f1f;border-radius:12px;padding:28px;margin-bottom:16px;">
+    <h3 style="color:#f0ece4;margin:0 0 4px;font-size:1.05rem;">📧 Verify Email</h3>
+    <p style="color:#777;font-size:0.82rem;margin:0 0 16px;">
+      {% if pending_email_exists %}
+        A 6-digit code was sent to <strong style="color:#f0ece4;">{{ request.user.email }}</strong>. Enter it below.
+      {% else %}
+        Click below to receive a verification code at <strong style="color:#f0ece4;">{{ request.user.email }}</strong>.
+      {% endif %}
+    </p>
+
+    {% if pending_email_exists %}
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="verify_email">
+      <input type="text" name="otp" maxlength="6" inputmode="numeric" autocomplete="one-time-code" required
+             style="width:100%;padding:14px;border:1px solid #2a2a2a;border-radius:8px;background:#0e0e0e;color:#f0ece4;font-size:1.5rem;text-align:center;letter-spacing:8px;font-weight:700;box-sizing:border-box;"
+             placeholder="000000">
+      <button type="submit" style="width:100%;padding:14px;margin-top:12px;border:none;border-radius:8px;background:linear-gradient(135deg,#d4af37,#b8962e);color:#0d0d0d;font-weight:700;font-size:1rem;cursor:pointer;">
+        Verify Email
+      </button>
+    </form>
+    <form method="post" style="margin-top:10px;text-align:center;">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="resend_email">
+      <button type="submit" style="background:none;border:none;color:#666;font-size:0.78rem;cursor:pointer;text-decoration:underline;padding:4px;">
+        Didn't receive it? Resend
+      </button>
+    </form>
+    {% else %}
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="resend_email">
+      <button type="submit" style="width:100%;padding:14px;border:none;border-radius:8px;background:linear-gradient(135deg,#d4af37,#b8962e);color:#0d0d0d;font-weight:700;font-size:1rem;cursor:pointer;">
+        Send Verification Code
+      </button>
+    </form>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if email_verified and not phone_verified %}
+  <div style="background:#141414;border:1px solid #1f1f1f;border-radius:12px;padding:28px;">
+    <h3 style="color:#f0ece4;margin:0 0 4px;font-size:1.05rem;">📱 Verify Phone</h3>
+    <p style="color:#777;font-size:0.82rem;margin:0 0 16px;">Enter your phone number to receive a verification code.</p>
+
+    {% if not phone %}
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="send_phone">
+      <input type="tel" name="phone" placeholder="+977 98XXXXXXXX" required
+             style="width:100%;padding:14px;border:1px solid #2a2a2a;border-radius:8px;background:#0e0e0e;color:#f0ece4;font-size:0.95rem;box-sizing:border-box;">
+      <button type="submit" style="width:100%;padding:14px;margin-top:12px;border:none;border-radius:8px;background:linear-gradient(135deg,#d4af37,#b8962e);color:#0d0d0d;font-weight:700;font-size:1rem;cursor:pointer;">
+        Send Code
+      </button>
+    </form>
+    {% else %}
+    <p style="color:#777;font-size:0.82rem;">Code sent to <strong style="color:#f0ece4;">{{ phone }}</strong></p>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="verify_phone">
+      <input type="text" name="otp" maxlength="6" inputmode="numeric" autocomplete="one-time-code" required
+             style="width:100%;padding:14px;border:1px solid #2a2a2a;border-radius:8px;background:#0e0e0e;color:#f0ece4;font-size:1.5rem;text-align:center;letter-spacing:8px;font-weight:700;box-sizing:border-box;"
+             placeholder="000000">
+      <button type="submit" style="width:100%;padding:14px;margin-top:12px;border:none;border-radius:8px;background:linear-gradient(135deg,#d4af37,#b8962e);color:#0d0d0d;font-weight:700;font-size:1rem;cursor:pointer;">
+        Verify Phone
+      </button>
+    </form>
+    <form method="post" style="margin-top:10px;">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="send_phone">
+      <input type="hidden" name="phone" value="{{ phone }}">
+      <button type="submit" style="width:100%;padding:10px;border:1px solid #2a2a2a;border-radius:8px;background:transparent;color:#d4af37;font-size:0.82rem;cursor:pointer;">
+        Resend Code
+      </button>
+    </form>
+    {% endif %}
+
+    <form method="post" style="margin-top:16px;text-align:center;">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="skip_phone">
+      <button type="submit" style="background:none;border:none;color:#666;font-size:0.82rem;cursor:pointer;text-decoration:underline;">
+        Skip for now
+      </button>
+    </form>
+  </div>
+  {% endif %}
+
+  {% endif %}
+</div>
+{% endblock %}

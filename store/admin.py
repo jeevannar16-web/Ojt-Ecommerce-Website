@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Product, CartItem, Order, OrderItem, Category, FavoriteItem, NewsletterSubscriber, Review
+from .models import Product, ProductSize, CartItem, Order, OrderItem, Category, FavoriteItem, NewsletterSubscriber, Review
 
 
 # ════════════════════════════════════════════════════════════════
@@ -48,15 +48,41 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 # ════════════════════════════════════════════════════════════════
-# PRODUCT ADMIN
+# PRODUCT SIZE INLINE
+# ════════════════════════════════════════════════════════════════
+class ProductSizeInline(admin.TabularInline):
+    model = ProductSize
+    extra = 1
+
+
+# ════════════════════════════════════════════════════════════════
+# PRODUCT SIZE ADMIN
+# ════════════════════════════════════════════════════════════════
+@admin.register(ProductSize)
+class ProductSizeAdmin(admin.ModelAdmin):
+    list_display = ['product', 'size', 'stock']
+    list_filter = ['product__seller']
+    search_fields = ['product__name', 'size']
+
+
+# ════════════════════════════════════════════════════════════════
+# PRODUCT ADMIN  (word-wrap friendly)
 # ════════════════════════════════════════════════════════════════
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['image_tag', 'name', 'category', 'price', 'stock', 'rating', 'is_featured', 'is_sale']
-    list_filter = ['category', 'is_featured', 'is_sale']
+    list_display = ['image_tag', 'colored_name', 'category', 'seller', 'price', 'stock', 'rating', 'is_featured', 'is_sale']
+    list_filter = ['category', 'is_featured', 'is_sale', 'seller']
     list_editable = ['price', 'stock', 'rating', 'is_featured', 'is_sale']
     search_fields = ['name', 'description']
     readonly_fields = ['image_tag']
+    list_per_page = 20
+
+    inlines = [ProductSizeInline]
+
+    class Media:
+        css = {
+            'all': ['css/admin_word_wrap.css']
+        }
 
     @admin.display(description='Image')
     def image_tag(self, obj):
@@ -64,9 +90,15 @@ class ProductAdmin(admin.ModelAdmin):
             return image_preview(obj.image.url)
         return '—'
 
+    @admin.display(description='Name')
+    def colored_name(self, obj):
+        if obj.is_sale:
+            return format_html('<span style="color:#e74c3c;font-weight:700;">🔥 {}</span>', obj.name[:60])
+        return format_html('<span style="max-width:200px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{}</span>', obj.name[:60])
+
     fieldsets = (
         ('Basic Info', {
-            'fields': ('name', 'category', 'description')
+            'fields': ('name', 'category', 'seller', 'description')
         }),
         ('Pricing & Stock', {
             'fields': ('price', 'stock')
@@ -85,8 +117,14 @@ class ProductAdmin(admin.ModelAdmin):
 # ════════════════════════════════════════════════════════════════
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name']
+    list_display = ['image_tag', 'id', 'name']
     search_fields = ['name']
+
+    @admin.display(description='Image')
+    def image_tag(self, obj):
+        if obj.image:
+            return image_preview(obj.image.url)
+        return '—'
 
 
 # ════════════════════════════════════════════════════════════════

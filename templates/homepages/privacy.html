@@ -1,0 +1,104 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}Privacy Policy — Fitness Hub{% endblock %}
+
+{% block extra_css %}
+<style>
+.legal-section {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+}
+.legal-section h1 {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #e8c97e, #c4783a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.legal-section .last-updated {
+  color: var(--clr-muted);
+  font-size: 0.85rem;
+  margin-bottom: 40px;
+}
+.legal-section h2 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--clr-accent);
+  margin: 32px 0 12px;
+}
+.legal-section p {
+  color: var(--clr-text);
+  line-height: 1.75;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  opacity: 0.88;
+}
+.legal-section ul {
+  list-style: disc;
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+.legal-section ul li {
+  color: var(--clr-text);
+  line-height: 1.75;
+  font-size: 0.95rem;
+  opacity: 0.88;
+  margin-bottom: 6px;
+}
+.legal-section strong {
+  color: var(--clr-accent);
+  opacity: 1;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="legal-section">
+  <h1>Privacy Policy</h1>
+  <p class="last-updated">Last updated: June 2026</p>
+
+  <p>FitnessHub ("we", "our", "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website.</p>
+
+  <h2>Information We Collect</h2>
+  <p>We collect information that you provide directly to us, including:</p>
+  <ul>
+    <li><strong>Account Information:</strong> Name, email address, password, and profile details when you register.</li>
+    <li><strong>Order Information:</strong> Shipping address, billing details, and purchase history when you place an order.</li>
+    <li><strong>Communications:</strong> Messages you send us via contact forms or support channels.</li>
+    <li><strong>Newsletter:</strong> Email address when you subscribe to our newsletter.</li>
+  </ul>
+
+  <h2>How We Use Your Information</h2>
+  <ul>
+    <li>Process and fulfill your orders.</li>
+    <li>Send you order confirmations, shipping updates, and support communications.</li>
+    <li>Send you marketing emails (only with your consent).</li>
+    <li>Improve our website, products, and customer experience.</li>
+    <li>Detect and prevent fraud or abuse.</li>
+  </ul>
+
+  <h2>Information Sharing</h2>
+  <p>We do not sell your personal information. We may share your data with trusted third-party service providers who assist us in operating our website and fulfilling orders (e.g., payment processors, shipping carriers), subject to strict confidentiality agreements.</p>
+
+  <h2>Data Security</h2>
+  <p>We implement industry-standard security measures — including SSL encryption, secure server infrastructure, and access controls — to protect your personal information against unauthorized access, alteration, disclosure, or destruction.</p>
+
+  <h2>Your Rights</h2>
+  <p>You have the right to:</p>
+  <ul>
+    <li>Access, update, or delete your personal account information at any time.</li>
+    <li>Unsubscribe from marketing emails using the link in any email we send.</li>
+    <li>Request a copy of the data we hold about you.</li>
+  </ul>
+
+  <h2>Cookies</h2>
+  <p>We use cookies and similar tracking technologies to enhance your browsing experience, analyze site traffic, and understand where our audience comes from. You can control cookie preferences through your browser settings. For more details, see our <a href="{% url 'cookies' %}" style="color:var(--clr-accent);">Cookies Policy</a>.</p>
+
+  <h2>Contact Us</h2>
+  <p>If you have any questions about this Privacy Policy, please contact us at <strong>support@fitnesshub.com</strong>.</p>
+</section>
+{% endblock %}

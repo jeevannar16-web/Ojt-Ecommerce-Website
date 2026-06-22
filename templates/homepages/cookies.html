@@ -1,0 +1,99 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}Cookies Policy — Fitness Hub{% endblock %}
+
+{% block extra_css %}
+<style>
+.legal-section {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+}
+.legal-section h1 {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #e8c97e, #c4783a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.legal-section .last-updated {
+  color: var(--clr-muted);
+  font-size: 0.85rem;
+  margin-bottom: 40px;
+}
+.legal-section h2 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--clr-accent);
+  margin: 32px 0 12px;
+}
+.legal-section p {
+  color: var(--clr-text);
+  line-height: 1.75;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  opacity: 0.88;
+}
+.legal-section ul {
+  list-style: disc;
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+.legal-section ul li {
+  color: var(--clr-text);
+  line-height: 1.75;
+  font-size: 0.95rem;
+  opacity: 0.88;
+  margin-bottom: 6px;
+}
+.legal-section strong {
+  color: var(--clr-accent);
+  opacity: 1;
+}
+.legal-section a {
+  color: var(--clr-accent);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="legal-section">
+  <h1>Cookies Policy</h1>
+  <p class="last-updated">Last updated: June 2026</p>
+
+  <p>FitnessHub ("we", "our", "us") uses cookies and similar tracking technologies on our website. This policy explains what cookies are, how we use them, and how you can control them.</p>
+
+  <h2>What Are Cookies?</h2>
+  <p>Cookies are small text files stored on your device (computer, tablet, phone) when you visit a website. They help the website remember your preferences, understand how you interact with the site, and improve your browsing experience.</p>
+
+  <h2>How We Use Cookies</h2>
+  <p>We use the following categories of cookies:</p>
+
+  <ul>
+    <li><strong>Essential Cookies:</strong> Required for the website to function properly. These enable core features like security, session management, and account authentication. Without these cookies, some services cannot be provided.</li>
+    <li><strong>Functional Cookies:</strong> Remember your preferences and settings (e.g., language, currency) to provide a personalized experience.</li>
+    <li><strong>Analytics Cookies:</strong> Help us understand how visitors interact with our website — which pages are visited most, how users navigate, and where errors occur. We use this data to improve our site and your experience.</li>
+    <li><strong>Marketing Cookies:</strong> Used to deliver relevant advertisements and measure the effectiveness of our marketing campaigns. These may be set by us or by third-party advertising partners.</li>
+  </ul>
+
+  <h2>Third-Party Cookies</h2>
+  <p>Some cookies are placed by third-party services that appear on our website. These may include analytics providers (e.g., Google Analytics) and payment processors. We do not control these cookies and recommend reviewing the privacy policies of these third parties for more information.</p>
+
+  <h2>Managing Cookies</h2>
+  <p>You can control and manage cookies in several ways:</p>
+  <ul>
+    <li><strong>Browser Settings:</strong> Most web browsers allow you to block or delete cookies through their settings. Consult your browser's help guide for instructions.</li>
+    <li><strong>Opt-Out Tools:</strong> You can opt out of Google Analytics by installing the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-Out Browser Add-on</a>.</li>
+  </ul>
+  <p>Please note that disabling certain cookies may affect the functionality and performance of our website.</p>
+
+  <h2>Updates</h2>
+  <p>We may update this Cookies Policy from time to time to reflect changes in technology, legislation, or our practices. Check this page periodically for updates.</p>
+
+  <h2>Contact</h2>
+  <p>If you have questions about our use of cookies, contact us at <strong>support@fitnesshub.com</strong>.</p>
+</section>
+{% endblock %}

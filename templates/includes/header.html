@@ -1,0 +1,90 @@
+  <nav class="main-nav">
+    <div class="nav-left-brand">
+      <a href="{% url 'home' %}" class="nav-logo">
+        <div class="logo-icon">🪺</div>
+        <div class="logo-name">Fitness<span>Hub</span></div>
+      </a>
+    </div>
+
+    <div class="search-wrap" style="position:relative; width:100%; max-width:600px; margin:0 auto;">
+      <form action="{% url 'store:product_list' %}" method="GET" style="display:flex; gap:8px; margin:0;" onsubmit="return validateSearch()">
+        <div style="position:relative; flex:1;">
+          <input type="text" name="search" id="search-input" autocomplete="off"
+                 placeholder="Search products, brands..."
+                 value="{{ request.GET.search|default:'' }}"
+                 style="width:100%; background:#1a1a1a; border:1px solid #333; color:#fff; padding:10px 44px 10px 20px; border-radius:50px; outline:none; font-size:0.88rem; transition:border-color 0.2s;">
+          <button type="button" id="search-clear-btn"
+                  style="display:none; position:absolute; right:4px; top:50%; transform:translateY(-50%); background:none; border:none; color:#666; font-size:1.2rem; cursor:pointer; padding:4px 10px; line-height:1;"
+                  onclick="clearSearch()">&times;</button>
+        </div>
+        <button type="submit"
+                style="background:var(--clr-accent); border:none; border-radius:50px; width:42px; height:42px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;">
+          <i class="bi bi-search" style="color:#0d0d0d;"></i>
+        </button>
+      </form>
+      <div id="search-dropdown"
+           style="display:none; position:absolute; top:calc(100% + 6px); left:0; right:56px; background:#141414; border:1px solid #2a2a2a; border-radius:14px; box-shadow:0 16px 48px rgba(0,0,0,0.7); z-index:9999; overflow:hidden; padding:8px 0;">
+        <div id="search-history-section" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 16px 4px;">
+            <span style="color:#666; font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; font-weight:700;">Recent</span>
+            <button onclick="clearHistory()" style="background:none; border:none; color:#d4af37; font-size:0.72rem; cursor:pointer; font-weight:600;">Clear</button>
+          </div>
+          <div id="search-history-list"></div>
+          <div style="height:1px; background:#2a2a2a; margin:6px 12px;"></div>
+        </div>
+        <div id="search-suggestions-section">
+          <div style="padding:8px 16px 4px;">
+            <span style="color:#666; font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; font-weight:700;" id="suggestions-label">Suggestions</span>
+          </div>
+          <div id="search-suggestions-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <a href="{% url 'store:favorites_list' %}"
+         style="position:relative; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:#fff; transition:all 0.2s;"
+         onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
+        <i class="bi bi-heart" style="font-size:1.2rem;"></i>
+        <span class="global-fav-count"
+              style="position:absolute; top:-6px; right:-6px; background:#ef4444; color:#fff; font-size:0.65rem; font-weight:700; min-width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0 4px; border:2px solid #0d0d0d; box-shadow:0 2px 8px rgba(239,68,68,0.45);">
+          {{ global_favorited_ids|length }}
+        </span>
+      </a>
+
+      <a href="{% url 'store:cart' %}" class="nav-icon-btn" title="Cart" style="text-decoration:none;">
+        <i class="bi bi-bag"></i>
+        <span id="cart-count"
+              style="position:absolute; top:-6px; right:-6px; background:#ef4444; color:white; font-size:0.65rem; font-weight:700; min-width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid #0d0d0d; box-shadow:0 2px 8px rgba(239,68,68,0.4);">
+          {{ cart_count }}
+        </span>
+      </a>
+
+      {% if user.is_authenticated %}
+        <div class="user-dropdown">
+          <button class="nav-icon-btn"><i class="bi bi-person"></i></button>
+          <div class="dropdown-content">
+            <a href="{% url 'profile' %}"><i class="bi bi-person-circle" style="margin-right:8px;"></i>Profile</a>
+            <a href="{% url 'store:order_history' %}">📦 Orders</a>
+            <a href="{% url 'store:seller_center' %}"><i class="bi bi-shop" style="margin-right:8px;"></i>Seller Center</a>
+            {% if user.is_superuser %}
+            <a href="{% url 'store:admin_dashboard' %}"><i class="bi bi-speedometer2" style="margin-right:8px;"></i>Admin Dashboard</a>
+            {% endif %}
+            {% if user.profile.is_seller or user.is_superuser %}
+            <a href="{% url 'store:seller_dashboard' %}"><i class="bi bi-shop" style="margin-right:8px;"></i>Seller Dashboard</a>
+            {% endif %}
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" style="color:#ef4444;">
+                <i class="bi bi-box-arrow-right" style="margin-right:8px;"></i>Logout
+              </button>
+            </form>
+          </div>
+        </div>
+      {% else %}
+        <a href="{% url 'store:seller_center' %}" class="btn-seller-center">Sell</a>
+        <a href="{% url 'login' %}" class="btn-login">Login</a>
+        <a href="{% url 'register' %}" class="btn-register">Sign Up</a>
+      {% endif %}
+    </div>
+  </nav>

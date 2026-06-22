@@ -1,0 +1,412 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard — FitnessHub{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="brand">
+      <h2>Admin <span>Panel</span></h2>
+      <small>{{ request.user.username }}</small>
+    </div>
+    <ul class="admin-nav">
+      <li class="nav-label">Management</li>
+      <li><a href="{% url 'store:admin_dashboard' %}" class="active"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+      <li><a href="{% url 'store:admin_activity_log' %}"><i class="bi bi-clock-history"></i> Activity Log</a></li>
+      <li><a href="{% url 'store:admin_favorites' %}"><i class="bi bi-heart-fill"></i> Favorites</a></li>
+      <li><a href="{% url 'store:admin_cart' %}"><i class="bi bi-bag-plus"></i> Cart</a></li>
+      <li><a href="{% url 'admin:index' %}" target="_blank"><i class="bi bi-gear"></i> Django Admin</a></li>
+      <li><a href="{% url 'admin:auth_user_changelist' %}" target="_blank"><i class="bi bi-people"></i> Users</a></li>
+      <li><a href="{% url 'admin:store_product_changelist' %}" target="_blank"><i class="bi bi-box-seam"></i> Products</a></li>
+      <li><a href="{% url 'admin:store_order_changelist' %}" target="_blank"><i class="bi bi-truck"></i> Orders</a></li>
+      <li class="nav-label">Store</li>
+      <li><a href="{% url 'home' %}"><i class="bi bi-shop"></i> View Site</a></li>
+      <li><a href="{% url 'store:seller_dashboard' %}"><i class="bi bi-shop"></i> Seller View</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main">
+    <h1>Dashboard</h1>
+    <p class="page-sub">System overview and management at a glance.</p>
+
+    <div class="stats-row">
+      <a href="{% url 'admin:auth_user_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_users }}</div><div class="lbl">Users</div></a>
+      <a href="{% url 'admin:auth_user_changelist' %}?profile__is_email_verified__exact=1" target="_blank" class="stat-box clickable" style="border-left:3px solid #2ec4b6;"><div class="num" style="color:#2ec4b6;">{{ total_verified_users }}</div><div class="lbl">Verified</div></a>
+      <a href="{% url 'admin:auth_user_changelist' %}?profile__is_email_verified__exact=0" target="_blank" class="stat-box clickable" style="border-left:3px solid #ef4444;"><div class="num" style="color:#ef4444;">{{ total_unverified_users }}</div><div class="lbl">Unverified</div></a>
+      <a href="{% url 'admin:store_product_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_products }}</div><div class="lbl">Products</div></a>
+      <a href="{% url 'admin:store_order_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_orders }}</div><div class="lbl">Orders</div></a>
+      <a href="{% url 'admin:store_order_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">${{ total_revenue|floatformat:0 }}</div><div class="lbl">Revenue</div></a>
+      <a href="{% url 'admin:store_category_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_categories }}</div><div class="lbl">Categories</div></a>
+      <a href="{% url 'admin:store_review_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_reviews }}</div><div class="lbl">Reviews</div></a>
+      <a href="{% url 'admin:store_newslettersubscriber_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_subscribers }}</div><div class="lbl">Subscribers</div></a>
+      <a href="{% url 'store:admin_favorites' %}" class="stat-box clickable"><div class="num">{{ total_favorites_count }}</div><div class="lbl">Favorites</div></a>
+      <a href="{% url 'store:admin_cart' %}" class="stat-box clickable"><div class="num">{{ total_cart_items_count }}</div><div class="lbl">Cart Items</div></a>
+      <a href="{% url 'store:admin_cart' %}" class="stat-box clickable"><div class="num">{{ active_cart_users }}</div><div class="lbl">Active Cart Users</div></a>
+    </div>
+
+    <div class="admin-order-status-row">
+      <span class="os-label">Orders by Status:</span>
+      {% for code, info in order_status_breakdown.items %}
+      <a href="{% url 'admin:store_order_changelist' %}?status__exact={{ code }}" target="_blank" class="os-badge os-{{ code }}">
+        <span class="os-count">{{ info.count }}</span>
+        <span class="os-name">{{ info.label }}</span>
+      </a>
+      {% endfor %}
+    </div>
+
+    <div class="admin-grid">
+      <div class="admin-card">
+        <div class="card-hd">
+          <h3><i class="bi bi-box-seam"></i> Recent Orders</h3>
+          <a href="{% url 'admin:store_order_changelist' %}" target="_blank">Manage →</a>
+        </div>
+        <div class="card-bd">
+          {% if recent_orders %}
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in recent_orders %}
+              <tr>
+                <td><a href="{% url 'admin:store_order_change' order.id %}" target="_blank" class="admin-order-link">#{{ order.order_number|default:order.id }}</a></td>
+                <td>{{ order.user.username }}</td>
+                <td>${{ order.total_amount }}</td>
+                <td>
+                  <form method="POST" class="status-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_order_status">
+                    <input type="hidden" name="order_id" value="{{ order.id }}">
+                    <select name="status" onchange="this.form.submit()" class="status-select status-{{ order.status }}">
+                      {% for code, label in order.STATUS_CHOICES %}
+                      <option value="{{ code }}" {% if order.status == code %}selected{% endif %}>{{ label }}</option>
+                      {% endfor %}
+                    </select>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="empty-state">No orders yet.</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="card-hd">
+          <h3><i class="bi bi-person-plus"></i> Pending Sellers <span class="badge">{{ pending_sellers|length }}</span></h3>
+        </div>
+        <div class="card-bd">
+          {% if pending_sellers %}
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Store / Type</th>
+                <th>Email</th>
+                <th>Credentials</th>
+                <th>Requested</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for profile in pending_sellers %}
+              <tr>
+                <td style="font-weight:600;color:#f0ece4;">@{{ profile.user.username }}</td>
+                <td>
+                  {% if profile.store_name %}
+                    <span style="color:#d4af37;font-weight:600;">{{ profile.store_name }}</span>
+                    <br><span style="color:#666;font-size:0.7rem;">{{ profile.get_business_type_display|default:'—' }}</span>
+                  {% else %}
+                    <span style="color:#666;">—</span>
+                  {% endif %}
+                </td>
+                <td>{{ profile.user.email }}</td>
+                <td style="max-width:220px;font-size:0.75rem;color:#999;">
+                  {% if profile.business_registration %}
+                    <span><b style="color:#aaa;">Reg:</b> {{ profile.business_registration }}</span><br>
+                  {% endif %}
+                  {% if profile.tax_id %}
+                    <span><b style="color:#aaa;">Tax:</b> {{ profile.tax_id }}</span><br>
+                  {% endif %}
+                  {% if profile.business_address %}
+                    <span><b style="color:#aaa;">Addr:</b> {{ profile.business_address|truncatechars:40 }}</span><br>
+                  {% endif %}
+                  {% if profile.id_proof %}
+                    <a href="{{ profile.id_proof.url }}" target="_blank" style="color:#3b82f6;font-weight:600;">View ID →</a>
+                  {% endif %}
+                  {% if not profile.business_registration and not profile.tax_id %}
+                    <span style="color:#555;">—</span>
+                  {% endif %}
+                </td>
+                <td style="font-size:0.75rem;color:#999;white-space:nowrap;">
+                  {% if profile.seller_requested_at %}
+                    {{ profile.seller_requested_at|date:"M d, Y" }}
+                  {% else %}
+                    <span style="color:#555;">—</span>
+                  {% endif %}
+                </td>
+                <td style="display:flex;gap:5px;">
+                  <form method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="approve_seller">
+                    <input type="hidden" name="user_id" value="{{ profile.user.id }}">
+                    <button type="submit" class="admin-btn-sm admin-btn-approve">Approve</button>
+                  </form>
+                  <form method="POST" style="display:inline;" onsubmit="return confirmDecline(this)">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="decline_seller">
+                    <input type="hidden" name="user_id" value="{{ profile.user.id }}">
+                    <input type="hidden" name="rejection_reason" class="rejection-reason" value="">
+                    <button type="submit" class="admin-btn-sm admin-btn-decline">Decline</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="empty-state">No pending seller requests.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-grid">
+      <div class="admin-card">
+        <div class="card-hd">
+          <h3><i class="bi bi-exclamation-triangle"></i> Low Stock Products</h3>
+          <a href="{% url 'admin:store_product_changelist' %}" target="_blank">Manage →</a>
+        </div>
+        <div class="card-bd">
+          {% if low_stock_products %}
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Stock</th>
+                <th>Price</th>
+                <th>Seller</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product in low_stock_products %}
+              <tr>
+                <td><a href="{% url 'admin:store_product_change' product.id %}" target="_blank" style="color:#f0ece4;font-weight:600;text-decoration:none;">{{ product.name|truncatechars:45 }}</a></td>
+                <td>
+                  {% if product.stock == 0 %}
+                    <span class="stock-out">{{ product.stock }}</span>
+                  {% else %}
+                    <span class="stock-low">{{ product.stock }}</span>
+                  {% endif %}
+                </td>
+                <td>${{ product.price }}</td>
+                <td>{{ product.seller.username|default:'—' }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="empty-state">All products are well-stocked.</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="card-hd">
+          <h3><i class="bi bi-people"></i> Current Sellers</h3>
+        </div>
+        <div class="card-bd">
+          {% if current_sellers %}
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Store</th>
+                <th>Email</th>
+                <th>Joined</th>
+                <th>Verified</th>
+                <th>Products</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for profile in current_sellers %}
+              <tr>
+                <td style="font-weight:600;color:#f0ece4;">@{{ profile.user.username }}</td>
+                <td>
+                  {% if profile.store_name %}
+                    <span style="color:#d4af37;">{{ profile.store_name }}</span>
+                  {% else %}
+                    <span style="color:#666;">—</span>
+                  {% endif %}
+                </td>
+                <td style="color:#999;font-size:0.78rem;">{{ profile.user.email }}</td>
+                <td style="font-size:0.75rem;color:#999;">{{ profile.user.date_joined|date:"M d, Y" }}</td>
+                <td>
+                  {% if profile.is_email_verified %}
+                    <span style="color:#2ec4b6;font-weight:600;">Yes</span>
+                  {% else %}
+                    <span style="color:#ef4444;">No</span>
+                  {% endif %}
+                </td>
+                <td>{{ profile.user.products.count }}</td>
+                <td>
+                  {% if not profile.user.is_superuser %}
+                  <form method="POST" style="display:inline;" onsubmit="return confirm('Revoke seller access for @{{ profile.user.username|escapejs }}?')">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="revoke_seller">
+                    <input type="hidden" name="user_id" value="{{ profile.user.id }}">
+                    <button type="submit" class="admin-btn-sm admin-btn-revoke">Revoke</button>
+                  </form>
+                  {% else %}
+                  <span style="color:#d4af37;font-size:0.72rem;font-weight:600;">Superuser</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="empty-state">No sellers yet.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-grid">
+      <div class="admin-card">
+        <div class="card-hd">
+          <h3><i class="bi bi-heart-fill" style="color:#ef4444;"></i> Recent Favorites</h3>
+          <a href="{% url 'store:admin_favorites' %}">View All →</a>
+        </div>
+        <div class="card-bd">
+          {% if recent_favorites %}
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Product</th>
+                <th>When</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for fav in recent_favorites %}
+              <tr>
+                <td style="color:#f0ece4;font-weight:600;">@{{ fav.user.username }}</td>
+                <td>{{ fav.product.name|truncatechars:45 }}</td>
+                <td style="color:#666;font-size:0.75rem;">{{ fav.created_at|timesince }} ago</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="empty-state">No favorites activity yet.</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="card-hd">
+          <h3><i class="bi bi-bag-plus" style="color:#3b82f6;"></i> Cart Additions</h3>
+          <a href="{% url 'store:admin_cart' %}">View All →</a>
+        </div>
+        <div class="card-bd">
+          {% if recent_cart_items %}
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>When</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in recent_cart_items %}
+              <tr>
+                <td style="color:#f0ece4;font-weight:600;">@{{ item.user.username }}</td>
+                <td>{{ item.product.name|truncatechars:40 }}</td>
+                <td>{{ item.quantity }}</td>
+                <td style="color:#666;font-size:0.75rem;">{{ item.added_at|timesince }} ago</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="empty-state">No cart activity yet.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <div class="card-hd">
+        <h3><i class="bi bi-person-plus"></i> New User Registrations</h3>
+      </div>
+      <div class="card-bd">
+        {% if recent_users %}
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Joined</th>
+              <th>Verified</th>
+              <th>Seller?</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in recent_users %}
+            <tr>
+              <td style="color:#f0ece4;font-weight:600;">@{{ u.username }}</td>
+              <td>{{ u.email|default:'—' }}</td>
+              <td style="color:#666;font-size:0.75rem;">{{ u.date_joined|date:"M d, Y" }}</td>
+              <td>
+                {% if u.profile.is_email_verified and u.profile.is_phone_verified %}
+                <span style="color:#2ec4b6;font-weight:600;">✓ Full</span>
+                {% elif u.profile.is_email_verified %}
+                <span style="color:#f59e0b;font-weight:600;">✓ Email</span>
+                {% elif u.profile.is_phone_verified %}
+                <span style="color:#f59e0b;font-weight:600;">✓ Phone</span>
+                {% else %}
+                <span style="color:#ef4444;font-weight:600;">✗</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if u.profile.is_seller %}
+                <span style="color:#2ec4b6;font-weight:600;">Seller</span>
+                {% elif u.profile.seller_requested %}
+                <span style="color:#f57224;font-weight:600;">Pending</span>
+                {% else %}
+                <span style="color:#666;">—</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">No users yet.</div>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/pages/admin_dashboard.js' %}"></script>
+{% endblock %}

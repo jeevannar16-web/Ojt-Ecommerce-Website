@@ -1,0 +1,178 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}Apply to Sell — FitnessHub{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/seller_apply.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="sa-wrap">
+  <div class="sa-card">
+    <div class="sa-header">
+      <div class="sa-icon"><i class="bi bi-shop"></i></div>
+      <h1>Apply to Become a Seller</h1>
+      <p>Fill in your store details below. Our team will review your application within 24-48 hours.</p>
+    </div>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="sa-msg {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    {% if recent_credentials %}
+    <div class="sa-recent">
+      <div class="sa-recent-header">
+        <i class="bi bi-clock-history"></i> Recently Used Credentials
+        <span class="sa-recent-badge">Click to fill form</span>
+      </div>
+      <div class="sa-recent-list">
+        {% for cred in recent_credentials %}
+        <div class="sa-recent-item" role="button"
+             data-store-name="{{ cred.store_name }}"
+             data-business-type="{{ cred.business_type }}"
+             data-store-description="{{ cred.store_description }}"
+             data-business-registration="{{ cred.business_registration }}"
+             data-tax-id="{{ cred.tax_id }}"
+             data-business-address="{{ cred.business_address }}"
+             data-phone="{{ cred.phone }}">
+          <div class="sa-recent-top">
+            <strong>{{ cred.store_name|default:'(no name)' }}</strong>
+            <span class="sa-recent-date">{{ cred.created_at|date:'M j, Y' }}</span>
+          </div>
+          <div class="sa-recent-details">
+            {% if cred.business_registration %}<span>Reg: {{ cred.business_registration }}</span>{% endif %}
+            {% if cred.business_type %}<span>{{ cred.business_type|title }}</span>{% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <form method="POST" class="sa-form" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="sa-form-section">
+        <h3><i class="bi bi-building"></i> Store Information</h3>
+        <div class="sa-form-row">
+          <div class="sa-field">
+            <label for="id_store_name">Store Name <span class="req">*</span></label>
+            <input type="text" name="store_name" id="id_store_name"
+                   value="{{ form_data.store_name|default:'' }}"
+                   placeholder="e.g. FitGear Pro" required maxlength="200">
+            <span class="sa-hint">This will be your public store name.</span>
+          </div>
+        </div>
+        <div class="sa-form-row">
+          <div class="sa-field">
+            <label for="id_business_type">Business Type <span class="req">*</span></label>
+            <select name="business_type" id="id_business_type" required>
+              <option value="">Select business type</option>
+              <option value="individual" {% if form_data.business_type == 'individual' %}selected{% endif %}>Individual / Sole Proprietor</option>
+              <option value="company" {% if form_data.business_type == 'company' %}selected{% endif %}>Company / Business Entity</option>
+            </select>
+          </div>
+        </div>
+        <div class="sa-form-row">
+          <div class="sa-field">
+            <label for="id_store_description">Store Description</label>
+            <textarea name="store_description" id="id_store_description" rows="4"
+                      placeholder="Tell customers about your store — what you sell, your story, your values...">{{ form_data.store_description|default:'' }}</textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="sa-form-section">
+        <h3><i class="bi bi-file-earmark-text"></i> Business Credentials</h3>
+        <div class="sa-form-row">
+          <div class="sa-field">
+            <label for="id_business_registration">Business Registration / License #</label>
+            <input type="text" name="business_registration" id="id_business_registration"
+                   value="{{ form_data.business_registration|default:'' }}"
+                   placeholder="e.g. BRN-2024-12345">
+            <span class="sa-hint">Your official business registration or license number.</span>
+          </div>
+        </div>
+        <div class="sa-form-row">
+          <div class="sa-field">
+            <label for="id_tax_id">Tax ID / VAT Number</label>
+            <input type="text" name="tax_id" id="id_tax_id"
+                   value="{{ form_data.tax_id|default:'' }}"
+                   placeholder="e.g. TX-987654321">
+            <span class="sa-hint">Tax identification number for your business.</span>
+          </div>
+        </div>
+        <div class="sa-form-row">
+          <div class="sa-field">
+            <label for="id_business_address">Registered Business Address</label>
+            <textarea name="business_address" id="id_business_address" rows="3"
+                      placeholder="Your official registered business address...">{{ form_data.business_address|default:'' }}</textarea>
+          </div>
+        </div>
+        <div class="sa-form-row">
+          <div class="sa-field">
+            <label for="id_id_proof">Government ID / Business License <span class="sa-opt">(upload)</span></label>
+            <input type="file" name="id_proof" id="id_id_proof" accept="image/*,.pdf">
+            <span class="sa-hint">Upload a government-issued ID or business license document.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sa-form-section">
+        <h3><i class="bi bi-telephone"></i> Contact Information</h3>
+        <div class="sa-form-row">
+          <div class="sa-field">
+            <label for="id_phone">Phone Number</label>
+            <input type="tel" name="phone" id="id_phone"
+                   value="{{ form_data.phone|default:'' }}"
+                   placeholder="+1 234 567 8900">
+            <span class="sa-hint">For order-related communications.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sa-form-section">
+        <h3><i class="bi bi-shield-check"></i> Agreement</h3>
+        <label class="sa-checkbox">
+          <input type="checkbox" name="agree_terms" id="id_agree_terms" required>
+          <span>I confirm that the information provided is accurate and I agree to the <a href="{% url 'terms' %}" target="_blank">Terms of Service</a> and <a href="{% url 'privacy' %}" target="_blank">Privacy Policy</a>.</span>
+        </label>
+      </div>
+
+      <div class="sa-form-actions">
+        <button type="submit" class="sa-btn sa-btn-primary">
+          <i class="bi bi-send-check"></i> Submit Application
+        </button>
+        <a href="{% url 'profile' %}" class="sa-btn sa-btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% block extra_js %}
+<script>
+document.querySelectorAll('.sa-recent-item').forEach(function(item) {
+  item.addEventListener('click', function() {
+    var fields = {
+      'store_name': this.dataset.storeName,
+      'business_type': this.dataset.businessType,
+      'store_description': this.dataset.storeDescription,
+      'business_registration': this.dataset.businessRegistration,
+      'tax_id': this.dataset.taxId,
+      'business_address': this.dataset.businessAddress,
+      'phone': this.dataset.phone,
+    };
+    Object.keys(fields).forEach(function(name) {
+      var el = document.getElementById('id_' + name);
+      if (el) el.value = fields[name];
+    });
+    var btns = document.querySelectorAll('.sa-recent-item');
+    btns.forEach(function(b) { b.classList.remove('active'); });
+    this.classList.add('active');
+  });
+});
+</script>
+{% endblock %}
+{% endblock %}

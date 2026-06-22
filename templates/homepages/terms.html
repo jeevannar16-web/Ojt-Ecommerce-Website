@@ -1,0 +1,98 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}Terms of Service — Fitness Hub{% endblock %}
+
+{% block extra_css %}
+<style>
+.legal-section {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+}
+.legal-section h1 {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #e8c97e, #c4783a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.legal-section .last-updated {
+  color: var(--clr-muted);
+  font-size: 0.85rem;
+  margin-bottom: 40px;
+}
+.legal-section h2 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--clr-accent);
+  margin: 32px 0 12px;
+}
+.legal-section p {
+  color: var(--clr-text);
+  line-height: 1.75;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  opacity: 0.88;
+}
+.legal-section ul {
+  list-style: disc;
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+.legal-section ul li {
+  color: var(--clr-text);
+  line-height: 1.75;
+  font-size: 0.95rem;
+  opacity: 0.88;
+  margin-bottom: 6px;
+}
+.legal-section strong {
+  color: var(--clr-accent);
+  opacity: 1;
+}
+.legal-section a {
+  color: var(--clr-accent);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="legal-section">
+  <h1>Terms of Service</h1>
+  <p class="last-updated">Last updated: June 2026</p>
+
+  <p>Welcome to FitnessHub. By accessing or using our website, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, please do not use our services.</p>
+
+  <h2>Account Registration</h2>
+  <p>When you create an account with us, you must provide accurate, complete, and current information. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. Notify us immediately of any unauthorized use.</p>
+
+  <h2>Orders and Payment</h2>
+  <ul>
+    <li>All prices are listed in the currency displayed and are subject to change without notice.</li>
+    <li>We reserve the right to refuse or cancel any order for any reason, including product availability, pricing errors, or suspected fraud.</li>
+    <li>Payment must be received in full before we process and ship your order.</li>
+    <li>Promotional codes and discounts are subject to specific terms and may be withdrawn at any time.</li>
+  </ul>
+
+  <h2>Shipping and Returns</h2>
+  <p>Shipping times are estimates and not guaranteed. Risk of loss and title pass to you upon delivery. Our return policy allows returns within 30 days of receipt for items in original condition. For full details, see our Return Policy page.</p>
+
+  <h2>Intellectual Property</h2>
+  <p>All content on this website — including text, graphics, logos, images, and software — is the property of FitnessHub or its licensors and is protected by copyright and intellectual property laws. You may not reproduce, distribute, modify, or create derivative works without our express written consent.</p>
+
+  <h2>Limitation of Liability</h2>
+  <p>FitnessHub shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of your use of our website or products. Our total liability in any matter is limited to the amount you paid us for the product or service giving rise to the claim.</p>
+
+  <h2>Termination</h2>
+  <p>We reserve the right to suspend or terminate your account and access to our services at our sole discretion, without prior notice, for conduct that we believe violates these Terms or is harmful to other users, third parties, or us.</p>
+
+  <h2>Changes to Terms</h2>
+  <p>We may update these Terms of Service from time to time. Changes will be posted on this page with an updated revision date. Continued use of the website after changes constitutes acceptance of the new terms.</p>
+
+  <h2>Contact</h2>
+  <p>For questions about these Terms, contact us at <strong>support@fitnesshub.com</strong>.</p>
+</section>
+{% endblock %}

@@ -1,0 +1,21 @@
+  {% if messages %}
+  <div class="messages-wrap">
+    {% for message in messages %}
+      <div class="msg-toast">{{ message }}</div>
+    {% endfor %}
+  </div>
+  <script>
+    (function(){
+      var toasts = document.querySelectorAll('.msg-toast');
+      for(var i=0;i<toasts.length;i++){
+        (function(t){
+          setTimeout(function(){
+            t.style.transition='opacity 0.5s ease';
+            t.style.opacity='0';
+            setTimeout(function(){ t.remove(); },500);
+          },3500);
+        })(toasts[i]);
+      }
+    })();
+  </script>
+  {% endif %}

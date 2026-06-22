@@ -224,8 +224,8 @@
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <span class="price-now">${{ product.price }}</span>
             <div class="actions-group">
-              <button class="btn-fav" onclick="event.stopPropagation(); toggleFavorite(event, {{ product.id }}, this)">
-                <i class="bi bi-heart"></i>
+              <button class="btn-fav {% if product.id in global_favorited_ids %}favorited{% endif %}" onclick="event.stopPropagation(); toggleFavorite(event, {{ product.id }}, this)">
+                <i class="bi {% if product.id in global_favorited_ids %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
               </button>
               <button class="btn-cart" onclick="event.stopPropagation(); addToCart(event, {{ product.id }}, this)">
                 <i class="bi bi-bag-plus"></i>

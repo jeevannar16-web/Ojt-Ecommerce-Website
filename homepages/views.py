@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Q  
+from django.views.generic import TemplateView
 from store.models import Product, Category
 
 def home(request):
@@ -74,3 +75,15 @@ def home(request):
         'search_error': error,
     }
     return render(request, 'index.html', context)
+
+
+class PrivacyPolicyView(TemplateView):
+    template_name = 'homepages/privacy.html'
+
+
+class TermsOfServiceView(TemplateView):
+    template_name = 'homepages/terms.html'
+
+
+class CookiesPolicyView(TemplateView):
+    template_name = 'homepages/cookies.html'

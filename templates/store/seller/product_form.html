@@ -1,0 +1,104 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}{% if product %}Edit{% else %}Add{% endif %} Product — Seller{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/seller_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="seller-layout">
+    <aside class="seller-sidebar">
+      <div class="brand">
+        <h2>Seller <span>Center</span></h2>
+        <small>{{ request.user.username }}</small>
+        {% if request.user.profile.store_name %}
+        <div class="store-name">{{ request.user.profile.store_name }}</div>
+        {% endif %}
+      </div>
+      <ul class="seller-nav">
+        <li class="nav-label">Main</li>
+        <li><a href="{% url 'store:seller_dashboard' %}"><i class="bi bi-grid"></i> Dashboard</a></li>
+        <li><a href="{% url 'store:seller_product_list' %}"><i class="bi bi-box-seam"></i> Products</a></li>
+        <li><a href="{% url 'store:seller_orders' %}"><i class="bi bi-truck"></i> Orders</a></li>
+        <li class="nav-label">Store</li>
+        {% if request.user.profile.store_slug %}<li><a href="{% url 'store:seller_storefront' request.user.profile.store_slug %}"><i class="bi bi-shop"></i> My Storefront</a></li>{% endif %}
+        <li class="nav-label">Quick Actions</li>
+        <li><a href="{% url 'store:seller_product_add' %}"><i class="bi bi-plus-lg"></i> Add Product</a></li>
+        <li><a href="{% url 'home' %}"><i class="bi bi-eye"></i> View Site</a></li>
+      </ul>
+    </aside>
+
+  <main class="seller-main">
+    <h1>{% if product %}Edit <span style="color:#d4af37;">Product</span>{% else %}Add <span style="color:#d4af37;">Product</span>{% endif %}</h1>
+    {% if product %}
+    <p class="page-sub">Editing: {{ product.name }}</p>
+    {% else %}
+    <p class="page-sub">Create a new product listing.</p>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" style="background:#141414;border:1px solid #1f1f1f;border-radius:10px;padding:28px;max-width:720px;">
+      {% csrf_token %}
+
+      <div style="margin-bottom:18px;">
+        <label style="display:block;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#777;margin-bottom:6px;">Product Name *</label>
+        <input type="text" name="name" value="{{ form_data.name|default:'' }}" placeholder="e.g. Premium Yoga Mat" required style="width:100%;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:10px 14px;color:#f0ece4;font-size:0.9rem;font-family:inherit;outline:none;box-sizing:border-box;">
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div style="margin-bottom:18px;">
+          <label style="display:block;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#777;margin-bottom:6px;">Category</label>
+          <select name="category" style="width:100%;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:10px 14px;color:#f0ece4;font-size:0.9rem;font-family:inherit;outline:none;cursor:pointer;box-sizing:border-box;">
+            <option value="">— Select —</option>
+            {% for cat in categories %}
+            <option value="{{ cat.id }}" {% if form_data.category|stringformat:"s" == cat.id|stringformat:"s" %}selected{% endif %} style="background:#0a0a0a;">{{ cat.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div style="margin-bottom:18px;">
+          <label style="display:block;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#777;margin-bottom:6px;">Price *</label>
+          <input type="number" name="price" value="{{ form_data.price|default:'' }}" step="0.01" min="0" placeholder="0.00" required style="width:100%;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:10px 14px;color:#f0ece4;font-size:0.9rem;font-family:inherit;outline:none;box-sizing:border-box;">
+        </div>
+      </div>
+
+      <div style="margin-bottom:18px;">
+        <label style="display:block;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#777;margin-bottom:6px;">Sizes (comma-separated)</label>
+        <input type="text" name="sizes" value="{{ form_data.sizes|default:'' }}" placeholder="e.g. S,M,L,XL or 5kg,10kg,20kg" style="width:100%;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:10px 14px;color:#f0ece4;font-size:0.9rem;font-family:inherit;outline:none;box-sizing:border-box;">
+        <small style="color:#666;font-size:0.76rem;display:block;margin-top:4px;">Leave empty if no size variants. Each size gets its own stock.</small>
+      </div>
+
+      <div style="margin-bottom:18px;">
+        <label style="display:block;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#777;margin-bottom:6px;">Description</label>
+        <textarea name="description" placeholder="Describe your product..." style="width:100%;min-height:100px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:10px 14px;color:#f0ece4;font-size:0.9rem;font-family:inherit;outline:none;resize:vertical;box-sizing:border-box;">{{ form_data.description|default:'' }}</textarea>
+      </div>
+
+      <div style="margin-bottom:18px;">
+        <label style="display:block;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#777;margin-bottom:6px;">Product Image</label>
+        <input type="file" name="image" accept="image/*" style="width:100%;padding:8px;background:#0a0a0a;border:1px dashed #2a2a2a;border-radius:8px;color:#666;font-size:0.85rem;cursor:pointer;box-sizing:border-box;">
+        {% if product and product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #2a2a2a;margin-top:8px;">
+        {% endif %}
+      </div>
+
+      <div style="display:flex;gap:16px;margin-bottom:18px;">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.88rem;color:#ccc;">
+          <input type="checkbox" name="is_sale" id="is_sale" {% if form_data.is_sale %}checked{% endif %} style="width:16px;height:16px;accent-color:#d4af37;cursor:pointer;"> On Sale
+        </label>
+        {% if product %}
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.88rem;color:#ccc;">
+          <input type="checkbox" name="is_featured" id="is_featured" {% if form_data.is_featured %}checked{% endif %} style="width:16px;height:16px;accent-color:#d4af37;cursor:pointer;"> Featured
+        </label>
+        {% endif %}
+      </div>
+
+      <div style="display:flex;gap:10px;">
+        <button type="submit" style="padding:12px 28px;border-radius:8px;font-weight:700;font-size:0.88rem;font-family:inherit;cursor:pointer;border:none;background:linear-gradient(135deg,#d4af37,#b8962e);color:#0d0d0d;display:inline-flex;align-items:center;gap:8px;">
+          <i class="bi bi-check-lg"></i> {% if product %}Update{% else %}Create{% endif %} Product
+        </button>
+        <a href="{% url 'store:seller_product_list' %}" style="padding:12px 28px;border-radius:8px;font-weight:600;font-size:0.88rem;text-decoration:none;border:1px solid #2a2a2a;color:#999;display:inline-flex;align-items:center;">Cancel</a>
+      </div>
+    </form>
+  </main>
+</div>
+{% endblock %}

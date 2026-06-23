@@ -1,7 +1,7 @@
 {% extends 'layout/base.html' %}
 {% load static %}
 
-{% block title %}My Wishlist — FitnessHub{% endblock %}
+{% block title %}My Wishlist — FITNESS HUB{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/favorites.css' %}">
@@ -12,15 +12,15 @@
 
 <div class="wishlist-container">
   <div class="wishlist-header">
-    <h1>My <span>Wishlist</span> <i class="bi bi-heart-fill" style="color: #ef4444; font-size: 1.8rem;"></i></h1>
+    <h1>{{ 'My'|t }} <span>{{ 'Wishlist'|t }}</span> <i class="bi bi-heart-fill" style="color: #ef4444; font-size: 1.8rem;"></i></h1>
   </div>
 
   <div id="empty-state-template" style="display: none;">
     <div class="wishlist-empty">
       <div style="font-size: 3.5rem; margin-bottom: 16px;">❤️</div>
-      <h3 style="color: var(--clr-text); font-family: var(--font-display); margin-bottom: 8px;">Your Wishlist is Empty</h3>
-      <p style="color: var(--clr-muted); font-size: 0.95rem; margin-bottom: 24px;">Explore items and tap the heart icon to save products here!</p>
-      <a href="/" style="display: inline-block; color: #0d0d0d; background: var(--clr-accent); padding: 12px 28px; border-radius: 50px; font-weight: 600; text-decoration: none; transition: background 0.2s;">Discover Products</a>
+      <h3 style="color: var(--clr-text); font-family: var(--font-display); margin-bottom: 8px;">{{ 'Your Wishlist is Empty'|t }}</h3>
+      <p style="color: var(--clr-muted); font-size: 0.95rem; margin-bottom: 24px;">{{ 'Explore items and tap the heart icon to save products here!'|t }}</p>
+      <a href="/" style="display: inline-block; color: #0d0d0d; background: var(--clr-accent); padding: 12px 28px; border-radius: 50px; font-weight: 600; text-decoration: none; transition: background 0.2s;">{{ 'Discover Products'|t }}</a>
     </div>
   </div>
 
@@ -28,13 +28,13 @@
     {% for fav_item in favorite_items %}
       <div class="card-product" id="wishlist-item-{{ fav_item.product.id }}">
         
-        <button type="button" class="btn-remove-floating" title="Remove from Wishlist" onclick="removeWishlistItem(event, {{ fav_item.product.id }})">
+        <button type="button" class="btn-remove-floating" title="{{ 'Remove from Wishlist'|t }}" onclick="removeWishlistItem(event, {{ fav_item.product.id }})">
           <i class="bi bi-x-lg"></i>
         </button>
 
         <div class="card-img-wrap">
           {% if fav_item.product.image %}
-            <img src="{{ fav_item.product.image.url }}" alt="{{ fav_item.product.name }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <img src="{{ fav_item.product.image.url }}" alt="{{ fav_item.product.name|t }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
             <div style="font-size: 3rem; display: none;">📦</div>
           {% else %}
             <div style="font-size: 3rem;">📦</div>
@@ -42,13 +42,13 @@
         </div>
         
         <div class="card-body-custom">
-          <div class="card-category">{{ fav_item.product.category.name }}</div>
-          <div class="card-title-text">{{ fav_item.product.name }}</div>
+          <div class="card-category">{{ fav_item.product.category.name|t }}</div>
+          <div class="card-title-text">{{ fav_item.product.name|t }}</div>
           <div class="card-price-row">
-            <span class="price-now">${{ fav_item.product.price }}</span>
+            <span class="price-now">{{ fav_item.product.price|currency }}</span>
             
             <button type="button" class="btn-cart-full" onclick="addToCart(event, {{ fav_item.product.id }})">
-              <i class="bi bi-bag-plus"></i> Add
+              <i class="bi bi-bag-plus"></i> {{ 'Add'|t }}
             </button>
           </div>
         </div>
@@ -56,9 +56,9 @@
     {% empty %}
       <div class="wishlist-empty" style="grid-column: 1 / -1;">
         <div style="font-size: 3.5rem; margin-bottom: 16px;">❤️</div>
-        <h3 style="color: var(--clr-text); font-family: var(--font-display); margin-bottom: 8px;">Your Wishlist is Empty</h3>
-        <p style="color: var(--clr-muted); font-size: 0.95rem; margin-bottom: 24px;">Explore items and tap the heart icon to save products here!</p>
-        <a href="/" style="display: inline-block; color: #0d0d0d; background: var(--clr-accent); padding: 12px 28px; border-radius: 50px; font-weight: 600; text-decoration: none; transition: background 0.2s;">Discover Products</a>
+        <h3 style="color: var(--clr-text); font-family: var(--font-display); margin-bottom: 8px;">{{ 'Your Wishlist is Empty'|t }}</h3>
+        <p style="color: var(--clr-muted); font-size: 0.95rem; margin-bottom: 24px;">{{ 'Explore items and tap the heart icon to save products here!'|t }}</p>
+        <a href="/" style="display: inline-block; color: #0d0d0d; background: var(--clr-accent); padding: 12px 28px; border-radius: 50px; font-weight: 600; text-decoration: none; transition: background 0.2s;">{{ 'Discover Products'|t }}</a>
       </div>
     {% endfor %}
   </div>

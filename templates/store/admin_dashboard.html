@@ -1,7 +1,7 @@
 {% extends 'layout/base.html' %}
 {% load static %}
 
-{% block title %}Admin Dashboard — FitnessHub{% endblock %}
+{% block title %}{{ 'Admin Dashboard'|t }} — FITNESS HUB{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/admin_dashboard.css' %}">
@@ -11,46 +11,46 @@
 <div class="admin-layout">
   <aside class="admin-sidebar">
     <div class="brand">
-      <h2>Admin <span>Panel</span></h2>
+      <h2>{{ 'Admin'|t }} <span>{{ 'Panel'|t }}</span></h2>
       <small>{{ request.user.username }}</small>
     </div>
     <ul class="admin-nav">
-      <li class="nav-label">Management</li>
-      <li><a href="{% url 'store:admin_dashboard' %}" class="active"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
-      <li><a href="{% url 'store:admin_activity_log' %}"><i class="bi bi-clock-history"></i> Activity Log</a></li>
-      <li><a href="{% url 'store:admin_favorites' %}"><i class="bi bi-heart-fill"></i> Favorites</a></li>
-      <li><a href="{% url 'store:admin_cart' %}"><i class="bi bi-bag-plus"></i> Cart</a></li>
-      <li><a href="{% url 'admin:index' %}" target="_blank"><i class="bi bi-gear"></i> Django Admin</a></li>
-      <li><a href="{% url 'admin:auth_user_changelist' %}" target="_blank"><i class="bi bi-people"></i> Users</a></li>
-      <li><a href="{% url 'admin:store_product_changelist' %}" target="_blank"><i class="bi bi-box-seam"></i> Products</a></li>
-      <li><a href="{% url 'admin:store_order_changelist' %}" target="_blank"><i class="bi bi-truck"></i> Orders</a></li>
-      <li class="nav-label">Store</li>
-      <li><a href="{% url 'home' %}"><i class="bi bi-shop"></i> View Site</a></li>
-      <li><a href="{% url 'store:seller_dashboard' %}"><i class="bi bi-shop"></i> Seller View</a></li>
+      <li class="nav-label">{{ 'Management'|t }}</li>
+      <li><a href="{% url 'store:admin_dashboard' %}" class="active"><i class="bi bi-speedometer2"></i> {{ 'Dashboard'|t }}</a></li>
+      <li><a href="{% url 'store:admin_activity_log' %}"><i class="bi bi-clock-history"></i> {{ 'Activity Log'|t }}</a></li>
+      <li><a href="{% url 'store:admin_favorites' %}"><i class="bi bi-heart-fill"></i> {{ 'Favorites'|t }}</a></li>
+      <li><a href="{% url 'store:admin_cart' %}"><i class="bi bi-bag-plus"></i> {{ 'Cart'|t }}</a></li>
+      <li><a href="{% url 'admin:index' %}" target="_blank"><i class="bi bi-gear"></i> {{ 'Django Admin'|t }}</a></li>
+      <li><a href="{% url 'admin:auth_user_changelist' %}" target="_blank"><i class="bi bi-people"></i> {{ 'Users'|t }}</a></li>
+      <li><a href="{% url 'admin:store_product_changelist' %}" target="_blank"><i class="bi bi-box-seam"></i> {{ 'Products'|t }}</a></li>
+      <li><a href="{% url 'admin:store_order_changelist' %}" target="_blank"><i class="bi bi-truck"></i> {{ 'Orders'|t }}</a></li>
+      <li class="nav-label">{{ 'Store'|t }}</li>
+      <li><a href="{% url 'home' %}"><i class="bi bi-shop"></i> {{ 'View Site'|t }}</a></li>
+      <li><a href="{% url 'store:seller_dashboard' %}"><i class="bi bi-shop"></i> {{ 'Seller View'|t }}</a></li>
     </ul>
   </aside>
 
   <main class="admin-main">
-    <h1>Dashboard</h1>
-    <p class="page-sub">System overview and management at a glance.</p>
+    <h1>{{ 'Dashboard'|t }}</h1>
+    <p class="page-sub">{{ 'System overview and management at a glance.'|t }}</p>
 
     <div class="stats-row">
-      <a href="{% url 'admin:auth_user_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_users }}</div><div class="lbl">Users</div></a>
-      <a href="{% url 'admin:auth_user_changelist' %}?profile__is_email_verified__exact=1" target="_blank" class="stat-box clickable" style="border-left:3px solid #2ec4b6;"><div class="num" style="color:#2ec4b6;">{{ total_verified_users }}</div><div class="lbl">Verified</div></a>
-      <a href="{% url 'admin:auth_user_changelist' %}?profile__is_email_verified__exact=0" target="_blank" class="stat-box clickable" style="border-left:3px solid #ef4444;"><div class="num" style="color:#ef4444;">{{ total_unverified_users }}</div><div class="lbl">Unverified</div></a>
-      <a href="{% url 'admin:store_product_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_products }}</div><div class="lbl">Products</div></a>
-      <a href="{% url 'admin:store_order_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_orders }}</div><div class="lbl">Orders</div></a>
-      <a href="{% url 'admin:store_order_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">${{ total_revenue|floatformat:0 }}</div><div class="lbl">Revenue</div></a>
-      <a href="{% url 'admin:store_category_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_categories }}</div><div class="lbl">Categories</div></a>
-      <a href="{% url 'admin:store_review_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_reviews }}</div><div class="lbl">Reviews</div></a>
-      <a href="{% url 'admin:store_newslettersubscriber_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_subscribers }}</div><div class="lbl">Subscribers</div></a>
-      <a href="{% url 'store:admin_favorites' %}" class="stat-box clickable"><div class="num">{{ total_favorites_count }}</div><div class="lbl">Favorites</div></a>
-      <a href="{% url 'store:admin_cart' %}" class="stat-box clickable"><div class="num">{{ total_cart_items_count }}</div><div class="lbl">Cart Items</div></a>
-      <a href="{% url 'store:admin_cart' %}" class="stat-box clickable"><div class="num">{{ active_cart_users }}</div><div class="lbl">Active Cart Users</div></a>
+      <a href="{% url 'admin:auth_user_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_users }}</div><div class="lbl">{{ 'Users'|t }}</div></a>
+      <a href="{% url 'admin:auth_user_changelist' %}?profile__is_email_verified__exact=1" target="_blank" class="stat-box clickable" style="border-left:3px solid #2ec4b6;"><div class="num" style="color:#2ec4b6;">{{ total_verified_users }}</div><div class="lbl">{{ 'Verified'|t }}</div></a>
+      <a href="{% url 'admin:auth_user_changelist' %}?profile__is_email_verified__exact=0" target="_blank" class="stat-box clickable" style="border-left:3px solid #ef4444;"><div class="num" style="color:#ef4444;">{{ total_unverified_users }}</div><div class="lbl">{{ 'Unverified'|t }}</div></a>
+      <a href="{% url 'admin:store_product_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_products }}</div><div class="lbl">{{ 'Products'|t }}</div></a>
+      <a href="{% url 'admin:store_order_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_orders }}</div><div class="lbl">{{ 'Orders'|t }}</div></a>
+      <a href="{% url 'admin:store_order_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">${{ total_revenue|floatformat:0 }}</div><div class="lbl">{{ 'Revenue'|t }}</div></a>
+      <a href="{% url 'admin:store_category_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_categories }}</div><div class="lbl">{{ 'Categories'|t }}</div></a>
+      <a href="{% url 'admin:store_review_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_reviews }}</div><div class="lbl">{{ 'Reviews'|t }}</div></a>
+      <a href="{% url 'admin:store_newslettersubscriber_changelist' %}" target="_blank" class="stat-box clickable"><div class="num">{{ total_subscribers }}</div><div class="lbl">{{ 'Subscribers'|t }}</div></a>
+      <a href="{% url 'store:admin_favorites' %}" class="stat-box clickable"><div class="num">{{ total_favorites_count }}</div><div class="lbl">{{ 'Favorites'|t }}</div></a>
+      <a href="{% url 'store:admin_cart' %}" class="stat-box clickable"><div class="num">{{ total_cart_items_count }}</div><div class="lbl">{{ 'Cart Items'|t }}</div></a>
+      <a href="{% url 'store:admin_cart' %}" class="stat-box clickable"><div class="num">{{ active_cart_users }}</div><div class="lbl">{{ 'Active Cart Users'|t }}</div></a>
     </div>
 
     <div class="admin-order-status-row">
-      <span class="os-label">Orders by Status:</span>
+      <span class="os-label">{{ 'Orders by Status:'|t }}</span>
       {% for code, info in order_status_breakdown.items %}
       <a href="{% url 'admin:store_order_changelist' %}?status__exact={{ code }}" target="_blank" class="os-badge os-{{ code }}">
         <span class="os-count">{{ info.count }}</span>
@@ -62,18 +62,18 @@
     <div class="admin-grid">
       <div class="admin-card">
         <div class="card-hd">
-          <h3><i class="bi bi-box-seam"></i> Recent Orders</h3>
-          <a href="{% url 'admin:store_order_changelist' %}" target="_blank">Manage →</a>
+          <h3><i class="bi bi-box-seam"></i> {{ 'Recent Orders'|t }}</h3>
+          <a href="{% url 'admin:store_order_changelist' %}" target="_blank">{{ 'Manage'|t }} →</a>
         </div>
         <div class="card-bd">
           {% if recent_orders %}
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Order</th>
-                <th>Customer</th>
-                <th>Total</th>
-                <th>Status</th>
+                <th>{{ 'Order'|t }}</th>
+                <th>{{ 'Customer'|t }}</th>
+                <th>{{ 'Total'|t }}</th>
+                <th>{{ 'Status'|t }}</th>
               </tr>
             </thead>
             <tbody>
@@ -89,7 +89,7 @@
                     <input type="hidden" name="order_id" value="{{ order.id }}">
                     <select name="status" onchange="this.form.submit()" class="status-select status-{{ order.status }}">
                       {% for code, label in order.STATUS_CHOICES %}
-                      <option value="{{ code }}" {% if order.status == code %}selected{% endif %}>{{ label }}</option>
+                      <option value="{{ code }}" {% if order.status == code %}selected{% endif %}>{{ label|t }}</option>
                       {% endfor %}
                     </select>
                   </form>
@@ -99,26 +99,26 @@
             </tbody>
           </table>
           {% else %}
-          <div class="empty-state">No orders yet.</div>
+          <div class="empty-state">{{ 'No orders yet.'|t }}</div>
           {% endif %}
         </div>
       </div>
 
       <div class="admin-card">
         <div class="card-hd">
-          <h3><i class="bi bi-person-plus"></i> Pending Sellers <span class="badge">{{ pending_sellers|length }}</span></h3>
+          <h3><i class="bi bi-person-plus"></i> {{ 'Pending Sellers'|t }} <span class="badge">{{ pending_sellers|length }}</span></h3>
         </div>
         <div class="card-bd">
           {% if pending_sellers %}
           <table class="admin-table">
             <thead>
               <tr>
-                <th>User</th>
-                <th>Store / Type</th>
-                <th>Email</th>
-                <th>Credentials</th>
-                <th>Requested</th>
-                <th>Actions</th>
+                <th>{{ 'User'|t }}</th>
+                <th>{{ 'Store / Type'|t }}</th>
+                <th>{{ 'Email'|t }}</th>
+                <th>{{ 'Credentials'|t }}</th>
+                <th>{{ 'Requested'|t }}</th>
+                <th>{{ 'Actions'|t }}</th>
               </tr>
             </thead>
             <tbody>
@@ -128,7 +128,7 @@
                 <td>
                   {% if profile.store_name %}
                     <span style="color:#d4af37;font-weight:600;">{{ profile.store_name }}</span>
-                    <br><span style="color:#666;font-size:0.7rem;">{{ profile.get_business_type_display|default:'—' }}</span>
+                    <br><span style="color:#666;font-size:0.7rem;">{{ profile.get_business_type_display|default:'—'|t }}</span>
                   {% else %}
                     <span style="color:#666;">—</span>
                   {% endif %}
@@ -136,16 +136,16 @@
                 <td>{{ profile.user.email }}</td>
                 <td style="max-width:220px;font-size:0.75rem;color:#999;">
                   {% if profile.business_registration %}
-                    <span><b style="color:#aaa;">Reg:</b> {{ profile.business_registration }}</span><br>
+                    <span><b style="color:#aaa;">{{ 'Reg:'|t }}</b> {{ profile.business_registration }}</span><br>
                   {% endif %}
                   {% if profile.tax_id %}
-                    <span><b style="color:#aaa;">Tax:</b> {{ profile.tax_id }}</span><br>
+                    <span><b style="color:#aaa;">{{ 'Tax:'|t }}</b> {{ profile.tax_id }}</span><br>
                   {% endif %}
                   {% if profile.business_address %}
-                    <span><b style="color:#aaa;">Addr:</b> {{ profile.business_address|truncatechars:40 }}</span><br>
+                    <span><b style="color:#aaa;">{{ 'Addr:'|t }}</b> {{ profile.business_address|truncatechars:40 }}</span><br>
                   {% endif %}
                   {% if profile.id_proof %}
-                    <a href="{{ profile.id_proof.url }}" target="_blank" style="color:#3b82f6;font-weight:600;">View ID →</a>
+                    <a href="{{ profile.id_proof.url }}" target="_blank" style="color:#3b82f6;font-weight:600;">{{ 'View ID'|t }} →</a>
                   {% endif %}
                   {% if not profile.business_registration and not profile.tax_id %}
                     <span style="color:#555;">—</span>
@@ -163,14 +163,14 @@
                     {% csrf_token %}
                     <input type="hidden" name="action" value="approve_seller">
                     <input type="hidden" name="user_id" value="{{ profile.user.id }}">
-                    <button type="submit" class="admin-btn-sm admin-btn-approve">Approve</button>
+                    <button type="submit" class="admin-btn-sm admin-btn-approve">{{ 'Approve'|t }}</button>
                   </form>
                   <form method="POST" style="display:inline;" onsubmit="return confirmDecline(this)">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="decline_seller">
                     <input type="hidden" name="user_id" value="{{ profile.user.id }}">
                     <input type="hidden" name="rejection_reason" class="rejection-reason" value="">
-                    <button type="submit" class="admin-btn-sm admin-btn-decline">Decline</button>
+                    <button type="submit" class="admin-btn-sm admin-btn-decline">{{ 'Decline'|t }}</button>
                   </form>
                 </td>
               </tr>
@@ -178,7 +178,7 @@
             </tbody>
           </table>
           {% else %}
-          <div class="empty-state">No pending seller requests.</div>
+          <div class="empty-state">{{ 'No pending seller requests.'|t }}</div>
           {% endif %}
         </div>
       </div>
@@ -187,18 +187,18 @@
     <div class="admin-grid">
       <div class="admin-card">
         <div class="card-hd">
-          <h3><i class="bi bi-exclamation-triangle"></i> Low Stock Products</h3>
-          <a href="{% url 'admin:store_product_changelist' %}" target="_blank">Manage →</a>
+          <h3><i class="bi bi-exclamation-triangle"></i> {{ 'Low Stock Products'|t }}</h3>
+          <a href="{% url 'admin:store_product_changelist' %}" target="_blank">{{ 'Manage'|t }} →</a>
         </div>
         <div class="card-bd">
           {% if low_stock_products %}
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Product</th>
-                <th>Stock</th>
-                <th>Price</th>
-                <th>Seller</th>
+                <th>{{ 'Product'|t }}</th>
+                <th>{{ 'Stock'|t }}</th>
+                <th>{{ 'Price'|t }}</th>
+                <th>{{ 'Seller'|t }}</th>
               </tr>
             </thead>
             <tbody>
@@ -212,34 +212,34 @@
                     <span class="stock-low">{{ product.stock }}</span>
                   {% endif %}
                 </td>
-                <td>${{ product.price }}</td>
+                <td>{{ product.price|currency }}</td>
                 <td>{{ product.seller.username|default:'—' }}</td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
           {% else %}
-          <div class="empty-state">All products are well-stocked.</div>
+          <div class="empty-state">{{ 'All products are well-stocked.'|t }}</div>
           {% endif %}
         </div>
       </div>
 
       <div class="admin-card">
         <div class="card-hd">
-          <h3><i class="bi bi-people"></i> Current Sellers</h3>
+          <h3><i class="bi bi-people"></i> {{ 'Current Sellers'|t }}</h3>
         </div>
         <div class="card-bd">
           {% if current_sellers %}
           <table class="admin-table">
             <thead>
               <tr>
-                <th>User</th>
-                <th>Store</th>
-                <th>Email</th>
-                <th>Joined</th>
-                <th>Verified</th>
-                <th>Products</th>
-                <th>Actions</th>
+                <th>{{ 'User'|t }}</th>
+                <th>{{ 'Store'|t }}</th>
+                <th>{{ 'Email'|t }}</th>
+                <th>{{ 'Joined'|t }}</th>
+                <th>{{ 'Verified'|t }}</th>
+                <th>{{ 'Products'|t }}</th>
+                <th>{{ 'Actions'|t }}</th>
               </tr>
             </thead>
             <tbody>
@@ -257,22 +257,22 @@
                 <td style="font-size:0.75rem;color:#999;">{{ profile.user.date_joined|date:"M d, Y" }}</td>
                 <td>
                   {% if profile.is_email_verified %}
-                    <span style="color:#2ec4b6;font-weight:600;">Yes</span>
+                    <span style="color:#2ec4b6;font-weight:600;">{{ 'Yes'|t }}</span>
                   {% else %}
-                    <span style="color:#ef4444;">No</span>
+                    <span style="color:#ef4444;">{{ 'No'|t }}</span>
                   {% endif %}
                 </td>
                 <td>{{ profile.user.products.count }}</td>
                 <td>
                   {% if not profile.user.is_superuser %}
-                  <form method="POST" style="display:inline;" onsubmit="return confirm('Revoke seller access for @{{ profile.user.username|escapejs }}?')">
+                  <form method="POST" style="display:inline;" onsubmit="return confirm('{{ 'Revoke seller access for'|t }} @{{ profile.user.username|escapejs }}?')">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="revoke_seller">
                     <input type="hidden" name="user_id" value="{{ profile.user.id }}">
-                    <button type="submit" class="admin-btn-sm admin-btn-revoke">Revoke</button>
+                    <button type="submit" class="admin-btn-sm admin-btn-revoke">{{ 'Revoke'|t }}</button>
                   </form>
                   {% else %}
-                  <span style="color:#d4af37;font-size:0.72rem;font-weight:600;">Superuser</span>
+                  <span style="color:#d4af37;font-size:0.72rem;font-weight:600;">{{ 'Superuser'|t }}</span>
                   {% endif %}
                 </td>
               </tr>
@@ -280,7 +280,7 @@
             </tbody>
           </table>
           {% else %}
-          <div class="empty-state">No sellers yet.</div>
+          <div class="empty-state">{{ 'No sellers yet.'|t }}</div>
           {% endif %}
         </div>
       </div>
@@ -289,17 +289,17 @@
     <div class="admin-grid">
       <div class="admin-card">
         <div class="card-hd">
-          <h3><i class="bi bi-heart-fill" style="color:#ef4444;"></i> Recent Favorites</h3>
-          <a href="{% url 'store:admin_favorites' %}">View All →</a>
+          <h3><i class="bi bi-heart-fill" style="color:#ef4444;"></i> {{ 'Recent Favorites'|t }}</h3>
+          <a href="{% url 'store:admin_favorites' %}">{{ 'View All'|t }} →</a>
         </div>
         <div class="card-bd">
           {% if recent_favorites %}
           <table class="admin-table">
             <thead>
               <tr>
-                <th>User</th>
-                <th>Product</th>
-                <th>When</th>
+                <th>{{ 'User'|t }}</th>
+                <th>{{ 'Product'|t }}</th>
+                <th>{{ 'When'|t }}</th>
               </tr>
             </thead>
             <tbody>
@@ -307,31 +307,31 @@
               <tr>
                 <td style="color:#f0ece4;font-weight:600;">@{{ fav.user.username }}</td>
                 <td>{{ fav.product.name|truncatechars:45 }}</td>
-                <td style="color:#666;font-size:0.75rem;">{{ fav.created_at|timesince }} ago</td>
+                <td style="color:#666;font-size:0.75rem;">{{ fav.created_at|timesince }} {{ 'ago'|t }}</td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
           {% else %}
-          <div class="empty-state">No favorites activity yet.</div>
+          <div class="empty-state">{{ 'No favorites activity yet.'|t }}</div>
           {% endif %}
         </div>
       </div>
 
       <div class="admin-card">
         <div class="card-hd">
-          <h3><i class="bi bi-bag-plus" style="color:#3b82f6;"></i> Cart Additions</h3>
-          <a href="{% url 'store:admin_cart' %}">View All →</a>
+          <h3><i class="bi bi-bag-plus" style="color:#3b82f6;"></i> {{ 'Cart Additions'|t }}</h3>
+          <a href="{% url 'store:admin_cart' %}">{{ 'View All'|t }} →</a>
         </div>
         <div class="card-bd">
           {% if recent_cart_items %}
           <table class="admin-table">
             <thead>
               <tr>
-                <th>User</th>
-                <th>Product</th>
-                <th>Qty</th>
-                <th>When</th>
+                <th>{{ 'User'|t }}</th>
+                <th>{{ 'Product'|t }}</th>
+                <th>{{ 'Qty'|t }}</th>
+                <th>{{ 'When'|t }}</th>
               </tr>
             </thead>
             <tbody>
@@ -340,13 +340,13 @@
                 <td style="color:#f0ece4;font-weight:600;">@{{ item.user.username }}</td>
                 <td>{{ item.product.name|truncatechars:40 }}</td>
                 <td>{{ item.quantity }}</td>
-                <td style="color:#666;font-size:0.75rem;">{{ item.added_at|timesince }} ago</td>
+                <td style="color:#666;font-size:0.75rem;">{{ item.added_at|timesince }} {{ 'ago'|t }}</td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
           {% else %}
-          <div class="empty-state">No cart activity yet.</div>
+          <div class="empty-state">{{ 'No cart activity yet.'|t }}</div>
           {% endif %}
         </div>
       </div>
@@ -354,18 +354,18 @@
 
     <div class="admin-card">
       <div class="card-hd">
-        <h3><i class="bi bi-person-plus"></i> New User Registrations</h3>
+        <h3><i class="bi bi-person-plus"></i> {{ 'New User Registrations'|t }}</h3>
       </div>
       <div class="card-bd">
         {% if recent_users %}
         <table class="admin-table">
           <thead>
             <tr>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Joined</th>
-              <th>Verified</th>
-              <th>Seller?</th>
+              <th>{{ 'Username'|t }}</th>
+              <th>{{ 'Email'|t }}</th>
+              <th>{{ 'Joined'|t }}</th>
+              <th>{{ 'Verified'|t }}</th>
+              <th>{{ 'Seller?'|t }}</th>
             </tr>
           </thead>
           <tbody>
@@ -376,20 +376,20 @@
               <td style="color:#666;font-size:0.75rem;">{{ u.date_joined|date:"M d, Y" }}</td>
               <td>
                 {% if u.profile.is_email_verified and u.profile.is_phone_verified %}
-                <span style="color:#2ec4b6;font-weight:600;">✓ Full</span>
+                <span style="color:#2ec4b6;font-weight:600;">✓ {{ 'Full'|t }}</span>
                 {% elif u.profile.is_email_verified %}
-                <span style="color:#f59e0b;font-weight:600;">✓ Email</span>
+                <span style="color:#f59e0b;font-weight:600;">✓ {{ 'Email'|t }}</span>
                 {% elif u.profile.is_phone_verified %}
-                <span style="color:#f59e0b;font-weight:600;">✓ Phone</span>
+                <span style="color:#f59e0b;font-weight:600;">✓ {{ 'Phone'|t }}</span>
                 {% else %}
                 <span style="color:#ef4444;font-weight:600;">✗</span>
                 {% endif %}
               </td>
               <td>
                 {% if u.profile.is_seller %}
-                <span style="color:#2ec4b6;font-weight:600;">Seller</span>
+                <span style="color:#2ec4b6;font-weight:600;">{{ 'Seller'|t }}</span>
                 {% elif u.profile.seller_requested %}
-                <span style="color:#f57224;font-weight:600;">Pending</span>
+                <span style="color:#f57224;font-weight:600;">{{ 'Pending'|t }}</span>
                 {% else %}
                 <span style="color:#666;">—</span>
                 {% endif %}
@@ -399,7 +399,7 @@
           </tbody>
         </table>
         {% else %}
-        <div class="empty-state">No users yet.</div>
+        <div class="empty-state">{{ 'No users yet.'|t }}</div>
         {% endif %}
       </div>
     </div>

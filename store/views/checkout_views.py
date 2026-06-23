@@ -12,10 +12,18 @@ import uuid
 
 @login_required
 def checkout_view(request):
-    db_items = CartItem.objects.filter(user=request.user)
+    items_param = request.GET.get('items', '').strip()
+    if items_param:
+        try:
+            selected_ids = [int(x) for x in items_param.split(',') if x.strip().isdigit()]
+            db_items = CartItem.objects.filter(user=request.user, id__in=selected_ids)
+        except (ValueError, TypeError):
+            db_items = CartItem.objects.filter(user=request.user)
+    else:
+        db_items = CartItem.objects.filter(user=request.user)
 
     if not db_items.exists():
-        messages.error(request, "Your cart is empty! Cannot checkout.")
+        messages.error(request, "No items selected for checkout.")
         return redirect('store:cart')
 
     cart_items = []
@@ -40,6 +48,8 @@ def checkout_view(request):
         city = request.POST.get('city', '').strip()
         province = request.POST.get('province', '').strip()
         postal_code = request.POST.get('postal_code', '').strip()
+        latitude = request.POST.get('latitude', '').strip()
+        longitude = request.POST.get('longitude', '').strip()
 
         errors = []
         if not full_name:
@@ -76,6 +86,16 @@ def checkout_view(request):
         profile.city = city
         profile.state = province
         profile.zip_code = postal_code
+        if latitude:
+            try:
+                profile.latitude = float(latitude)
+            except (ValueError, TypeError):
+                pass
+        if longitude:
+            try:
+                profile.longitude = float(longitude)
+            except (ValueError, TypeError):
+                pass
         profile.save()
 
         generated_order_number = uuid.uuid4().hex[:10].upper()
@@ -87,12 +107,27 @@ def checkout_view(request):
             address_parts.append(f"ZIP: {postal_code}")
         full_shipping_address = ", ".join(address_parts)
 
+        order_lat = None
+        order_lng = None
+        if latitude:
+            try:
+                order_lat = float(latitude)
+            except (ValueError, TypeError):
+                pass
+        if longitude:
+            try:
+                order_lng = float(longitude)
+            except (ValueError, TypeError):
+                pass
+
         order = Order.objects.create(
             user=request.user,
             order_number=generated_order_number,
             full_name=full_name,
             email=email,
             shipping_address=full_shipping_address,
+            latitude=order_lat,
+            longitude=order_lng,
             total_amount=total_amount,
             status='Pending'
         )
@@ -127,6 +162,9 @@ def checkout_view(request):
         'city': profile.city,
         'province': profile.state,
         'postal_code': profile.zip_code,
+        'latitude': profile.latitude or '',
+        'longitude': profile.longitude or '',
+        'country': profile.country,
     }
     return render(request, 'store/checkout.html', {
         'cart_items': cart_items,

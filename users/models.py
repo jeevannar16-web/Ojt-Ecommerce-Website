@@ -37,6 +37,8 @@ class Profile(models.Model):
     business_address = models.TextField(blank=True, help_text="Registered business address")
     is_email_verified = models.BooleanField(default=False, help_text="Email verified via OTP")
     is_phone_verified = models.BooleanField(default=False, help_text="Phone verified via SMS OTP")
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="Default delivery latitude")
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="Default delivery longitude")
 
     def __str__(self):
         return self.user.username

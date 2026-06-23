@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum
+from django.db.models import Sum, Q
 import json
-from ..models import CartItem, Product, ProductSize
+from datetime import datetime, timedelta
+from ..models import CartItem, Product, ProductSize, Category
 from ..activity_logger import log_action
 
 
@@ -77,19 +78,85 @@ def add_to_cart(request, product_id):
         user=request.user
     ).aggregate(total=Sum('quantity'))['total'] or 0
 
-    return JsonResponse({
+    response_data = {
         'success': True,
         'message': f'{product.name} added to your bag!',
         'cart_count': total_cart_items,
-    })
+    }
+
+    if product.has_sizes:
+        sizes_qs = ProductSize.objects.filter(product=product)
+        response_data['has_sizes'] = True
+        response_data['sizes'] = [{'size': ps.size, 'stock': ps.stock} for ps in sizes_qs]
+    else:
+        response_data['has_sizes'] = False
+        response_data['stock_remaining'] = product.stock
+
+    return JsonResponse(response_data)
 
 
 def cart_view(request):
     cart_items = []
     subtotal = 0.0
 
+    filters = {}
     if request.user.is_authenticated:
         db_items = CartItem.objects.filter(user=request.user)
+
+        cat = request.GET.get('category', '').strip()
+        if cat:
+            db_items = db_items.filter(product__category__name__iexact=cat)
+
+        seller = request.GET.get('seller', '').strip()
+        if seller:
+            db_items = db_items.filter(product__seller__username__iexact=seller)
+
+        price_min = request.GET.get('price_min', '').strip()
+        if price_min:
+            try:
+                db_items = db_items.filter(product__price__gte=float(price_min))
+            except ValueError:
+                pass
+
+        price_max = request.GET.get('price_max', '').strip()
+        if price_max:
+            try:
+                db_items = db_items.filter(product__price__lte=float(price_max))
+            except ValueError:
+                pass
+
+        date_from = request.GET.get('date_from', '').strip()
+        if date_from:
+            try:
+                dt = datetime.strptime(date_from, '%Y-%m-%d')
+                db_items = db_items.filter(added_at__gte=dt)
+            except ValueError:
+                pass
+
+        date_to = request.GET.get('date_to', '').strip()
+        if date_to:
+            try:
+                dt = datetime.strptime(date_to + ' 23:59:59', '%Y-%m-%d %H:%M:%S')
+                db_items = db_items.filter(added_at__lte=dt)
+            except ValueError:
+                pass
+
+        sort = request.GET.get('sort', '').strip()
+        if sort == 'price_asc':
+            db_items = db_items.order_by('product__price')
+        elif sort == 'price_desc':
+            db_items = db_items.order_by('-product__price')
+        elif sort == 'newest':
+            db_items = db_items.order_by('-added_at')
+        elif sort == 'oldest':
+            db_items = db_items.order_by('added_at')
+        elif sort == 'name_asc':
+            db_items = db_items.order_by('product__name')
+        elif sort == 'qty_desc':
+            db_items = db_items.order_by('-quantity')
+        else:
+            db_items = db_items.order_by('-added_at')
+
         for item in db_items:
             item_total = float(item.product.price) * int(item.quantity)
             subtotal += item_total
@@ -99,7 +166,26 @@ def cart_view(request):
                 'total_price': item_total,
                 'id': item.id,
                 'size': item.size or None,
+                'added_at': item.added_at,
             })
+
+        cats_in_cart = Category.objects.filter(
+            products__cartitem__user=request.user
+        ).distinct()
+        sellers_in_cart = Product.objects.filter(
+            cartitem__user=request.user
+        ).values_list('seller__username', flat=True).distinct()
+        filters = {
+            'categories': cats_in_cart,
+            'sellers': sellers_in_cart,
+            'current_category': request.GET.get('category', ''),
+            'current_seller': request.GET.get('seller', ''),
+            'current_price_min': request.GET.get('price_min', ''),
+            'current_price_max': request.GET.get('price_max', ''),
+            'current_date_from': request.GET.get('date_from', ''),
+            'current_date_to': request.GET.get('date_to', ''),
+            'current_sort': request.GET.get('sort', ''),
+        }
     else:
         session_cart = request.session.get('cart', {})
         for product_id, data in session_cart.items():
@@ -115,6 +201,7 @@ def cart_view(request):
                     'total_price': item_total,
                     'id': product.id,
                     'size': sz,
+                    'added_at': None,
                 })
             except Product.DoesNotExist:
                 continue
@@ -131,11 +218,13 @@ def cart_view(request):
         'total_amount': round(subtotal, 2),
         'promo_applied': promo_applied,
         'promo_code': promo_code,
+        'filters': filters,
     }
     return render(request, 'store/cart.html', context)
 
 
 def update_cart_quantity(request, product_id, action):
+    is_ajax = request.GET.get('_ajax') == '1'
     if request.user.is_authenticated:
         cart_item = get_object_or_404(CartItem, id=product_id, user=request.user)
         product = cart_item.product
@@ -216,4 +305,90 @@ def update_cart_quantity(request, product_id, action):
         request.session['cart'] = cart
         request.session.modified = True
 
+    if is_ajax:
+        from django.db.models import Sum
+        total_cart_qty = CartItem.objects.filter(user=request.user).aggregate(total=Sum('quantity'))['total'] or 0
+        return JsonResponse({
+            'success': True,
+            'action': action,
+            'cart_count': total_cart_qty,
+        })
     return redirect('store:cart')
+
+
+@login_required
+def cart_batch_delete(request):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'POST required'}, status=405)
+
+    try:
+        data = json.loads(request.body)
+    except (ValueError, TypeError):
+        data = request.POST
+
+    item_ids = data.get('item_ids', [])
+    if not item_ids:
+        return JsonResponse({'success': False, 'error': 'No items specified'})
+
+    if isinstance(item_ids, str):
+        try:
+            item_ids = json.loads(item_ids)
+        except (ValueError, TypeError):
+            item_ids = [int(x) for x in item_ids.split(',') if x.strip().isdigit()]
+
+    deleted_count = 0
+    for item_id in item_ids:
+        try:
+            cart_item = CartItem.objects.get(id=item_id, user=request.user)
+            product = cart_item.product
+            qty = cart_item.quantity
+            if cart_item.size:
+                ps = ProductSize.objects.filter(product=product, size=cart_item.size).first()
+                if ps:
+                    ps.stock += qty
+                    ps.save()
+            else:
+                product.stock += qty
+                product.save()
+            log_action(request.user, 'cart_remove', f"Removed {qty}x {product.name} from cart (batch)",
+                       {'product_id': product.id, 'product_name': product.name, 'quantity': qty, 'action': 'batch_delete'}, request)
+            cart_item.delete()
+            deleted_count += 1
+        except CartItem.DoesNotExist:
+            pass
+
+    from django.db.models import Sum
+    total_cart_qty = CartItem.objects.filter(user=request.user).aggregate(total=Sum('quantity'))['total'] or 0
+    return JsonResponse({
+        'success': True,
+        'deleted_count': deleted_count,
+        'cart_count': total_cart_qty,
+    })
+
+
+@login_required
+def cart_mini_api(request):
+    items = CartItem.objects.filter(user=request.user).select_related('product')
+    cart_data = []
+    total = 0
+    for ci in items:
+        subtotal = ci.product.price * ci.quantity
+        total += subtotal
+        cart_data.append({
+            'id': ci.id,
+            'product_id': ci.product.id,
+            'name': ci.product.name,
+            'price': float(ci.product.price),
+            'quantity': ci.quantity,
+            'subtotal': float(subtotal),
+            'image': ci.product.image.url if ci.product.image else '',
+            'size': ci.size or '',
+        })
+    from django.db.models import Sum as SumAgg
+    cart_qty = CartItem.objects.filter(user=request.user).aggregate(total=SumAgg('quantity'))['total'] or 0
+    return JsonResponse({
+        'success': True,
+        'items': cart_data,
+        'total': float(total),
+        'cart_count': cart_qty,
+    })

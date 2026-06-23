@@ -226,6 +226,8 @@ def product_list_api(request):
         'next_page': page_obj.next_page_number() if page_obj.has_next() else None,
         'total': paginator.count,
         'loaded': len(page_obj.object_list),
+        'is_search': is_search,
+        'search_query': search_query,
     })
 
 
@@ -256,6 +258,26 @@ def sale_catalog(request):
     }
     return render(request, 'store/product_list.html', context)
 
+
+
+def product_stock_api(request, product_id):
+    try:
+        product = Product.objects.get(id=product_id)
+    except Product.DoesNotExist:
+        return JsonResponse({'error': 'Not found'}, status=404)
+    sizes_data = []
+    if product.has_sizes:
+        for ps in product.sizes.all():
+            sizes_data.append({'size': ps.size, 'stock': ps.stock})
+    response = JsonResponse({
+        'stock_remaining': product.stock,
+        'has_sizes': product.has_sizes,
+        'sizes': sizes_data,
+    })
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    return response
 
 
 def search_suggestions(request):

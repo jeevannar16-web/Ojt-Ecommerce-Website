@@ -1,23 +1,23 @@
 {% extends 'layout/base.html' %}
-{% block title %}Verify Phone{% endblock %}
+{% block title %}{{ 'Verify Phone'|t }} — FITNESS HUB{% endblock %}
 {% block content %}
 <div style="max-width:440px;margin:40px auto;padding:32px;background:#141414;border:1px solid #1f1f1f;border-radius:12px;">
-  <h2 style="color:#f0ece4;margin:0 0 8px;">Verify Your Phone</h2>
-  <p style="color:#777;font-size:0.88rem;margin:0 0 24px;">Enter the 6-digit code sent to <strong style="color:#f0ece4;">{{ phone }}</strong>.</p>
+  <h2 style="color:#f0ece4;margin:0 0 8px;">{{ 'Verify Your Phone'|t }}</h2>
+  <p style="color:#777;font-size:0.88rem;margin:0 0 24px;">{{ 'Enter the 6-digit code sent to'|t }} <strong style="color:#f0ece4;">{{ phone }}</strong>.</p>
   <form method="post">
     {% csrf_token %}
     <input type="text" name="otp" maxlength="6" inputmode="numeric" autocomplete="one-time-code"
            style="width:100%;padding:14px;border:1px solid #2a2a2a;border-radius:8px;background:#0e0e0e;color:#f0ece4;font-size:1.5rem;text-align:center;letter-spacing:8px;font-weight:700;box-sizing:border-box;"
            placeholder="000000" required>
     <button type="submit" style="width:100%;padding:14px;margin-top:16px;border:none;border-radius:8px;background:linear-gradient(135deg,#d4af37,#b8962e);color:#0d0d0d;font-weight:700;font-size:1rem;cursor:pointer;">
-      Verify
+      {{ 'Verify'|t }}
     </button>
   </form>
   <form method="post" action="{% url 'resend_phone_verification' %}" style="margin-top:12px;">
     {% csrf_token %}
     <input type="hidden" name="phone" value="{{ phone }}">
     <button type="submit" style="width:100%;padding:10px;border:1px solid #2a2a2a;border-radius:8px;background:transparent;color:#d4af37;font-size:0.85rem;cursor:pointer;">
-      Resend Code
+      {{ 'Resend Code'|t }}
     </button>
   </form>
 </div>

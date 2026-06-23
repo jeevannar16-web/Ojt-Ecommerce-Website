@@ -1,0 +1,286 @@
+.register-wrap {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.register-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(212,175,55,0.04) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 50%, rgba(196,120,58,0.04) 0%, transparent 60%);
+}
+.register-card {
+  position: relative;
+  background: #141414;
+  border-radius: 20px;
+  padding: 48px 44px 40px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  border: 1px solid #2a2a2a;
+}
+.register-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 21px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(212,175,55,0.3), transparent 40%, transparent 60%, rgba(196,120,58,0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.register-card .brand {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.register-card .brand .icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #e8c97e, #c4783a);
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 0 24px rgba(232,201,126,0.2);
+  color: #0d0d0d;
+}
+.register-card .brand h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #f0ece4;
+  margin: 16px 0 4px;
+}
+.register-card .brand p {
+  color: #7a756e;
+  font-size: 0.88rem;
+  margin: 0;
+}
+.reg-form .form-row {
+  margin-bottom: 16px;
+}
+.reg-form .form-row label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #a09a92;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.reg-form .form-row input {
+  width: 100%;
+  padding: 13px 16px;
+  background: #0d0d0d;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  color: #f0ece4;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.reg-form .form-row input:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.08);
+}
+.reg-form .form-row input::placeholder { color: #555; }
+.pwd-field {
+  position: relative;
+  width: 100%;
+}
+.pwd-field input {
+  padding-right: 44px !important;
+}
+.pwd-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background: none;
+  border: none;
+  border-left: 1px solid #2a2a2a;
+  color: #888;
+  cursor: pointer;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, background 0.15s;
+  border-radius: 0 10px 10px 0;
+  padding: 0;
+}
+.pwd-toggle:hover {
+  color: #d4af37;
+  background: rgba(212,175,55,0.06);
+}
+.pwd-strength {
+  height: 4px;
+  background: #2a2a2a;
+  border-radius: 2px;
+  margin-top: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.pwd-strength-bar {
+  height: 100%;
+  width: 0;
+  border-radius: 2px;
+  transition: width 0.3s, background 0.3s;
+}
+.pwd-strength-text {
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-top: 4px;
+  height: 14px;
+}
+.pwd-match {
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-top: 4px;
+  height: 14px;
+}
+.seller-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0 16px;
+  padding: 14px 16px;
+  background: rgba(212,175,55,0.04);
+  border: 1px solid rgba(212,175,55,0.12);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.seller-check:hover {
+  background: rgba(212,175,55,0.07);
+  border-color: rgba(212,175,55,0.25);
+}
+.seller-check input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #d4af37;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.seller-check .seller-text {
+  flex: 1;
+}
+.seller-check .seller-text strong {
+  display: block;
+  color: #f0ece4;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.seller-check .seller-text span {
+  display: block;
+  color: #7a756e;
+  font-size: 0.75rem;
+  margin-top: 2px;
+}
+.reg-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #e8c97e, #c4783a);
+  color: #0d0d0d;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.reg-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.reg-btn:active { transform: translateY(0); }
+.reg-footer {
+  text-align: center;
+  margin-top: 24px;
+  color: #7a756e;
+  font-size: 0.85rem;
+}
+.reg-footer a {
+  color: #d4af37;
+  text-decoration: none;
+  font-weight: 600;
+}
+.reg-footer a:hover { text-decoration: underline; }
+.reg-error {
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.25);
+  color: #ef4444;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+.reg-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0 0;
+  color: #555;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.reg-divider::before, .reg-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #2a2a2a;
+}
+
+@media (max-width: 480px) {
+  .register-card { padding: 32px 24px; }
+}
+
+.social-auth {
+  margin: 20px 0 0;
+}
+.social-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  color: #555;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.social-divider::before,
+.social-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #2a2a2a;
+}
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+.google-btn:hover {
+  background: #f5f5f5;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}

@@ -1,6 +1,14 @@
+import threading
+
 from django.conf import settings
 
 from .models import Language
+
+_thread_locals = threading.local()
+
+
+def get_current_language():
+    return getattr(_thread_locals, 'language_code', settings.LANGUAGE_CODE)
 
 
 class LanguageMiddleware:
@@ -10,9 +18,11 @@ class LanguageMiddleware:
     def __call__(self, request):
         lang_code = self._resolve_language(request)
         request.LANGUAGE_CODE = lang_code
+        _thread_locals.language_code = lang_code
         if hasattr(request, 'session'):
             request.session['django_language'] = lang_code
         response = self.get_response(request)
+        _thread_locals.language_code = None
         if not response.cookies.get('django_language'):
             response.set_cookie('django_language', lang_code, max_age=31536000)
         return response
@@ -32,13 +42,3 @@ class LanguageMiddleware:
         if lang and Language.objects.filter(code=lang, is_active=True).exists():
             return lang
         return settings.LANGUAGE_CODE
-
-    @classmethod
-    def process_url(cls, path, target_lang):
-        parts = path.split('/')
-        if len(parts) > 1 and parts[0] == '':
-            codes = dict(Language.objects.filter(is_active=True).values_list('code', 'code'))
-            if len(parts) > 2 and parts[1] in codes:
-                parts[1] = target_lang
-                return '/'.join(parts)
-        return f'/{target_lang}{path if path.startswith("/") else "/" + path}'

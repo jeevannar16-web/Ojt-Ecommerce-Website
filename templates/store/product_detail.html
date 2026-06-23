@@ -16,7 +16,7 @@
             <div style="flex: 1 1 450px; max-width: 550px;">
                 <div style="border: 1px solid rgba(212,175,55,0.2); border-radius: 20px; overflow: hidden; background: #121212; box-shadow: 0 15px 35px rgba(0,0,0,0.6); aspect-ratio: 1; max-height: 500px;">
                     {% if product.image %}
-                        <img src="{% if 'http' in product.image.name or 'http' in product.image %}{% if product.image.name %}{{ product.image.name }}{% else %}{{ product.image }}{% endif %}{% else %}{{ product.image.url }}{% endif %}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                        <img src="{% if 'http' in product.image.name or 'http' in product.image %}{% if product.image.name %}{{ product.image.name }}{% else %}{{ product.image }}{% endif %}{% else %}{{ product.image.url }}{% endif %}" alt="{{ product.name|t }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
                     {% else %}
                         <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #1a1a1a; color: #444; font-size: 4rem;">📦</div>
                     {% endif %}
@@ -25,10 +25,10 @@
 
             <div style="flex: 1 1 450px;">
                 <span style="color: #f57224; text-transform: uppercase; font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; display: block; margin-bottom: 0.5rem;">
-                    {{ product.category.name|default:"Elite Gear" }}
+                    {{ product.category.name|default:"Elite Gear"|t }}
                 </span>
-                <h1 style="font-size: 2.8rem; font-weight: bold; margin: 0 0 0.5rem 0;">{{ product.name }}</h1>
-                <div style="font-size: 2rem; font-weight: bold; color: #f57224; margin-bottom: 0.8rem;">${{ product.price }}</div>
+                <h1 style="font-size: 2.8rem; font-weight: bold; margin: 0 0 0.5rem 0;">{{ product.name|t }}</h1>
+                <div style="font-size: 2rem; font-weight: bold; color: #f57224; margin-bottom: 0.8rem;">{{ product.price|currency }}</div>
 
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
                     <div id="product-stars-display" style="display: flex; gap: 3px;">
@@ -45,27 +45,27 @@
                 </div>
 
                 <div style="width: 100%; height: 1px; background: rgba(212,175,55,0.15); margin: 1.5rem 0;"></div>
-                <p style="color: #b0b0b0; font-size: 1.05rem; line-height: 1.8; margin-bottom: 2rem;">{{ product.description }}</p>
+                <p style="color: #b0b0b0; font-size: 1.05rem; line-height: 1.8; margin-bottom: 2rem;">{{ product.description|t }}</p>
 
                 <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 1rem 1.2rem; border-radius: 12px; display: inline-block; min-width: 280px; margin-bottom: 2.5rem;">
-                    <span style="color: #888; font-size: 0.7rem; display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Availability Status</span>
+                    <span style="color: #888; font-size: 0.7rem; display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">{{ 'Availability Status'|t }}</span>
                     <span id="stock-status-display">
                         {% if product.stock > 0 %}
                             <span style="color: #2ec4b6; font-weight: bold; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                                 <span style="width: 8px; height: 8px; background: #2ec4b6; border-radius: 50%; display: inline-block;"></span>
-                                <span>In Stock</span>
+                                <span>{{ 'In Stock'|t }}</span>
                                 <span id="stock-count" style="background:rgba(46,196,182,0.12); padding:1px 10px; border-radius:10px; font-size:0.82rem;">{{ product.stock }}</span>
-                                <span style="font-weight:400; font-size:0.82rem; color:#888;">units available</span>
+                                <span style="font-weight:400; font-size:0.82rem; color:#888;">{{ 'units available'|t }}</span>
                             </span>
                             {% if product.stock <= 5 %}
                             <div style="margin-top:6px; font-size:0.72rem; color:#f57224;">
-                                <i class="bi bi-lightning-fill"></i> Only {{ product.stock }} left — order soon!
+                                <i class="bi bi-lightning-fill"></i> {{ 'Only'|t }} {{ product.stock }} {{ 'left — order soon!'|t }}
                             </div>
                             {% endif %}
                         {% else %}
                             <span style="color: #e63946; font-weight: bold; display: flex; align-items: center;">
                                 <span style="width: 8px; height: 8px; background: #e63946; border-radius: 50%; display: inline-block; margin-right: 8px;"></span>
-                                Out of Stock
+                                {{ 'Out of Stock'|t }}
                             </span>
                         {% endif %}
                     </span>
@@ -77,7 +77,7 @@
                         {% if sizes or product.size %}
                         <div style="width:100%; margin-bottom:0.5rem;">
                             <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:#888; margin-bottom:0.75rem;">
-                                Select Size
+                                {{ 'Select Size'|t }}
                             </div>
                             <div style="display:flex; flex-wrap:wrap; gap:8px;" id="size-selector">
                                 {% if sizes %}
@@ -102,7 +102,7 @@
                                 {% endif %}
                             </div>
                             <div id="size-error" style="color:#e63946; font-size:0.78rem; margin-top:6px; display:none;">
-                                Please select a size before adding to bag.
+                                {{ 'Please select a size before adding to bag.'|t }}
                             </div>
                         </div>
                         <input type="hidden" id="selected-size" value="">
@@ -115,26 +115,26 @@
                                 <button type="button" onclick="changeQty(1)" id="qty-plus">+</button>
                             </div>
                             <button type="button" class="btn-add-bag" onclick="addToCartWithSize(event, {{ product.id }})">
-                                ADD TO BAG
+                                {{ 'ADD TO BAG'|t }}
                             </button>
                             <button type="button" class="btn-shop-now" onclick="shopNow(event, {{ product.id }})">
                                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M13 2L4 14h6v8l9-12h-6z"/>
                                 </svg>
-                                SHOP NOW
+                                {{ 'SHOP NOW'|t }}
                             </button>
                         </div>
                         <button type="button"
                                 onclick="toggleFavorite(event, {{ product.id }}, this)"
                                 class="detail-fav-btn {% if is_favorited %}favorited{% endif %}">
                             <i class="{% if is_favorited %}bi bi-heart-fill{% else %}bi bi-heart{% endif %}"></i>
-                            <span>{% if is_favorited %}Wishlisted{% else %}Wishlist{% endif %}</span>
+                            <span>{% if is_favorited %}{{ 'Wishlisted'|t }}{% else %}{{ 'Wishlist'|t }}{% endif %}</span>
                         </button>
                     {% endif %}
                     <a href="{% url 'store:product_list' %}"
                        class="btn-catalog"
                        style="text-decoration:none; padding:14px 28px; border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:8px; font-weight:bold; text-transform:uppercase; font-size:0.9rem;">
-                        RETURN TO CATALOG
+                        {{ 'RETURN TO CATALOG'|t }}
                     </a>
                 </div>
 
@@ -143,7 +143,7 @@
 
         <div class="review-section">
             <div class="review-section-title">
-                Customer Reviews <span>{{ total_reviews }}</span>
+                {{ 'Customer Reviews'|t }} <span>{{ total_reviews }}</span>
             </div>
 
             {% if total_reviews > 0 %}
@@ -159,7 +159,7 @@
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <div class="review-total">Based on {{ total_reviews }} review{{ total_reviews|pluralize }}</div>
+                    <div class="review-total">{{ 'Based on'|t }} {{ total_reviews }} review{{ total_reviews|pluralize }}</div>
                 </div>
             </div>
             {% endif %}
@@ -168,7 +168,7 @@
                 {% if has_purchased %}
                     <div class="review-form-wrap">
                         <div class="review-form-title">
-                            {% if user_review %}✏️ Update Your Review{% else %}⭐ Write a Review{% endif %}
+                            {% if user_review %}✏️ {{ 'Update Your Review'|t }}{% else %}⭐ {{ 'Write a Review'|t }}{% endif %}
                         </div>
 
                         <div class="star-selector" id="star-selector">
@@ -186,22 +186,22 @@
 
                         <textarea class="review-textarea"
                                   id="review-comment"
-                                  placeholder="Share your experience with this product...">{% if user_review %}{{ user_review.comment }}{% endif %}</textarea>
+                                  placeholder="{{ 'Share your experience with this product...'|t }}">{% if user_review %}{{ user_review.comment }}{% endif %}</textarea>
 
                         <button class="review-submit-btn" onclick="submitReview({{ product.id }})">
-                            {% if user_review %}Update Review{% else %}Submit Review{% endif %}
+                            {% if user_review %}{{ 'Update Review'|t }}{% else %}{{ 'Submit Review'|t }}{% endif %}
                         </button>
                     </div>
                 {% else %}
                     <div style="background: rgba(212,175,55,0.04); border: 1px solid rgba(212,175,55,0.1); border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 2.5rem; color: #888; font-size: 0.9rem;">
                         <i class="bi bi-bag-check" style="color: #d4af37; margin-right: 8px;"></i>
-                        Purchase this product to leave a review.
+                        {{ 'Purchase this product to leave a review.'|t }}
                     </div>
                 {% endif %}
             {% else %}
                 <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 2.5rem; color: #888; font-size: 0.9rem;">
                     <i class="bi bi-person-lock" style="color: #d4af37; margin-right: 8px;"></i>
-                    <a href="{% url 'login' %}" style="color: #d4af37; text-decoration: none; font-weight: 600;">Sign in</a> to leave a review.
+                    <a href="{% url 'login' %}" style="color: #d4af37; text-decoration: none; font-weight: 600;">{{ 'Sign in'|t }}</a> {{ 'to leave a review.'|t }}
                 </div>
             {% endif %}
 
@@ -216,7 +216,7 @@
                                 <div class="review-date">{{ review.created_at|date:"M d, Y" }}</div>
                             </div>
                         </div>
-                        <span class="verified-badge">✓ Verified Purchase</span>
+                        <span class="verified-badge">✓ {{ 'Verified Purchase'|t }}</span>
                     </div>
                     <div class="review-stars-row">
                         {% for i in "12345" %}
@@ -235,34 +235,34 @@
             {% else %}
                 <div class="no-reviews-msg">
                     <span>💬</span>
-                    No reviews yet. Be the first to review this product!
+                    {{ 'No reviews yet. Be the first to review this product!'|t }}
                 </div>
             {% endif %}
         </div>
 
         <div style="margin-top: 6rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 4rem;">
             <h3 style="font-size: 1.3rem; font-weight: bold; margin-bottom: 2.5rem; text-transform: uppercase; letter-spacing: 1.5px; color: #fff;">
-                You May Also Like
+                {{ 'You May Also Like'|t }}
             </h3>
             <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
                 {% for rec in recommendations %}
                 <div class="rec-card-item" style="flex: 1 1 220px; max-width: 265px; background: #121212; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;">
                     <div style="height: 220px; background: #0d0d0d; overflow: hidden;">
                         {% if rec.image %}
-                            <img src="{% if 'http' in rec.image.name or 'http' in rec.image %}{% if rec.image.name %}{{ rec.image.name }}{% else %}{{ rec.image }}{% endif %}{% else %}{{ rec.image.url }}{% endif %}" alt="{{ rec.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="{% if 'http' in rec.image.name or 'http' in rec.image %}{% if rec.image.name %}{{ rec.image.name }}{% else %}{{ rec.image }}{% endif %}{% else %}{{ rec.image.url }}{% endif %}" alt="{{ rec.name|t }}" style="width: 100%; height: 100%; object-fit: cover;">
                         {% else %}
                             <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #333; font-size: 2rem;">📦</div>
                         {% endif %}
                     </div>
                     <div style="padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1;">
                         <div style="margin-bottom: 1.25rem;">
-                            <h5 style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.35rem 0;">{{ rec.name }}</h5>
+                            <h5 style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.35rem 0;">{{ rec.name|t }}</h5>
                             {% include 'partials/star_rating.html' with product=rec %}
-                            <span style="color: #d4af37; font-weight: bold; font-size: 1.05rem;">${{ rec.price }}</span>
+                            <span style="color: #d4af37; font-weight: bold; font-size: 1.05rem;">{{ rec.price|currency }}</span>
                         </div>
                         <a href="{% url 'store:product_detail' rec.id %}"
                            style="display: block; width: 100%; text-align: center; text-decoration: none; color: #fff; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1); padding: 0.6rem 0; border-radius: 8px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">
-                            View Item
+                            {{ 'View Item'|t }}
                         </a>
                         <button type="button"
                                 onclick="toggleFavorite(event, {{ rec.id }}, this)"
@@ -274,7 +274,7 @@
                 </div>
                 {% empty %}
                 <div style="color: #555; font-style: italic; padding: 0.5rem 0;">
-                    No alternative items available in stock right now.
+                    {{ 'No alternative items available in stock right now.'|t }}
                 </div>
                 {% endfor %}
             </div>
@@ -289,4 +289,29 @@
 
 {% block extra_js %}
 <script src="{% static 'js/pages/product_detail.js' %}"></script>
+<script>
+(function(){
+  var stockStatus = document.getElementById('stock-status-display');
+  var qtyInput = document.getElementById('qty-input');
+  var productId = {{ product.id }};
+  if (!stockStatus && !qtyInput) return;
+  function refreshStock() {
+    fetch('/store/api/product-stock/' + productId + '/')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data || data.error) return;
+        try { updateStockDisplay(productId, data, null); } catch(e) {}
+        var sc = document.getElementById('stock-count');
+        if (sc && !data.has_sizes && data.stock_remaining !== undefined) {
+          sc.textContent = data.stock_remaining;
+        }
+      })
+      .catch(function() {});
+  }
+  refreshStock();
+  window.addEventListener('pageshow', function(e) {
+    refreshStock();
+  });
+})();
+</script>
 {% endblock %}

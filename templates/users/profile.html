@@ -1,7 +1,7 @@
 {% extends 'layout/base.html' %}
 {% load static %}
 
-{% block title %}My Account — FitnessHub{% endblock %}
+{% block title %}My Account — FITNESS HUB{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/profile.css' %}">
@@ -15,21 +15,21 @@
     </div>
     <div class="profile-header-info">
       <h1>{{ request.user.username }}</h1>
-      <p class="member-since">{{ request.user.email }} · Member since <span>{{ request.user.date_joined|date:"F Y" }}</span></p>
+      <p class="member-since">{{ request.user.email }} · {{ 'Member since'|t }} <span>{{ request.user.date_joined|date:"F Y" }}</span></p>
     </div>
   </div>
 
   <div class="profile-tabs">
-    <button class="profile-tab active" data-tab="info"><i class="bi bi-person"></i> Account</button>
+    <button class="profile-tab active" data-tab="info"><i class="bi bi-person"></i> {{ 'Account'|t }}</button>
     <button class="profile-tab" data-tab="orders">
-      <i class="bi bi-box"></i> Orders
+      <i class="bi bi-box"></i> {{ 'Orders'|t }}
       {% if orders %}<span class="badge">{{ orders|length }}</span>{% endif %}
     </button>
     <button class="profile-tab" data-tab="wishlist">
-      <i class="bi bi-heart"></i> Wishlist
+      <i class="bi bi-heart"></i> {{ 'Wishlist'|t }}
       {% if favorites %}<span class="badge">{{ favorites|length }}</span>{% endif %}
     </button>
-    <button class="profile-tab" data-tab="seller"><i class="bi bi-shop"></i> Seller</button>
+    <button class="profile-tab" data-tab="seller"><i class="bi bi-shop"></i> {{ 'Seller'|t }}</button>
   </div>
 
   <div id="tab-info" class="tab-panel active">
@@ -38,35 +38,50 @@
         {% csrf_token %}
         <div class="profile-form-grid">
           <div class="form-field">
-            <label>Phone</label>
-            <input type="text" name="phone" value="{{ profile.phone|default:'' }}" placeholder="+1 234 567 8900">
+            <label>{{ 'Phone'|t }}</label>
+            <input type="text" name="phone" value="{{ profile.phone|default:'' }}" placeholder="{{ '+1 234 567 8900'|t }}">
           </div>
           <div class="form-field">
-            <label>Country</label>
-            <input type="text" name="country" value="{{ profile.country|default:'US' }}" placeholder="Country">
+            <label>{{ 'Country'|t }}</label>
+            <input type="text" name="country" value="{{ profile.country|default:'US' }}" placeholder="{{ 'Country'|t }}">
           </div>
           <div class="form-field full-width">
-            <label>Address Line 1</label>
-            <input type="text" name="address_line1" value="{{ profile.address_line1|default:'' }}" placeholder="Street address">
+            <label>{{ 'Address Line 1'|t }}</label>
+            <input type="text" name="address_line1" value="{{ profile.address_line1|default:'' }}" placeholder="{{ 'Street address'|t }}">
           </div>
           <div class="form-field full-width">
-            <label>Address Line 2</label>
-            <input type="text" name="address_line2" value="{{ profile.address_line2|default:'' }}" placeholder="Apartment, suite, etc. (optional)">
+            <label>{{ 'Address Line 2'|t }}</label>
+            <input type="text" name="address_line2" value="{{ profile.address_line2|default:'' }}" placeholder="{{ 'Apartment, suite, etc. (optional)'|t }}">
           </div>
           <div class="form-field">
-            <label>City</label>
-            <input type="text" name="city" value="{{ profile.city|default:'' }}" placeholder="City">
+            <label>{{ 'City'|t }}</label>
+            <input type="text" name="city" value="{{ profile.city|default:'' }}" placeholder="{{ 'City'|t }}">
           </div>
           <div class="form-field">
-            <label>State / Province</label>
-            <input type="text" name="state" value="{{ profile.state|default:'' }}" placeholder="State / Province">
+            <label>{{ 'State / Province'|t }}</label>
+            <input type="text" name="state" value="{{ profile.state|default:'' }}" placeholder="{{ 'State / Province'|t }}">
           </div>
           <div class="form-field">
-            <label>ZIP / Postal Code</label>
-            <input type="text" name="zip_code" value="{{ profile.zip_code|default:'' }}" placeholder="ZIP / Postal code">
+            <label>{{ 'ZIP / Postal Code'|t }}</label>
+            <input type="text" name="zip_code" value="{{ profile.zip_code|default:'' }}" placeholder="{{ 'ZIP / Postal code'|t }}">
           </div>
         </div>
-        <button type="submit" class="profile-submit-btn"><i class="bi bi-check2"></i> Save Changes</button>
+        <div style="margin-top:16px;">
+          <label style="font-size:0.78rem;color:#888;display:block;margin-bottom:6px;">{{ 'Default Delivery Location'|t }}</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:180px;display:flex;gap:6px;">
+              <input type="text" id="profile-location-search" placeholder="{{ 'Search a location...'|t }}" style="flex:1;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#fff;font-size:0.82rem;">
+              <button type="button" id="profile-location-search-btn" style="background:rgba(255,255,255,0.06);border:none;border-radius:6px;padding:7px 12px;color:#aaa;cursor:pointer;"><i class="bi bi-search"></i></button>
+            </div>
+            <button type="button" id="profile-use-my-location" style="background:rgba(212,175,55,0.12);border:1px solid rgba(212,175,55,0.25);border-radius:8px;padding:7px 14px;color:#d4af37;cursor:pointer;font-size:0.82rem;font-weight:600;"><i class="bi bi-crosshair"></i> {{ 'Use My Location'|t }}</button>
+            <button type="button" id="profile-find-on-map" style="background:rgba(46,196,182,0.1);border:1px solid rgba(46,196,182,0.2);border-radius:8px;padding:7px 16px;color:#2ec4b6;cursor:pointer;font-size:0.82rem;font-weight:600;"><i class="bi bi-geo-alt"></i> {{ 'Find on Map'|t }}</button>
+          </div>
+          <div id="profile-map" style="width:100%;height:220px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"></div>
+          <div style="font-size:0.72rem;color:#666;margin-top:4px;">{{ 'Search, type address then "Find on Map", or click/drag on the map.'|t }}</div>
+          <input type="hidden" name="latitude" id="profile-latitude" value="{{ profile.latitude|default:'' }}">
+          <input type="hidden" name="longitude" id="profile-longitude" value="{{ profile.longitude|default:'' }}">
+        </div>
+        <button type="submit" class="profile-submit-btn"><i class="bi bi-check2"></i> {{ 'Save Changes'|t }}</button>
       </form>
     </div>
   </div>
@@ -77,16 +92,16 @@
       <div class="order-card">
         <div class="order-info">
           <h4>Order #{{ order.order_number|default:order.id }}</h4>
-          <p>{{ order.created_at|date:"M d, Y" }} · <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span></p>
+          <p>{{ order.created_at|date:"M d, Y" }} · <span class="status-badge status-{{ order.status }}">{{ order.get_status_display|t }}</span></p>
         </div>
-        <div class="order-total">${{ order.total_amount }}</div>
+        <div class="order-total">{{ order.total_amount|currency }}</div>
       </div>
       {% endfor %}
     {% else %}
       <div class="empty-list">
         <i class="bi bi-box"></i>
-        <p>You haven't placed any orders yet.</p>
-        <a href="{% url 'store:product_list' %}">Start Shopping</a>
+        <p>{{ "You haven't placed any orders yet."|t }}</p>
+        <a href="{% url 'store:product_list' %}">{{ 'Start Shopping'|t }}</a>
       </div>
     {% endif %}
   </div>
@@ -97,13 +112,13 @@
         {% for fav in favorites %}
         <a href="{% url 'store:product_detail' fav.product.id %}" class="fav-card" style="text-decoration:none;">
           {% if fav.product.image %}
-            <img src="{{ fav.product.image.url }}" alt="{{ fav.product.name }}">
+            <img src="{{ fav.product.image.url }}" alt="{{ fav.product.name|t }}">
           {% else %}
             <div style="height:140px;background:var(--clr-surface);display:flex;align-items:center;justify-content:center;color:var(--clr-muted);font-size:2rem;"><i class="bi bi-image"></i></div>
           {% endif %}
           <div class="fav-card-body">
             <h4>{{ fav.product.name|truncatechars:30 }}</h4>
-            <span class="price">${{ fav.product.price }}</span>
+            <span class="price">{{ fav.product.price|currency }}</span>
           </div>
         </a>
         {% endfor %}
@@ -111,8 +126,8 @@
     {% else %}
       <div class="empty-list">
         <i class="bi bi-heart"></i>
-        <p>Your wishlist is empty.</p>
-        <a href="{% url 'store:product_list' %}">Browse Products</a>
+        <p>{{ 'Your wishlist is empty.'|t }}</p>
+        <a href="{% url 'store:product_list' %}">{{ 'Browse Products'|t }}</a>
       </div>
     {% endif %}
   </div>
@@ -120,59 +135,59 @@
   <div id="tab-seller" class="tab-panel">
     <div class="seller-card">
       {% if profile.is_seller or request.user.is_superuser %}
-        <h3>Seller Dashboard</h3>
-        <p>Manage your products, view orders, and track sales.</p>
+        <h3>{{ 'Seller Dashboard'|t }}</h3>
+        <p>{{ 'Manage your products, view orders, and track sales.'|t }}</p>
         {% if profile.store_name %}
         <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.12);border-radius:8px;padding:12px 16px;margin-bottom:16px;text-align:left;">
-          <strong style="color:#d4af37;font-size:0.8rem;display:block;margin-bottom:4px;">Your Store</strong>
+          <strong style="color:#d4af37;font-size:0.8rem;display:block;margin-bottom:4px;">{{ 'Your Store'|t }}</strong>
           <span style="color:#f0ece4;font-size:1rem;font-weight:700;">{{ profile.store_name }}</span>
-          {% if profile.business_type %}<span style="color:#777;font-size:0.78rem;margin-left:8px;">({{ profile.get_business_type_display }})</span>{% endif %}
+          {% if profile.business_type %}<span style="color:#777;font-size:0.78rem;margin-left:8px;">({{ profile.get_business_type_display|t }})</span>{% endif %}
         </div>
         {% endif %}
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <a href="{% url 'store:seller_dashboard' %}" class="seller-btn"><i class="bi bi-shop"></i> Seller Dashboard</a>
+          <a href="{% url 'store:seller_dashboard' %}" class="seller-btn"><i class="bi bi-shop"></i> {{ 'Seller Dashboard'|t }}</a>
           {% if profile.store_slug %}
-          <a href="{% url 'store:seller_storefront' profile.store_slug %}" class="seller-btn" style="background:var(--clr-border);color:var(--clr-text);"><i class="bi bi-eye"></i> View My Store</a>
+          <a href="{% url 'store:seller_storefront' profile.store_slug %}" class="seller-btn" style="background:var(--clr-border);color:var(--clr-text);"><i class="bi bi-eye"></i> {{ 'View My Store'|t }}</a>
           {% endif %}
         </div>
       {% elif profile.seller_requested %}
-        <h3>Seller Application Pending</h3>
+        <h3>{{ 'Seller Application Pending'|t }}</h3>
         {% if profile.store_name %}
         <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.12);border-radius:8px;padding:12px 16px;margin-bottom:16px;text-align:left;">
-          <strong style="color:#d4af37;font-size:0.8rem;display:block;margin-bottom:4px;">Store Name</strong>
+          <strong style="color:#d4af37;font-size:0.8rem;display:block;margin-bottom:4px;">{{ 'Store Name'|t }}</strong>
           <span style="color:#f0ece4;">{{ profile.store_name }}</span>
-          {% if profile.business_type %}<span style="color:#777;font-size:0.78rem;margin-left:8px;">({{ profile.get_business_type_display }})</span>{% endif %}
+          {% if profile.business_type %}<span style="color:#777;font-size:0.78rem;margin-left:8px;">({{ profile.get_business_type_display|t }})</span>{% endif %}
         </div>
         {% endif %}
-        <p>Your application to become a seller is under review. An admin will approve it shortly.</p>
-        <span class="pending-badge"><i class="bi bi-clock"></i> Pending Approval</span>
+        <p>{{ 'Your application to become a seller is under review. An admin will approve it shortly.'|t }}</p>
+        <span class="pending-badge"><i class="bi bi-clock"></i> {{ 'Pending Approval'|t }}</span>
       {% elif profile.seller_rejection_reason %}
-        <h3>Application Declined</h3>
+        <h3>{{ 'Application Declined'|t }}</h3>
         {% if profile.store_name %}
         <div style="background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.12);border-radius:8px;padding:12px 16px;margin-bottom:16px;text-align:left;">
-          <strong style="color:#d4af37;font-size:0.8rem;display:block;margin-bottom:4px;">Store Name</strong>
+          <strong style="color:#d4af37;font-size:0.8rem;display:block;margin-bottom:4px;">{{ 'Store Name'|t }}</strong>
           <span style="color:#f0ece4;">{{ profile.store_name }}</span>
         </div>
         {% endif %}
-        <p>Your seller application was not approved.</p>
+        <p>{{ 'Your seller application was not approved.'|t }}</p>
         <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:12px 16px;margin-bottom:16px;text-align:left;">
-          <strong style="color:#ef4444;font-size:0.8rem;display:block;margin-bottom:4px;">Reason:</strong>
-          <span style="color:#ccc;font-size:0.88rem;">{{ profile.seller_rejection_reason }}</span>
+          <strong style="color:#ef4444;font-size:0.8rem;display:block;margin-bottom:4px;">{{ 'Reason:'|t }}</strong>
+          <span style="color:#ccc;font-size:0.88rem;">{{ profile.seller_rejection_reason|t }}</span>
         </div>
         <form method="POST" action="{% url 'profile' %}">
           {% csrf_token %}
           <input type="hidden" name="request_seller" value="1">
-          <button type="submit" class="seller-btn" style="background:var(--clr-border);color:var(--clr-text);">Request Again</button>
+          <button type="submit" class="seller-btn" style="background:var(--clr-border);color:var(--clr-text);">{{ 'Request Again'|t }}</button>
         </form>
       {% else %}
-        <h3>Become a Seller</h3>
-        <p>Want to sell your products on FitnessHub? Set up your store and start selling.</p>
+        <h3>{{ 'Become a Seller'|t }}</h3>
+        <p>{{ 'Want to sell your products on FitnessHub? Set up your store and start selling.'|t }}</p>
         <ul style="color:#999;font-size:0.82rem;line-height:2;list-style:none;padding:0;margin-bottom:18px;">
-          <li><i class="bi bi-check-circle" style="color:#2ecc71;margin-right:8px;"></i> Create your store profile</li>
-          <li><i class="bi bi-check-circle" style="color:#2ecc71;margin-right:8px;"></i> Tell us about your business</li>
-          <li><i class="bi bi-check-circle" style="color:#2ecc71;margin-right:8px;"></i> Get approved and start selling</li>
+          <li><i class="bi bi-check-circle" style="color:#2ecc71;margin-right:8px;"></i> {{ 'Create your store profile'|t }}</li>
+          <li><i class="bi bi-check-circle" style="color:#2ecc71;margin-right:8px;"></i> {{ 'Tell us about your business'|t }}</li>
+          <li><i class="bi bi-check-circle" style="color:#2ecc71;margin-right:8px;"></i> {{ 'Get approved and start selling'|t }}</li>
         </ul>
-        <a href="{% url 'store:seller_apply' %}" class="seller-btn"><i class="bi bi-rocket-takeoff"></i> Apply to Sell</a>
+        <a href="{% url 'store:seller_apply' %}" class="seller-btn"><i class="bi bi-rocket-takeoff"></i> {{ 'Apply to Sell'|t }}</a>
       {% endif %}
     </div>
   </div>
@@ -181,4 +196,5 @@
 
 {% block extra_js %}
 <script src="{% static 'js/pages/profile.js' %}"></script>
+<script src="{% static 'js/pages/profile_map.js' %}"></script>
 {% endblock %}

@@ -1,0 +1,14 @@
+:root {
+  --clr-bg:       #0d0d0d;
+  --clr-surface:  #141414;
+  --clr-card:     #1a1a1a;
+  --clr-border:   #2a2a2a;
+  --clr-accent:   #e8c97e;
+  --clr-accent2:  #c4783a;
+  --clr-text:     #f0ece4;
+  --clr-muted:    #7a756e;
+  --font-display: 'Playfair Display', serif;
+  --font-body:    'DM Sans', sans-serif;
+  --radius:       12px;
+  --nav-h:        72px;
+}

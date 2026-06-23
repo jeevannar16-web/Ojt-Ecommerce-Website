@@ -7,12 +7,12 @@
       <div class="elite-nav-track" id="elite-nav-track">
         <a href="{% url 'store:product_list' %}"
            class="elite-cat-all {% if not request.GET.category %}active-cat{% endif %}">
-          All Items
+          {{ 'All Items'|t }}
         </a>
         {% for category in global_categories %}
           <a href="{% url 'store:product_list' %}?category={{ category.id }}"
              class="elite-cat-item {% if request.GET.category == category.id|slugify %}active-cat{% endif %}"
-             data-label="{{ category.name }}">
+             data-label="{{ category.name|t }}">
             <span class="ecat-icon" style="font-size:1.3rem; line-height:1;">
               {% with name=category.name|lower %}
                 {% if "cardio" in name %}🏃
@@ -38,7 +38,7 @@
                 {% endif %}
               {% endwith %}
             </span>
-            <span>{{ category.name }}</span>
+            <span>{{ category.name|t }}</span>
           </a>
         {% endfor %}
       </div>

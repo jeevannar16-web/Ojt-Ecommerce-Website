@@ -1,7 +1,7 @@
 {% extends 'layout/base.html' %}
 {% load static %}
 
-{% block title %}{{ store_profile.store_name|default:seller.username }} — FitnessHub Store{% endblock %}
+{% block title %}{{ store_profile.store_name|default:seller.username }} — FITNESS HUB {{ 'Store'|t }}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/seller_storefront.css' %}">
@@ -21,17 +21,17 @@
       </div>
       <div class="sf-store-info">
         <h1>{{ store_profile.store_name|default:seller.username }}</h1>
-        <p class="sf-store-desc">{{ store_profile.store_description|default:"Welcome to our store!" }}</p>
+        <p class="sf-store-desc">{{ store_profile.store_description|default:"Welcome to our store!"|t }}</p>
         <div class="sf-store-meta">
-          <span><i class="bi bi-box-seam"></i> {{ total_products }} Products</span>
+          <span><i class="bi bi-box-seam"></i> {{ total_products }} {{ 'Products'|t }}</span>
           {% if store_profile.business_type %}
-          <span><i class="bi bi-building"></i> {{ store_profile.get_business_type_display }}</span>
+          <span><i class="bi bi-building"></i> {{ store_profile.get_business_type_display|t }}</span>
           {% endif %}
-          <span><i class="bi bi-person"></i> Seller: {{ seller.username }}</span>
+          <span><i class="bi bi-person"></i> {{ 'Seller:'|t }} {{ seller.username }}</span>
         </div>
       </div>
       <div style="margin-left:auto;align-self:flex-start;">
-        <a href="{% url 'store:seller_center' %}" class="sf-sell-link"><i class="bi bi-shop"></i> Sell on FitnessHub</a>
+        <a href="{% url 'store:seller_center' %}" class="sf-sell-link"><i class="bi bi-shop"></i> {{ 'Sell on FitnessHub'|t }}</a>
       </div>
       </div>
     </div>
@@ -39,9 +39,9 @@
   <div class="sf-body">
     {% if categories %}
     <div class="sf-sidebar">
-      <h3>Categories</h3>
+      <h3>{{ 'Categories'|t }}</h3>
       <ul class="sf-cat-list">
-        <li><a href="?{% if current_sort %}sort={{ current_sort }}{% endif %}{% if current_search %}&search={{ current_search }}{% endif %}" class="{% if not current_category %}active{% endif %}">All</a></li>
+        <li><a href="?{% if current_sort %}sort={{ current_sort }}{% endif %}{% if current_search %}&search={{ current_search }}{% endif %}" class="{% if not current_category %}active{% endif %}">{{ 'All'|t }}</a></li>
         {% for cat_id, cat_name in categories %}
         <li><a href="?category={{ cat_id }}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_search %}&search={{ current_search }}{% endif %}" class="{% if current_category|stringformat:'s' == cat_id|stringformat:'s' %}active{% endif %}">{{ cat_name|default:'Uncategorized' }}</a></li>
         {% endfor %}
@@ -51,19 +51,19 @@
 
     <div class="sf-main">
       <div class="sf-toolbar">
-        <div class="sf-result-count">{{ total_products }} product{{ total_products|pluralize }}</div>
+        <div class="sf-result-count">{{ total_products }} {{ 'product'|t }}{{ total_products|pluralize }}</div>
         <form method="GET" class="sf-search-form">
           {% if current_category %}<input type="hidden" name="category" value="{{ current_category }}">{% endif %}
-          <input type="text" name="search" placeholder="Search in this store..." value="{{ current_search }}" class="sf-search-input">
+          <input type="text" name="search" placeholder="{{ 'Search in this store...'|t }}" value="{{ current_search }}" class="sf-search-input">
           <button type="submit" class="sf-search-btn"><i class="bi bi-search"></i></button>
         </form>
         <div class="sf-sort">
-          <label for="sort-select">Sort:</label>
+          <label for="sort-select">{{ 'Sort:'|t }}</label>
           <select id="sort-select" onchange="window.location.href='?{% if current_category %}category={{ current_category }}&{% endif %}{% if current_search %}search={{ current_search }}&{% endif %}sort='+this.value">
-            <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Newest</option>
-            <option value="price_low" {% if current_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
-            <option value="price_high" {% if current_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
-            <option value="name" {% if current_sort == 'name' %}selected{% endif %}>Name: A-Z</option>
+            <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>{{ 'Newest'|t }}</option>
+            <option value="price_low" {% if current_sort == 'price_low' %}selected{% endif %}>{{ 'Price: Low to High'|t }}</option>
+            <option value="price_high" {% if current_sort == 'price_high' %}selected{% endif %}>{{ 'Price: High to Low'|t }}</option>
+            <option value="name" {% if current_sort == 'name' %}selected{% endif %}>{{ 'Name: A-Z'|t }}</option>
           </select>
         </div>
       </div>
@@ -74,21 +74,21 @@
         <a href="{% url 'store:product_detail' product.id %}" class="sf-product-card">
           <div class="sf-product-img">
             {% if product.image %}
-              <img src="{{ product.image.url }}" alt="{{ product.name }}">
+              <img src="{{ product.image.url }}" alt="{{ product.name|t }}">
             {% else %}
               <div class="sf-img-placeholder"><i class="bi bi-image"></i></div>
             {% endif %}
-            {% if product.is_sale %}<span class="sf-badge-sale">Sale</span>{% endif %}
+            {% if product.is_sale %}<span class="sf-badge-sale">{{ 'Sale'|t }}</span>{% endif %}
           </div>
           <div class="sf-product-body">
             <h3>{{ product.name|truncatechars:45 }}</h3>
-            <span class="sf-product-price">${{ product.price }}</span>
+            <span class="sf-product-price">{{ product.price|currency }}</span>
             {% if product.has_sizes %}
-              <span class="sf-product-sizes">{{ product.sizes.count }} size{{ product.sizes.count|pluralize }}</span>
+              <span class="sf-product-sizes">{{ product.sizes.count }} {{ 'size'|t }}{{ product.sizes.count|pluralize }}</span>
             {% elif product.stock > 0 %}
-              <span class="sf-product-stock">In Stock</span>
+              <span class="sf-product-stock">{{ 'In Stock'|t }}</span>
             {% else %}
-              <span class="sf-product-stock sf-out">Out of Stock</span>
+              <span class="sf-product-stock sf-out">{{ 'Out of Stock'|t }}</span>
             {% endif %}
           </div>
         </a>
@@ -97,7 +97,7 @@
       {% else %}
       <div class="sf-empty">
         <i class="bi bi-box-seam"></i>
-        <p>No products found in this store.</p>
+        <p>{{ 'No products found in this store.'|t }}</p>
       </div>
       {% endif %}
     </div>

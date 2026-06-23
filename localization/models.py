@@ -55,7 +55,7 @@ class Translation(models.Model):
             return data
         lang = Language.objects.filter(code=language_code, is_active=True).first()
         if not lang:
-            return cls.get_translations(settings.LANGUAGE_CODE)
+            return cls.get_fallback_translations()
         translations = {}
         qs = cls.objects.filter(language=lang).only('key', 'value')
         for t in qs.iterator(chunk_size=500):
@@ -69,7 +69,7 @@ class Translation(models.Model):
         data = cache.get(cache_key)
         if data is not None:
             return data
-        lang = Language.objects.filter(code=settings.LANGUAGE_CODE, is_active=True).first()
+        lang = Language.objects.filter(code='en', is_active=True).first()
         if not lang:
             return {}
         translations = {}

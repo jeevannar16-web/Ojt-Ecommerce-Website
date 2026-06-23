@@ -17,10 +17,13 @@ urlpatterns = [
     path('products/<int:product_id>/', views.product_detail, name='product_detail'),
     path('sale/', views.sale_catalog, name='sale_catalog'),
     path('cart/update/<int:product_id>/<str:action>/', views.update_cart_quantity, name='update_cart_quantity'),
+    path('cart/batch-delete/', views.cart_batch_delete, name='cart_batch_delete'),
     path('favorites/', views.favorites_list, name='favorites_list'),
     path('favorites/toggle/<int:product_id>/', views.toggle_favorite, name='toggle_favorite'),
     path('search/suggestions/', views.search_suggestions, name='search_suggestions'),
     path('api/products/', views.product_list_api, name='product_list_api'),
+    path('api/product-stock/<int:product_id>/', views.product_stock_api, name='product_stock_api'),
+    path('api/cart-mini/', views.cart_mini_api, name='cart_mini_api'),
 
     path('newsletter/subscribe/', views.newsletter_subscribe, name='newsletter_subscribe'),
     path('orders/', views.order_history_view, name='order_history'),

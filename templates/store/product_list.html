@@ -6,171 +6,166 @@
 {% endblock %}
 
 {% block content %}
-<div style="background:radial-gradient(circle at top,#161616 0%,#0a0a0a 100%); min-height:100vh; padding:2rem 0 6rem; font-family:system-ui,-apple-system,sans-serif; color:#fff;">
-<div style="max-width:1280px; margin:0 auto; padding:0 2rem;">
+<div class="pl-page">
 
-    {% if is_search %}
+  {% if is_search %}
+  <div class="pl-top-row">
     <div class="result-header catalog-fade-in">
-        <h1>Results for <span>"{{ request.GET.search }}"</span></h1>
-        <p>{{ total_count }} result{{ total_count|pluralize }} found</p>
+      <h1>{{ 'Results for'|t }} <span>"{{ request.GET.search }}"</span></h1>
+      <p>{{ total_count }} {{ 'result'|t }}{{ total_count|pluralize }} {{ 'found'|t }}</p>
     </div>
-    {% endif %}
+  </div>
+  {% endif %}
 
-    {% if not is_search and active_goals %}
-    <div class="goal-tabs catalog-fade-in">
-        <a href="?{% if search_query %}search={{ search_query }}{% endif %}" class="goal-tab {% if not active_goal %}active{% endif %}">All</a>
-        {% for g in active_goals %}
-        <a href="?goal={{ g.key }}{% if search_query %}&search={{ search_query }}{% endif %}{% if active_category_id %}&category={{ active_category_id }}{% endif %}" class="goal-tab {% if active_goal == g.key %}active{% endif %}">{{ g.label }}</a>
+  {% if not is_search and active_goals %}
+  <div class="pl-top-row">
+    <div class="goal-tabs catalog-fade-in" style="margin:0;">
+      <a href="?{% if search_query %}search={{ search_query }}{% endif %}" class="goal-tab {% if not active_goal %}active{% endif %}">{{ 'All'|t }}</a>
+      {% for g in active_goals %}
+      <a href="?goal={{ g.key }}{% if search_query %}&search={{ search_query }}{% endif %}{% if active_category_id %}&category={{ active_category_id }}{% endif %}" class="goal-tab {% if active_goal == g.key %}active{% endif %}">{{ g.label }}</a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <form method="GET" action="" id="filter-form" class="pl-sidebar-wrap">
+    <input type="hidden" name="search" value="{{ request.GET.search|default:'' }}">
+    <input type="hidden" name="goal" value="{{ active_goal|default:'' }}">
+    <input type="hidden" name="sort" value="{{ active_sort|default:'' }}">
+    <input type="hidden" name="category" value="{{ active_category_id|default:'' }}">
+
+    <div class="filter-sidebar">
+      <div class="filter-sidebar-inner">
+        <div class="filter-sidebar-title"><i class="bi bi-funnel"></i> {{ 'Filters'|t }}</div>
+
+        <div class="fsec-title">{{ 'Price Range'|t }}</div>
+        <div class="pl-price-row">
+          <input type="number" name="price_min" class="price-input"
+                 placeholder="{{ 'Min'|t }}" value="{{ price_min }}" min="0">
+          <input type="number" name="price_max" class="price-input"
+                 placeholder="{{ 'Max'|t }}" value="{{ price_max }}" min="0">
+        </div>
+
+        <hr class="f-divider">
+
+        <div class="fsec-title">{{ 'Equipment Type'|t }}</div>
+        {% for cat in all_categories %}
+        <label class="fcheck">
+          <input type="checkbox" name="type" value="{{ cat.name }}" {% if cat.name in selected_types %}checked{% endif %}>
+          <span class="fcheck-lbl">{{ cat.name|t }}</span>
+        </label>
         {% endfor %}
-    </div>
-    {% endif %}
 
-    <div class="catalog-layout">
+        <hr class="f-divider">
 
-        <form method="GET" action="" id="filter-form">
-            {% if request.GET.search %}<input type="hidden" name="search" value="{{ request.GET.search }}">{% endif %}
-            {% if active_goal %}<input type="hidden" name="goal" value="{{ active_goal }}">{% endif %}
-            {% if active_sort %}<input type="hidden" name="sort" value="{{ active_sort }}">{% endif %}
-            {% if active_category_id %}<input type="hidden" name="category" value="{{ active_category_id }}">{% endif %}
-
-            <div class="filter-sidebar catalog-fade-in">
-                <div class="filter-sidebar-inner">
-                    <div class="filter-sidebar-title"><i class="bi bi-funnel"></i> Filters</div>
-
-                    <div class="fsec-title">Price Range</div>
-                    <div style="display:flex; flex-direction:column; gap:6px;">
-                        <input type="number" name="price_min" class="price-input"
-                               placeholder="$ Min" value="{{ price_min }}" min="0">
-                        <input type="number" name="price_max" class="price-input"
-                               placeholder="$ Max" value="{{ price_max }}" min="0">
-                    </div>
-
-                    <hr class="f-divider">
-
-                    <div class="fsec-title">Equipment Type</div>
-                    {% for cat in all_categories %}
-                    <label class="fcheck">
-                        <input type="checkbox" name="type" value="{{ cat.name }}" {% if cat.name in selected_types %}checked{% endif %}>
-                        <span class="fcheck-lbl">{{ cat.name }}</span>
-                    </label>
-                    {% endfor %}
-
-                    <hr class="f-divider">
-
-                    <div class="toggle-wrap">
-                        <span style="font-size:0.8rem; color:#aaa;">In Stock Only</span>
-                        <label class="toggle-sw">
-                            <input type="checkbox" name="available" value="1" {% if only_available %}checked{% endif %}>
-                            <span class="toggle-sl"></span>
-                        </label>
-                    </div>
-
-                    <button type="submit" class="btn-apply">Apply Filters</button>
-                    <a href="{% url 'store:product_list' %}" class="btn-clear">Clear All</a>
-                </div>
-            </div>
-        </form>
-
-        <div style="flex:1; min-width:0;">
-
-            <div class="sort-bar catalog-fade-in">
-                <span class="sort-label">Sort by</span>
-                <div class="sort-pills">
-                    {% with sp="?" %}
-                    <a href="{{ sp }}{% if search_query %}&search={{ search_query }}{% endif %}{% if active_goal %}&goal={{ active_goal }}{% endif %}{% if active_category_id %}&category={{ active_category_id }}{% endif %}{% if price_min %}&price_min={{ price_min }}{% endif %}{% if price_max %}&price_max={{ price_max }}{% endif %}"
-                       class="sort-pill {% if not active_sort %}active{% endif %}">Featured</a>
-                    <a href="{{ sp }}&sort=newest{% if search_query %}&search={{ search_query }}{% endif %}{% if active_goal %}&goal={{ active_goal }}{% endif %}{% if active_category_id %}&category={{ active_category_id }}{% endif %}{% if price_min %}&price_min={{ price_min }}{% endif %}{% if price_max %}&price_max={{ price_max }}{% endif %}"
-                       class="sort-pill {% if active_sort == 'newest' %}active{% endif %}">Newest</a>
-                    <a href="{{ sp }}&sort=price_asc{% if search_query %}&search={{ search_query }}{% endif %}{% if active_goal %}&goal={{ active_goal }}{% endif %}{% if active_category_id %}&category={{ active_category_id }}{% endif %}{% if price_min %}&price_min={{ price_min }}{% endif %}{% if price_max %}&price_max={{ price_max }}{% endif %}"
-                       class="sort-pill {% if active_sort == 'price_asc' %}active{% endif %}">Price: Low → High</a>
-                    <a href="{{ sp }}&sort=price_desc{% if search_query %}&search={{ search_query }}{% endif %}{% if active_goal %}&goal={{ active_goal }}{% endif %}{% if active_category_id %}&category={{ active_category_id }}{% endif %}{% if price_min %}&price_min={{ price_min }}{% endif %}{% if price_max %}&price_max={{ price_max }}{% endif %}"
-                       class="sort-pill {% if active_sort == 'price_desc' %}active{% endif %}">Price: High → Low</a>
-                    <a href="{{ sp }}&sort=rating_desc{% if search_query %}&search={{ search_query }}{% endif %}{% if active_goal %}&goal={{ active_goal }}{% endif %}{% if active_category_id %}&category={{ active_category_id }}{% endif %}{% if price_min %}&price_min={{ price_min }}{% endif %}{% if price_max %}&price_max={{ price_max }}{% endif %}"
-                       class="sort-pill {% if active_sort == 'rating_desc' %}active{% endif %}">Top Rated</a>
-                    <a href="{{ sp }}&sort=name_asc{% if search_query %}&search={{ search_query }}{% endif %}{% if active_goal %}&goal={{ active_goal }}{% endif %}{% if active_category_id %}&category={{ active_category_id }}{% endif %}{% if price_min %}&price_min={{ price_min }}{% endif %}{% if price_max %}&price_max={{ price_max }}{% endif %}"
-                       class="sort-pill {% if active_sort == 'name_asc' %}active{% endif %}">Name A–Z</a>
-                    {% endwith %}
-                </div>
-                <span style="font-size:0.78rem; color:#555; margin-left:auto; flex-shrink:0;" id="product-count">{{ total_count }} item{{ total_count|pluralize }}</span>
-            </div>
-
-            <div id="product-grid" class="product-grid">
-                {% for product in products %}
-                    {% include 'partials/product_card.html' with index=forloop.counter %}
-                {% empty %}
-                <div class="empty-state">
-                    <div class="empty-state-icon">
-                        {% if is_search %}🔍{% else %}📦{% endif %}
-                    </div>
-                    {% if is_search %}
-                        <h3>No results found for "{{ request.GET.search }}"</h3>
-                        <p>Check your spelling or try different keywords. Browse our categories above to find what you need.</p>
-                    {% else %}
-                        <h3>No products match these filters</h3>
-                        <p>Try adjusting your price range or equipment type filters.</p>
-                    {% endif %}
-                    <a href="{% url 'store:product_list' %}" class="pcard-btn pcard-btn-view" style="display:inline-flex;padding:8px 20px;text-decoration:none;">Browse All Products</a>
-                </div>
-                {% endfor %}
-            </div>
-
-            <div id="scroll-sentinel"></div>
-
-            <div class="loading-more" id="loading-indicator">
-                <div class="loading-more-inner">
-                    <div class="loading-spinner"></div>
-                    <span class="loading-text">Loading more...</span>
-                </div>
-            </div>
-
-            <div id="skeleton-container" style="display:none;">
-                <div class="skeleton-grid" id="skeleton-grid">
-                    {% for i in "1234" %}
-                    <div class="skeleton-card">
-                        <div class="skeleton-img"></div>
-                        <div class="skeleton-body">
-                            <div class="skeleton-line skeleton-line-sm"></div>
-                            <div class="skeleton-line skeleton-line-lg"></div>
-                            <div class="skeleton-line" style="width:40%;"></div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
+        <div class="toggle-wrap">
+          <span class="pl-toggle-lbl">{{ 'In Stock Only'|t }}</span>
+          <label class="toggle-sw">
+            <input type="checkbox" name="available" value="1" {% if only_available %}checked{% endif %}>
+            <span class="toggle-sl"></span>
+          </label>
         </div>
+
+        <button type="submit" class="btn-apply">{{ 'Apply Filters'|t }}</button>
+        <a href="{% url 'store:product_list' %}" class="btn-clear">{{ 'Clear All'|t }}</a>
+      </div>
+    </div>
+  </form>
+
+  <div class="pl-main">
+    <div class="sort-bar catalog-fade-in">
+      <span class="sort-label">{{ 'Sort by'|t }}</span>
+      <div class="sort-pills">
+        {% with sp="?" %}
+        <a href="{{ sp }}{% if search_query %}&search={{ search_query }}{% endif %}{% if active_goal %}&goal={{ active_goal }}{% endif %}{% if active_category_id %}&category={{ active_category_id }}{% endif %}{% if price_min %}&price_min={{ price_min }}{% endif %}{% if price_max %}&price_max={{ price_max }}{% endif %}"
+           class="sort-pill {% if not active_sort %}active{% endif %}">{{ 'Featured'|t }}</a>
+        <a href="{{ sp }}&sort=newest{% if search_query %}&search={{ search_query }}{% endif %}{% if active_goal %}&goal={{ active_goal }}{% endif %}{% if active_category_id %}&category={{ active_category_id }}{% endif %}{% if price_min %}&price_min={{ price_min }}{% endif %}{% if price_max %}&price_max={{ price_max }}{% endif %}"
+           class="sort-pill {% if active_sort == 'newest' %}active{% endif %}">{{ 'Newest'|t }}</a>
+        <a href="{{ sp }}&sort=price_asc{% if search_query %}&search={{ search_query }}{% endif %}{% if active_goal %}&goal={{ active_goal }}{% endif %}{% if active_category_id %}&category={{ active_category_id }}{% endif %}{% if price_min %}&price_min={{ price_min }}{% endif %}{% if price_max %}&price_max={{ price_max }}{% endif %}"
+           class="sort-pill {% if active_sort == 'price_asc' %}active{% endif %}">{{ 'Price: Low → High'|t }}</a>
+        <a href="{{ sp }}&sort=price_desc{% if search_query %}&search={{ search_query }}{% endif %}{% if active_goal %}&goal={{ active_goal }}{% endif %}{% if active_category_id %}&category={{ active_category_id }}{% endif %}{% if price_min %}&price_min={{ price_min }}{% endif %}{% if price_max %}&price_max={{ price_max }}{% endif %}"
+           class="sort-pill {% if active_sort == 'price_desc' %}active{% endif %}">{{ 'Price: High → Low'|t }}</a>
+        <a href="{{ sp }}&sort=rating_desc{% if search_query %}&search={{ search_query }}{% endif %}{% if active_goal %}&goal={{ active_goal }}{% endif %}{% if active_category_id %}&category={{ active_category_id }}{% endif %}{% if price_min %}&price_min={{ price_min }}{% endif %}{% if price_max %}&price_max={{ price_max }}{% endif %}"
+           class="sort-pill {% if active_sort == 'rating_desc' %}active{% endif %}">{{ 'Top Rated'|t }}</a>
+        <a href="{{ sp }}&sort=name_asc{% if search_query %}&search={{ search_query }}{% endif %}{% if active_goal %}&goal={{ active_goal }}{% endif %}{% if active_category_id %}&category={{ active_category_id }}{% endif %}{% if price_min %}&price_min={{ price_min }}{% endif %}{% if price_max %}&price_max={{ price_max }}{% endif %}"
+           class="sort-pill {% if active_sort == 'name_asc' %}active{% endif %}">{{ 'Name A–Z'|t }}</a>
+        {% endwith %}
+      </div>
+      <span class="pl-count" id="product-count">{{ total_count }} {{ 'item'|t }}{{ total_count|pluralize }}</span>
     </div>
 
-    {% if recommendations %}
-    <div class="catalog-fade-in" style="margin-top:5rem;padding-top:3rem;border-top:1px solid rgba(255,255,255,0.04);">
-        <div style="text-align:center;margin-bottom:2.5rem;">
-            <span style="text-transform:uppercase;font-weight:700;font-size:0.65rem;color:#d4af37;letter-spacing:3px;display:block;margin-bottom:0.3rem;">Curated For You</span>
-            <h3 style="font-size:1.2rem;font-weight:800;color:#fff;margin:0;">Recommended</h3>
-            <div style="width:28px;height:2px;background:#d4af37;margin:0.75rem auto;border-radius:1px;"></div>
+    <div class="pl-grid-wrap" id="pl-grid-wrap">
+      <div id="product-grid" class="product-grid">
+        {% for product in products %}
+          {% include 'partials/product_card.html' with index=forloop.counter %}
+        {% empty %}
+        <div class="empty-state">
+          <div class="empty-state-icon">{% if is_search %}🔍{% else %}📦{% endif %}</div>
+          {% if is_search %}
+            <h3>{{ 'No results found for'|t }} "{{ request.GET.search }}"</h3>
+            <p>{{ 'Check your spelling or try different keywords.'|t }}</p>
+          {% else %}
+            <h3>{{ 'No products match these filters'|t }}</h3>
+            <p>{{ 'Try adjusting your price range or equipment type filters.'|t }}</p>
+          {% endif %}
+          <a href="{% url 'store:product_list' %}" class="pl-btn-browse">{{ 'Browse All Products'|t }}</a>
         </div>
-        <div style="display:flex;flex-wrap:wrap;gap:1.25rem;justify-content:center;">
-            {% for rec in recommendations %}
-            <div class="rec-card">
-                <div style="aspect-ratio:1;background:#161616;overflow:hidden;">
-                    {% if rec.image %}
-                        <img src="{% if 'http' in rec.image.name or 'http' in rec.image %}{% if rec.image.name %}{{ rec.image.name }}{% else %}{{ rec.image }}{% endif %}{% else %}{{ rec.image.url }}{% endif %}" alt="{{ rec.name }}" style="width:100%;height:100%;object-fit:cover;opacity:0.85;">
-                    {% else %}
-                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#2a2a2a;font-size:1.5rem;">🏋️</div>
-                    {% endif %}
-                </div>
-                <div style="padding:0.85rem;display:flex;flex-direction:column;flex-grow:1;justify-content:space-between;">
-                    <div style="margin-bottom:0.5rem;">
-                        <div style="color:#fff;margin:0 0 0.15rem;font-weight:600;font-size:0.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ rec.name }}</div>
-                        <span style="color:#d4af37;font-weight:700;font-size:0.82rem;">${{ rec.price }}</span>
-                    </div>
-                    <a href="{% url 'store:product_detail' rec.id %}" class="pcard-btn pcard-btn-view" style="padding:6px 0;font-size:0.68rem;">View Gear</a>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
+        {% endfor %}
+      </div>
+      <div id="scroll-sentinel"></div>
 
-</div>
+      <div class="loading-more" id="loading-indicator">
+        <div class="loading-more-inner">
+          <div class="loading-spinner"></div>
+          <span class="loading-text">{{ 'Loading more...'|t }}</span>
+        </div>
+      </div>
+
+      <div id="skeleton-container" class="pl-skeleton-container">
+        <div class="skeleton-grid" id="skeleton-grid">
+          {% for i in "1234" %}
+          <div class="skeleton-card">
+            <div class="skeleton-img"></div>
+            <div class="skeleton-body">
+              <div class="skeleton-line skeleton-line-sm"></div>
+              <div class="skeleton-line skeleton-line-lg"></div>
+              <div class="skeleton-line" style="width:40%;"></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if recommendations %}
+  <div class="pl-recs catalog-fade-in">
+    <div class="pl-recs-header">
+      <span class="pl-recs-tag">{{ 'Curated For You'|t }}</span>
+      <h3>{{ 'Recommended'|t }}</h3>
+      <div class="pl-recs-line"></div>
+    </div>
+    <div class="pl-recs-grid">
+      {% for rec in recommendations %}
+      <div class="rec-card">
+        <div class="rec-card-img">
+          {% if rec.image %}
+            <img src="{% if 'http' in rec.image.name or 'http' in rec.image %}{% if rec.image.name %}{{ rec.image.name }}{% else %}{{ rec.image }}{% endif %}{% else %}{{ rec.image.url }}{% endif %}" alt="{{ rec.name|t }}">
+          {% else %}
+            <div class="rec-card-placeholder">🏋️</div>
+          {% endif %}
+        </div>
+        <div class="rec-card-body">
+          <div class="rec-card-name">{{ rec.name|t }}</div>
+          <span class="rec-card-price">{{ rec.price|currency }}</span>
+          <a href="{% url 'store:product_detail' rec.id %}" class="rec-card-btn">{{ 'View Gear'|t }}</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
 </div>
 {% endblock %}
 

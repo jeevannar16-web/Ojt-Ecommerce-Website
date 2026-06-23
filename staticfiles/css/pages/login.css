@@ -1,0 +1,199 @@
+.login-wrap {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+}
+.login-card {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 44px 40px 36px;
+  width: 100%;
+  max-width: 400px;
+}
+.login-card .brand {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.login-card .brand h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f0ece4;
+  margin: 0 0 4px;
+}
+.login-card .brand p {
+  color: #7a756e;
+  font-size: 0.85rem;
+  margin: 0;
+}
+.login-form .field {
+  margin-bottom: 18px;
+}
+.login-form .field label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #a09a92;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.login-form .field input {
+  width: 100%;
+  padding: 13px 16px;
+  background: #0d0d0d;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  color: #f0ece4;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.login-form .field input:focus {
+  border-color: #d4af37;
+}
+.login-form .field input::placeholder { color: #555; }
+.login-form .field .pwd-field input {
+  padding-right: 44px !important;
+}
+.pwd-field {
+  position: relative;
+  width: 100%;
+}
+.pwd-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background: none;
+  border: none;
+  border-left: 1px solid #2a2a2a;
+  color: #888;
+  cursor: pointer;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, background 0.15s;
+  border-radius: 0 10px 10px 0;
+  padding: 0;
+}
+.pwd-toggle:hover {
+  color: #d4af37;
+  background: rgba(212,175,55,0.06);
+}
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: -4px 0 20px;
+}
+.login-options a {
+  color: #d4af37;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.login-options a:hover { color: #e8c97e; text-decoration: underline; }
+.login-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #e8c97e, #c4783a);
+  color: #0d0d0d;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.login-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0 0;
+  color: #555;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.login-divider::before, .login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #2a2a2a;
+}
+.login-footer {
+  text-align: center;
+  margin-top: 20px;
+  color: #7a756e;
+  font-size: 0.85rem;
+}
+.login-footer a {
+  color: #d4af37;
+  text-decoration: none;
+  font-weight: 600;
+}
+.login-footer a:hover { text-decoration: underline; }
+.login-error {
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.25);
+  color: #ef4444;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+@media (max-width: 480px) {
+  .login-card { padding: 32px 24px; }
+}
+
+.social-auth {
+  margin: 20px 0 0;
+}
+.social-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  color: #555;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.social-divider::before,
+.social-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #2a2a2a;
+}
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+.google-btn:hover {
+  background: #f5f5f5;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}

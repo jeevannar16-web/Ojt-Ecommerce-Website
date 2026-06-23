@@ -26,12 +26,14 @@ def _parse_sizes(size_str):
 
 
 def seller_center(request):
-    """Public seller center landing page — Daraz-style."""
+    """Public seller center landing page."""
     seller_count = Profile.objects.filter(is_seller=True).count()
     product_count = Product.objects.count()
+    order_count = Order.objects.count()
     return render(request, 'store/seller_center.html', {
         'seller_count': seller_count,
         'product_count': product_count,
+        'order_count': order_count,
     })
 
 

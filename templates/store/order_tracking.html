@@ -12,83 +12,89 @@
 
     <div class="tracking-container">
         <div class="dashboard-header">
-            <span class="tracking-badge">📦 LIVE LOGISTICS</span>
-            <h2>Your <span class="gold-gradient-text">Order Journeys</span></h2>
-            <p>Review real-time processing milestones and structural purchase history details.</p>
+            <span class="tracking-badge">📦 {{ 'LIVE LOGISTICS'|t }}</span>
+            <h2>{{ 'Your'|t }} <span class="gold-gradient-text">{{ 'Order Journeys'|t }}</span></h2>
+            <p>{{ 'Review real-time processing milestones and structural purchase history details.'|t }}</p>
         </div>
 
         <hr class="premium-divider">
 
         <div class="tracking-section-group">
-            <h3 class="section-title-label text-warning">⏳ Active Logistics Pipeline</h3>
+            <h3 class="section-title-label text-warning">⏳ {{ 'Active Logistics Pipeline'|t }}</h3>
             
             {% if not upcoming_orders %}
                 <div class="empty-tracking-card mb-5">
                     <div class="empty-icon">📦</div>
-                    <h3>No active shipments moving</h3>
-                    <p>When you acquire fresh gear, real-time in-transit routing markers will manifest right here.</p>
+                    <h3>{{ 'No active shipments moving'|t }}</h3>
+                    <p>{{ 'When you acquire fresh gear, real-time in-transit routing markers will manifest right here.'|t }}</p>
                 </div>
             {% else %}
                 {% for order in upcoming_orders %}
                     <div class="order-master-card active-pipeline-card">
                         <div class="order-summary-header">
                             <div>
-                                <span class="meta-label">TRACKING ID</span>
+                                <span class="meta-label">{{ 'TRACKING ID'|t }}</span>
                                 <span class="meta-value">{% if order.order_number %}#{{ order.order_number }}{% else %}#00{{ order.id }}{% endif %}</span>
                             </div>
                             <div>
-                                <span class="meta-label">TIMESTAMP</span>
+                                <span class="meta-label">{{ 'TIMESTAMP'|t }}</span>
                                 <span class="meta-value">{{ order.created_at|date:"M d, Y • H:i" }}</span>
                             </div>
                             <div>
-                                <span class="meta-label">TOTAL CAPITAL</span>
+                                <span class="meta-label">{{ 'TOTAL CAPITAL'|t }}</span>
                                 <span class="meta-value gold-text">${{ order.total_amount }}</span>
                             </div>
                             <div>
-                                <span class="status-pill status-{{ order.status|lower }}">{{ order.get_status_display }}</span>
+                                <span class="status-pill status-{{ order.status|lower }}">{{ order.get_status_display|t }}</span>
                             </div>
                             {% if order.status == 'Pending' or order.status == 'Processing' %}
                             <div>
                                 <a href="{% url 'store:cancel_order' order.id %}"
                                    onclick="return confirm('Cancel this order? Stock will be restored.')"
                                    style="display: inline-block; padding: 8px 18px; background: rgba(231,76,60,0.1); color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); border-radius: 8px; font-size: 0.78rem; font-weight: 700; text-decoration: none; text-transform: uppercase; letter-spacing: 1px;">
-                                    ✕ Cancel Order
+                                    ✕ {{ 'Cancel Order'|t }}
                                 </a>
                             </div>
                             {% endif %}
                         </div>
 
                         <div class="items-ordered-section">
-                            <h4>Manifest Content</h4>
+                            <h4>{{ 'Manifest Content'|t }}</h4>
                             <div class="items-grid-list">
                                 {% for item in order.items.all %}
                                     <div class="ordered-item-row">
                                         <div class="item-icon-box">🏋️‍♂️</div>
                                         <div class="item-details">
-                                            <span class="item-name">{{ item.product.name }}</span>
-                                            <span class="item-meta">Qty: {{ item.quantity }} @ ${{ item.price }} each</span>
+                                            <span class="item-name">{{ item.product.name|t }}</span>
+                                            <span class="item-meta">{{ 'Qty:'|t }} {{ item.quantity }} @ {{ item.price|currency }} {{ 'each'|t }}</span>
                                         </div>
                                     </div>
                                 {% endfor %}
                             </div>
                         </div>
+                        {% if order.latitude and order.longitude %}
+                        <div style="margin-top:12px;">
+                            <button type="button" class="toggle-map-btn" data-toggle-map="{{ order.id }}" style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.15);color:#d4af37;padding:5px 14px;border-radius:6px;font-size:0.75rem;cursor:pointer;font-weight:600;">{{ 'View Delivery Location'|t }} <i class="bi bi-chevron-down"></i></button>
+                            <div id="order-map-{{ order.id }}" data-order-map data-lat="{{ order.latitude }}" data-lng="{{ order.longitude }}" style="width:100%;height:0;border-radius:8px;overflow:hidden;margin-top:8px;transition:height 0.3s ease;"></div>
+                        </div>
+                        {% endif %}
 
                         <div class="timeline-tracking-track">
                             <div class="timeline-step {% if order.status == 'Pending' or order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}active-step{% endif %}">
                                 <div class="step-dot"></div>
-                                <span class="step-title">Placed</span>
+                                <span class="step-title">{{ 'Placed'|t }}</span>
                             </div>
                             <div class="timeline-step {% if order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}active-step{% endif %}">
                                 <div class="step-dot"></div>
-                                <span class="step-title">Preparing</span>
+                                <span class="step-title">{{ 'Preparing'|t }}</span>
                             </div>
                             <div class="timeline-step {% if order.status == 'Shipped' or order.status == 'Delivered' %}active-step{% endif %}">
                                 <div class="step-dot"></div>
-                                <span class="step-title">In Transit</span>
+                                <span class="step-title">{{ 'In Transit'|t }}</span>
                             </div>
                             <div class="timeline-step {% if order.status == 'Delivered' %}active-step{% endif %}">
                                 <div class="step-dot"></div>
-                                <span class="step-title">Delivered</span>
+                                <span class="step-title">{{ 'Delivered'|t }}</span>
                             </div>
                         </div>
                     </div>
@@ -97,32 +103,32 @@
         </div>
 
         <div class="tracking-section-group mt-5">
-            <h3 class="section-title-label text-muted">✅ Completed Archive Logs</h3>
+            <h3 class="section-title-label text-muted">✅ {{ 'Completed Archive Logs'|t }}</h3>
             
             {% if not recent_orders %}
                 <div class="empty-tracking-card">
                     <div class="empty-icon">📁</div>
-                    <h3>No past historical logs</h3>
-                    <p>Your finalized, settled acquisition invoices will be saved within this registry component.</p>
+                    <h3>{{ 'No past historical logs'|t }}</h3>
+                    <p>{{ 'Your finalized, settled acquisition invoices will be saved within this registry component.'|t }}</p>
                 </div>
             {% else %}
                 {% for order in recent_orders %}
                     <div class="order-master-card history-archive-card">
                         <div class="order-summary-header">
                             <div>
-                                <span class="meta-label">ORDER REFERENCE</span>
+                                <span class="meta-label">{{ 'ORDER REFERENCE'|t }}</span>
                                 <span class="meta-value">{% if order.order_number %}#{{ order.order_number }}{% else %}#00{{ order.id }}{% endif %}</span>
                             </div>
                             <div>
-                                <span class="meta-label">DELIVERED TIMESTAMP</span>
+                                <span class="meta-label">{{ 'DELIVERED TIMESTAMP'|t }}</span>
                                 <span class="meta-value">{{ order.created_at|date:"M d, Y" }}</span>
                             </div>
                             <div>
-                                <span class="meta-label">TOTAL CAPITAL</span>
+                                <span class="meta-label">{{ 'TOTAL CAPITAL'|t }}</span>
                                 <span class="meta-value gold-text">${{ order.total_amount }}</span>
                             </div>
                             <div>
-                                <span class="status-pill status-{{ order.status|lower }}">{{ order.get_status_display }}</span>
+                                <span class="status-pill status-{{ order.status|lower }}">{{ order.get_status_display|t }}</span>
                             </div>
                         </div>
 
@@ -132,13 +138,19 @@
                                     <div class="ordered-item-row" style="opacity: 0.65;">
                                         <div class="item-icon-box">📦</div>
                                         <div class="item-details">
-                                            <span class="item-name">{{ item.product.name }}</span>
-                                            <span class="item-meta">Qty: {{ item.quantity }} @ ${{ item.price }}</span>
+                                            <span class="item-name">{{ item.product.name|t }}</span>
+                                            <span class="item-meta">Qty: {{ item.quantity }} @ {{ item.price|currency }}</span>
                                         </div>
                                     </div>
                                 {% endfor %}
                             </div>
                         </div>
+                        {% if order.latitude and order.longitude %}
+                        <div style="margin-top:12px;">
+                            <button type="button" class="toggle-map-btn" data-toggle-map="{{ order.id }}" style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.15);color:#d4af37;padding:5px 14px;border-radius:6px;font-size:0.75rem;cursor:pointer;font-weight:600;">{{ 'View Delivery Location'|t }} <i class="bi bi-chevron-down"></i></button>
+                            <div id="order-map-{{ order.id }}" data-order-map data-lat="{{ order.latitude }}" data-lng="{{ order.longitude }}" style="width:100%;height:0;border-radius:8px;overflow:hidden;margin-top:8px;transition:height 0.3s ease;"></div>
+                        </div>
+                        {% endif %}
                     </div>
                 {% endfor %}
             {% endif %}
@@ -147,4 +159,37 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/pages/order_maps.js' %}"></script>
+<script>
+document.querySelectorAll('[data-toggle-map]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var orderId = this.getAttribute('data-toggle-map');
+    var mapEl = document.getElementById('order-map-' + orderId);
+    if (!mapEl) return;
+    var isOpen = mapEl.style.height !== '0px' && mapEl.style.height !== '';
+    if (isOpen) {
+      mapEl.style.height = '0px';
+      this.innerHTML = 'View Delivery Location <i class="bi bi-chevron-down"></i>';
+    } else {
+      mapEl.style.height = '180px';
+      this.innerHTML = 'Hide Map <i class="bi bi-chevron-up"></i>';
+      if (mapEl._leaflet_id) {
+        mapEl._leaflet_map.invalidateSize();
+      } else {
+        var lat = parseFloat(mapEl.getAttribute('data-lat'));
+        var lng = parseFloat(mapEl.getAttribute('data-lng'));
+        if (!isNaN(lat) && !isNaN(lng)) {
+          var map = L.map(mapEl, { center: [lat, lng], zoom: 15, zoomControl: false, dragging: false, scrollWheelZoom: false, attributionControl: false });
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+          L.marker([lat, lng]).addTo(map).bindPopup('Delivery Location');
+          mapEl._leaflet_map = map;
+        }
+      }
+    }
+  });
+});
+</script>
 {% endblock %}

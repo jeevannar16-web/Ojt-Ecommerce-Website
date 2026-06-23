@@ -10,19 +10,19 @@
     <div class="checkout-container">
         <div class="checkout-steps">
             <div class="step-item completed">
-                <span class="step-num">✓</span> Cart
+                <span class="step-num">✓</span> {{ 'Cart'|t }}
             </div>
             <div class="step-line active"></div>
             <div class="step-item active">
-                <span class="step-num">2</span> Shipping
+                <span class="step-num">2</span> {{ 'Shipping'|t }}
             </div>
             <div class="step-line"></div>
             <div class="step-item">
-                <span class="step-num">3</span> Payment
+                <span class="step-num">3</span> {{ 'Payment'|t }}
             </div>
             <div class="step-line"></div>
             <div class="step-item">
-                <span class="step-num">4</span> Confirm
+                <span class="step-num">4</span> {{ 'Confirm'|t }}
             </div>
         </div>
 
@@ -37,82 +37,108 @@
 
         <div class="row g-4">
             <div class="col-lg-8">
-                <form action="{% url 'store:checkout' %}" method="POST" id="checkout-form" novalidate>
+                <form action="{% url 'store:checkout' %}{% if request.GET.items %}?items={{ request.GET.items }}{% endif %}" method="POST" id="checkout-form" novalidate>
                     {% csrf_token %}
 
                     <div class="card-dz">
-                        <div class="card-title-dz"><i class="bi bi-person-circle"></i> Contact Information</div>
+                        <div class="card-title-dz"><i class="bi bi-person-circle"></i> {{ 'Contact Information'|t }}</div>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label-dz">Full Name <span class="required">*</span></label>
+                                <label class="form-label-dz">{{ 'Full Name'|t }} <span class="required">*</span></label>
                                 <input type="text" class="form-control-dz" id="full_name" name="full_name"
                                        value="{{ form_data.full_name }}"
                                        placeholder="John Doe" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label-dz">Email Address <span class="required">*</span></label>
+                                <label class="form-label-dz">{{ 'Email Address'|t }} <span class="required">*</span></label>
                                 <input type="email" class="form-control-dz" id="email" name="email"
                                        value="{{ form_data.email }}"
                                        placeholder="john@example.com" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label-dz">Phone Number <span class="required">*</span></label>
+                                <label class="form-label-dz">{{ 'Phone Number'|t }} <span class="required">*</span></label>
                                 <input type="tel" class="form-control-dz" id="phone_number" name="phone_number"
                                        value="{{ form_data.phone_number }}"
                                        placeholder="+92 300 1234567" required>
-                                <div class="form-hint">Format: +92 300 1234567 or 03XX-XXXXXXX</div>
+                                <div class="form-hint">{{ 'Format:'|t }} +92 300 1234567 {{ 'or'|t }} 03XX-XXXXXXX</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="card-dz">
-                        <div class="card-title-dz"><i class="bi bi-geo-alt"></i> Shipping Address</div>
+                        <div class="card-title-dz"><i class="bi bi-geo-alt"></i> {{ 'Shipping Address'|t }}</div>
                         <div class="row g-3">
                             <div class="col-12">
-                                <label class="form-label-dz">Street Address <span class="required">*</span></label>
+                                <label class="form-label-dz">{{ 'Street Address'|t }} <span class="required">*</span></label>
                                 <input type="text" class="form-control-dz" id="shipping_address" name="shipping_address"
                                        value="{{ form_data.shipping_address }}"
                                        placeholder="House #, Street, Area" required>
                             </div>
                             <div class="city-grid">
                                 <div>
-                                    <label class="form-label-dz">City <span class="required">*</span></label>
+                                    <label class="form-label-dz">{{ 'City'|t }} <span class="required">*</span></label>
                                     <input type="text" class="form-control-dz" id="city" name="city"
                                            value="{{ form_data.city }}"
                                            placeholder="e.g. Karachi" required>
                                 </div>
                                 <div>
-                                    <label class="form-label-dz">Province / State <span class="required">*</span></label>
+                                    <label class="form-label-dz">{{ 'Province / State'|t }} <span class="required">*</span></label>
                                     <input type="text" class="form-control-dz" id="province" name="province"
                                            value="{{ form_data.province }}"
                                            placeholder="e.g. Sindh" required>
                                 </div>
                                 <div>
-                                    <label class="form-label-dz">Postal / ZIP Code</label>
+                                    <label class="form-label-dz">{{ 'Postal / ZIP Code'|t }}</label>
                                     <input type="text" class="form-control-dz" id="postal_code" name="postal_code"
                                            value="{{ form_data.postal_code }}"
                                            placeholder="e.g. 75000">
                                 </div>
                             </div>
+                            <div style="margin-top:8px;">
+                              <button type="button" id="find-on-map-btn" style="background:rgba(46,196,182,0.1);border:1px solid rgba(46,196,182,0.2);border-radius:8px;padding:8px 18px;color:#2ec4b6;cursor:pointer;font-size:0.82rem;font-weight:600;"><i class="bi bi-geo-alt"></i> {{ 'Find on Map'|t }}</button>
+                              <span style="font-size:0.72rem;color:#555;margin-left:10px;">{{ 'Type address above, then click to locate on map'|t }}</span>
+                            </div>
                         </div>
                     </div>
 
                     <div class="card-dz">
-                        <div class="card-title-dz"><i class="bi bi-truck"></i> Delivery Method</div>
+                        <div class="card-title-dz"><i class="bi bi-map"></i> {{ 'Pin Your Delivery Location'|t }}</div>
+                        <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+                            <div style="flex:1;min-width:180px;display:flex;gap:6px;">
+                                <input type="text" id="location-search" placeholder="{{ 'Search a location...'|t }}" style="flex:1;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#fff;font-size:0.82rem;">
+                                <button type="button" id="location-search-btn" style="background:rgba(255,255,255,0.06);border:none;border-radius:6px;padding:7px 12px;color:#aaa;cursor:pointer;"><i class="bi bi-search"></i></button>
+                            </div>
+                            <button type="button" id="home-location-btn" style="background:rgba(46,196,182,0.12);border:1px solid rgba(46,196,182,0.25);border-radius:6px;padding:7px 14px;color:#2ec4b6;cursor:pointer;font-size:0.82rem;font-weight:600;display:none;"><i class="bi bi-house-door"></i> {{ 'Deliver to Home'|t }}</button>
+                            <button type="button" id="use-my-location" style="background:rgba(212,175,55,0.12);border:1px solid rgba(212,175,55,0.25);border-radius:6px;padding:7px 14px;color:#d4af37;cursor:pointer;font-size:0.82rem;font-weight:600;"><i class="bi bi-crosshair"></i> {{ 'Use My Location'|t }}</button>
+                        </div>
+                        <div id="checkout-map" style="width:100%;height:280px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"></div>
+                        <div id="map-status" style="font-size:0.78rem;color:#888;margin-top:6px;">{{ 'Type your address above and click "Find on Map", or search below, or click directly on the map.'|t }}</div>
+                        <input type="hidden" id="id_latitude" name="latitude" value="{{ form_data.latitude|default:'' }}">
+                        <input type="hidden" id="id_longitude" name="longitude" value="{{ form_data.longitude|default:'' }}">
+                        <input type="hidden" id="country" name="country" value="{{ form_data.country|default:'' }}">
+                        <input type="hidden" id="home-address" value="{{ form_data.shipping_address|default:'' }}">
+                        <input type="hidden" id="home-city" value="{{ form_data.city|default:'' }}">
+                        <input type="hidden" id="home-province" value="{{ form_data.province|default:'' }}">
+                        <input type="hidden" id="home-postal" value="{{ form_data.postal_code|default:'' }}">
+                        <input type="hidden" id="home-phone" value="{{ form_data.phone_number|default:'' }}">
+                    </div>
+
+                    <div class="card-dz">
+                        <div class="card-title-dz"><i class="bi bi-truck"></i> {{ 'Delivery Method'|t }}</div>
                         <div style="display:flex;flex-direction:column;gap:8px;">
                             <label class="delivery-option selected">
                                 <input type="radio" name="delivery_method" value="standard" checked>
                                 <div>
-                                    <div class="d-label">Standard Delivery</div>
-                                    <div class="d-desc">Guaranteed delivery in 5-7 business days</div>
+                                    <div class="d-label">{{ 'Standard Delivery'|t }}</div>
+                                    <div class="d-desc">{{ 'Guaranteed delivery in 5-7 business days'|t }}</div>
                                 </div>
-                                <div class="d-price" style="color:#2ec4b6;">Free</div>
+                                <div class="d-price" style="color:#2ec4b6;">{{ 'Free'|t }}</div>
                             </label>
                             <label class="delivery-option">
                                 <input type="radio" name="delivery_method" value="express">
                                 <div>
-                                    <div class="d-label">Express Delivery</div>
-                                    <div class="d-desc">Guaranteed delivery in 2-3 business days</div>
+                                    <div class="d-label">{{ 'Express Delivery'|t }}</div>
+                                    <div class="d-desc">{{ 'Guaranteed delivery in 2-3 business days'|t }}</div>
                                 </div>
                                 <div class="d-price">$5.99</div>
                             </label>
@@ -120,16 +146,16 @@
                     </div>
 
                     <div class="card-dz">
-                        <div class="card-title-dz"><i class="bi bi-credit-card"></i> Payment Method</div>
+                        <div class="card-title-dz"><i class="bi bi-credit-card"></i> {{ 'Payment Method'|t }}</div>
                         <div style="display:flex;flex-direction:column;gap:8px;">
                             <label class="payment-option selected">
                                 <input type="radio" name="payment_method" value="cod" checked>
                                 <div>
                                     <label style="cursor:pointer;font-weight:600;font-size:0.88rem;color:#fff;margin:0;">
-                                        Cash on Delivery
+                                        {{ 'Cash on Delivery'|t }}
                                     </label>
                                     <small style="display:block;font-size:0.76rem;color:#666;font-weight:400;">
-                                        Pay with cash when your order arrives
+                                        {{ 'Pay with cash when your order arrives'|t }}
                                     </small>
                                 </div>
                             </label>
@@ -137,10 +163,10 @@
                                 <input type="radio" name="payment_method" value="card">
                                 <div>
                                     <label style="cursor:pointer;font-weight:600;font-size:0.88rem;color:#fff;margin:0;">
-                                        Credit / Debit Card
+                                        {{ 'Credit / Debit Card'|t }}
                                     </label>
                                     <small style="display:block;font-size:0.76rem;color:#666;font-weight:400;">
-                                        Visa, Mastercard, American Express
+                                        {{ 'Visa, Mastercard, American Express'|t }}
                                     </small>
                                 </div>
                             </label>
@@ -151,7 +177,7 @@
 
             <div class="col-lg-4">
                 <div class="card-dz" style="position:sticky;top:20px;">
-                    <div class="card-title-dz"><i class="bi bi-receipt"></i> Order Summary</div>
+                    <div class="card-title-dz"><i class="bi bi-receipt"></i> {{ 'Order Summary'|t }}</div>
 
                     <div>
                         {% for item in cart_items %}
@@ -159,32 +185,32 @@
                             <div class="summary-img">
                                 {% if item.product.image %}
                                 <img src="{% if 'http' in item.product.image.name or 'http' in item.product.image %}{% if item.product.image.name %}{{ item.product.image.name }}{% else %}{{ item.product.image }}{% endif %}{% else %}{{ item.product.image.url }}{% endif %}"
-                                     alt="{{ item.product.name }}">
+                                     alt="{{ item.product.name|t }}">
                                 {% else %}
                                 <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#333;font-size:1.2rem;">📦</div>
                                 {% endif %}
                             </div>
                             <div class="summary-info">
-                                <div class="summary-name">{{ item.product.name }}{% if item.size %} <span style="color:#d4af37;">· {{ item.size }}</span>{% endif %}</div>
-                                <div class="summary-qty">Qty: {{ item.quantity }}</div>
+                                <div class="summary-name">{{ item.product.name|t }}{% if item.size %} <span style="color:#d4af37;">· {{ item.size }}</span>{% endif %}</div>
+                                <div class="summary-qty">{{ 'Qty:'|t }} {{ item.quantity }}</div>
                             </div>
-                            <div class="summary-price">${{ item.total_price }}</div>
+                            <div class="summary-price">{{ item.total_price|currency }}</div>
                         </div>
                         {% endfor %}
                     </div>
 
                     <div style="margin-top:8px;">
                         <div class="total-row">
-                            <span>Subtotal ({{ cart_items|length }} item{{ cart_items|length|pluralize }})</span>
-                            <span class="amount" style="color:#fff;">${{ total_amount }}</span>
+                            <span>{{ 'Subtotal'|t }} ({{ cart_items|length }} item{{ cart_items|length|pluralize }})</span>
+                            <span class="amount" style="color:#fff;">{{ total_amount|currency }}</span>
                         </div>
                         <div class="total-row">
-                            <span>Shipping</span>
-                            <span class="amount" style="color:#2ec4b6;">Free</span>
+                            <span>{{ 'Shipping'|t }}</span>
+                            <span class="amount" style="color:#2ec4b6;">{{ 'Free'|t }}</span>
                         </div>
                         <div class="total-row grand">
-                            <span>Total</span>
-                            <span class="amount">${{ total_amount }}</span>
+                            <span>{{ 'Total'|t }}</span>
+                            <span class="amount">{{ total_amount|currency }}</span>
                         </div>
                     </div>
 
@@ -194,11 +220,11 @@
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M13 2L4 14h6v8l9-12h-6z"/>
                         </svg>
-                        Place Order
+                        {{ 'Place Order'|t }}
                     </button>
 
                     <div style="margin-top:12px;text-align:center;font-size:0.72rem;color:#555;">
-                        <i class="bi bi-shield-lock-fill me-1"></i> Your information is secure
+                        <i class="bi bi-shield-lock-fill me-1"></i> {{ 'Your information is secure'|t }}
                     </div>
                 </div>
             </div>
@@ -210,4 +236,11 @@
 
 {% block extra_js %}
 <script src="{% static 'js/pages/checkout.js' %}"></script>
+<script src="{% static 'js/pages/checkout_map.js' %}"></script>
+<script>
+document.getElementById('checkout-form')?.addEventListener('submit', function () {
+  const btn = document.getElementById('place-order-btn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="loader-ring-sm"></span> {{ 'Processing...'|t }}'; }
+});
+</script>
 {% endblock %}

@@ -1,7 +1,7 @@
 # Session Summary
 
 ## Goal
-Complete full e-commerce platform with admin dashboard, seller marketplace, professional auth/profile, ProductSize inventory, secure role-based access, email validation, and credential history — all without data loss.
+Complete full e-commerce platform with admin dashboard, seller marketplace, professional auth/profile, ProductSize inventory, secure role-based access, email validation, credential history, and real-time maps location configuration — all without data loss.
 
 ## Constraints & Preferences
 - No data dump/reload required — everything works with existing database
@@ -53,6 +53,39 @@ Complete full e-commerce platform with admin dashboard, seller marketplace, prof
 - Created `CredentialHistory` model (FK User, stores store_name, business_type, store_description, business_registration, tax_id, business_address, phone, created_at)
 - Migration `users.0009_credential_history` applied
 - Seller apply page shows last 5 credential sets as clickable cards → fills form fields via JS → user can edit
+- **Multi-language translation system (Nepali, Hindi, Korean, English)**
+  - Custom DB-backed Translation model with `|t` filter (auto-loaded in all templates)
+  - LanguageMiddleware detects `?lang=` query param
+  - `available_languages` context processor injects all active languages for nav switcher
+  - Created `seed_translations` management command using `deep-translator` (MyMemory API preferred, falls back to Google scraping)
+  - Added `|t` filter to **30 template files** (all user-facing pages translated)
+  - **613 translation keys** extracted (**576 from templates + 37 from Python views**)
+  - **~680 translations per language** seeded
+  - Language switcher dropdown in header nav
+  - `messages.html` uses `{{ message|t }}` so flash messages auto-translate
+  - `seed_translations` auto-scans both `.html`/`.txt` and `.py` files for translatable strings
+  - Future: just add `|t` in templates or `messages.*()` in views, then re-run `seed_translations`
+- **Auto-currency conversion** — prices auto-convert based on language:
+  - English → USD ($), Nepali → NPR (रु), Hindi → INR (₹), Korean → KRW (₩)
+  - `|currency` filter globally available (no `{% load %}` needed)
+  - Fetches live rates from `open.er-api.com` (free, no key, no credit card) with 1-hour cache
+  - `localization/currency.py`: exchange rate service with JSON file caching
+  - 37+ template price displays updated to use `{{ price|currency }}`
+- **Location map** in footer using Leaflet + OpenStreetMap (free, no API key)
+  - `static/js/base/map.js` initializes map centered on Kathmandu, Nepal
+  - Leaflet CDN loaded in `base.html`
+  - `templates/includes/footer.html` — Col 5 with map + address
+
+## What Works (added this session)
+- **Checkout map picker**: click to place draggable marker, reverse geocode (Nominatim) auto-fills address, "Use My Location" (browser geolocation), location search box
+- **"Deliver to Home" button** on checkout: one-click fills all address fields + places marker from saved profile lat/lng
+- **Profile map picker**: set default delivery location from Account tab
+- **Order history maps**: collapsible "View Delivery Location" toggle on each order card shows a 180px map with delivery marker
+- **Footer map**: dynamically shows logged-in user's home location (falls back to Kathmandu, Nepal)
+- **Header delivery badge**: shows user's saved city with geo icon (links to profile edit)
+- **Homepage delivery card**: "Deliver to" section after hero with address, toggle-able mini map, and edit link
+- `Order.latitude` / `Order.longitude` saved per order from map picker
+- `Profile.latitude` / `Profile.longitude` saved as default delivery location
 
 ### In Progress
 - (none)

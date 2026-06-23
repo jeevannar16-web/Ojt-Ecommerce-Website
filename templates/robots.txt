@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /store/admin/
+Disallow: /store/seller/
+Disallow: /accounts/
+Disallow: /verification/
+Disallow: /password-reset/
+Sitemap: https://fitnesshub.com/sitemap.xml

@@ -1,7 +1,7 @@
 {% extends 'layout/base.html' %}
 {% load static %}
 
-{% block title %}Apply to Sell — FitnessHub{% endblock %}
+{% block title %}{{ 'Apply to Sell'|t }} — FITNESS HUB{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/seller_apply.css' %}">
@@ -12,8 +12,8 @@
   <div class="sa-card">
     <div class="sa-header">
       <div class="sa-icon"><i class="bi bi-shop"></i></div>
-      <h1>Apply to Become a Seller</h1>
-      <p>Fill in your store details below. Our team will review your application within 24-48 hours.</p>
+      <h1>{{ 'Apply to Become a Seller'|t }}</h1>
+      <p>{{ 'Fill in your store details below. Our team will review your application within 24-48 hours.'|t }}</p>
     </div>
 
     {% if messages %}
@@ -25,8 +25,8 @@
     {% if recent_credentials %}
     <div class="sa-recent">
       <div class="sa-recent-header">
-        <i class="bi bi-clock-history"></i> Recently Used Credentials
-        <span class="sa-recent-badge">Click to fill form</span>
+        <i class="bi bi-clock-history"></i> {{ 'Recently Used Credentials'|t }}
+        <span class="sa-recent-badge">{{ 'Click to fill form'|t }}</span>
       </div>
       <div class="sa-recent-list">
         {% for cred in recent_credentials %}
@@ -43,7 +43,7 @@
             <span class="sa-recent-date">{{ cred.created_at|date:'M j, Y' }}</span>
           </div>
           <div class="sa-recent-details">
-            {% if cred.business_registration %}<span>Reg: {{ cred.business_registration }}</span>{% endif %}
+            {% if cred.business_registration %}<span>{{ 'Reg:'|t }} {{ cred.business_registration }}</span>{% endif %}
             {% if cred.business_type %}<span>{{ cred.business_type|title }}</span>{% endif %}
           </div>
         </div>
@@ -56,97 +56,97 @@
       {% csrf_token %}
 
       <div class="sa-form-section">
-        <h3><i class="bi bi-building"></i> Store Information</h3>
+        <h3><i class="bi bi-building"></i> {{ 'Store Information'|t }}</h3>
         <div class="sa-form-row">
           <div class="sa-field">
-            <label for="id_store_name">Store Name <span class="req">*</span></label>
+            <label for="id_store_name">{{ 'Store Name'|t }} <span class="req">*</span></label>
             <input type="text" name="store_name" id="id_store_name"
                    value="{{ form_data.store_name|default:'' }}"
-                   placeholder="e.g. FitGear Pro" required maxlength="200">
-            <span class="sa-hint">This will be your public store name.</span>
+                   placeholder="{{ 'e.g. FitGear Pro'|t }}" required maxlength="200">
+            <span class="sa-hint">{{ 'This will be your public store name.'|t }}</span>
           </div>
         </div>
         <div class="sa-form-row">
           <div class="sa-field">
-            <label for="id_business_type">Business Type <span class="req">*</span></label>
+            <label for="id_business_type">{{ 'Business Type'|t }} <span class="req">*</span></label>
             <select name="business_type" id="id_business_type" required>
-              <option value="">Select business type</option>
-              <option value="individual" {% if form_data.business_type == 'individual' %}selected{% endif %}>Individual / Sole Proprietor</option>
-              <option value="company" {% if form_data.business_type == 'company' %}selected{% endif %}>Company / Business Entity</option>
+              <option value="">{{ 'Select business type'|t }}</option>
+              <option value="individual" {% if form_data.business_type == 'individual' %}selected{% endif %}>{{ 'Individual / Sole Proprietor'|t }}</option>
+              <option value="company" {% if form_data.business_type == 'company' %}selected{% endif %}>{{ 'Company / Business Entity'|t }}</option>
             </select>
           </div>
         </div>
         <div class="sa-form-row">
           <div class="sa-field">
-            <label for="id_store_description">Store Description</label>
+            <label for="id_store_description">{{ 'Store Description'|t }}</label>
             <textarea name="store_description" id="id_store_description" rows="4"
-                      placeholder="Tell customers about your store — what you sell, your story, your values...">{{ form_data.store_description|default:'' }}</textarea>
+                      placeholder="{{ 'Tell customers about your store — what you sell, your story, your values...'|t }}">{{ form_data.store_description|default:'' }}</textarea>
           </div>
         </div>
       </div>
 
       <div class="sa-form-section">
-        <h3><i class="bi bi-file-earmark-text"></i> Business Credentials</h3>
+        <h3><i class="bi bi-file-earmark-text"></i> {{ 'Business Credentials'|t }}</h3>
         <div class="sa-form-row">
           <div class="sa-field">
-            <label for="id_business_registration">Business Registration / License #</label>
+            <label for="id_business_registration">{{ 'Business Registration / License #'|t }}</label>
             <input type="text" name="business_registration" id="id_business_registration"
                    value="{{ form_data.business_registration|default:'' }}"
-                   placeholder="e.g. BRN-2024-12345">
-            <span class="sa-hint">Your official business registration or license number.</span>
+                   placeholder="{{ 'e.g. BRN-2024-12345'|t }}">
+            <span class="sa-hint">{{ 'Your official business registration or license number.'|t }}</span>
           </div>
         </div>
         <div class="sa-form-row">
           <div class="sa-field">
-            <label for="id_tax_id">Tax ID / VAT Number</label>
+            <label for="id_tax_id">{{ 'Tax ID / VAT Number'|t }}</label>
             <input type="text" name="tax_id" id="id_tax_id"
                    value="{{ form_data.tax_id|default:'' }}"
-                   placeholder="e.g. TX-987654321">
-            <span class="sa-hint">Tax identification number for your business.</span>
+                   placeholder="{{ 'e.g. TX-987654321'|t }}">
+            <span class="sa-hint">{{ 'Tax identification number for your business.'|t }}</span>
           </div>
         </div>
         <div class="sa-form-row">
           <div class="sa-field">
-            <label for="id_business_address">Registered Business Address</label>
+            <label for="id_business_address">{{ 'Registered Business Address'|t }}</label>
             <textarea name="business_address" id="id_business_address" rows="3"
-                      placeholder="Your official registered business address...">{{ form_data.business_address|default:'' }}</textarea>
+                      placeholder="{{ 'Your official registered business address...'|t }}">{{ form_data.business_address|default:'' }}</textarea>
           </div>
         </div>
         <div class="sa-form-row">
           <div class="sa-field">
-            <label for="id_id_proof">Government ID / Business License <span class="sa-opt">(upload)</span></label>
+            <label for="id_id_proof">{{ 'Government ID / Business License'|t }} <span class="sa-opt">(upload)</span></label>
             <input type="file" name="id_proof" id="id_id_proof" accept="image/*,.pdf">
-            <span class="sa-hint">Upload a government-issued ID or business license document.</span>
+            <span class="sa-hint">{{ 'Upload a government-issued ID or business license document.'|t }}</span>
           </div>
         </div>
       </div>
 
       <div class="sa-form-section">
-        <h3><i class="bi bi-telephone"></i> Contact Information</h3>
+        <h3><i class="bi bi-telephone"></i> {{ 'Contact Information'|t }}</h3>
         <div class="sa-form-row">
           <div class="sa-field">
-            <label for="id_phone">Phone Number</label>
+            <label for="id_phone">{{ 'Phone Number'|t }}</label>
             <input type="tel" name="phone" id="id_phone"
                    value="{{ form_data.phone|default:'' }}"
                    placeholder="+1 234 567 8900">
-            <span class="sa-hint">For order-related communications.</span>
+            <span class="sa-hint">{{ 'For order-related communications.'|t }}</span>
           </div>
         </div>
       </div>
 
       <div class="sa-form-section">
-        <h3><i class="bi bi-shield-check"></i> Agreement</h3>
+        <h3><i class="bi bi-shield-check"></i> {{ 'Agreement'|t }}</h3>
         <label class="sa-checkbox">
           <input type="checkbox" name="agree_terms" id="id_agree_terms" required>
-          <span>I confirm that the information provided is accurate and I agree to the <a href="{% url 'terms' %}" target="_blank">Terms of Service</a> and <a href="{% url 'privacy' %}" target="_blank">Privacy Policy</a>.</span>
+          <span>{{ 'I confirm that the information provided is accurate and I agree to the'|t }} <a href="{% url 'terms' %}" target="_blank">{{ 'Terms of Service'|t }}</a> {{ 'and'|t }} <a href="{% url 'privacy' %}" target="_blank">{{ 'Privacy Policy'|t }}</a>.</span>
         </label>
       </div>
 
       <div class="sa-form-actions">
         <button type="submit" class="sa-btn sa-btn-primary">
-          <i class="bi bi-send-check"></i> Submit Application
+          <i class="bi bi-send-check"></i> {{ 'Submit Application'|t }}
         </button>
-        <a href="{% url 'profile' %}" class="sa-btn sa-btn-outline">Cancel</a>
+        <a href="{% url 'profile' %}" class="sa-btn sa-btn-outline">{{ 'Cancel'|t }}</a>
       </div>
     </form>
   </div>

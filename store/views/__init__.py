@@ -1,6 +1,6 @@
-from .cart_views import add_to_cart, cart_view, update_cart_quantity
+from .cart_views import add_to_cart, cart_view, update_cart_quantity, cart_batch_delete, cart_mini_api
 from .checkout_views import checkout_view
-from .product_views import product_list, product_detail, product_list_api, sale_catalog, search_suggestions
+from .product_views import product_list, product_detail, product_list_api, product_stock_api, sale_catalog, search_suggestions
 from .order_views import order_history_view, cancel_order
 from .favorite_views import toggle_favorite, favorites_list
 from .curation_views import curation_workspace, update_curation_asset

@@ -1,0 +1,14 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}Server Error — FITNESS HUB{% endblock %}
+
+{% block content %}
+<div style="min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;">
+  <div style="font-size:5rem;font-weight:800;color:var(--clr-accent);line-height:1;margin-bottom:0.5rem;">500</div>
+  <div style="width:40px;height:2px;background:var(--clr-accent);margin:1rem auto;border-radius:1px;"></div>
+  <h1 style="font-family:var(--font-display);font-size:1.6rem;color:var(--clr-text);margin:0 0 0.5rem;">{{ 'Something Went Wrong'|t }}</h1>
+  <p style="color:var(--clr-muted);max-width:400px;margin:0 0 2rem;">{{ "We're experiencing a temporary issue. Please try again in a moment."|t }}</p>
+  <a href="{% url 'home' %}" style="display:inline-flex;align-items:center;gap:8px;background:var(--clr-accent);color:#0d0d0d;padding:12px 28px;border-radius:50px;font-weight:700;text-decoration:none;transition:opacity 0.2s;" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">← {{ 'Back to Home'|t }}</a>
+</div>
+{% endblock %}

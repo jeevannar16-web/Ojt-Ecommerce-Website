@@ -1,4 +1,24 @@
 (function () {
+  /* ── Click-toggle dropdowns (lang + user) — delegated ── */
+  function toggleDropdown(btn) {
+    var container = btn.closest('.nav-lang, .user-dropdown');
+    if (!container) return;
+    var isOpen = container.classList.contains('open');
+    document.querySelectorAll('.nav-lang.open, .user-dropdown.open').forEach(function (el) {
+      if (el !== container) el.classList.remove('open');
+    });
+    container.classList.toggle('open', !isOpen);
+  }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.nav-lang-btn, .user-dropdown > .nav-icon-btn');
+    if (btn) { e.stopPropagation(); toggleDropdown(btn); return; }
+    var inside = e.target.closest('.nav-lang-drop, .dropdown-content');
+    if (inside) return;
+    document.querySelectorAll('.nav-lang.open, .user-dropdown.open').forEach(function (el) {
+      el.classList.remove('open');
+    });
+  });
+
   const track = document.getElementById('elite-nav-track');
   const inner = document.getElementById('elite-nav-inner');
   const prev  = document.getElementById('nav-prev');

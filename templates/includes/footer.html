@@ -1,14 +1,19 @@
-  <!-- ════ FOOTER ════ -->
-  <footer class="site-footer">
+{% load static %}
+<footer class="site-footer">
     <div class="footer-glow-line"></div>
 
     <div class="footer-body">
 
       <!-- Col 1: Brand -->
       <div>
-        <div class="footer-brand-name">Fitness<span>Hub</span></div>
-        <p class="footer-brand-tagline">Curated fitness goods, beautifully delivered. Find what moves you.</p>
+        <a href="{% url 'home' %}" class="footer-logo-link">
+          <img src="{% static 'images/logo.jpg' %}" alt="FitnessHub" class="footer-logo-img">
+        </a>
+        <p class="footer-brand-tagline">{{ 'Curated fitness goods, beautifully delivered. Find what moves you.'|t }}</p>
         <div class="footer-socials">
+          <a href="https://github.com/jeevannar16-web" target="_blank" rel="noopener noreferrer" class="footer-social-btn" aria-label="GitHub" title="GitHub">
+            <i class="bi bi-github"></i>
+          </a>
           <a href="#" class="footer-social-btn" aria-label="Twitter" title="Twitter">
             <i class="bi bi-twitter-x"></i>
           </a>
@@ -26,26 +31,26 @@
 
       <!-- Col 2: Shop — only real working URLs -->
       <div>
-        <div class="footer-col-heading">Shop</div>
+        <div class="footer-col-heading">{{ 'Shop'|t }}</div>
         <ul class="footer-nav-list">
           <li>
             <a href="{% url 'store:product_list' %}">
-              <span class="ft-arrow">›</span>All Products
+              <span class="ft-arrow">›</span>{{ 'All Products'|t }}
             </a>
           </li>
           <li>
             <a href="{% url 'store:sale_catalog' %}">
-              <span class="ft-arrow">›</span>Sale Collection
+              <span class="ft-arrow">›</span>{{ 'Sale Collection'|t }}
             </a>
           </li>
           <li>
             <a href="{% url 'store:favorites_list' %}">
-              <span class="ft-arrow">›</span>My Wishlist
+              <span class="ft-arrow">›</span>{{ 'My Wishlist'|t }}
             </a>
           </li>
           <li>
             <a href="{% url 'store:cart' %}">
-              <span class="ft-arrow">›</span>My Cart
+              <span class="ft-arrow">›</span>{{ 'Cart'|t }}
             </a>
           </li>
         </ul>
@@ -53,44 +58,44 @@
 
       <!-- Col 3: Account — only real working URLs -->
       <div>
-        <div class="footer-col-heading">Account</div>
+        <div class="footer-col-heading">{{ 'Account'|t }}</div>
         <ul class="footer-nav-list">
           {% if user.is_authenticated %}
           <li>
             <a href="{% url 'profile' %}">
-              <span class="ft-arrow">›</span>My Profile
+              <span class="ft-arrow">›</span>{{ 'nav.profile'|t }}
             </a>
           </li>
           <li>
             <a href="{% url 'store:order_history' %}">
-              <span class="ft-arrow">›</span>Order History
+              <span class="ft-arrow">›</span>{{ 'profile.orders'|t }}
             </a>
           </li>
           <li>
             <a href="{% url 'store:cart' %}">
-              <span class="ft-arrow">›</span>Checkout
+              <span class="ft-arrow">›</span>{{ 'Checkout'|t }}
             </a>
           </li>
           {% else %}
           <li>
             <a href="{% url 'login' %}">
-              <span class="ft-arrow">›</span>Login
+              <span class="ft-arrow">›</span>{{ 'Login'|t }}
             </a>
           </li>
           <li>
             <a href="{% url 'register' %}">
-              <span class="ft-arrow">›</span>Create Account
+              <span class="ft-arrow">›</span>{{ 'Create Account'|t }}
             </a>
           </li>
           <li>
             <a href="{% url 'store:cart' %}">
-              <span class="ft-arrow">›</span>View Cart
+              <span class="ft-arrow">›</span>{{ 'View Cart'|t }}
             </a>
           </li>
           {% endif %}
           <li>
             <a href="{% url 'store:seller_center' %}">
-              <span class="ft-arrow">›</span>Seller Center
+              <span class="ft-arrow">›</span>{{ 'Seller Center'|t }}
             </a>
           </li>
         </ul>
@@ -98,9 +103,9 @@
 
       <!-- Col 4: Newsletter -->
       <div>
-        <div class="footer-col-heading">Newsletter</div>
+        <div class="footer-col-heading">{{ 'Newsletter'|t }}</div>
         <div class="footer-nl-box">
-          <p class="footer-nl-desc">Get early access to exclusive drops and members-only deals.</p>
+          <p class="footer-nl-desc">{{ 'Get early access to exclusive drops and members-only deals.'|t }}</p>
           <form id="ajax-newsletter-form" class="footer-nl-form" novalidate>
             {% csrf_token %}
             <div style="position:relative; flex:1;">
@@ -108,46 +113,55 @@
                 type="email"
                 id="newsletter-email-input"
                 name="email"
-                placeholder="yourname@gmail.com"
+                placeholder="{{ 'yourname@gmail.com'|t }}"
                 required
                 class="footer-nl-input"
                 pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
-                title="Enter a valid email (e.g. yourname@gmail.com)"
+                title="{{ 'Enter a valid email (e.g. yourname@gmail.com)'|t }}"
               >
               <span id="nl-error" style="display:none; position:absolute; top:calc(100% + 4px); left:0; color:#ef4444; font-size:0.7rem; font-weight:500;"></span>
             </div>
             <button type="submit" id="newsletter-submit-btn" class="footer-nl-btn">
-              Subscribe
+              {{ 'Subscribe'|t }}
             </button>
           </form>
           <div class="footer-nl-badges">
             <div class="footer-nl-badge">
               <i class="bi bi-shield-check" style="color:var(--clr-accent);"></i>
-              No spam, ever
+              {{ 'No spam, ever'|t }}
             </div>
             <div class="footer-nl-badge">
               <i class="bi bi-bell" style="color:var(--clr-accent);"></i>
-              Weekly drops
+              {{ 'Weekly drops'|t }}
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Col 5: Location Map -->
+      <div>
+        <div class="footer-col-heading">{{ 'Our Location'|t }}</div>
+        <div id="footer-map" class="footer-map" style="width:100%;height:160px;border-radius:10px;overflow:hidden;"{% if user.is_authenticated and user.profile.latitude %} data-home-lat="{{ user.profile.latitude }}" data-home-lng="{{ user.profile.longitude }}"{% endif %}></div>
+        <p class="footer-map-addr" style="font-size:0.72rem;color:var(--clr-muted);margin-top:6px;">
+          <i class="bi bi-geo-alt"></i> {% if user.is_authenticated and user.profile.city %}{{ user.profile.city }}, {{ user.profile.country }}{% else %}Kathmandu, Nepal{% endif %}
+        </p>
       </div>
 
     </div><!-- /footer-body -->
 
     <!-- Bottom bar -->
     <div class="footer-bottom-bar">
-      <p class="footer-copy">© {% now "Y" %} FitnessHub. All rights reserved.</p>
+      <p class="footer-copy">© {% now "Y" %} FITNESS HUB. {{ 'All rights reserved.'|t }}</p>
 
       <div class="footer-promo">
         <span class="footer-promo-dot"></span>
-        Free shipping over $50 &nbsp;·&nbsp; Code <strong>FIT-CODEX</strong>
+        {{ 'Free shipping over'|t }} {{ 50|currency }} &nbsp;·&nbsp; {{ 'Code'|t }} <strong>FIT-CODEX</strong>
       </div>
 
       <div class="footer-legal">
-        <a href="{% url 'privacy' %}">Privacy Policy</a>
-        <a href="{% url 'terms' %}">Terms</a>
-        <a href="{% url 'cookies' %}">Cookies</a>
+        <a href="{% url 'privacy' %}">{{ 'Privacy Policy'|t }}</a>
+        <a href="{% url 'terms' %}">{{ 'Terms'|t }}</a>
+        <a href="{% url 'cookies' %}">{{ 'Cookies'|t }}</a>
       </div>
     </div>
 

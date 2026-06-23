@@ -149,6 +149,19 @@ def profile(request):
         form = UserProfileForm(request.POST, instance=user_profile)
         if form.is_valid():
             form.save()
+            lat = request.POST.get('latitude', '').strip()
+            lng = request.POST.get('longitude', '').strip()
+            if lat:
+                try:
+                    user_profile.latitude = float(lat)
+                except (ValueError, TypeError):
+                    pass
+            if lng:
+                try:
+                    user_profile.longitude = float(lng)
+                except (ValueError, TypeError):
+                    pass
+            user_profile.save()
             messages.success(request, "Profile updated successfully!")
             return redirect('profile')
     else:

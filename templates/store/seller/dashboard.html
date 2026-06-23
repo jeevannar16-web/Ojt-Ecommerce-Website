@@ -1,7 +1,7 @@
 {% extends 'layout/base.html' %}
 {% load static %}
 
-{% block title %}Seller Dashboard — FitnessHub{% endblock %}
+{% block title %}{{ 'Seller Dashboard'|t }} — FITNESS HUB{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/seller_dashboard.css' %}">
@@ -11,32 +11,32 @@
 <div class="seller-layout">
   <aside class="seller-sidebar">
     <div class="brand">
-      <h2>Seller <span>Center</span></h2>
+      <h2>{{ 'Seller'|t }} <span>{{ 'Center'|t }}</span></h2>
       <small>{{ request.user.username }}</small>
       {% if request.user.profile.store_name %}
       <div class="store-name">{{ request.user.profile.store_name }}</div>
       {% endif %}
     </div>
     <ul class="seller-nav">
-      <li class="nav-label">Main</li>
-      <li><a href="{% url 'store:seller_dashboard' %}" class="active"><i class="bi bi-grid"></i> Dashboard</a></li>
-      <li><a href="{% url 'store:seller_product_list' %}"><i class="bi bi-box-seam"></i> Products</a></li>
-      <li><a href="{% url 'store:seller_orders' %}"><i class="bi bi-truck"></i> Orders</a></li>
-      <li class="nav-label">Store</li>
-      {% if request.user.profile.store_slug %}<li><a href="{% url 'store:seller_storefront' request.user.profile.store_slug %}"><i class="bi bi-shop"></i> My Storefront</a></li>{% endif %}
-      <li class="nav-label">Quick Actions</li>
-      <li><a href="{% url 'store:seller_product_add' %}"><i class="bi bi-plus-lg"></i> Add Product</a></li>
-      <li><a href="{% url 'home' %}"><i class="bi bi-eye"></i> View Site</a></li>
+      <li class="nav-label">{{ 'Main'|t }}</li>
+      <li><a href="{% url 'store:seller_dashboard' %}" class="active"><i class="bi bi-grid"></i> {{ 'Dashboard'|t }}</a></li>
+      <li><a href="{% url 'store:seller_product_list' %}"><i class="bi bi-box-seam"></i> {{ 'Products'|t }}</a></li>
+      <li><a href="{% url 'store:seller_orders' %}"><i class="bi bi-truck"></i> {{ 'Orders'|t }}</a></li>
+      <li class="nav-label">{{ 'Store'|t }}</li>
+      {% if request.user.profile.store_slug %}<li><a href="{% url 'store:seller_storefront' request.user.profile.store_slug %}"><i class="bi bi-shop"></i> {{ 'My Storefront'|t }}</a></li>{% endif %}
+      <li class="nav-label">{{ 'Quick Actions'|t }}</li>
+      <li><a href="{% url 'store:seller_product_add' %}"><i class="bi bi-plus-lg"></i> {{ 'Add Product'|t }}</a></li>
+      <li><a href="{% url 'home' %}"><i class="bi bi-eye"></i> {{ 'View Site'|t }}</a></li>
     </ul>
   </aside>
 
   <main class="seller-main">
     <div class="sd-top-bar">
       <div>
-        <h1>Dashboard</h1>
-        <p class="page-sub">Welcome back, {{ request.user.username }}. Here's your store performance.</p>
+        <h1>{{ 'Dashboard'|t }}</h1>
+        <p class="page-sub">{{ 'Welcome back'|t }}, {{ request.user.username }}. {{ "Here's your store performance."|t }}</p>
       </div>
-      <a href="{% url 'store:seller_product_add' %}" class="sd-add-btn"><i class="bi bi-plus-lg"></i> Add Product</a>
+      <a href="{% url 'store:seller_product_add' %}" class="sd-add-btn"><i class="bi bi-plus-lg"></i> {{ 'Add Product'|t }}</a>
     </div>
 
     <div class="sd-stats-row-2">
@@ -44,56 +44,56 @@
         <div class="sd-quick-stat-icon gold"><i class="bi bi-box-seam"></i></div>
         <div>
           <div class="qnum">{{ total_products }}</div>
-          <div class="qlbl">Total Products</div>
+          <div class="qlbl">{{ 'Total Products'|t }}</div>
         </div>
       </div>
       <div class="sd-quick-stat">
         <div class="sd-quick-stat-icon blue"><i class="bi bi-graph-up-arrow"></i></div>
         <div>
           <div class="qnum">{{ total_units_sold }}</div>
-          <div class="qlbl">Units Sold</div>
+          <div class="qlbl">{{ 'Units Sold'|t }}</div>
         </div>
       </div>
       <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_orders' %}'">
         <div class="sd-quick-stat-icon green"><i class="bi bi-bag-check"></i></div>
         <div>
           <div class="qnum">{{ total_orders }}</div>
-          <div class="qlbl">Orders Received</div>
+          <div class="qlbl">{{ 'Orders Received'|t }}</div>
         </div>
       </div>
       <div class="sd-quick-stat">
         <div class="sd-quick-stat-icon purple"><i class="bi bi-currency-dollar"></i></div>
         <div>
-          <div class="qnum">${{ total_revenue|floatformat:0 }}</div>
-          <div class="qlbl">Total Revenue</div>
+          <div class="qnum">{{ total_revenue|currency }}</div>
+          <div class="qlbl">{{ 'Total Revenue'|t }}</div>
         </div>
       </div>
       <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_orders' %}'">
         <div class="sd-quick-stat-icon orange"><i class="bi bi-clock"></i></div>
         <div>
           <div class="qnum">{{ pending_orders }}</div>
-          <div class="qlbl">Pending Orders</div>
+          <div class="qlbl">{{ 'Pending Orders'|t }}</div>
         </div>
       </div>
       <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_orders' %}'">
         <div class="sd-quick-stat-icon green"><i class="bi bi-check-circle"></i></div>
         <div>
           <div class="qnum">{{ completed_orders }}</div>
-          <div class="qlbl">Delivered</div>
+          <div class="qlbl">{{ 'Delivered'|t }}</div>
         </div>
       </div>
       <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_product_list' %}?stock=out'">
         <div class="sd-quick-stat-icon red"><i class="bi bi-exclamation-triangle"></i></div>
         <div>
           <div class="qnum">{{ out_of_stock }}</div>
-          <div class="qlbl">Out of Stock</div>
+          <div class="qlbl">{{ 'Out of Stock'|t }}</div>
         </div>
       </div>
       <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_product_list' %}?stock=low'">
         <div class="sd-quick-stat-icon orange"><i class="bi bi-battery-half"></i></div>
         <div>
           <div class="qnum">{{ low_stock }}</div>
-          <div class="qlbl">Low Stock</div>
+          <div class="qlbl">{{ 'Low Stock'|t }}</div>
         </div>
       </div>
     </div>
@@ -101,7 +101,7 @@
     <div class="sd-card-grid">
       <div class="seller-card">
         <div class="seller-card-header">
-          <h3><i class="bi bi-trophy"></i> Top Selling Products</h3>
+          <h3><i class="bi bi-trophy"></i> {{ 'Top Selling Products'|t }}</h3>
         </div>
         <div class="seller-card-body">
           {% if top_products %}
@@ -122,7 +122,7 @@
           {% else %}
           <div class="seller-empty">
             <i class="bi bi-graph-down"></i>
-            <p>No sales data yet. Start selling!</p>
+            <p>{{ 'No sales data yet. Start selling!'|t }}</p>
           </div>
           {% endif %}
         </div>
@@ -130,7 +130,7 @@
 
       <div class="seller-card">
         <div class="seller-card-header">
-          <h3><i class="bi bi-currency-dollar"></i> Revenue by Product</h3>
+          <h3><i class="bi bi-currency-dollar"></i> {{ 'Revenue by Product'|t }}</h3>
         </div>
         <div class="seller-card-body">
           {% if top_products %}
@@ -151,7 +151,7 @@
           {% else %}
           <div class="seller-empty">
             <i class="bi bi-currency-dollar"></i>
-            <p>No revenue data yet.</p>
+            <p>{{ 'No revenue data yet.'|t }}</p>
           </div>
           {% endif %}
         </div>
@@ -161,27 +161,27 @@
     <div class="sd-card-grid">
       <div class="seller-card">
         <div class="seller-card-header">
-          <h3><i class="bi bi-clock-history"></i> Recent Orders</h3>
-          <a href="{% url 'store:seller_orders' %}" class="seller-card-link">View All →</a>
+          <h3><i class="bi bi-clock-history"></i> {{ 'Recent Orders'|t }}</h3>
+          <a href="{% url 'store:seller_orders' %}" class="seller-card-link">{{ 'View All'|t }} →</a>
         </div>
         <div class="sd-order-filter-bar">
-          <a href="{% url 'store:seller_orders' %}" class="pl-filter active">All</a>
-          <a href="{% url 'store:seller_orders' %}?status=Pending" class="pl-filter">Pending</a>
-          <a href="{% url 'store:seller_orders' %}?status=Processing" class="pl-filter">Processing</a>
-          <a href="{% url 'store:seller_orders' %}?status=Shipped" class="pl-filter">Shipped</a>
-          <a href="{% url 'store:seller_orders' %}?status=Delivered" class="pl-filter">Delivered</a>
-          <a href="{% url 'store:seller_orders' %}?status=Cancelled" class="pl-filter">Cancelled</a>
+          <a href="{% url 'store:seller_orders' %}" class="pl-filter active">{{ 'All'|t }}</a>
+          <a href="{% url 'store:seller_orders' %}?status=Pending" class="pl-filter">{{ 'Pending'|t }}</a>
+          <a href="{% url 'store:seller_orders' %}?status=Processing" class="pl-filter">{{ 'Processing'|t }}</a>
+          <a href="{% url 'store:seller_orders' %}?status=Shipped" class="pl-filter">{{ 'Shipped'|t }}</a>
+          <a href="{% url 'store:seller_orders' %}?status=Delivered" class="pl-filter">{{ 'Delivered'|t }}</a>
+          <a href="{% url 'store:seller_orders' %}?status=Cancelled" class="pl-filter">{{ 'Cancelled'|t }}</a>
         </div>
         <div class="seller-card-body">
           {% if recent_orders %}
           <table class="seller-table">
             <thead>
               <tr>
-                <th>Order</th>
-                <th>Customer</th>
-                <th>Status</th>
-                <th>Total</th>
-                <th>Date</th>
+                <th>{{ 'Order'|t }}</th>
+                <th>{{ 'Customer'|t }}</th>
+                <th>{{ 'Status'|t }}</th>
+                <th>{{ 'Total'|t }}</th>
+                <th>{{ 'Date'|t }}</th>
               </tr>
             </thead>
             <tbody>
@@ -190,7 +190,7 @@
                 <td style="color:#f0ece4;font-weight:600;">#{{ order.order_number|default:order.id }}</td>
                 <td style="color:#999;font-size:0.78rem;">{{ order.user.username|default:'—' }}</td>
                 <td>
-                  <span class="sd-status" data-status="{{ order.status }}">{{ order.get_status_display }}</span>
+                  <span class="sd-status" data-status="{{ order.status }}">{{ order.get_status_display|t }}</span>
                 </td>
                 <td><span style="color:#d4af37;font-weight:600;">${{ order.total_amount }}</span></td>
                 <td style="color:#666;font-size:0.75rem;">{{ order.created_at|date:"M d, Y" }}</td>
@@ -201,7 +201,7 @@
           {% else %}
           <div class="seller-empty">
             <i class="bi bi-truck"></i>
-            <p>No orders yet.</p>
+            <p>{{ 'No orders yet.'|t }}</p>
           </div>
           {% endif %}
         </div>
@@ -209,26 +209,26 @@
 
       <div class="seller-card">
         <div class="seller-card-header">
-          <h3><i class="bi bi-box-seam"></i> Recent Products</h3>
-          <a href="{% url 'store:seller_product_list' %}" class="seller-card-link">View All →</a>
+          <h3><i class="bi bi-box-seam"></i> {{ 'Recent Products'|t }}</h3>
+          <a href="{% url 'store:seller_product_list' %}" class="seller-card-link">{{ 'View All'|t }} →</a>
         </div>
         <div class="sd-order-filter-bar">
-          <a href="{% url 'store:seller_product_list' %}" class="pl-filter active">All</a>
-          <a href="{% url 'store:seller_product_list' %}?stock=low" class="pl-filter">Low Stock</a>
-          <a href="{% url 'store:seller_product_list' %}?stock=out" class="pl-filter">Out of Stock</a>
-          <a href="{% url 'store:seller_product_add' %}" class="pl-filter" style="color:#d4af37;">+ Add New</a>
+          <a href="{% url 'store:seller_product_list' %}" class="pl-filter active">{{ 'All'|t }}</a>
+          <a href="{% url 'store:seller_product_list' %}?stock=low" class="pl-filter">{{ 'Low Stock'|t }}</a>
+          <a href="{% url 'store:seller_product_list' %}?stock=out" class="pl-filter">{{ 'Out of Stock'|t }}</a>
+          <a href="{% url 'store:seller_product_add' %}" class="pl-filter" style="color:#d4af37;">+ {{ 'Add New'|t }}</a>
         </div>
         <div class="seller-card-body">
           {% if recent_products %}
           <table class="seller-table">
             <thead>
               <tr>
-                <th style="width:50px;">Image</th>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Stock</th>
-                <th>Status</th>
-                <th>Edit</th>
+                <th style="width:50px;">{{ 'Image'|t }}</th>
+                <th>{{ 'Product'|t }}</th>
+                <th>{{ 'Price'|t }}</th>
+                <th>{{ 'Stock'|t }}</th>
+                <th>{{ 'Status'|t }}</th>
+                <th>{{ 'Edit'|t }}</th>
               </tr>
             </thead>
             <tbody>
@@ -242,7 +242,7 @@
                   {% endif %}
                 </td>
                 <td><a href="{% url 'store:seller_product_edit' product.id %}" class="product-name">{{ product.name|truncatechars:45 }}</a></td>
-                <td style="color:#d4af37;font-weight:600;">${{ product.price }}</td>
+                <td style="color:#d4af37;font-weight:600;">{{ product.price|currency }}</td>
                 <td>
                   {% if product.stock == 0 %}
                     <span class="sd-stock sd-stock-out">{{ product.stock }}</span>
@@ -253,9 +253,9 @@
                   {% endif %}
                 </td>
                 <td>
-                  {% if product.is_sale %}<span class="sd-badge sd-badge-sale">Sale</span>{% endif %}
-                  {% if product.is_featured %}<span class="sd-badge sd-badge-featured">Featured</span>{% endif %}
-                  {% if not product.is_sale and not product.is_featured %}<span style="color:#666;">Active</span>{% endif %}
+                  {% if product.is_sale %}<span class="sd-badge sd-badge-sale">{{ 'Sale'|t }}</span>{% endif %}
+                  {% if product.is_featured %}<span class="sd-badge sd-badge-featured">{{ 'Featured'|t }}</span>{% endif %}
+                  {% if not product.is_sale and not product.is_featured %}<span style="color:#666;">{{ 'Active'|t }}</span>{% endif %}
                 </td>
                 <td><a href="{% url 'store:seller_product_edit' product.id %}" style="color:#3b82f6;font-size:0.75rem;text-decoration:none;font-weight:600;"><i class="bi bi-pencil"></i></a></td>
               </tr>
@@ -265,8 +265,8 @@
           {% else %}
           <div class="seller-empty">
             <i class="bi bi-box-seam"></i>
-            <p>No products yet. Start adding your first product!</p>
-            <a href="{% url 'store:seller_product_add' %}" class="seller-card-link">Add Product →</a>
+            <p>{{ 'No products yet. Start adding your first product!'|t }}</p>
+            <a href="{% url 'store:seller_product_add' %}" class="seller-card-link">{{ 'Add Product'|t }} →</a>
           </div>
           {% endif %}
         </div>
@@ -276,12 +276,12 @@
     {% if total_revenue %}
     <div class="seller-card">
       <div class="seller-card-header">
-        <h3><i class="bi bi-bar-chart"></i> Performance Summary</h3>
+        <h3><i class="bi bi-bar-chart"></i> {{ 'Performance Summary'|t }}</h3>
       </div>
       <div class="seller-card-body" style="padding:16px 20px;">
         <div style="display:flex;flex-wrap:wrap;gap:16px;">
           <div style="flex:1;min-width:140px;background:#0e0e0e;border-radius:8px;padding:14px 16px;border:1px solid #1a1a1a;">
-            <div style="font-size:0.68rem;color:#777;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Conversion Rate</div>
+            <div style="font-size:0.68rem;color:#777;text-transform:uppercase;letter-spacing:1px;font-weight:600;">{{ 'Conversion Rate'|t }}</div>
             <div style="font-size:1.5rem;font-weight:800;color:#f0ece4;margin-top:4px;">
               {% if total_products > 0 %}
                 {% widthratio total_orders total_products 100 %}%
@@ -289,19 +289,19 @@
             </div>
           </div>
           <div style="flex:1;min-width:140px;background:#0e0e0e;border-radius:8px;padding:14px 16px;border:1px solid #1a1a1a;">
-            <div style="font-size:0.68rem;color:#777;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Avg Order Value</div>
+            <div style="font-size:0.68rem;color:#777;text-transform:uppercase;letter-spacing:1px;font-weight:600;">{{ 'Avg Order Value'|t }}</div>
             <div style="font-size:1.5rem;font-weight:800;color:#f0ece4;margin-top:4px;">
               {% if total_orders > 0 %}${{ total_revenue|floatformat:0 }}{% else %}$0{% endif %}
             </div>
           </div>
           <div style="flex:1;min-width:140px;background:#0e0e0e;border-radius:8px;padding:14px 16px;border:1px solid #1a1a1a;">
-            <div style="font-size:0.68rem;color:#777;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Revenue per Unit</div>
+            <div style="font-size:0.68rem;color:#777;text-transform:uppercase;letter-spacing:1px;font-weight:600;">{{ 'Revenue per Unit'|t }}</div>
             <div style="font-size:1.5rem;font-weight:800;color:#f0ece4;margin-top:4px;">
               {% if total_units_sold > 0 %}${{ revenue_per_unit|floatformat:0 }}{% else %}$0{% endif %}
             </div>
           </div>
           <div style="flex:1;min-width:140px;background:#0e0e0e;border-radius:8px;padding:14px 16px;border:1px solid #1a1a1a;">
-            <div style="font-size:0.68rem;color:#777;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Stock Health</div>
+            <div style="font-size:0.68rem;color:#777;text-transform:uppercase;letter-spacing:1px;font-weight:600;">{{ 'Stock Health'|t }}</div>
             <div style="font-size:1.5rem;font-weight:800;color:#f0ece4;margin-top:4px;">
               {% with total=total_products|add:1 %}
                 {% widthratio out_of_stock total 100 %}% OOS

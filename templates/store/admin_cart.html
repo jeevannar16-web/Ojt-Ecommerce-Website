@@ -1,7 +1,7 @@
 {% extends 'layout/base.html' %}
 {% load static %}
 
-{% block title %}Cart Management — Admin{% endblock %}
+{% block title %}{{ 'Cart Management'|t }} — FITNESS HUB{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/admin_activity_log.css' %}">
@@ -11,37 +11,37 @@
 <div class="admin-layout">
   <aside class="admin-sidebar">
     <div class="brand">
-      <h2>Admin <span>Panel</span></h2>
+      <h2>{{ 'Admin'|t }} <span>{{ 'Panel'|t }}</span></h2>
       <small>{{ request.user.username }}</small>
     </div>
     <ul class="admin-nav">
-      <li class="nav-label">Management</li>
-      <li><a href="{% url 'store:admin_dashboard' %}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
-      <li><a href="{% url 'store:admin_activity_log' %}"><i class="bi bi-clock-history"></i> Activity Log</a></li>
-      <li><a href="{% url 'store:admin_favorites' %}"><i class="bi bi-heart-fill"></i> Favorites</a></li>
-      <li><a href="{% url 'store:admin_cart' %}" class="active"><i class="bi bi-bag-plus"></i> Cart</a></li>
-      <li><a href="{% url 'admin:index' %}" target="_blank"><i class="bi bi-gear"></i> Django Admin</a></li>
-      <li><a href="{% url 'admin:auth_user_changelist' %}" target="_blank"><i class="bi bi-people"></i> Users</a></li>
-      <li><a href="{% url 'admin:store_product_changelist' %}" target="_blank"><i class="bi bi-box-seam"></i> Products</a></li>
-      <li><a href="{% url 'admin:store_order_changelist' %}" target="_blank"><i class="bi bi-truck"></i> Orders</a></li>
-      <li class="nav-label">Store</li>
-      <li><a href="{% url 'home' %}"><i class="bi bi-shop"></i> View Site</a></li>
-      <li><a href="{% url 'store:seller_dashboard' %}"><i class="bi bi-shop"></i> Seller View</a></li>
+      <li class="nav-label">{{ 'Management'|t }}</li>
+      <li><a href="{% url 'store:admin_dashboard' %}"><i class="bi bi-speedometer2"></i> {{ 'Dashboard'|t }}</a></li>
+      <li><a href="{% url 'store:admin_activity_log' %}"><i class="bi bi-clock-history"></i> {{ 'Activity Log'|t }}</a></li>
+      <li><a href="{% url 'store:admin_favorites' %}"><i class="bi bi-heart-fill"></i> {{ 'Favorites'|t }}</a></li>
+      <li><a href="{% url 'store:admin_cart' %}" class="active"><i class="bi bi-bag-plus"></i> {{ 'Cart'|t }}</a></li>
+      <li><a href="{% url 'admin:index' %}" target="_blank"><i class="bi bi-gear"></i> {{ 'Django Admin'|t }}</a></li>
+      <li><a href="{% url 'admin:auth_user_changelist' %}" target="_blank"><i class="bi bi-people"></i> {{ 'Users'|t }}</a></li>
+      <li><a href="{% url 'admin:store_product_changelist' %}" target="_blank"><i class="bi bi-box-seam"></i> {{ 'Products'|t }}</a></li>
+      <li><a href="{% url 'admin:store_order_changelist' %}" target="_blank"><i class="bi bi-truck"></i> {{ 'Orders'|t }}</a></li>
+      <li class="nav-label">{{ 'Store'|t }}</li>
+      <li><a href="{% url 'home' %}"><i class="bi bi-shop"></i> {{ 'View Site'|t }}</a></li>
+      <li><a href="{% url 'store:seller_dashboard' %}"><i class="bi bi-shop"></i> {{ 'Seller View'|t }}</a></li>
     </ul>
   </aside>
 
   <main class="admin-main">
-    <h1><i class="bi bi-bag-plus" style="color:#3b82f6;"></i> Cart Management</h1>
-    <p class="page-sub">{{ total_cart_items }} items in carts across {{ total_cart_users }} active users.</p>
+    <h1><i class="bi bi-bag-plus" style="color:#3b82f6;"></i> {{ 'Cart Management'|t }}</h1>
+    <p class="page-sub">{{ total_cart_items }} {{ 'items in carts across'|t }} {{ total_cart_users }} {{ 'active users.'|t }}</p>
 
     <div class="stats-row" style="margin-bottom:18px;">
-      <div class="stat-box"><div class="num">{{ total_cart_items }}</div><div class="lbl">Cart Items</div></div>
-      <div class="stat-box"><div class="num">{{ total_cart_users }}</div><div class="lbl">Active Users</div></div>
-      <div class="stat-box"><div class="num">{{ total_qty }}</div><div class="lbl">Total Qty</div></div>
+      <div class="stat-box"><div class="num">{{ total_cart_items }}</div><div class="lbl">{{ 'Cart Items'|t }}</div></div>
+      <div class="stat-box"><div class="num">{{ total_cart_users }}</div><div class="lbl">{{ 'Active Users'|t }}</div></div>
+      <div class="stat-box"><div class="num">{{ total_qty }}</div><div class="lbl">{{ 'Total Qty'|t }}</div></div>
     </div>
 
     <div class="admin-card" style="margin-bottom:18px;">
-      <div class="card-hd"><h3><i class="bi bi-bar-chart"></i> Most Added to Cart</h3></div>
+      <div class="card-hd"><h3><i class="bi bi-bar-chart"></i> {{ 'Most Added to Cart'|t }}</h3></div>
       <div class="card-bd">
         <div style="display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px;">
           {% for p in top_carted %}
@@ -49,35 +49,35 @@
             <b style="color:#3b82f6;">{{ p.count }}×</b> {{ p.product__name|truncatechars:35 }}
           </span>
           {% empty %}
-          <span style="color:#555;">No cart data yet.</span>
+          <span style="color:#555;">{{ 'No cart data yet.'|t }}</span>
           {% endfor %}
         </div>
       </div>
     </div>
 
     <form method="GET" class="filter-bar">
-      <label>User</label>
-      <input type="text" name="user" placeholder="Username..." value="{{ current_user }}">
-      <label>Product</label>
-      <input type="text" name="product" placeholder="Product name..." value="{{ current_product }}">
-      <label>From</label>
+      <label>{{ 'User'|t }}</label>
+      <input type="text" name="user" placeholder="{{ 'Username...'|t }}" value="{{ current_user }}">
+      <label>{{ 'Product'|t }}</label>
+      <input type="text" name="product" placeholder="{{ 'Product name...'|t }}" value="{{ current_product }}">
+      <label>{{ 'From'|t }}</label>
       <input type="date" name="date_from" value="{{ current_date_from }}">
-      <label>To</label>
+      <label>{{ 'To'|t }}</label>
       <input type="date" name="date_to" value="{{ current_date_to }}">
-      <button type="submit" class="filter-btn"><i class="bi bi-funnel"></i> Filter</button>
-      <a href="{% url 'store:admin_cart' %}" class="filter-reset">Clear</a>
+      <button type="submit" class="filter-btn"><i class="bi bi-funnel"></i> {{ 'Filter'|t }}</button>
+      <a href="{% url 'store:admin_cart' %}" class="filter-reset">{{ 'Clear'|t }}</a>
     </form>
 
     <div class="al-table-wrap">
       <table class="al-table">
         <thead>
           <tr>
-            <th>User</th>
-            <th>Product</th>
-            <th>Size</th>
-            <th>Qty</th>
-            <th>Total</th>
-            <th>Added At</th>
+            <th>{{ 'User'|t }}</th>
+            <th>{{ 'Product'|t }}</th>
+            <th>{{ 'Size'|t }}</th>
+            <th>{{ 'Qty'|t }}</th>
+            <th>{{ 'Total'|t }}</th>
+            <th>{{ 'Added At'|t }}</th>
           </tr>
         </thead>
         <tbody>
@@ -87,12 +87,12 @@
             <td style="color:#f0ece4;font-weight:500;">{{ item.product.name|truncatechars:55 }}</td>
             <td>{% if item.size %}<span style="color:#d4af37;">{{ item.size }}</span>{% else %}<span style="color:#444;">—</span>{% endif %}</td>
             <td>{{ item.quantity }}</td>
-            <td><span style="color:#2ec4b6;font-weight:600;">${{ item.total_price|floatformat:2 }}</span></td>
+            <td><span style="color:#2ec4b6;font-weight:600;">{{ item.total_price|currency }}</span></td>
             <td class="al-time">{{ item.added_at|date:"M d, Y H:i" }}</td>
           </tr>
           {% empty %}
           <tr>
-            <td colspan="6" style="text-align:center;padding:40px;color:#555;">No cart items found.</td>
+            <td colspan="6" style="text-align:center;padding:40px;color:#555;">{{ 'No cart items found.'|t }}</td>
           </tr>
           {% endfor %}
         </tbody>

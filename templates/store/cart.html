@@ -1,93 +1,355 @@
 {% extends 'layout/base.html' %}
+{% load static %}
 
-{% block title %}My Cart — FitnessHub{% endblock %}
+{% block title %}My Cart — FITNESS HUB{% endblock %}
 
 {% block content %}
-<div style="max-width: 1000px; margin: 60px auto; padding: 0 2rem; font-family: sans-serif; color: #fff;">
-    <h2 style="font-family: var(--font-display); font-size: 2.2rem; margin-bottom: 24px;">Your Shopping <span style="color: #d4af37;">Cart</span></h2>
+<div data-cart-container style="max-width: 1000px; margin: 60px auto; padding: 0 2rem; font-family: sans-serif; color: #fff;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+        <h2 style="font-family: var(--font-display); font-size: 2.2rem; margin:0;">{{ 'Your Shopping'|t }} <span style="color: #d4af37;">{{ 'Cart'|t }}</span></h2>
+        <button id="filter-toggle" type="button" style="background:transparent;border:1px solid rgba(255,255,255,0.12);color:#aaa;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">
+            <i class="bi bi-funnel"></i> {{ 'Filters'|t }}
+        </button>
+    </div>
 
     {% if cart_items %}
+
+    <div id="filter-panel" style="display:none;background:var(--clr-card,#121212);border:1px solid var(--clr-border,rgba(255,255,255,0.05));border-radius:12px;padding:1.25rem;margin-bottom:1.5rem;"{% if filters.current_category or filters.current_seller or filters.current_price_min or filters.current_price_max or filters.current_date_from or filters.current_date_to %} data-filter-active="1"{% endif %}>
+        <form method="GET" action="" id="cart-filter-form">
+          <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:end;">
+            <div style="flex:1;min-width:140px;">
+              <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:#666;display:block;margin-bottom:4px;">{{ 'Category'|t }}</label>
+              <select name="category" style="width:100%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#ccc;font-size:0.82rem;">
+                <option value="">{{ 'All Categories'|t }}</option>
+                {% for c in filters.categories %}
+                <option value="{{ c.name }}" {% if filters.current_category == c.name %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div style="flex:1;min-width:140px;">
+              <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:#666;display:block;margin-bottom:4px;">{{ 'Seller'|t }}</label>
+              <select name="seller" style="width:100%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#ccc;font-size:0.82rem;">
+                <option value="">{{ 'All Sellers'|t }}</option>
+                {% for s in filters.sellers %}
+                <option value="{{ s }}" {% if filters.current_seller == s %}selected{% endif %}>{{ s }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div style="flex:1;min-width:140px;">
+              <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:#666;display:block;margin-bottom:4px;">{{ 'Sort By'|t }}</label>
+              <select name="sort" style="width:100%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#ccc;font-size:0.82rem;">
+                <option value="newest" {% if filters.current_sort == 'newest' or not filters.current_sort %}selected{% endif %}>{{ 'Newest First'|t }}</option>
+                <option value="oldest" {% if filters.current_sort == 'oldest' %}selected{% endif %}>{{ 'Oldest First'|t }}</option>
+                <option value="price_asc" {% if filters.current_sort == 'price_asc' %}selected{% endif %}>{{ 'Price: Low to High'|t }}</option>
+                <option value="price_desc" {% if filters.current_sort == 'price_desc' %}selected{% endif %}>{{ 'Price: High to Low'|t }}</option>
+                <option value="name_asc" {% if filters.current_sort == 'name_asc' %}selected{% endif %}>{{ 'Name A-Z'|t }}</option>
+                <option value="qty_desc" {% if filters.current_sort == 'qty_desc' %}selected{% endif %}>{{ 'Most Quantity'|t }}</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:end;margin-top:1rem;">
+            <div style="flex:1;min-width:120px;">
+              <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:#666;display:block;margin-bottom:4px;">{{ 'Min Price'|t }}</label>
+              <input type="number" name="price_min" value="{{ filters.current_price_min }}" placeholder="0" min="0" style="width:100%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#fff;font-size:0.82rem;box-sizing:border-box;">
+            </div>
+            <div style="flex:1;min-width:120px;">
+              <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:#666;display:block;margin-bottom:4px;">{{ 'Max Price'|t }}</label>
+              <input type="number" name="price_max" value="{{ filters.current_price_max }}" placeholder="999" min="0" style="width:100%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#fff;font-size:0.82rem;box-sizing:border-box;">
+            </div>
+            <div style="flex:1;min-width:120px;">
+              <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:#666;display:block;margin-bottom:4px;">{{ 'Date From'|t }}</label>
+              <input type="date" name="date_from" value="{{ filters.current_date_from }}" style="width:100%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#fff;font-size:0.82rem;box-sizing:border-box;color-scheme:dark;">
+            </div>
+            <div style="flex:1;min-width:120px;">
+              <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:#666;display:block;margin-bottom:4px;">{{ 'Date To'|t }}</label>
+              <input type="date" name="date_to" value="{{ filters.current_date_to }}" style="width:100%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#fff;font-size:0.82rem;box-sizing:border-box;color-scheme:dark;">
+            </div>
+            <div style="display:flex;gap:6px;align-items:end;flex-wrap:wrap;">
+              <button type="submit" style="background:#d4af37;color:#0d0d0d;border:none;padding:7px 18px;border-radius:6px;font-weight:700;font-size:0.78rem;cursor:pointer;text-transform:uppercase;">{{ 'Apply'|t }}</button>
+              <a href="{% url 'store:cart' %}" style="background:transparent;border:1px solid rgba(255,255,255,0.1);color:#666;padding:7px 14px;border-radius:6px;font-size:0.78rem;text-decoration:none;cursor:pointer;">{{ 'Clear'|t }}</a>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
+            <button type="button" class="date-preset" data-days="1" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:#888;padding:4px 12px;border-radius:5px;font-size:0.72rem;cursor:pointer;">{{ 'Today'|t }}</button>
+            <button type="button" class="date-preset" data-days="7" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:#888;padding:4px 12px;border-radius:5px;font-size:0.72rem;cursor:pointer;">{{ 'Last 7 Days'|t }}</button>
+            <button type="button" class="date-preset" data-days="30" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:#888;padding:4px 12px;border-radius:5px;font-size:0.72rem;cursor:pointer;">{{ 'Last 30 Days'|t }}</button>
+          </div>
+        </form>
+    </div>
         
-        <div style="background: var(--clr-card, #121212); border: 1px solid var(--clr-border, rgba(255, 255, 255, 0.05)); padding: 1.5rem; border-radius: var(--radius, 12px); margin-bottom: 2rem;">
-            <form method="GET" action="" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-                <div style="flex-grow: 1; min-width: 250px;">
-                    <label style="color: #888; font-size: 0.8rem; text-transform: uppercase; display: block; margin-bottom: 0.5rem;">Have a Promo Code?</label>
-                    <input type="text" name="promo_code" value="{{ promo_code|default:'' }}" placeholder="e.g. FIT-CODEX" style="width: 100%; background: var(--clr-bg, #1a1a1a); border: 1px solid rgba(212, 175, 55, 0.3); padding: 0.75rem; border-radius: 6px; color: #fff; outline: none;">
-                </div>
-                <button type="submit" style="background: transparent; border: 1px solid #d4af37; color: #d4af37; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; margin-top: 1.3rem;">
-                    Apply
-                </button>
-            </form>
+        <div style="background: var(--clr-card, #121212); border: 1px solid var(--clr-border, rgba(255, 255, 255, 0.05)); border-radius: var(--radius, 12px); padding: 24px; margin-bottom: 30px;">
 
-            {% if promo_applied %}
-                <p style="color: #2a9d8f; font-size: 0.85rem; margin: 0.75rem 0 0 0; font-weight: bold;">✓ Code applied successfully!</p>
-            {% endif %}
-        </div>
-
-        {% if total_amount <= 20.0 %}
-        <div style="background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; padding: 1.25rem; border-radius: 8px; margin-bottom: 2rem; font-size: 0.9rem; line-height: 1.4;">
-            💡 <strong>Micro-Order Status unlocked!</strong> Your total is under <strong>$20.00</strong>. 
-            <br><span style="color: #d4af37;">Tip: Use code <strong style="letter-spacing: 1px;">FIT-CODEX</strong> to apply a threshold tester clearance markdown!</span>
-        </div>
-        {% endif %}
-
-        <div style="background: var(--clr-card, #121212); border: 1px solid var(--clr-border, rgba(255,255,255,0.05)); border-radius: var(--radius, 12px); padding: 24px; margin-bottom: 30px;">
+            <div style="display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:4px;">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:#aaa;">
+                <input type="checkbox" id="select-all" checked>
+                {{ 'Select All'|t }}
+              </label>
+              <span style="color:rgba(255,255,255,0.1);">|</span>
+              <span style="font-size:0.78rem;color:#555;" id="selected-count">{{ cart_items|length }} {{ 'item(s) selected'|t }}</span>
+              <span style="flex:1;"></span>
+              <button type="button" id="remove-selected-btn" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:6px;padding:5px 14px;color:#ef4444;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:5px;"><i class="bi bi-trash3"></i> {{ 'Remove Selected'|t }}</button>
+            </div>
 
             {% for item in cart_items %}
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 16px 0; gap: 20px;">
-                    <div>
-                        <h4 style="font-size: 1.1rem; color: #fff; margin: 0 0 4px 0;">{{ item.product.name }}{% if item.size %} <span style="color:#d4af37;font-size:0.85rem;">· {{ item.size }}</span>{% endif %}</h4>
-                        
-                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.6rem;">
-                            <span style="color: #888; font-size: 0.9rem;">Price: ${{ item.product.price }}</span>
-                        <span style="color: rgba(255,255,255,0.15);">|</span>
-                        
-                        <a href="{% url 'store:update_cart_quantity' item.id 'remove' %}" style="text-decoration: none; color: #fff; background: rgba(255,255,255,0.06); width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-weight: bold; font-size: 0.9rem;">-</a>
-                        
-                        <span style="color: #fff; font-weight: bold; font-size: 0.95rem; min-width: 18px; text-align: center;">{{ item.quantity }}</span>
-                        
-                        <a href="{% url 'store:update_cart_quantity' item.id 'add' %}" style="text-decoration: none; color: #fff; background: rgba(255,255,255,0.06); width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-weight: bold; font-size: 0.9rem;">+</a>
-                        
-                        <span style="color: rgba(255,255,255,0.15);">|</span>
-                        
-                        <a href="{% url 'store:update_cart_quantity' item.id 'delete' %}" style="text-decoration: none; color: #ef4444; font-size: 0.8rem; text-transform: uppercase; font-weight: 700;">Remove</a>
+            <div data-cart-row data-item-id="{{ item.id }}" style="display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 16px 0; gap: 16px;">
+                <div style="flex:0 0 30px;">
+                  <input type="checkbox" data-cart-checkbox class="cart-item-cb" checked style="width:18px;height:18px;cursor:pointer;accent-color:#d4af37;">
+                </div>
+                <div style="flex:1;min-width:0;">
+                    <h4 style="font-size: 1.05rem; color: #fff; margin: 0 0 2px 0;">{{ item.product.name|t }}{% if item.size %} <span style="color:#d4af37;font-size:0.82rem;">{{ item.size }}</span>{% endif %}</h4>
+                    <div style="font-size:0.7rem;color:#555;margin-bottom:4px;">
+                      {{ item.product.category.name|t }}
+                      {% if item.product.seller %} · {{ item.product.seller.username }}{% endif %}
+                      {% if item.added_at %} · {{ 'Added'|t }} {{ item.added_at|date:"M d" }}{% endif %}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap:wrap;">
+                        <span data-cart-price data-unit-price="{{ item.product.price }}" style="color: #888; font-size: 0.9rem;">{{ item.product.price|currency }}</span>
+                    <span style="color: rgba(255,255,255,0.15);">|</span>
+                    
+                    <a href="{% url 'store:update_cart_quantity' item.id 'remove' %}" data-cart-action="remove" style="text-decoration: none; color: #fff; background: rgba(255,255,255,0.06); width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-weight: bold; font-size: 0.9rem;">-</a>
+                    
+                    <span data-cart-qty style="color: #fff; font-weight: bold; font-size: 0.95rem; min-width: 18px; text-align: center;">{{ item.quantity }}</span>
+                    
+                    <a href="{% url 'store:update_cart_quantity' item.id 'add' %}" data-cart-action="add" style="text-decoration: none; color: #fff; background: rgba(255,255,255,0.06); width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-weight: bold; font-size: 0.9rem;">+</a>
+                    
+                    <span style="color: rgba(255,255,255,0.15);">|</span>
+                    
+                    <a href="{% url 'store:update_cart_quantity' item.id 'delete' %}" data-cart-action="delete" style="text-decoration: none; color: #ef4444; font-size: 0.78rem; text-transform: uppercase; font-weight: 700;">{{ 'Remove'|t }}</a>
                     </div>
                 </div>
                 
-                <div style="font-family: var(--font-display); font-size: 1.2rem; color: #d4af37; font-weight: 600;">
-                    ${{ item.total_price }}
+                <div style="flex:0 0 auto;text-align:right;">
+                  <div data-cart-total style="font-family: var(--font-display); font-size: 1.2rem; color: #d4af37; font-weight: 600;">
+                      {{ item.total_price|currency }}
+                  </div>
                 </div>
             </div>
             {% endfor %}
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1);">
-                <span style="font-size: 1.1rem; color: var(--clr-muted, #888);">Grand Total:</span>
-                <span style="font-family: var(--font-display); font-size: 1.8rem; color: var(--clr-accent, #d4af37); font-weight: 700;">${{ total_amount }}</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <span id="selected-label" style="font-size: 0.9rem; color: var(--clr-muted, #888);">{{ 'Selected Total:'|t }}</span>
+                <span id="cart-grand-total" style="font-family: var(--font-display); font-size: 1.8rem; color: var(--clr-accent, #d4af37); font-weight: 700;">{{ total_amount|currency }}</span>
             </div>
         </div>
 
         <div style="background: var(--clr-card, #121212); border: 1px solid var(--clr-border, rgba(255,255,255,0.05)); border-radius: var(--radius, 12px); padding: 24px; display: flex; flex-direction: column; gap: 16px; text-align: center;">
-            <h3 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--clr-accent, #d4af37); margin: 0;">Ready to Checkout?</h3>
-            <p style="color: #888; font-size: 0.9rem; margin: 0;">
-                Fill in your shipping details and place your order on the secure checkout page.
+            <h3 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--clr-accent, #d4af37); margin: 0;">{{ 'Ready to Checkout?'|t }}</h3>
+            <p style="color: #888; font-size: 0.9rem; margin: 0;" id="checkout-hint">
+                {{ 'Select the items you want to purchase.'|t }}
             </p>
-            <a href="{% url 'store:checkout' %}"
+            <a href="javascript:void(0)" id="checkout-btn"
                style="display: inline-block; background: #f57224; color: #fff; text-decoration: none; border: none; padding: 16px 0; border-radius: 8px; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 1rem; letter-spacing: 0.5px; text-align: center;">
                 <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor;margin-right:8px;vertical-align:middle;" xmlns="http://www.w3.org/2000/svg">
                     <path d="M13 2L4 14h6v8l9-12h-6z"/>
                 </svg>
-                Proceed to Checkout
+                {{ 'Proceed to Checkout'|t }}
             </a>
             <div style="font-size:0.75rem;color:#555;">
-                <i class="bi bi-shield-lock-fill me-1"></i> Secure checkout · Your info is protected
+                <i class="bi bi-shield-lock-fill me-1"></i> {{ 'Secure checkout'|t }} · {{ 'Your info is protected'|t }}
             </div>
         </div>
 
     {% else %}
         <div style="text-align: center; padding: 60px 0; color: var(--clr-muted, #888);">
-            <p style="font-size: 1.2rem; margin-bottom: 20px;">Your shopping cart is completely empty.</p>
-            <a href="{% url 'store:sale_catalog' %}" style="color: #d4af37; text-decoration: none; font-weight: 600;">Go Back to Storefront →</a>
+            <p style="font-size: 1.2rem; margin-bottom: 20px;">{{ 'Your shopping cart is completely empty.'|t }}</p>
+            <a href="{% url 'store:sale_catalog' %}" style="color: #d4af37; text-decoration: none; font-weight: 600;">{{ 'Go Back to Storefront'|t }} →</a>
         </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  var container = document.querySelector('[data-cart-container]');
+  if (!container) return;
+
+  function showEmptyCart() {
+    var titleBar = container.querySelector('div:first-child');
+    container.innerHTML = '';
+    if (titleBar) container.appendChild(titleBar.cloneNode(true));
+    var emptyDiv = document.createElement('div');
+    emptyDiv.style.cssText = 'text-align:center;padding:60px 0;color:#888;';
+    emptyDiv.innerHTML = '<p style="font-size:1.2rem;margin-bottom:20px;">{{ 'Your shopping cart is completely empty.'|t }}</p><a href="{% url 'store:sale_catalog' %}" style="color:#d4af37;text-decoration:none;font-weight:600;">{{ 'Go Back to Storefront'|t }} →</a>';
+    container.appendChild(emptyDiv);
+  }
+
+  function recalcTotal() {
+    var checked = container.querySelectorAll('[data-cart-checkbox]:checked');
+    var countEl = document.getElementById('selected-count');
+    var hintEl = document.getElementById('checkout-hint');
+    var checkoutBtn = document.getElementById('checkout-btn');
+    if (countEl) countEl.textContent = checked.length + ' item(s) selected';
+    
+    var grandTotal = 0;
+    checked.forEach(function(cb) {
+      var row = cb.closest('[data-cart-row]');
+      if (!row) return;
+      var t = row.querySelector('[data-cart-total]');
+      if (t) grandTotal += parseFloat(t.textContent.replace(/[^0-9.-]/g, '')) || 0;
+    });
+    var grandEl = document.getElementById('cart-grand-total');
+    if (grandEl) grandEl.textContent = '$' + grandTotal.toFixed(2);
+
+    if (hintEl) {
+      hintEl.textContent = checked.length === 0
+        ? 'Please select at least one item to checkout.'
+        : checked.length + ' item(s) selected for checkout.';
+    }
+    if (checkoutBtn) {
+      checkoutBtn.style.opacity = checked.length === 0 ? '0.5' : '1';
+    }
+  }
+
+  document.getElementById('select-all').addEventListener('change', function() {
+    var checked = this.checked;
+    container.querySelectorAll('[data-cart-checkbox]').forEach(function(cb) { cb.checked = checked; });
+    recalcTotal();
+  });
+
+  container.addEventListener('change', function(e) {
+    if (e.target.matches('[data-cart-checkbox]')) {
+      var all = container.querySelectorAll('[data-cart-checkbox]');
+      var allChecked = true;
+      all.forEach(function(cb) { if (!cb.checked) allChecked = false; });
+      var selAll = document.getElementById('select-all');
+      if (selAll) selAll.checked = allChecked;
+      recalcTotal();
+    }
+  });
+
+  container.addEventListener('click', function(e) {
+    var link = e.target.closest('[data-cart-action]');
+    if (link) {
+      e.preventDefault();
+      var href = link.getAttribute('href');
+      if (!href) return;
+
+      fetch(href + (href.indexOf('?') > -1 ? '&' : '?') + '_ajax=1')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (!data.success) return;
+          var badge = document.getElementById('cart-count');
+          if (badge && data.cart_count !== undefined) badge.textContent = data.cart_count;
+
+          var row = link.closest('[data-cart-row]');
+          if (!row) return;
+
+          if (data.action === 'delete') {
+            row.remove();
+          } else {
+            var qtyEl = row.querySelector('[data-cart-qty]');
+            if (!qtyEl) return;
+            var qty = parseInt(qtyEl.textContent);
+            if (data.action === 'add') qty++;
+            else qty--;
+            if (qty <= 0) { row.remove(); }
+            else {
+              qtyEl.textContent = qty;
+              var priceEl = row.querySelector('[data-cart-price]');
+              var totalEl = row.querySelector('[data-cart-total]');
+              if (priceEl && totalEl) {
+                var unitPrice = parseFloat(priceEl.getAttribute('data-unit-price'));
+                totalEl.textContent = '$' + (unitPrice * qty).toFixed(2);
+              }
+            }
+          }
+
+          var rows = document.querySelectorAll('[data-cart-row]');
+          if (rows.length === 0) { showEmptyCart(); }
+          recalcTotal();
+          if (window.refreshMiniCart) window.refreshMiniCart();
+        })
+        .catch(function() { showToast('Something went wrong. Please try again.', true); });
+    }
+  });
+
+  document.getElementById('checkout-btn').addEventListener('click', function() {
+    var checked = container.querySelectorAll('[data-cart-checkbox]:checked');
+    if (checked.length === 0) { showToast('Select at least one item to checkout.', true); return; }
+    var ids = [];
+    checked.forEach(function(cb) {
+      var row = cb.closest('[data-cart-row]');
+      if (row) ids.push(row.getAttribute('data-item-id'));
+    });
+    window.location.href = "{% url 'store:checkout' %}?items=" + ids.join(',');
+  });
+
+  var removeBtn = document.getElementById('remove-selected-btn');
+  if (removeBtn) {
+    removeBtn.addEventListener('click', function() {
+      var checked = container.querySelectorAll('[data-cart-checkbox]:checked');
+      if (checked.length === 0) { showToast('No items selected to remove.', true); return; }
+      var ids = [];
+      checked.forEach(function(cb) {
+        var row = cb.closest('[data-cart-row]');
+        if (row) ids.push(row.getAttribute('data-item-id'));
+      });
+      removeBtn.disabled = true;
+      removeBtn.innerHTML = '<span class="loader-ring-sm"></span> Removing...';
+      fetch('{% url "store:cart_batch_delete" %}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
+        body: JSON.stringify({ item_ids: ids })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        removeBtn.disabled = false;
+        removeBtn.innerHTML = '<i class="bi bi-trash3"></i> Remove Selected';
+        if (!data.success) { showToast('Failed to remove items.', true); return; }
+        var badge = document.getElementById('cart-count');
+        if (badge && data.cart_count !== undefined) badge.textContent = data.cart_count;
+        var totalRemoved = 0;
+        checked.forEach(function(cb) {
+          var row = cb.closest('[data-cart-row]');
+          if (!row) return;
+          var qtyEl = row.querySelector('[data-cart-qty]');
+          if (qtyEl) totalRemoved += parseInt(qtyEl.textContent) || 0;
+          row.remove();
+        });
+        var rows = document.querySelectorAll('[data-cart-row]');
+        if (rows.length === 0) { showEmptyCart(); }
+        recalcTotal();
+        if (totalRemoved > 0) {
+          showToast('Removed ' + totalRemoved + ' item' + (totalRemoved !== 1 ? 's' : '') + ' \u2014 stock restored.');
+        }
+        if (window.refreshMiniCart) window.refreshMiniCart();
+      })
+      .catch(function() {
+        removeBtn.disabled = false;
+        removeBtn.innerHTML = '<i class="bi bi-trash3"></i> Remove Selected';
+        showToast('Failed to remove items. Please try again.', true);
+      });
+    });
+  }
+
+  var filterPanel = document.getElementById('filter-panel');
+  var filterToggle = document.getElementById('filter-toggle');
+  if (filterToggle && filterPanel) {
+    filterToggle.addEventListener('click', function() {
+      var showing = filterPanel.style.display !== 'none';
+      filterPanel.style.display = showing ? 'none' : 'block';
+      filterToggle.innerHTML = showing
+        ? '<i class="bi bi-funnel"></i> Filters'
+        : '<i class="bi bi-funnel"></i> Hide Filters';
+    });
+    if (filterPanel.hasAttribute('data-filter-active')) filterPanel.style.display = 'block';
+  }
+
+  document.querySelectorAll('.date-preset').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var days = parseInt(this.getAttribute('data-days'));
+      var from = new Date();
+      from.setDate(from.getDate() - days);
+      document.querySelector('input[name="date_from"]').value = from.toISOString().split('T')[0];
+      document.querySelector('input[name="date_to"]').value = new Date().toISOString().split('T')[0];
+    });
+  });
+
+  recalcTotal();
+  window.addEventListener('pageshow', function(e) {
+    if (e.persisted) { window.location.reload(); }
+  });
+})();
+</script>
 {% endblock %}

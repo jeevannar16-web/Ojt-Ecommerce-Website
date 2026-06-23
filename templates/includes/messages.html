@@ -1,7 +1,7 @@
   {% if messages %}
   <div class="messages-wrap">
     {% for message in messages %}
-      <div class="msg-toast">{{ message }}</div>
+      <div class="msg-toast">{{ message|t }}</div>
     {% endfor %}
   </div>
   <script>

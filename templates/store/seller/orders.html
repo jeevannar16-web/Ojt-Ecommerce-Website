@@ -1,7 +1,7 @@
 {% extends 'layout/base.html' %}
 {% load static %}
 
-{% block title %}Orders — Seller{% endblock %}
+{% block title %}{{ 'Orders'|t }} — FITNESS HUB{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/seller_dashboard.css' %}">
@@ -11,36 +11,36 @@
 <div class="seller-layout">
     <aside class="seller-sidebar">
       <div class="brand">
-        <h2>Seller <span>Center</span></h2>
+        <h2>{{ 'Seller'|t }} <span>{{ 'Center'|t }}</span></h2>
         <small>{{ request.user.username }}</small>
         {% if request.user.profile.store_name %}
         <div class="store-name">{{ request.user.profile.store_name }}</div>
         {% endif %}
       </div>
       <ul class="seller-nav">
-        <li class="nav-label">Main</li>
-        <li><a href="{% url 'store:seller_dashboard' %}"><i class="bi bi-grid"></i> Dashboard</a></li>
-        <li><a href="{% url 'store:seller_product_list' %}"><i class="bi bi-box-seam"></i> Products</a></li>
-        <li><a href="{% url 'store:seller_orders' %}" class="active"><i class="bi bi-truck"></i> Orders</a></li>
-        <li class="nav-label">Store</li>
-        {% if request.user.profile.store_slug %}<li><a href="{% url 'store:seller_storefront' request.user.profile.store_slug %}"><i class="bi bi-shop"></i> My Storefront</a></li>{% endif %}
-        <li class="nav-label">Quick Actions</li>
-        <li><a href="{% url 'store:seller_product_add' %}"><i class="bi bi-plus-lg"></i> Add Product</a></li>
-        <li><a href="{% url 'home' %}"><i class="bi bi-eye"></i> View Site</a></li>
+        <li class="nav-label">{{ 'Main'|t }}</li>
+        <li><a href="{% url 'store:seller_dashboard' %}"><i class="bi bi-grid"></i> {{ 'Dashboard'|t }}</a></li>
+        <li><a href="{% url 'store:seller_product_list' %}"><i class="bi bi-box-seam"></i> {{ 'Products'|t }}</a></li>
+        <li><a href="{% url 'store:seller_orders' %}" class="active"><i class="bi bi-truck"></i> {{ 'Orders'|t }}</a></li>
+        <li class="nav-label">{{ 'Store'|t }}</li>
+        {% if request.user.profile.store_slug %}<li><a href="{% url 'store:seller_storefront' request.user.profile.store_slug %}"><i class="bi bi-shop"></i> {{ 'My Storefront'|t }}</a></li>{% endif %}
+        <li class="nav-label">{{ 'Quick Actions'|t }}</li>
+        <li><a href="{% url 'store:seller_product_add' %}"><i class="bi bi-plus-lg"></i> {{ 'Add Product'|t }}</a></li>
+        <li><a href="{% url 'home' %}"><i class="bi bi-eye"></i> {{ 'View Site'|t }}</a></li>
       </ul>
     </aside>
 
   <main class="seller-main">
-    <h1>Order Management</h1>
-    <p class="page-sub">Orders containing your products.</p>
+    <h1>{{ 'Order Management'|t }}</h1>
+    <p class="page-sub">{{ 'Orders containing your products.'|t }}</p>
 
     <div class="sd-order-filter-bar" style="background:#141414;border:1px solid #1f1f1f;border-radius:10px;margin-bottom:18px;">
-      <a href="{% url 'store:seller_orders' %}" class="pl-filter {% if not current_status %}active{% endif %}">All</a>
-      <a href="{% url 'store:seller_orders' %}?status=Pending" class="pl-filter {% if current_status == 'Pending' %}active{% endif %}">Pending</a>
-      <a href="{% url 'store:seller_orders' %}?status=Processing" class="pl-filter {% if current_status == 'Processing' %}active{% endif %}">Processing</a>
-      <a href="{% url 'store:seller_orders' %}?status=Shipped" class="pl-filter {% if current_status == 'Shipped' %}active{% endif %}">Shipped</a>
-      <a href="{% url 'store:seller_orders' %}?status=Delivered" class="pl-filter {% if current_status == 'Delivered' %}active{% endif %}">Delivered</a>
-      <a href="{% url 'store:seller_orders' %}?status=Cancelled" class="pl-filter {% if current_status == 'Cancelled' %}active{% endif %}">Cancelled</a>
+      <a href="{% url 'store:seller_orders' %}" class="pl-filter {% if not current_status %}active{% endif %}">{{ 'All'|t }}</a>
+      <a href="{% url 'store:seller_orders' %}?status=Pending" class="pl-filter {% if current_status == 'Pending' %}active{% endif %}">{{ 'Pending'|t }}</a>
+      <a href="{% url 'store:seller_orders' %}?status=Processing" class="pl-filter {% if current_status == 'Processing' %}active{% endif %}">{{ 'Processing'|t }}</a>
+      <a href="{% url 'store:seller_orders' %}?status=Shipped" class="pl-filter {% if current_status == 'Shipped' %}active{% endif %}">{{ 'Shipped'|t }}</a>
+      <a href="{% url 'store:seller_orders' %}?status=Delivered" class="pl-filter {% if current_status == 'Delivered' %}active{% endif %}">{{ 'Delivered'|t }}</a>
+      <a href="{% url 'store:seller_orders' %}?status=Cancelled" class="pl-filter {% if current_status == 'Cancelled' %}active{% endif %}">{{ 'Cancelled'|t }}</a>
     </div>
 
     <div class="seller-card">
@@ -49,13 +49,13 @@
         <table class="seller-table">
           <thead>
             <tr>
-              <th>Order #</th>
-              <th>Product</th>
-              <th>Qty</th>
-              <th>Total</th>
-              <th>Customer</th>
-              <th>Status</th>
-              <th>Date</th>
+              <th>{{ 'Order #'|t }}</th>
+              <th>{{ 'Product'|t }}</th>
+              <th>{{ 'Qty'|t }}</th>
+              <th>{{ 'Total'|t }}</th>
+              <th>{{ 'Customer'|t }}</th>
+              <th>{{ 'Status'|t }}</th>
+              <th>{{ 'Date'|t }}</th>
             </tr>
           </thead>
           <tbody>
@@ -64,7 +64,7 @@
               <td style="font-weight:600;color:#f0ece4;">#{{ item.order.id }}</td>
               <td>{{ item.product.name|truncatechars:40 }}</td>
               <td>{{ item.quantity }}</td>
-              <td>${{ item.price|floatformat:2 }}</td>
+              <td>{{ item.price|currency }}</td>
               <td>{{ item.order.full_name }}</td>
               <td>
                 <span class="status-badge status-{{ item.order.status }}" style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:0.7rem;font-weight:700;text-transform:uppercase;
@@ -75,7 +75,7 @@
                   {% elif item.order.status == 'Cancelled' %}background:rgba(239,68,68,0.12);color:#ef4444;
                   {% else %}background:rgba(255,255,255,0.05);color:#999;
                   {% endif %}">
-                  {{ item.order.get_status_display }}
+                  {{ item.order.get_status_display|t }}
                 </span>
               </td>
               <td style="color:#777;font-size:0.78rem;">{{ item.order.created_at|date:"M d, Y" }}</td>
@@ -86,7 +86,7 @@
         {% else %}
         <div class="seller-empty">
           <i class="bi bi-truck"></i>
-          <p>No orders for your products yet.</p>
+          <p>{{ 'No orders for your products yet.'|t }}</p>
         </div>
         {% endif %}
       </div>

@@ -251,6 +251,17 @@
     .msg-box ul { margin: 4px 0 0 0; padding-left: 18px; }
     .msg-box ul li { margin-bottom: 2px; }
 
+    #checkout-map { z-index: 0; }
+    #checkout-map + .leaflet-container { border-radius: 10px; }
+
+    #location-search::-webkit-input-placeholder { color: #555; }
+    #location-search::-moz-placeholder { color: #555; }
+    #location-search:-ms-input-placeholder { color: #555; }
+    #location-search::placeholder { color: #555; }
+
+    #use-my-location:hover { background: rgba(212,175,55,0.2) !important; }
+    #location-search-btn:hover { background: rgba(255,255,255,0.1) !important; color: #fff !important; }
+
     @media (max-width: 768px) {
         .city-grid { grid-template-columns: 1fr; }
         .checkout-steps { font-size: 0.7rem; }

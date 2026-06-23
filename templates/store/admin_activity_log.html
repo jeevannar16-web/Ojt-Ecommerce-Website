@@ -2,7 +2,7 @@
 {% load static %}
 {% load store_filters %}
 
-{% block title %}Activity Log — Admin{% endblock %}
+{% block title %}{{ 'Activity Log'|t }} — FITNESS HUB{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/admin_activity_log.css' %}">
@@ -12,64 +12,64 @@
 <div class="admin-layout">
   <aside class="admin-sidebar">
     <div class="brand">
-      <h2>Admin <span>Panel</span></h2>
+      <h2>{{ 'Admin'|t }} <span>{{ 'Panel'|t }}</span></h2>
       <small>{{ request.user.username }}</small>
     </div>
     <ul class="admin-nav">
-      <li class="nav-label">Management</li>
-      <li><a href="{% url 'store:admin_dashboard' %}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
-      <li><a href="{% url 'store:admin_activity_log' %}" class="active"><i class="bi bi-clock-history"></i> Activity Log</a></li>
-      <li><a href="{% url 'store:admin_favorites' %}"><i class="bi bi-heart-fill"></i> Favorites</a></li>
-      <li><a href="{% url 'store:admin_cart' %}"><i class="bi bi-bag-plus"></i> Cart</a></li>
-      <li><a href="{% url 'admin:index' %}" target="_blank"><i class="bi bi-gear"></i> Django Admin</a></li>
-      <li><a href="{% url 'admin:auth_user_changelist' %}" target="_blank"><i class="bi bi-people"></i> Users</a></li>
-      <li><a href="{% url 'admin:store_product_changelist' %}" target="_blank"><i class="bi bi-box-seam"></i> Products</a></li>
-      <li><a href="{% url 'admin:store_order_changelist' %}" target="_blank"><i class="bi bi-truck"></i> Orders</a></li>
-      <li class="nav-label">Store</li>
-      <li><a href="{% url 'home' %}"><i class="bi bi-shop"></i> View Site</a></li>
-      <li><a href="{% url 'store:seller_dashboard' %}"><i class="bi bi-shop"></i> Seller View</a></li>
+      <li class="nav-label">{{ 'Management'|t }}</li>
+      <li><a href="{% url 'store:admin_dashboard' %}"><i class="bi bi-speedometer2"></i> {{ 'Dashboard'|t }}</a></li>
+      <li><a href="{% url 'store:admin_activity_log' %}" class="active"><i class="bi bi-clock-history"></i> {{ 'Activity Log'|t }}</a></li>
+      <li><a href="{% url 'store:admin_favorites' %}"><i class="bi bi-heart-fill"></i> {{ 'Favorites'|t }}</a></li>
+      <li><a href="{% url 'store:admin_cart' %}"><i class="bi bi-bag-plus"></i> {{ 'Cart'|t }}</a></li>
+      <li><a href="{% url 'admin:index' %}" target="_blank"><i class="bi bi-gear"></i> {{ 'Django Admin'|t }}</a></li>
+      <li><a href="{% url 'admin:auth_user_changelist' %}" target="_blank"><i class="bi bi-people"></i> {{ 'Users'|t }}</a></li>
+      <li><a href="{% url 'admin:store_product_changelist' %}" target="_blank"><i class="bi bi-box-seam"></i> {{ 'Products'|t }}</a></li>
+      <li><a href="{% url 'admin:store_order_changelist' %}" target="_blank"><i class="bi bi-truck"></i> {{ 'Orders'|t }}</a></li>
+      <li class="nav-label">{{ 'Store'|t }}</li>
+      <li><a href="{% url 'home' %}"><i class="bi bi-shop"></i> {{ 'View Site'|t }}</a></li>
+      <li><a href="{% url 'store:seller_dashboard' %}"><i class="bi bi-shop"></i> {{ 'Seller View'|t }}</a></li>
     </ul>
   </aside>
 
   <main class="admin-main">
-    <h1>Activity Log</h1>
-    <p class="page-sub">Every user action tracked in real time.</p>
+    <h1>{{ 'Activity Log'|t }}</h1>
+    <p class="page-sub">{{ 'Every user action tracked in real time.'|t }}</p>
 
     <form method="GET" class="filter-bar">
-      <label>Action</label>
+      <label>{{ 'Action'|t }}</label>
       <select name="action">
-        <option value="">All Actions</option>
+        <option value="">{{ 'All Actions'|t }}</option>
         {% for code, label in action_types %}
         <option value="{{ code }}" {% if current_action == code %}selected{% endif %}>{{ label }}</option>
         {% endfor %}
       </select>
 
-      <label>User</label>
-      <input type="text" name="user" placeholder="Search username..." value="{{ current_user }}">
+      <label>{{ 'User'|t }}</label>
+      <input type="text" name="user" placeholder="{{ 'Search username...'|t }}" value="{{ current_user }}">
 
-      <label>From</label>
+      <label>{{ 'From'|t }}</label>
       <input type="date" name="date_from" value="{{ current_date_from }}">
-      <label>To</label>
+      <label>{{ 'To'|t }}</label>
       <input type="date" name="date_to" value="{{ current_date_to }}">
 
-      <button type="submit" class="filter-btn"><i class="bi bi-funnel"></i> Filter</button>
-      <a href="{% url 'store:admin_activity_log' %}" class="filter-reset">Clear</a>
+      <button type="submit" class="filter-btn"><i class="bi bi-funnel"></i> {{ 'Filter'|t }}</button>
+      <a href="{% url 'store:admin_activity_log' %}" class="filter-reset">{{ 'Clear'|t }}</a>
     </form>
 
     <div class="al-summary">
-      <span>Total: <b>{{ page_obj.paginator.count }}</b></span>
+      <span>{{ 'Total:'|t }} <b>{{ page_obj.paginator.count }}</b></span>
     </div>
 
     <div class="al-table-wrap">
       <table class="al-table">
         <thead>
           <tr>
-            <th>User</th>
-            <th>Action</th>
-            <th>Description</th>
-            <th>Details</th>
-            <th>IP</th>
-            <th>When</th>
+            <th>{{ 'User'|t }}</th>
+            <th>{{ 'Action'|t }}</th>
+            <th>{{ 'Description'|t }}</th>
+            <th>{{ 'Details'|t }}</th>
+            <th>{{ 'IP'|t }}</th>
+            <th>{{ 'When'|t }}</th>
           </tr>
         </thead>
         <tbody>
@@ -82,7 +82,7 @@
               <span style="color:#555;">—</span>
               {% endif %}
             </td>
-            <td><span class="al-action al-action-{{ log.action_type }}">{{ log.get_action_type_display }}</span></td>
+            <td><span class="al-action al-action-{{ log.action_type }}">{{ log.get_action_type_display|t }}</span></td>
             <td class="al-desc">{{ log.description|default:'—' }}</td>
             <td>
               {% if log.details %}
@@ -96,7 +96,7 @@
           </tr>
           {% empty %}
           <tr>
-            <td colspan="6" style="text-align:center;padding:40px;color:#555;">No activity recorded yet.</td>
+            <td colspan="6" style="text-align:center;padding:40px;color:#555;">{{ 'No activity recorded yet.'|t }}</td>
           </tr>
           {% endfor %}
         </tbody>

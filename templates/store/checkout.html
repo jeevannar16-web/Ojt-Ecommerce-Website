@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/pages/checkout.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/checkout.css' %}?v=3">
 {% endblock %}
 
 {% block content %}
@@ -26,19 +26,32 @@
             </div>
         </div>
 
-        {% if messages %}
-        {% for message in messages %}
-        <div class="msg-box {% if message.tags == 'error' %}error{% else %}success{% endif %}">
-            <i class="bi {% if message.tags == 'error' %}bi-exclamation-circle{% else %}bi-check-circle{% endif %}"></i>
-            {{ message }}
-        </div>
-        {% endfor %}
-        {% endif %}
-
         <div class="row g-4">
             <div class="col-lg-8">
                 <form action="{% url 'store:checkout' %}{% if request.GET.items %}?items={{ request.GET.items }}{% endif %}" method="POST" id="checkout-form" novalidate>
                     {% csrf_token %}
+
+                    <div class="card-dz">
+                        <div class="card-title-dz"><i class="bi bi-map"></i> {{ 'Pin Your Delivery Location'|t }}</div>
+                        <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+                            <div style="flex:1;min-width:180px;display:flex;gap:6px;position:relative;">
+                                <input type="text" id="location-search" placeholder="{{ 'Search a location...'|t }}" style="flex:1;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#fff;font-size:0.82rem;" autocomplete="off">
+                                <button type="button" id="location-search-btn" style="background:rgba(255,255,255,0.06);border:none;border-radius:6px;padding:7px 12px;color:#aaa;cursor:pointer;"><i class="bi bi-search"></i></button>
+                                <div id="location-suggestions" class="map-suggestions"></div>
+                            </div>
+                            <button type="button" id="home-location-btn" style="background:rgba(46,196,182,0.12);border:1px solid rgba(46,196,182,0.25);border-radius:6px;padding:7px 14px;color:#2ec4b6;cursor:pointer;font-size:0.82rem;font-weight:600;"><i class="bi bi-house-door"></i> {{ 'Deliver to Home'|t }}</button>
+                        </div>
+                        <div id="checkout-map" class="location-map" style="aspect-ratio:unset;height:280px;"></div>
+                        <div id="map-status" style="font-size:0.78rem;color:#888;margin-top:6px;">{{ 'Click on the map to set your delivery location, or search above.'|t }}</div>
+                        <input type="hidden" id="id_latitude" name="latitude" value="{{ form_data.latitude|default:'' }}">
+                        <input type="hidden" id="id_longitude" name="longitude" value="{{ form_data.longitude|default:'' }}">
+                        <input type="hidden" id="country" name="country" value="{{ form_data.country|default:'' }}">
+                        <input type="hidden" id="home-address" value="{{ form_data.shipping_address|default:'' }}">
+                        <input type="hidden" id="home-city" value="{{ form_data.city|default:'' }}">
+                        <input type="hidden" id="home-province" value="{{ form_data.province|default:'' }}">
+                        <input type="hidden" id="home-postal" value="{{ form_data.postal_code|default:'' }}">
+                        <input type="hidden" id="home-phone" value="{{ form_data.phone_number|default:'' }}">
+                    </div>
 
                     <div class="card-dz">
                         <div class="card-title-dz"><i class="bi bi-person-circle"></i> {{ 'Contact Information'|t }}</div>
@@ -99,28 +112,6 @@
                               <span style="font-size:0.72rem;color:#555;margin-left:10px;">{{ 'Type address above, then click to locate on map'|t }}</span>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="card-dz">
-                        <div class="card-title-dz"><i class="bi bi-map"></i> {{ 'Pin Your Delivery Location'|t }}</div>
-                        <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
-                            <div style="flex:1;min-width:180px;display:flex;gap:6px;">
-                                <input type="text" id="location-search" placeholder="{{ 'Search a location...'|t }}" style="flex:1;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#fff;font-size:0.82rem;">
-                                <button type="button" id="location-search-btn" style="background:rgba(255,255,255,0.06);border:none;border-radius:6px;padding:7px 12px;color:#aaa;cursor:pointer;"><i class="bi bi-search"></i></button>
-                            </div>
-                            <button type="button" id="home-location-btn" style="background:rgba(46,196,182,0.12);border:1px solid rgba(46,196,182,0.25);border-radius:6px;padding:7px 14px;color:#2ec4b6;cursor:pointer;font-size:0.82rem;font-weight:600;display:none;"><i class="bi bi-house-door"></i> {{ 'Deliver to Home'|t }}</button>
-                            <button type="button" id="use-my-location" style="background:rgba(212,175,55,0.12);border:1px solid rgba(212,175,55,0.25);border-radius:6px;padding:7px 14px;color:#d4af37;cursor:pointer;font-size:0.82rem;font-weight:600;"><i class="bi bi-crosshair"></i> {{ 'Use My Location'|t }}</button>
-                        </div>
-                        <div id="checkout-map" style="width:100%;height:280px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);"></div>
-                        <div id="map-status" style="font-size:0.78rem;color:#888;margin-top:6px;">{{ 'Type your address above and click "Find on Map", or search below, or click directly on the map.'|t }}</div>
-                        <input type="hidden" id="id_latitude" name="latitude" value="{{ form_data.latitude|default:'' }}">
-                        <input type="hidden" id="id_longitude" name="longitude" value="{{ form_data.longitude|default:'' }}">
-                        <input type="hidden" id="country" name="country" value="{{ form_data.country|default:'' }}">
-                        <input type="hidden" id="home-address" value="{{ form_data.shipping_address|default:'' }}">
-                        <input type="hidden" id="home-city" value="{{ form_data.city|default:'' }}">
-                        <input type="hidden" id="home-province" value="{{ form_data.province|default:'' }}">
-                        <input type="hidden" id="home-postal" value="{{ form_data.postal_code|default:'' }}">
-                        <input type="hidden" id="home-phone" value="{{ form_data.phone_number|default:'' }}">
                     </div>
 
                     <div class="card-dz">
@@ -236,7 +227,7 @@
 
 {% block extra_js %}
 <script src="{% static 'js/pages/checkout.js' %}"></script>
-<script src="{% static 'js/pages/checkout_map.js' %}"></script>
+<script src="{% static 'js/pages/checkout_map.js' %}?v=3"></script>
 <script>
 document.getElementById('checkout-form')?.addEventListener('submit', function () {
   const btn = document.getElementById('place-order-btn');

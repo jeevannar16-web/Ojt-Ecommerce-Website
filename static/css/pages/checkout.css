@@ -259,8 +259,10 @@
     #location-search:-ms-input-placeholder { color: #555; }
     #location-search::placeholder { color: #555; }
 
-    #use-my-location:hover { background: rgba(212,175,55,0.2) !important; }
+
     #location-search-btn:hover { background: rgba(255,255,255,0.1) !important; color: #fff !important; }
+
+
 
     @media (max-width: 768px) {
         .city-grid { grid-template-columns: 1fr; }

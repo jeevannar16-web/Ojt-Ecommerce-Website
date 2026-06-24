@@ -64,6 +64,7 @@ class Product(models.Model):
         help_text="Comma-separated sizes, e.g. S,M,L,XL or 5kg,10kg,20kg"
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
+    original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Original price before discount. Leave blank if same as price.")
 
     def __str__(self):
         return self.name
@@ -80,6 +81,12 @@ class Product(models.Model):
     @property
     def has_sizes(self):
         return self.sizes.exists()
+
+    @property
+    def discount_percent(self):
+        if self.original_price and self.original_price > self.price:
+            return int((1 - self.price / self.original_price) * 100)
+        return 0
 
 
 class ProductSize(models.Model):

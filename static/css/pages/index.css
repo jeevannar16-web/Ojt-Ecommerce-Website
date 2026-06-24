@@ -357,14 +357,24 @@
 .mega-arrow.next { right: 20px; }
 
 /* ════════════════════════════════════════════════
-   FLASH SALE
+   FLASH SALE — Daraz Orange
    ════════════════════════════════════════════════ */
 .flash-sale-wrap {
-  background: linear-gradient(135deg,#1a0f0a,#0d0d0d);
-  border: 1px solid rgba(212,175,55,0.12);
+  background: linear-gradient(135deg,#1f0f0a,#0d0d0d);
+  border: 1px solid rgba(245,114,36,0.15);
   border-radius: 14px;
   padding: 18px 20px;
   margin: 0 0 30px;
+  position: relative;
+  overflow: hidden;
+}
+.flash-sale-wrap::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle at 30% 50%, rgba(245,114,36,0.04), transparent 60%);
+  pointer-events: none;
 }
 .flash-hd {
   display: flex;
@@ -372,15 +382,18 @@
   gap: 16px;
   margin-bottom: 16px;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
 }
 .flash-hd h2 {
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 800;
   color: #f57224;
   margin: 0;
   display: flex;
   align-items: center;
   gap: 8px;
+  text-shadow: 0 0 20px rgba(245,114,36,0.3);
 }
 .flash-hd h2 i { font-size: 1.3rem; }
 .flash-timer {
@@ -392,17 +405,32 @@
   font-weight: 600;
 }
 .flash-timer .tm-block {
-  background: #0d0d0d;
-  border: 1px solid #2a2a2a;
+  background: #1a0a05;
+  border: 1px solid rgba(245,114,36,0.3);
   padding: 4px 10px;
   border-radius: 6px;
   font-size: 1.1rem;
   font-weight: 800;
-  color: #d4af37;
+  color: #f57224;
   min-width: 32px;
   text-align: center;
 }
 .flash-timer .tm-sep { color: #555; font-weight: 700; }
+
+/* ════════════════════════════════════════════════
+   BEST DEALS — Daraz Teal
+   ════════════════════════════════════════════════ */
+.best-deals-wrap {
+  background: linear-gradient(135deg,#0a1210,#0d0d0d);
+  border: 1px solid rgba(46,196,182,0.12);
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin: 0 0 30px;
+  position: relative;
+}
+.best-deals-wrap .section-hd h2 { color: #2ec4b6; }
+.best-deals-wrap .section-hd h2 i { color: #2ec4b6; }
+.best-deals-wrap .section-hd::after { background: linear-gradient(90deg,#2ec4b6,rgba(46,196,182,0.2)); }
 
 /* ════════════════════════════════════════════════
    HORIZONTAL SCROLL ROW
@@ -634,6 +662,43 @@
 .load-more-wrap { text-align: center; margin-top: 55px; }
 
 .hidden-product { display: none; }
+
+/* ════════════════════════════════════════════════
+   DISCOUNT BADGES & ORIGINAL PRICE
+   ════════════════════════════════════════════════ */
+.hc-oprice {
+  font-size: 0.75rem;
+  color: #888;
+  text-decoration: line-through;
+  margin-right: 6px;
+  font-weight: 500;
+}
+.hc-price {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+.hc-badge.sale {
+  background: #f57224 !important;
+  color: #fff !important;
+  font-size: 0.65rem !important;
+  padding: 3px 7px !important;
+  border-radius: 4px !important;
+}
+.fcard-badge.sale-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #f57224;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+.fcard-price { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 
 /* ════════════════════════════════════════════════
    RESPONSIVE

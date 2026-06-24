@@ -16,15 +16,6 @@
 
   function detectLocation(callback) {
     if (hasSaved) { callback(savedLat, savedLng); return; }
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        function(pos) { callback(pos.coords.latitude, pos.coords.longitude); },
-        function() { fallbackToIP(callback); },
-        { enableHighAccuracy: false, timeout: 6000, maximumAge: 300000 }
-      );
-      return;
-    }
     fallbackToIP(callback);
   }
 
@@ -66,6 +57,7 @@
       marker.bindPopup('Delivery Location').openPopup();
       marker.on('dragend', onMarkerMoved);
       map.setView([lat, lng], 14);
+      setTimeout(function() { reverseGeocode(lat, lng, map); }, 300);
     }
 
     function onMarkerMoved(e) {
@@ -94,28 +86,15 @@
 
     function reverseGeocode(lat, lng) {
       clearTimeout(geocodeTimer);
-      var statusEl = document.getElementById('map-status');
-      if (statusEl) statusEl.textContent = 'Looking up address...';
-
       if (typeof lat !== 'number' || typeof lng !== 'number') return;
       if (Math.abs(lat) < 0.1 && Math.abs(lng) < 0.1) return;
 
       var url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + lat + '&lon=' + lng;
-      var dots = 0;
-      var statusInterval = setInterval(function() {
-        dots = (dots + 1) % 4;
-        if (statusEl) statusEl.textContent = 'Looking up address' + '.'.repeat(dots);
-      }, 500);
 
       fetch(url, { headers: { 'Accept-Language': 'en' } })
         .then(function(r) { return r.json(); })
         .then(function(data) {
-          clearInterval(statusInterval);
-          if (statusEl) statusEl.textContent = '';
-          if (!data || data.error) {
-            if (statusEl) statusEl.textContent = 'Could not determine address. Please fill in manually.';
-            return;
-          }
+          if (!data || data.error) return;
           var addr = data.address || {};
           var street = addr.road || addr.suburb || addr.neighbourhood || '';
           var houseNum = addr.house_number || '';
@@ -137,71 +116,66 @@
           if (state && provinceInput && !provinceInput.value) provinceInput.value = state;
           if (postcode && postalInput && !postalInput.value) postalInput.value = postcode;
           if (country && countryInput && !countryInput.value) countryInput.value = country;
-
-          if (addr.display_name && statusEl) {
-            statusEl.textContent = 'Address found: ' + addr.display_name.substring(0, 100) + '...';
-            statusEl.style.color = '#2ec4b6';
-          }
         })
-        .catch(function() {
-          clearInterval(statusInterval);
-          if (statusEl) statusEl.textContent = 'Geocoding unavailable. Please fill in address manually.';
-        });
-    }
-
-    var locBtn = document.getElementById('use-my-location');
-    if (locBtn) {
-      locBtn.addEventListener('click', function() {
-        if (!navigator.geolocation) {
-          showToast('Geolocation is not supported by your browser.', true);
-          return;
-        }
-        locBtn.disabled = true;
-        locBtn.innerHTML = '<span class="loader-ring-sm"></span> Locating...';
-        navigator.geolocation.getCurrentPosition(
-          function(pos) {
-            locBtn.disabled = false;
-            locBtn.innerHTML = '<i class="bi bi-crosshair"></i> Use My Location';
-            placeMarker(pos.coords.latitude, pos.coords.longitude);
-          },
-          function(err) {
-            locBtn.disabled = false;
-            locBtn.innerHTML = '<i class="bi bi-crosshair"></i> Use My Location';
-            var msg = 'Unable to retrieve your location. ';
-            if (err.code === 1) msg += 'Please allow location access.';
-            else if (err.code === 2) msg += 'Position unavailable.';
-            else msg += 'Request timed out.';
-            showToast(msg, true);
-          },
-          { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
-        );
-      });
+        .catch(function() {});
     }
 
     var homeBtn = document.getElementById('home-location-btn');
     if (homeBtn) {
       var homeLat = latInput.value;
       var homeLng = lngInput.value;
-      if (homeLat && homeLng && parseFloat(homeLat) !== 0) { homeBtn.style.display = ''; }
       var homeAddress = document.getElementById('home-address');
       var homeCity = document.getElementById('home-city');
       var homeProvince = document.getElementById('home-province');
       var homePostal = document.getElementById('home-postal');
       var homePhone = document.getElementById('home-phone');
       var countryInput = document.getElementById('country');
+      var hasHomeCoords = homeLat && homeLng && parseFloat(homeLat) !== 0;
+      var hasHomeAddr = homeAddress && homeAddress.value.trim();
 
       homeBtn.addEventListener('click', function() {
-        var lat = parseFloat(homeLat);
-        var lng = parseFloat(homeLng);
-        if (!isNaN(lat) && !isNaN(lng) && lat !== 0) {
-          placeMarker(lat, lng);
-        }
         var addr = homeAddress ? homeAddress.value : '';
         var city = homeCity ? homeCity.value : '';
         var prov = homeProvince ? homeProvince.value : '';
         var postal = homePostal ? homePostal.value : '';
         var phoneVal = homePhone ? homePhone.value : '';
         var cntry = countryInput ? countryInput.value : '';
+
+        if (hasHomeCoords) {
+          var lat = parseFloat(homeLat);
+          var lng = parseFloat(homeLng);
+          if (!isNaN(lat) && !isNaN(lng) && lat !== 0) placeMarker(lat, lng);
+        }
+        if (hasHomeAddr) {
+          var q = [addr, city, prov].filter(Boolean).join(', ');
+          if (q) {
+            homeBtn.disabled = true;
+            homeBtn.innerHTML = '<span class="loader-ring-sm"></span> Locating...';
+            var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(q) + '&limit=1&countrycodes=np,in';
+            fetch(url, { headers: { 'Accept-Language': 'en' } })
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                homeBtn.disabled = false;
+                homeBtn.innerHTML = '<i class="bi bi-house-door"></i> Deliver to Home';
+                if (data && data.length > 0) {
+                  placeMarker(parseFloat(data[0].lat), parseFloat(data[0].lon));
+                } else if (hasHomeCoords) {
+                  placeMarker(parseFloat(homeLat), parseFloat(homeLng));
+                }
+              })
+              .catch(function() {
+                homeBtn.disabled = false;
+                homeBtn.innerHTML = '<i class="bi bi-house-door"></i> Deliver to Home';
+                if (hasHomeCoords) placeMarker(parseFloat(homeLat), parseFloat(homeLng));
+              });
+          } else if (hasHomeCoords) {
+            placeMarker(parseFloat(homeLat), parseFloat(homeLng));
+          }
+        } else if (!hasHomeCoords) {
+          if (typeof showToast === 'function') {
+            showToast('Please save your home address in Profile settings first.', true);
+          }
+        }
 
         var addressInput = document.getElementById('shipping_address');
         var cityInput = document.getElementById('city');
@@ -215,43 +189,62 @@
         if (postal && postalInput) postalInput.value = postal;
         if (phoneVal && phoneInput) phoneInput.value = phoneVal;
         if (cntry && countryInput) countryInput.value = cntry;
-
-        showToast('Home address applied!');
       });
     }
 
     var searchBox = document.getElementById('location-search');
     var searchBtn = document.getElementById('location-search-btn');
-    if (searchBox && searchBtn) {
+    var suggestions = document.getElementById('location-suggestions');
+    if (searchBox && searchBtn && suggestions) {
+      var debounceTimer = null;
+      searchBox.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        var q = searchBox.value.trim();
+        if (q.length < 3) { suggestions.style.display = 'none'; return; }
+        debounceTimer = setTimeout(function() {
+          var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(q) + '&limit=5&countrycodes=np,in';
+          fetch(url, { headers: { 'Accept-Language': 'en' } })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+              suggestions.innerHTML = '';
+              if (!data || data.length === 0) { suggestions.style.display = 'none'; return; }
+              data.forEach(function(r) {
+                var d = document.createElement('div');
+                d.textContent = r.display_name;
+                d.addEventListener('click', function() {
+                  placeMarker(parseFloat(r.lat), parseFloat(r.lon));
+                  searchBox.value = r.display_name.split(',')[0];
+                  suggestions.style.display = 'none';
+                });
+                suggestions.appendChild(d);
+              });
+              suggestions.style.display = 'block';
+            })
+            .catch(function() { suggestions.style.display = 'none'; });
+        }, 300);
+      });
+      searchBox.addEventListener('blur', function() { setTimeout(function() { suggestions.style.display = 'none'; }, 200); });
+      searchBox.addEventListener('focus', function() {
+        if (suggestions.children.length) suggestions.style.display = 'block';
+      });
       function doSearch() {
         var q = searchBox.value.trim();
         if (!q) return;
-        searchBtn.disabled = true;
-        searchBtn.innerHTML = '<span class="loader-ring-sm"></span>';
-        var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(q) + '&limit=5';
+        var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(q) + '&limit=5&countrycodes=np,in';
         fetch(url, { headers: { 'Accept-Language': 'en' } })
           .then(function(r) { return r.json(); })
           .then(function(data) {
-            searchBtn.disabled = false;
-            searchBtn.innerHTML = '<i class="bi bi-search"></i>';
-            if (!data || data.length === 0) {
-              showToast('No locations found for "' + q + '"', true);
-              return;
-            }
+            if (!data || data.length === 0) return;
             var result = data[0];
             placeMarker(parseFloat(result.lat), parseFloat(result.lon));
           })
-          .catch(function() {
-            searchBtn.disabled = false;
-            searchBtn.innerHTML = '<i class="bi bi-search"></i>';
-            showToast('Search failed. Please try again.', true);
-          });
+          .catch(function() {});
       }
       searchBtn.addEventListener('click', doSearch);
       searchBox.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } });
     }
 
-    var findBtn = document.getElementById('find-on-map-btn');
+      var findBtn = document.getElementById('find-on-map-btn');
     if (findBtn) {
       findBtn.addEventListener('click', function() {
         var addr = document.getElementById('shipping_address');
@@ -262,7 +255,7 @@
         if (city && city.value.trim()) parts.push(city.value.trim());
         if (prov && prov.value.trim()) parts.push(prov.value.trim());
         var q = parts.join(', ');
-        if (!q) { showToast('Please fill in at least a street address and city.', true); return; }
+        if (!q) return;
         findBtn.disabled = true;
         findBtn.innerHTML = '<span class="loader-ring-sm"></span> Locating...';
         var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(q) + '&limit=5';
@@ -271,19 +264,20 @@
           .then(function(data) {
             findBtn.disabled = false;
             findBtn.innerHTML = '<i class="bi bi-geo-alt"></i> Find on Map';
-            if (!data || data.length === 0) {
-              showToast('Could not find that address on the map. Try searching below.', true);
-              return;
-            }
+            if (!data || data.length === 0) return;
             var result = data[0];
             placeMarker(parseFloat(result.lat), parseFloat(result.lon));
-            showToast('Location found! Adjust marker if needed.');
           })
           .catch(function() {
             findBtn.disabled = false;
             findBtn.innerHTML = '<i class="bi bi-geo-alt"></i> Find on Map';
-            showToast('Search failed. Please try again.', true);
           });
+      });
+    }
+
+    if (typeof enhanceMap === 'function') {
+      enhanceMap(map, {
+        fullscreen: true, panArrows: false, myLocation: false
       });
     }
   }

@@ -3,41 +3,45 @@
 
 {% block title %}My Cart — FITNESS HUB{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/cart.css' %}?v=1">
+{% endblock %}
+
 {% block content %}
-<div data-cart-container style="max-width: 1000px; margin: 60px auto; padding: 0 2rem; font-family: sans-serif; color: #fff;">
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
-        <h2 style="font-family: var(--font-display); font-size: 2.2rem; margin:0;">{{ 'Your Shopping'|t }} <span style="color: #d4af37;">{{ 'Cart'|t }}</span></h2>
-        <button id="filter-toggle" type="button" style="background:transparent;border:1px solid rgba(255,255,255,0.12);color:#aaa;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;">
+<div data-cart-container class="cart-page">
+    <div class="cart-header">
+        <h2>{{ 'Your Shopping'|t }} <span class="highlight">{{ 'Cart'|t }}</span></h2>
+        <button id="filter-toggle" type="button" class="filter-toggle-btn">
             <i class="bi bi-funnel"></i> {{ 'Filters'|t }}
         </button>
     </div>
 
     {% if cart_items %}
 
-    <div id="filter-panel" style="display:none;background:var(--clr-card,#121212);border:1px solid var(--clr-border,rgba(255,255,255,0.05));border-radius:12px;padding:1.25rem;margin-bottom:1.5rem;"{% if filters.current_category or filters.current_seller or filters.current_price_min or filters.current_price_max or filters.current_date_from or filters.current_date_to %} data-filter-active="1"{% endif %}>
+    <div id="filter-panel" class="filter-panel" style="display:none;"{% if filters.current_category or filters.current_seller or filters.current_price_min or filters.current_price_max or filters.current_date_from or filters.current_date_to %} data-filter-active="1"{% endif %}>
         <form method="GET" action="" id="cart-filter-form">
-          <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:end;">
-            <div style="flex:1;min-width:140px;">
-              <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:#666;display:block;margin-bottom:4px;">{{ 'Category'|t }}</label>
-              <select name="category" style="width:100%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#ccc;font-size:0.82rem;">
+          <div class="filter-row">
+            <div class="filter-group">
+              <label class="filter-label">{{ 'Category'|t }}</label>
+              <select name="category" class="filter-select">
                 <option value="">{{ 'All Categories'|t }}</option>
                 {% for c in filters.categories %}
                 <option value="{{ c.name }}" {% if filters.current_category == c.name %}selected{% endif %}>{{ c.name }}</option>
                 {% endfor %}
               </select>
             </div>
-            <div style="flex:1;min-width:140px;">
-              <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:#666;display:block;margin-bottom:4px;">{{ 'Seller'|t }}</label>
-              <select name="seller" style="width:100%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#ccc;font-size:0.82rem;">
+            <div class="filter-group">
+              <label class="filter-label">{{ 'Seller'|t }}</label>
+              <select name="seller" class="filter-select">
                 <option value="">{{ 'All Sellers'|t }}</option>
                 {% for s in filters.sellers %}
                 <option value="{{ s }}" {% if filters.current_seller == s %}selected{% endif %}>{{ s }}</option>
                 {% endfor %}
               </select>
             </div>
-            <div style="flex:1;min-width:140px;">
-              <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:#666;display:block;margin-bottom:4px;">{{ 'Sort By'|t }}</label>
-              <select name="sort" style="width:100%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#ccc;font-size:0.82rem;">
+            <div class="filter-group">
+              <label class="filter-label">{{ 'Sort By'|t }}</label>
+              <select name="sort" class="filter-select">
                 <option value="newest" {% if filters.current_sort == 'newest' or not filters.current_sort %}selected{% endif %}>{{ 'Newest First'|t }}</option>
                 <option value="oldest" {% if filters.current_sort == 'oldest' %}selected{% endif %}>{{ 'Oldest First'|t }}</option>
                 <option value="price_asc" {% if filters.current_sort == 'price_asc' %}selected{% endif %}>{{ 'Price: Low to High'|t }}</option>
@@ -47,112 +51,152 @@
               </select>
             </div>
           </div>
-          <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:end;margin-top:1rem;">
-            <div style="flex:1;min-width:120px;">
-              <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:#666;display:block;margin-bottom:4px;">{{ 'Min Price'|t }}</label>
-              <input type="number" name="price_min" value="{{ filters.current_price_min }}" placeholder="0" min="0" style="width:100%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#fff;font-size:0.82rem;box-sizing:border-box;">
+          <div class="filter-row">
+            <div class="filter-group" style="min-width:120px;">
+              <label class="filter-label">{{ 'Min Price'|t }}</label>
+              <input type="number" name="price_min" value="{{ filters.current_price_min }}" placeholder="0" min="0" class="filter-input">
             </div>
-            <div style="flex:1;min-width:120px;">
-              <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:#666;display:block;margin-bottom:4px;">{{ 'Max Price'|t }}</label>
-              <input type="number" name="price_max" value="{{ filters.current_price_max }}" placeholder="999" min="0" style="width:100%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#fff;font-size:0.82rem;box-sizing:border-box;">
+            <div class="filter-group" style="min-width:120px;">
+              <label class="filter-label">{{ 'Max Price'|t }}</label>
+              <input type="number" name="price_max" value="{{ filters.current_price_max }}" placeholder="999" min="0" class="filter-input">
             </div>
-            <div style="flex:1;min-width:120px;">
-              <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:#666;display:block;margin-bottom:4px;">{{ 'Date From'|t }}</label>
-              <input type="date" name="date_from" value="{{ filters.current_date_from }}" style="width:100%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#fff;font-size:0.82rem;box-sizing:border-box;color-scheme:dark;">
+            <div class="filter-group" style="min-width:120px;">
+              <label class="filter-label">{{ 'Date From'|t }}</label>
+              <input type="date" name="date_from" value="{{ filters.current_date_from }}" class="filter-input" style="color-scheme:dark;">
             </div>
-            <div style="flex:1;min-width:120px;">
-              <label style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:#666;display:block;margin-bottom:4px;">{{ 'Date To'|t }}</label>
-              <input type="date" name="date_to" value="{{ filters.current_date_to }}" style="width:100%;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:7px 10px;color:#fff;font-size:0.82rem;box-sizing:border-box;color-scheme:dark;">
+            <div class="filter-group" style="min-width:120px;">
+              <label class="filter-label">{{ 'Date To'|t }}</label>
+              <input type="date" name="date_to" value="{{ filters.current_date_to }}" class="filter-input" style="color-scheme:dark;">
             </div>
-            <div style="display:flex;gap:6px;align-items:end;flex-wrap:wrap;">
-              <button type="submit" style="background:#d4af37;color:#0d0d0d;border:none;padding:7px 18px;border-radius:6px;font-weight:700;font-size:0.78rem;cursor:pointer;text-transform:uppercase;">{{ 'Apply'|t }}</button>
-              <a href="{% url 'store:cart' %}" style="background:transparent;border:1px solid rgba(255,255,255,0.1);color:#666;padding:7px 14px;border-radius:6px;font-size:0.78rem;text-decoration:none;cursor:pointer;">{{ 'Clear'|t }}</a>
+            <div class="filter-actions">
+              <button type="submit" class="filter-apply-btn">{{ 'Apply'|t }}</button>
+              <a href="{% url 'store:cart' %}" class="filter-clear-btn">{{ 'Clear'|t }}</a>
             </div>
           </div>
-          <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">
-            <button type="button" class="date-preset" data-days="1" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:#888;padding:4px 12px;border-radius:5px;font-size:0.72rem;cursor:pointer;">{{ 'Today'|t }}</button>
-            <button type="button" class="date-preset" data-days="7" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:#888;padding:4px 12px;border-radius:5px;font-size:0.72rem;cursor:pointer;">{{ 'Last 7 Days'|t }}</button>
-            <button type="button" class="date-preset" data-days="30" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:#888;padding:4px 12px;border-radius:5px;font-size:0.72rem;cursor:pointer;">{{ 'Last 30 Days'|t }}</button>
+          <div class="filter-presets">
+            <button type="button" class="date-preset-btn" data-days="1">{{ 'Today'|t }}</button>
+            <button type="button" class="date-preset-btn" data-days="7">{{ 'Last 7 Days'|t }}</button>
+            <button type="button" class="date-preset-btn" data-days="30">{{ 'Last 30 Days'|t }}</button>
           </div>
         </form>
     </div>
         
-        <div style="background: var(--clr-card, #121212); border: 1px solid var(--clr-border, rgba(255, 255, 255, 0.05)); border-radius: var(--radius, 12px); padding: 24px; margin-bottom: 30px;">
+        <div class="cart-items-card">
 
-            <div style="display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:4px;">
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:#aaa;">
+            <div class="cart-toolbar">
+              <label class="select-all-label">
                 <input type="checkbox" id="select-all" checked>
                 {{ 'Select All'|t }}
               </label>
-              <span style="color:rgba(255,255,255,0.1);">|</span>
-              <span style="font-size:0.78rem;color:#555;" id="selected-count">{{ cart_items|length }} {{ 'item(s) selected'|t }}</span>
-              <span style="flex:1;"></span>
-              <button type="button" id="remove-selected-btn" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:6px;padding:5px 14px;color:#ef4444;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:5px;"><i class="bi bi-trash3"></i> {{ 'Remove Selected'|t }}</button>
+              <span class="toolbar-divider">|</span>
+              <span class="selected-count" id="selected-count">{{ cart_items|length }} {{ 'item(s) selected'|t }}</span>
+              <span class="toolbar-spacer"></span>
+              <button type="button" id="remove-selected-btn" class="remove-selected-btn"><i class="bi bi-trash3"></i> {{ 'Remove Selected'|t }}</button>
             </div>
 
             {% for item in cart_items %}
-            <div data-cart-row data-item-id="{{ item.id }}" style="display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 16px 0; gap: 16px;">
-                <div style="flex:0 0 30px;">
-                  <input type="checkbox" data-cart-checkbox class="cart-item-cb" checked style="width:18px;height:18px;cursor:pointer;accent-color:#d4af37;">
+            <div data-cart-row data-item-id="{{ item.id }}" class="cart-row">
+                <div class="cart-checkbox-col">
+                  <input type="checkbox" data-cart-checkbox class="cart-item-cb" checked>
                 </div>
-                <div style="flex:1;min-width:0;">
-                    <h4 style="font-size: 1.05rem; color: #fff; margin: 0 0 2px 0;">{{ item.product.name|t }}{% if item.size %} <span style="color:#d4af37;font-size:0.82rem;">{{ item.size }}</span>{% endif %}</h4>
-                    <div style="font-size:0.7rem;color:#555;margin-bottom:4px;">
+                <div class="cart-image-col">
+                  {% if item.product.image %}
+                  <img src="{% if 'http' in item.product.image.name or 'http' in item.product.image %}{% if item.product.image.name %}{{ item.product.image.name }}{% else %}{{ item.product.image }}{% endif %}{% else %}{{ item.product.image.url }}{% endif %}" alt="{{ item.product.name|t }}" class="cart-product-img" loading="lazy">
+                  {% else %}
+                  <div class="cart-product-img-placeholder">
+                    <i class="bi bi-box"></i>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="cart-info-col">
+                    <h4 class="cart-product-name">{{ item.product.name|t }}{% if item.size %} <span class="cart-product-size">{{ item.size }}</span>{% endif %}</h4>
+                    <div class="cart-product-meta">
                       {{ item.product.category.name|t }}
                       {% if item.product.seller %} · {{ item.product.seller.username }}{% endif %}
                       {% if item.added_at %} · {{ 'Added'|t }} {{ item.added_at|date:"M d" }}{% endif %}
                     </div>
-                    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap:wrap;">
-                        <span data-cart-price data-unit-price="{{ item.product.price }}" style="color: #888; font-size: 0.9rem;">{{ item.product.price|currency }}</span>
-                    <span style="color: rgba(255,255,255,0.15);">|</span>
+                    <div class="cart-actions-row">
+                        <span data-cart-price data-unit-price="{{ item.product.price }}" class="cart-unit-price">{{ item.product.price|currency }}</span>
+                    <span class="cart-action-divider">|</span>
                     
-                    <a href="{% url 'store:update_cart_quantity' item.id 'remove' %}" data-cart-action="remove" style="text-decoration: none; color: #fff; background: rgba(255,255,255,0.06); width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-weight: bold; font-size: 0.9rem;">-</a>
+                    <a href="{% url 'store:update_cart_quantity' item.id 'remove' %}" data-cart-action="remove" class="cart-qty-btn">−</a>
                     
-                    <span data-cart-qty style="color: #fff; font-weight: bold; font-size: 0.95rem; min-width: 18px; text-align: center;">{{ item.quantity }}</span>
+                    <span data-cart-qty class="cart-qty-value">{{ item.quantity }}</span>
                     
-                    <a href="{% url 'store:update_cart_quantity' item.id 'add' %}" data-cart-action="add" style="text-decoration: none; color: #fff; background: rgba(255,255,255,0.06); width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-weight: bold; font-size: 0.9rem;">+</a>
+                    <a href="{% url 'store:update_cart_quantity' item.id 'add' %}" data-cart-action="add" class="cart-qty-btn">+</a>
                     
-                    <span style="color: rgba(255,255,255,0.15);">|</span>
+                    <span class="cart-action-divider">|</span>
                     
-                    <a href="{% url 'store:update_cart_quantity' item.id 'delete' %}" data-cart-action="delete" style="text-decoration: none; color: #ef4444; font-size: 0.78rem; text-transform: uppercase; font-weight: 700;">{{ 'Remove'|t }}</a>
+                    <a href="{% url 'store:update_cart_quantity' item.id 'delete' %}" data-cart-action="delete" class="cart-remove-link">{{ 'Remove'|t }}</a>
                     </div>
                 </div>
                 
-                <div style="flex:0 0 auto;text-align:right;">
-                  <div data-cart-total style="font-family: var(--font-display); font-size: 1.2rem; color: #d4af37; font-weight: 600;">
+                <div class="cart-total-col">
+                  <div data-cart-total class="cart-row-total">
                       {{ item.total_price|currency }}
                   </div>
                 </div>
             </div>
             {% endfor %}
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1);">
-                <span id="selected-label" style="font-size: 0.9rem; color: var(--clr-muted, #888);">{{ 'Selected Total:'|t }}</span>
-                <span id="cart-grand-total" style="font-family: var(--font-display); font-size: 1.8rem; color: var(--clr-accent, #d4af37); font-weight: 700;">{{ total_amount|currency }}</span>
+            <div class="cart-summary-row">
+                <span id="selected-label" class="selected-total-label">{{ 'Selected Total:'|t }}</span>
+                <span id="cart-grand-total" class="cart-grand-total">{{ total_amount|currency }}</span>
             </div>
         </div>
 
-        <div style="background: var(--clr-card, #121212); border: 1px solid var(--clr-border, rgba(255,255,255,0.05)); border-radius: var(--radius, 12px); padding: 24px; display: flex; flex-direction: column; gap: 16px; text-align: center;">
-            <h3 style="font-family: var(--font-display); font-size: 1.4rem; color: var(--clr-accent, #d4af37); margin: 0;">{{ 'Ready to Checkout?'|t }}</h3>
-            <p style="color: #888; font-size: 0.9rem; margin: 0;" id="checkout-hint">
+        <div class="cart-delivery-card">
+            <h3 class="cart-delivery-title"><i class="bi bi-geo-alt"></i> {{ 'Delivery Location'|t }}</h3>
+            <div class="cart-delivery-search-row">
+                <div class="cart-delivery-search-wrap">
+                    <input type="text" id="cart-location-search" class="cart-delivery-search-input" placeholder="{{ 'Search a location...'|t }}" autocomplete="off">
+                    <div id="cart-location-suggestions" class="map-suggestions"></div>
+                </div>
+                <button type="button" id="cart-location-search-btn" class="cart-search-btn"><i class="bi bi-search"></i></button>
+                <button type="button" id="cart-home-btn" class="cart-home-btn"><i class="bi bi-house-door"></i> {{ 'Deliver to Home'|t }}</button>
+            </div>
+            <div id="cart-map" class="location-map"></div>
+            <input type="hidden" id="cart-latitude" name="latitude" value="">
+            <input type="hidden" id="cart-longitude" name="longitude" value="">
+            <input type="hidden" id="cart-home-address" value="{% if user.profile.address_line1 %}{{ user.profile.address_line1 }}{% endif %}">
+            <input type="hidden" id="cart-home-city" value="{% if user.profile.city %}{{ user.profile.city }}{% endif %}">
+            <input type="hidden" id="cart-home-province" value="{% if user.profile.state %}{{ user.profile.state }}{% endif %}">
+            <input type="hidden" id="cart-home-postal" value="{% if user.profile.zip_code %}{{ user.profile.zip_code }}{% endif %}">
+            <input type="hidden" id="cart-home-phone" value="{% if user.profile.phone %}{{ user.profile.phone }}{% endif %}">
+            <p class="map-status">{{ 'Search for a location or click on the map to set your delivery area.'|t }}</p>
+        </div>
+
+        <div class="cart-footer-actions">
+            <a href="{% url 'store:product_list' %}" class="cart-continue-link">
+                <i class="bi bi-arrow-left"></i> {{ 'Continue Shopping'|t }}
+            </a>
+        </div>
+
+        <div class="cart-checkout-card">
+            <div class="cart-checkout-header">
+                <h3 class="cart-checkout-title">{{ 'Ready to Checkout?'|t }}</h3>
+                <span class="cart-checkout-badge">{{ cart_items|length }} {{ 'items'|t }}</span>
+            </div>
+            <p class="cart-checkout-hint" id="checkout-hint">
                 {{ 'Select the items you want to purchase.'|t }}
             </p>
-            <a href="javascript:void(0)" id="checkout-btn"
-               style="display: inline-block; background: #f57224; color: #fff; text-decoration: none; border: none; padding: 16px 0; border-radius: 8px; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 1rem; letter-spacing: 0.5px; text-align: center;">
-                <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor;margin-right:8px;vertical-align:middle;" xmlns="http://www.w3.org/2000/svg">
+            <a href="javascript:void(0)" id="checkout-btn" class="checkout-btn">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M13 2L4 14h6v8l9-12h-6z"/>
                 </svg>
                 {{ 'Proceed to Checkout'|t }}
             </a>
-            <div style="font-size:0.75rem;color:#555;">
-                <i class="bi bi-shield-lock-fill me-1"></i> {{ 'Secure checkout'|t }} · {{ 'Your info is protected'|t }}
+            <div class="cart-security-note">
+                <i class="bi bi-shield-lock-fill"></i> {{ 'Secure checkout'|t }} · {{ 'Your info is protected'|t }}
             </div>
         </div>
 
     {% else %}
-        <div style="text-align: center; padding: 60px 0; color: var(--clr-muted, #888);">
-            <p style="font-size: 1.2rem; margin-bottom: 20px;">{{ 'Your shopping cart is completely empty.'|t }}</p>
-            <a href="{% url 'store:sale_catalog' %}" style="color: #d4af37; text-decoration: none; font-weight: 600;">{{ 'Go Back to Storefront'|t }} →</a>
+        <div class="cart-empty">
+            <div class="cart-empty-icon"><i class="bi bi-bag-x"></i></div>
+            <p>{{ 'Your cart is empty'|t }}</p>
+            <p class="cart-empty-sub">{{ 'Your cart is waiting. Start exploring our collection!'|t }}</p>
+            <a href="{% url 'store:sale_catalog' %}"><i class="bi bi-arrow-left"></i> {{ 'Start Shopping'|t }}</a>
         </div>
     {% endif %}
 </div>
@@ -165,12 +209,12 @@
   if (!container) return;
 
   function showEmptyCart() {
-    var titleBar = container.querySelector('div:first-child');
+    var titleBar = container.querySelector('.cart-header');
     container.innerHTML = '';
     if (titleBar) container.appendChild(titleBar.cloneNode(true));
     var emptyDiv = document.createElement('div');
-    emptyDiv.style.cssText = 'text-align:center;padding:60px 0;color:#888;';
-    emptyDiv.innerHTML = '<p style="font-size:1.2rem;margin-bottom:20px;">{{ 'Your shopping cart is completely empty.'|t }}</p><a href="{% url 'store:sale_catalog' %}" style="color:#d4af37;text-decoration:none;font-weight:600;">{{ 'Go Back to Storefront'|t }} →</a>';
+    emptyDiv.className = 'cart-empty';
+    emptyDiv.innerHTML = '<div class="cart-empty-icon"><i class="bi bi-bag-x"></i></div><p>{{ 'Your cart is empty'|t }}</p><p class="cart-empty-sub">{{ 'Your cart is waiting. Start exploring our collection!'|t }}</p><a href="{% url 'store:sale_catalog' %}"><i class="bi bi-arrow-left"></i> {{ 'Start Shopping'|t }}</a>';
     container.appendChild(emptyDiv);
   }
 
@@ -189,7 +233,7 @@
       if (t) grandTotal += parseFloat(t.textContent.replace(/[^0-9.-]/g, '')) || 0;
     });
     var grandEl = document.getElementById('cart-grand-total');
-    if (grandEl) grandEl.textContent = '$' + grandTotal.toFixed(2);
+    if (grandEl) grandEl.textContent = '$' + grandTotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
     if (hintEl) {
       hintEl.textContent = checked.length === 0
@@ -349,6 +393,173 @@
   recalcTotal();
   window.addEventListener('pageshow', function(e) {
     if (e.persisted) { window.location.reload(); }
+  });
+})();
+</script>
+
+<script>
+/* ─── Cart Map ─── */
+(function(){
+  var container = document.getElementById('cart-map');
+  if (!container) return;
+
+  var latInput = document.getElementById('cart-latitude');
+  var lngInput = document.getElementById('cart-longitude');
+  if (!latInput || !lngInput) return;
+
+  var savedLat = parseFloat(latInput.value);
+  var savedLng = parseFloat(lngInput.value);
+  var hasSaved = latInput.value && lngInput.value && !isNaN(savedLat) && savedLat !== 0;
+  var marker = null;
+
+  var KTM_LAT = 27.7172;
+  var KTM_LNG = 85.3240;
+
+  function detectLocation(callback) {
+    if (hasSaved) { callback(savedLat, savedLng); return; }
+    fetch('https://ip-api.com/json/?fields=lat,lon')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data && data.lat && data.lon && !isNaN(data.lat) && data.lat !== 0) callback(data.lat, data.lon);
+        else callback(KTM_LAT, KTM_LNG);
+      })
+      .catch(function() { callback(KTM_LAT, KTM_LNG); });
+  }
+
+  detectLocation(function(lat, lng) {
+    var map = L.map('cart-map', {
+      center: [lat, lng], zoom: 14,
+      zoomControl: true, attributionControl: true,
+    });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
+
+    var searchBox = document.getElementById('cart-location-search');
+    var searchBtn = document.getElementById('cart-location-search-btn');
+    var suggestions = document.getElementById('cart-location-suggestions');
+    var homeBtn = document.getElementById('cart-home-btn');
+    var homeAddr = document.getElementById('cart-home-address');
+    var homeCity = document.getElementById('cart-home-city');
+    var homeProv = document.getElementById('cart-home-province');
+    var homePostal = document.getElementById('cart-home-postal');
+    var homePhone = document.getElementById('cart-home-phone');
+
+    var userHomeLat = '{{ user.profile.latitude|default:"" }}';
+    var userHomeLng = '{{ user.profile.longitude|default:"" }}';
+    var hasHomeCoords = userHomeLat && userHomeLng && parseFloat(userHomeLat) !== 0;
+    var hasHomeAddr = homeAddr && homeAddr.value.trim();
+    if (homeBtn) homeBtn.style.display = '';
+    if (!hasHomeCoords && !hasHomeAddr) {
+      homeBtn.title = 'Save your home address in Profile first';
+    }
+
+    function placeMarker(lat, lng) {
+      if (marker) map.removeLayer(marker);
+      marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+      marker.bindPopup('Delivery Location').openPopup();
+      marker.on('dragend', function(e) {
+        var pos = e.target.getLatLng();
+        latInput.value = pos.lat.toFixed(6);
+        lngInput.value = pos.lng.toFixed(6);
+      });
+      latInput.value = lat.toFixed(6);
+      lngInput.value = lng.toFixed(6);
+      map.setView([lat, lng], 14);
+    }
+
+    map.on('click', function(e) { placeMarker(e.latlng.lat, e.latlng.lng); });
+
+    if (hasSaved) { placeMarker(savedLat, savedLng); }
+
+    if (homeBtn) {
+      homeBtn.addEventListener('click', function() {
+        if (hasHomeCoords) {
+          placeMarker(parseFloat(userHomeLat), parseFloat(userHomeLng));
+          var q = [homeAddr.value, homeCity.value, homeProv.value].filter(Boolean).join(', ');
+          if (q) {
+            fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(q) + '&limit=1')
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                if (data && data.length) {
+                  placeMarker(parseFloat(data[0].lat), parseFloat(data[0].lon));
+                } else if (hasHomeCoords) {
+                  placeMarker(parseFloat(userHomeLat), parseFloat(userHomeLng));
+                }
+              })
+              .catch(function() {
+                if (hasHomeCoords) placeMarker(parseFloat(userHomeLat), parseFloat(userHomeLng));
+              });
+          } else if (hasHomeCoords) {
+            placeMarker(parseFloat(userHomeLat), parseFloat(userHomeLng));
+          }
+        } else if (hasHomeAddr) {
+          var q = [homeAddr.value, homeCity.value, homeProv.value].filter(Boolean).join(', ');
+          if (q) {
+            homeBtn.disabled = true;
+            homeBtn.innerHTML = '<span class="loader-ring-sm"></span> Locating...';
+            fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(q) + '&limit=1')
+              .then(function(r) { return r.json(); })
+              .then(function(data) {
+                homeBtn.disabled = false;
+                homeBtn.innerHTML = '<i class="bi bi-house-door"></i> Deliver to Home';
+                if (data && data.length) placeMarker(parseFloat(data[0].lat), parseFloat(data[0].lon));
+              })
+              .catch(function() {
+                homeBtn.disabled = false;
+                homeBtn.innerHTML = '<i class="bi bi-house-door"></i> Deliver to Home';
+              });
+          }
+        } else {
+          showToast('Please save your home address in Profile settings first.', true);
+          setTimeout(function() { window.location.href = "{% url 'profile' %}"; }, 1500);
+        }
+      });
+    }
+
+    if (searchBox && searchBtn && suggestions) {
+      var debounceTimer = null;
+      searchBox.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        var q = searchBox.value.trim();
+        if (q.length < 3) { suggestions.style.display = 'none'; return; }
+        debounceTimer = setTimeout(function() {
+          var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(q) + '&limit=5&countrycodes=np,in';
+          fetch(url, { headers: { 'Accept-Language': 'en' } })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+              suggestions.innerHTML = '';
+              if (!data || data.length === 0) { suggestions.style.display = 'none'; return; }
+              data.forEach(function(r) {
+                var d = document.createElement('div');
+                d.textContent = r.display_name;
+                d.addEventListener('click', function() {
+                  placeMarker(parseFloat(r.lat), parseFloat(r.lon));
+                  searchBox.value = r.display_name.split(',')[0];
+                  suggestions.style.display = 'none';
+                });
+                suggestions.appendChild(d);
+              });
+              suggestions.style.display = 'block';
+            })
+            .catch(function() { suggestions.style.display = 'none'; });
+        }, 300);
+      });
+      searchBox.addEventListener('blur', function() { setTimeout(function() { suggestions.style.display = 'none'; }, 200); });
+      searchBox.addEventListener('focus', function() { if (suggestions.children.length) suggestions.style.display = 'block'; });
+      function doSearch() {
+        var q = searchBox.value.trim();
+        if (!q) return;
+        fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(q) + '&limit=5&countrycodes=np,in')
+          .then(function(r) { return r.json(); })
+          .then(function(data) { if (data && data.length) placeMarker(parseFloat(data[0].lat), parseFloat(data[0].lon)); })
+          .catch(function() {});
+      }
+      searchBtn.addEventListener('click', doSearch);
+      searchBox.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } });
+    }
+
+    if (typeof enhanceMap === 'function') {
+      enhanceMap(map, { fullscreen: true, panArrows: false, myLocation: false });
+    }
   });
 })();
 </script>

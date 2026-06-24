@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="{% static 'css/base/messages.css' %}?v=7">
   <link rel="stylesheet" href="{% static 'css/base/footer.css' %}?v=7">
   <link rel="stylesheet" href="{% static 'css/base/back_to_top.css' %}?v=7">
+  <link rel="stylesheet" href="{% static 'css/base/map_common.css' %}?v=7">
   <link rel="stylesheet" href="{% static 'css/base/search.css' %}?v=7">
 
   {% block extra_css %}{% endblock %}
@@ -53,7 +54,6 @@
 
   {% include 'includes/footer.html' %}
   {% include 'includes/toast_container.html' %}
-  {% include 'includes/back_to_top.html' %}
 
   <script>
   (function(){
@@ -78,8 +78,91 @@
   <script src="{% static 'js/base/newsletter.js' %}?v=7"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="{% static 'js/base/map.js' %}?v=7"></script>
+  <script src="{% static 'js/base/map_enhance.js' %}?v=1"></script>
 
   {% block extra_js %}{% endblock %}
+
+  <!-- Floating Quick Nav -->
+  <div id="floating-nav" role="navigation" aria-label="{{ 'Quick Navigation'|t }}">
+    <div id="fn-backdrop"></div>
+    <div id="fn-panel">
+      <div class="fn-head">
+        <span class="fn-head-icon"><i class="bi bi-grid-3x3-gap-fill"></i></span>
+        <span class="fn-head-label">{{ 'Quick Navigation'|t }}</span>
+        <button id="fn-close-btn" aria-label="{{ 'Close'|t }}"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="fn-body">
+        <div class="fn-group">
+          <div class="fn-group-label">{{ 'Shop by Section'|t }}</div>
+          <a href="#" data-target="flash-sale" class="fn-item"><span class="fn-item-icon"><i class="bi bi-lightning-fill"></i></span><span class="fn-item-text">{{ 'Flash Deals'|t }}</span></a>
+          <a href="#" data-target="best-deals" class="fn-item"><span class="fn-item-icon"><i class="bi bi-star-fill"></i></span><span class="fn-item-text">{{ 'Best Deals'|t }}</span></a>
+          <a href="#" data-target="trending" class="fn-item"><span class="fn-item-icon"><i class="bi bi-graph-up-arrow"></i></span><span class="fn-item-text">{{ 'Trending Now'|t }}</span></a>
+          <a href="#" data-target="top-rated" class="fn-item"><span class="fn-item-icon"><i class="bi bi-hand-thumbs-up-fill"></i></span><span class="fn-item-text">{{ 'Top Rated'|t }}</span></a>
+          <a href="#" data-target="new-arrivals" class="fn-item"><span class="fn-item-icon"><i class="bi bi-clock-history"></i></span><span class="fn-item-text">{{ 'New Arrivals'|t }}</span></a>
+          <a href="#" data-target="value-deals" class="fn-item"><span class="fn-item-icon"><i class="bi bi-cash-stack"></i></span><span class="fn-item-text">{{ 'Value Deals'|t }}</span></a>
+          <a href="#" data-target="almost-gone" class="fn-item"><span class="fn-item-icon"><i class="bi bi-exclamation-triangle-fill"></i></span><span class="fn-item-text">{{ 'Almost Gone'|t }}</span></a>
+        </div>
+        <div class="fn-group">
+          <div class="fn-group-label">{{ 'Your Account'|t }}</div>
+          <a href="{% url 'store:cart' %}" class="fn-item"><span class="fn-item-icon"><i class="bi bi-cart-fill"></i></span><span class="fn-item-text">{{ 'Cart'|t }}</span></a>
+          <a href="{% url 'store:favorites_list' %}" class="fn-item"><span class="fn-item-icon"><i class="bi bi-heart-fill"></i></span><span class="fn-item-text">{{ 'Wishlist'|t }}</span></a>
+          <a href="{% url 'profile' %}" class="fn-item"><span class="fn-item-icon"><i class="bi bi-person-fill"></i></span><span class="fn-item-text">{{ 'My Account'|t }}</span></a>
+        </div>
+      </div>
+      <button id="fn-top-btn"><i class="bi bi-arrow-up-circle-fill"></i> {{ 'Go to Top'|t }}</button>
+    </div>
+    <button id="fn-toggle" aria-label="{{ 'Open quick navigation'|t }}">
+      <span class="fn-ring"></span>
+      <span class="fn-toggle-icon"><i class="bi bi-arrow-up"></i></span>
+    </button>
+  </div>
+  <script>
+  (function(){
+    var toggle = document.getElementById('fn-toggle');
+    var nav = document.getElementById('floating-nav');
+    var closeBtn = document.getElementById('fn-close-btn');
+    var topBtn = document.getElementById('fn-top-btn');
+    if (!toggle || !nav) return;
+
+    toggle.addEventListener('click', function(){ nav.classList.toggle('fn-open'); });
+    if (closeBtn) closeBtn.addEventListener('click', function(){ nav.classList.remove('fn-open'); });
+    if (topBtn) topBtn.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); nav.classList.remove('fn-open'); });
+
+    /* ─── Only show section links that exist on this page ─── */
+    var groups = nav.querySelectorAll('.fn-group');
+    groups.forEach(function(group){
+      var links = group.querySelectorAll('.fn-item[data-target]');
+      var visibleCount = 0;
+      links.forEach(function(a){
+        var el = document.getElementById(a.getAttribute('data-target'));
+        if (!el) { a.style.display = 'none'; }
+        else { visibleCount++; }
+      });
+      if (visibleCount === 0 && links.length > 0) { group.style.display = 'none'; }
+      else { group.style.display = ''; }
+    });
+
+    /* ─── Smooth scroll with header offset ─── */
+    var headerEl = document.querySelector('.main-nav') || document.querySelector('header');
+    var headerH = headerEl ? headerEl.offsetHeight : 0;
+
+    nav.querySelectorAll('.fn-item[data-target]').forEach(function(a){
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        var el = document.getElementById(a.getAttribute('data-target'));
+        if (el) {
+          var top = el.getBoundingClientRect().top + window.scrollY - headerH - 20;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+        nav.classList.remove('fn-open');
+      });
+    });
+
+    document.addEventListener('click', function(e){
+      if (!nav.contains(e.target)) nav.classList.remove('fn-open');
+    });
+  })();
+  </script>
 
 </body>
 </html>

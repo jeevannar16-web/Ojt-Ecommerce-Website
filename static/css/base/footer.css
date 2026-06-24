@@ -21,6 +21,23 @@
   grid-template-columns: 2fr 1fr 1fr 1.8fr;
   gap: 56px;
 }
+.footer-body > div:nth-child(5) {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+}
+.footer-map {
+  width: 100%; aspect-ratio: 2.8 / 1; min-height: 120px; max-height: 200px;
+  border-radius: 10px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.footer-map-addr {
+  font-size: 0.78rem; color: var(--clr-muted); margin-top: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.footer-map-icon { color: var(--clr-accent); }
+@media (max-width: 560px) {
+  .footer-map { aspect-ratio: 3 / 1; min-height: 100px; }
+}
 @media (max-width: 900px) {
   .footer-body { grid-template-columns: 1fr 1fr; gap: 36px; }
 }

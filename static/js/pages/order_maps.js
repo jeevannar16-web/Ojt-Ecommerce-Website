@@ -20,5 +20,9 @@
     }).addTo(map);
     L.marker([lat, lng]).addTo(map)
       .bindPopup('Delivery Location');
+
+    if (typeof enhanceMap === 'function') {
+      enhanceMap(map, { fullscreen: true, panArrows: false, myLocation: false });
+    }
   });
 })();

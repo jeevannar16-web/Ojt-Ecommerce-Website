@@ -16,14 +16,6 @@
 
   function detectLocation(callback) {
     if (hasSaved) { callback(savedLat, savedLng); return; }
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        function(pos) { callback(pos.coords.latitude, pos.coords.longitude); },
-        function() { fallbackToIP(callback); },
-        { enableHighAccuracy: false, timeout: 6000, maximumAge: 300000 }
-      );
-      return;
-    }
     fallbackToIP(callback);
   }
 
@@ -80,63 +72,57 @@
       map.setView([lat, lng], 14);
     }
 
-    /* Search box */
+    /* Search box with autocomplete */
     var searchBox = document.getElementById('profile-location-search');
     var searchBtn = document.getElementById('profile-location-search-btn');
-    if (searchBox && searchBtn) {
+    var suggestions = document.getElementById('profile-location-suggestions');
+    if (searchBox && searchBtn && suggestions) {
+      var debounceTimer = null;
+      searchBox.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        var q = searchBox.value.trim();
+        if (q.length < 3) { suggestions.style.display = 'none'; return; }
+        debounceTimer = setTimeout(function() {
+          var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(q) + '&limit=5&countrycodes=np,in';
+          fetch(url, { headers: { 'Accept-Language': 'en' } })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+              suggestions.innerHTML = '';
+              if (!data || data.length === 0) { suggestions.style.display = 'none'; return; }
+              data.forEach(function(r) {
+                var d = document.createElement('div');
+                d.textContent = r.display_name;
+                d.addEventListener('click', function() {
+                  placeMarker(parseFloat(r.lat), parseFloat(r.lon));
+                  searchBox.value = r.display_name.split(',')[0];
+                  suggestions.style.display = 'none';
+                });
+                suggestions.appendChild(d);
+              });
+              suggestions.style.display = 'block';
+            })
+            .catch(function() { suggestions.style.display = 'none'; });
+        }, 300);
+      });
+      searchBox.addEventListener('blur', function() { setTimeout(function() { suggestions.style.display = 'none'; }, 200); });
+      searchBox.addEventListener('focus', function() {
+        if (suggestions.children.length) suggestions.style.display = 'block';
+      });
       function doSearch() {
         var q = searchBox.value.trim();
         if (!q) return;
-        searchBtn.disabled = true;
-        searchBtn.innerHTML = '<span class="loader-ring-sm"></span>';
-        var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(q) + '&limit=5';
+        var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(q) + '&limit=5&countrycodes=np,in';
         fetch(url, { headers: { 'Accept-Language': 'en' } })
           .then(function(r) { return r.json(); })
           .then(function(data) {
-            searchBtn.disabled = false;
-            searchBtn.innerHTML = '<i class="bi bi-search"></i>';
-            if (!data || data.length === 0) {
-              showToast('No locations found for "' + q + '"', true);
-              return;
-            }
+            if (!data || data.length === 0) return;
             var result = data[0];
             placeMarker(parseFloat(result.lat), parseFloat(result.lon));
           })
-          .catch(function() {
-            searchBtn.disabled = false;
-            searchBtn.innerHTML = '<i class="bi bi-search"></i>';
-            showToast('Search failed. Please try again.', true);
-          });
+          .catch(function() {});
       }
       searchBtn.addEventListener('click', doSearch);
       searchBox.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } });
-    }
-
-    /* Use My Location */
-    var myLocBtn = document.getElementById('profile-use-my-location');
-    if (myLocBtn) {
-      myLocBtn.addEventListener('click', function() {
-        if (!navigator.geolocation) { showToast('Geolocation is not supported by your browser.', true); return; }
-        myLocBtn.disabled = true;
-        myLocBtn.innerHTML = '<span class="loader-ring-sm"></span> Locating...';
-        navigator.geolocation.getCurrentPosition(
-          function(pos) {
-            myLocBtn.disabled = false;
-            myLocBtn.innerHTML = '<i class="bi bi-crosshair"></i> Use My Location';
-            placeMarker(pos.coords.latitude, pos.coords.longitude);
-          },
-          function(err) {
-            myLocBtn.disabled = false;
-            myLocBtn.innerHTML = '<i class="bi bi-crosshair"></i> Use My Location';
-            var msg = 'Unable to retrieve your location. ';
-            if (err.code === 1) msg += 'Please allow location access.';
-            else if (err.code === 2) msg += 'Position unavailable.';
-            else msg += 'Request timed out.';
-            showToast(msg, true);
-          },
-          { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
-        );
-      });
     }
 
     /* Find on Map from address fields */
@@ -151,7 +137,12 @@
         if (city && city.value.trim()) parts.push(city.value.trim());
         if (state && state.value.trim()) parts.push(state.value.trim());
         var q = parts.join(', ');
-        if (!q) { showToast('Please fill in at least your address and city above.', true); return; }
+        if (!q) {
+          if (typeof showToast === 'function') {
+            showToast('Please type your address first, then click Find on Map.', true);
+          }
+          return;
+        }
         findBtn.disabled = true;
         findBtn.innerHTML = '<span class="loader-ring-sm"></span> Locating...';
         var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(q) + '&limit=5';
@@ -161,18 +152,27 @@
             findBtn.disabled = false;
             findBtn.innerHTML = '<i class="bi bi-geo-alt"></i> Find on Map';
             if (!data || data.length === 0) {
-              showToast('Could not find that address on the map. Try searching above.', true);
+              if (typeof showToast === 'function') {
+                showToast('Could not find that location. Try a more specific address.', true);
+              }
               return;
             }
             var result = data[0];
             placeMarker(parseFloat(result.lat), parseFloat(result.lon));
-            showToast('Location found! Adjust marker if needed, then Save.');
           })
           .catch(function() {
             findBtn.disabled = false;
             findBtn.innerHTML = '<i class="bi bi-geo-alt"></i> Find on Map';
-            showToast('Search failed. Please try again.', true);
+            if (typeof showToast === 'function') {
+              showToast('Location search failed. Try again.', true);
+            }
           });
+      });
+    }
+
+    if (typeof enhanceMap === 'function') {
+      enhanceMap(map, {
+        fullscreen: true, panArrows: false, myLocation: false
       });
     }
   });

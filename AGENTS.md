@@ -86,6 +86,14 @@ Complete full e-commerce platform with admin dashboard, seller marketplace, prof
 - **Homepage delivery card**: "Deliver to" section after hero with address, toggle-able mini map, and edit link
 - `Order.latitude` / `Order.longitude` saved per order from map picker
 - `Profile.latitude` / `Profile.longitude` saved as default delivery location
+- **Messaging system (Daraz-style):**
+  - Product detail page shows "Sold by" card with store name + "Chat with Seller" button
+  - "Chat with Seller" only visible to **logged-in customers** who are not the seller (no button for seller viewing own product)
+  - **Anonymous users** see "Login to Chat" link → redirects to login then back
+  - **Customers cannot contact admin** — `contact_admin` view restricted to sellers/staff only
+  - **Sellers** can contact admin via "Contact Support" in messages page and "Contact Admin" in seller dashboard
+  - Floating message bubble (bottom-right) polls unread count every 5s
+  - All 446 products now have sellers assigned (previously 340 had none)
 
 ### In Progress
 - (none)
@@ -123,4 +131,6 @@ Complete full e-commerce platform with admin dashboard, seller marketplace, prof
 - Run `./venv/bin/python manage.py check` to verify no issues
 - `.env` has CHECKMAIL_API_KEY and MYEMAILVERIFIER_API_KEY active; NEVERBOUNCE_API_KEY emptied; ZEROBOUNCE_API_KEY empty
 - Server runs on `http://localhost:8000`
-- Dev server restart command: `pkill -f "manage.py"; nohup ./venv/bin/python manage.py runserver 0.0.0.0:8000 > /tmp/django.log 2>&1 &`
+- Dev server restart command: `setsid ./venv/bin/python manage.py runserver 0.0.0.0:8000 &>/tmp/django.log &`
+- Cloudflare Tunnel: run `setsid cloudflared tunnel --url http://localhost:8000 &>/tmp/cloudflared.log &` then get URL with `grep -o 'https://[a-z-]*\.trycloudflare\.com' /tmp/cloudflared.log | tail -1`
+- `.trycloudflare.com` added to ALLOWED_HOSTS in settings.py

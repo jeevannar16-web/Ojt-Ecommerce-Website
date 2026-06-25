@@ -4,7 +4,33 @@
 {% block title %}{{ 'Seller Dashboard'|t }} — FITNESS HUB{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/pages/seller_dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/seller_dashboard.css' %}?v=2">
+<link rel="stylesheet" href="{% static 'css/pages/messaging_widget.css' %}?v=1">
+<style>
+.sd-recommendation-card { background: #141414; border: 1px solid #1f1f1f; border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.3s ease; }
+.sd-recommendation-card:hover { border-color: #d4af37; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,175,55,0.08); }
+.sd-rec-header { padding: 12px 16px; border-bottom: 1px solid #1f1f1f; display: flex; justify-content: space-between; align-items: center; }
+.sd-rec-header h4 { margin: 0; font-size: 0.85rem; font-weight: 700; color: #f0ece4; display: flex; align-items: center; gap: 6px; }
+.sd-rec-body { padding: 8px 0; }
+.sd-rec-item { display: flex; align-items: center; gap: 10px; padding: 8px 16px; border-bottom: 1px solid #1a1a1a; cursor: pointer; transition: background 0.2s; }
+.sd-rec-item:last-child { border-bottom: none; }
+.sd-rec-item:hover { background: rgba(212,175,55,0.04); }
+.sd-rec-rank { width: 20px; height: 20px; border-radius: 50%; background: #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; color: #d4af37; flex-shrink: 0; }
+.sd-rec-name { flex: 1; font-size: 0.78rem; color: #ccc; font-weight: 600; }
+.sd-rec-meta { font-size: 0.65rem; color: #666; }
+.sd-rec-price { font-size: 0.78rem; color: #d4af37; font-weight: 700; }
+.sd-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+@media (max-width: 1100px) { .sd-grid-4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .sd-grid-4 { grid-template-columns: 1fr; } }
+.sd-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+@media (max-width: 900px) { .sd-grid-3 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .sd-grid-3 { grid-template-columns: 1fr; } }
+.rec-badge { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 0.55rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.rec-badge.top-rated { background: rgba(212,175,55,0.12); color: #d4af37; }
+.rec-badge.trending { background: rgba(239,68,68,0.12); color: #ef4444; }
+.rec-badge.demand { background: rgba(59,130,246,0.12); color: #3b82f6; }
+.rec-badge.lowstock { background: rgba(245,114,36,0.12); color: #f57224; }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -22,6 +48,7 @@
       <li><a href="{% url 'store:seller_dashboard' %}" class="active"><i class="bi bi-grid"></i> {{ 'Dashboard'|t }}</a></li>
       <li><a href="{% url 'store:seller_product_list' %}"><i class="bi bi-box-seam"></i> {{ 'Products'|t }}</a></li>
       <li><a href="{% url 'store:seller_orders' %}"><i class="bi bi-truck"></i> {{ 'Orders'|t }}</a></li>
+      <li><a href="{% url 'store:messages_list' %}"><i class="bi bi-chat-dots"></i> {{ 'Messages'|t }} <span class="msg-side-badge" id="seller-msg-badge" style="display:none;background:#d4af37;color:#0d0d0d;font-size:0.6rem;padding:1px 6px;border-radius:8px;margin-left:4px;font-weight:700;"></span></a></li>
       <li class="nav-label">{{ 'Store'|t }}</li>
       {% if request.user.profile.store_slug %}<li><a href="{% url 'store:seller_storefront' request.user.profile.store_slug %}"><i class="bi bi-shop"></i> {{ 'My Storefront'|t }}</a></li>{% endif %}
       <li class="nav-label">{{ 'Quick Actions'|t }}</li>
@@ -30,7 +57,7 @@
     </ul>
   </aside>
 
-  <main class="seller-main">
+  <main class="seller-main" id="seller-dashboard-main">
     <div class="sd-top-bar">
       <div>
         <h1>{{ 'Dashboard'|t }}</h1>
@@ -39,7 +66,8 @@
       <a href="{% url 'store:seller_product_add' %}" class="sd-add-btn"><i class="bi bi-plus-lg"></i> {{ 'Add Product'|t }}</a>
     </div>
 
-    <div class="sd-stats-row-2">
+    <!-- QUICK STATS -->
+    <div class="sd-stats-row-2" id="section-quick-stats">
       <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_product_list' %}'">
         <div class="sd-quick-stat-icon gold"><i class="bi bi-box-seam"></i></div>
         <div>
@@ -47,7 +75,7 @@
           <div class="qlbl">{{ 'Total Products'|t }}</div>
         </div>
       </div>
-      <div class="sd-quick-stat">
+      <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_orders' %}'">
         <div class="sd-quick-stat-icon blue"><i class="bi bi-graph-up-arrow"></i></div>
         <div>
           <div class="qnum">{{ total_units_sold }}</div>
@@ -68,14 +96,14 @@
           <div class="qlbl">{{ 'Total Revenue'|t }}</div>
         </div>
       </div>
-      <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_orders' %}'">
+      <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_orders' %}?status=Pending'">
         <div class="sd-quick-stat-icon orange"><i class="bi bi-clock"></i></div>
         <div>
           <div class="qnum">{{ pending_orders }}</div>
           <div class="qlbl">{{ 'Pending Orders'|t }}</div>
         </div>
       </div>
-      <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_orders' %}'">
+      <div class="sd-quick-stat clickable" onclick="location.href='{% url 'store:seller_orders' %}?status=Delivered'">
         <div class="sd-quick-stat-icon green"><i class="bi bi-check-circle"></i></div>
         <div>
           <div class="qnum">{{ completed_orders }}</div>
@@ -98,7 +126,189 @@
       </div>
     </div>
 
-    <div class="sd-card-grid">
+    <!-- RECOMMENDATIONS SECTION -->
+    {% if top_rated_in_category or trending_products or high_demand_categories or low_stock_products_list %}
+    <div class="sd-card-grid" id="section-recommendations" style="margin-bottom:20px;">
+      <div class="seller-card" style="grid-column:1/-1;">
+        <div class="seller-card-header" style="cursor:pointer;" onclick="var e=this.nextElementSibling;e.style.display=e.style.display==='none'?'block':'none';">
+          <h3><i class="bi bi-lightbulb" style="color:#f59e0b;"></i> {{ 'Recommendations & Insights'|t }}</h3>
+          <span style="color:#888;font-size:0.72rem;"><i class="bi bi-chevron-down"></i></span>
+        </div>
+        <div class="sd-grid-4" style="padding:16px;border-top:1px solid #1f1f1f;">
+
+          {% if top_rated_in_category %}
+          <div class="sd-recommendation-card" onclick="location.href='{% url 'store:seller_product_add' %}'">
+            <div class="sd-rec-header">
+              <h4><i class="bi bi-star-fill" style="color:#d4af37;"></i> {{ 'Top Rated to Sell'|t }}</h4>
+              <span class="rec-badge top-rated">{{ 'Hot'|t }}</span>
+            </div>
+            <div class="sd-rec-body">
+              {% for p in top_rated_in_category %}
+              <div class="sd-rec-item" onclick="event.stopPropagation();location.href='{% url 'store:product_detail' p.id %}'">
+                <span class="sd-rec-rank">{{ forloop.counter }}</span>
+                <span class="sd-rec-name">{{ p.name|truncatechars:25 }}</span>
+                <span class="sd-rec-price">{{ p.price|currency }}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          {% if trending_products %}
+          <div class="sd-recommendation-card" onclick="location.href='{% url 'store:seller_product_add' %}'">
+            <div class="sd-rec-header">
+              <h4><i class="bi bi-fire" style="color:#ef4444;"></i> {{ 'Trending Products'|t }}</h4>
+              <span class="rec-badge trending">{{ 'Popular'|t }}</span>
+            </div>
+            <div class="sd-rec-body">
+              {% for p in trending_products %}
+              <div class="sd-rec-item" onclick="event.stopPropagation();location.href='{% url 'store:product_detail' p.id %}'">
+                <span class="sd-rec-rank">{{ forloop.counter }}</span>
+                <span class="sd-rec-name">{{ p.name|truncatechars:25 }}</span>
+                <span class="sd-rec-price">{{ p.price|currency }}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          {% if high_demand_categories %}
+          <div class="sd-recommendation-card" onclick="location.href='{% url 'store:seller_product_add' %}'">
+            <div class="sd-rec-header">
+              <h4><i class="bi bi-graph-up-arrow" style="color:#3b82f6;"></i> {{ 'High Demand Categories'|t }}</h4>
+              <span class="rec-badge demand">{{ 'Grow'|t }}</span>
+            </div>
+            <div class="sd-rec-body">
+              {% for cat in high_demand_categories %}
+              <div class="sd-rec-item" onclick="event.stopPropagation();location.href='{% url 'store:product_list' %}?category={{ cat|slugify }}'">
+                <span class="sd-rec-rank">{{ forloop.counter }}</span>
+                <span class="sd-rec-name">{{ cat }}</span>
+                <span class="sd-rec-meta">{{ 'high demand'|t }}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          {% if low_stock_products_list %}
+          <div class="sd-recommendation-card" onclick="location.href='{% url 'store:seller_product_list' %}?stock=low'">
+            <div class="sd-rec-header">
+              <h4><i class="bi bi-exclamation-triangle" style="color:#f57224;"></i> {{ 'Restock Alert'|t }}</h4>
+              <span class="rec-badge lowstock">{{ 'Urgent'|t }}</span>
+            </div>
+            <div class="sd-rec-body">
+              {% for p in low_stock_products_list %}
+              <div class="sd-rec-item" onclick="event.stopPropagation();location.href='{% url 'store:seller_product_edit' p.id %}'">
+                <span class="sd-rec-rank">{{ forloop.counter }}</span>
+                <span class="sd-rec-name">{{ p.name|truncatechars:25 }}</span>
+                <span class="sd-rec-meta" style="color:#f57224;">{{ p.stock }} {{ 'left'|t }}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- MESSAGING WIDGET -->
+    <div class="sd-card-grid" id="section-messaging" style="margin-bottom:20px;">
+      <div class="seller-card mw-card" style="grid-column:1/-1;">
+        <div class="seller-card-header">
+          <div class="mw-header-left">
+            <div class="mw-header-icon"><i class="bi bi-chat-dots"></i></div>
+            <div>
+              <h3 class="mw-header-title">{{ 'Messages'|t }}</h3>
+            </div>
+          </div>
+          <div class="mw-header-actions">
+            <div class="mw-search-wrap">
+              <i class="bi bi-search"></i>
+              <input type="text" id="sd-msg-search" class="mw-search-input" placeholder="{{ 'Search conversations...'|t }}" style="width:220px;" oninput="sdFilterConversations(this.value)">
+            </div>
+            <a href="{% url 'store:messages_list' %}" class="seller-card-link">{{ 'View All'|t }} →</a>
+          </div>
+        </div>
+        <div class="seller-card-body" style="padding-top:0;">
+          <div class="mw-tabs">
+            <button class="mw-tab active" data-filter="all" onclick="sdMsgFilter(this,'all')">{{ 'All'|t }}</button>
+            <button class="mw-tab" data-filter="unread" onclick="sdMsgFilter(this,'unread')">{{ 'Unread'|t }} {% if recent_conversations %}<span class="mw-tab-badge" id="sd-unread-total">{{ recent_conversations|length }}</span>{% endif %}</button>
+            <button class="mw-tab" data-filter="support" onclick="sdMsgFilter(this,'support')"><i class="bi bi-headset"></i> {{ 'Support'|t }}</button>
+          </div>
+          {% if recent_conversations %}
+          <div id="sd-conv-list" class="mw-list">
+            {% for item in recent_conversations %}
+            <div class="mw-item" data-other="{{ item.other_user.username|lower }}" data-last="{{ item.last_message.content|default:''|lower }}" data-unread="{% if item.unread > 0 %}1{% else %}0{% endif %}" data-support="{% if item.is_support %}1{% else %}0{% endif %}">
+              {% if item.product and item.product.image %}
+              <div class="mw-thumb">
+                <img src="{{ item.product.image.url }}" alt="">
+              </div>
+              {% elif not item.product %}
+              <div class="mw-avatar">
+                {{ item.other_user.username|first|upper }}
+              </div>
+              {% else %}
+              <div class="mw-thumb-icon">
+                <i class="bi bi-box"></i>
+              </div>
+              {% endif %}
+              <div class="mw-body" onclick="location.href='{% url 'store:conversation_detail' item.conv.id %}'">
+                <div class="mw-top-row">
+                  <span class="mw-name"><emoji>{{ item.other_status_emoji }}</emoji> {{ item.other_user.username }}{% if item.is_support %} <span class="mw-support-badge">{{ 'Support'|t }}</span>{% endif %}</span>
+                  <div class="mw-top-right">
+                    {% if item.store_slug %}
+                    <a href="{% url 'store:seller_storefront' item.store_slug %}" class="mw-store-btn" onclick="event.stopPropagation();"><i class="bi bi-shop"></i> {{ 'Storefront'|t }}</a>
+                    {% endif %}
+                    <span class="mw-time">{{ item.last_message.created_at|timesince|default:'' }}</span>
+                  </div>
+                </div>
+                <div class="mw-bottom-row">
+                  {% if item.product %}
+                  <span class="mw-product-name">{{ item.product.name|truncatechars:22 }}</span>
+                  <span class="mw-sep">·</span>
+                  {% endif %}
+                  <span class="mw-preview">
+                    {% if item.last_message %}
+                      {{ item.last_message.content|truncatechars:40 }}
+                    {% else %}
+                      <span class="mw-preview-empty">{{ 'No messages yet'|t }}</span>
+                    {% endif %}
+                  </span>
+                  {% if item.unread > 0 %}
+                  <span class="mw-unread">{{ item.unread }}</span>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="mw-menu-wrap">
+                <button class="mw-menu-btn" onclick="event.stopPropagation();sdToggleMenu(this)">⋮</button>
+                <div class="mw-dropdown">
+                  <a href="{% url 'store:conversation_detail' item.conv.id %}" class="mw-dropdown-item"><i class="bi bi-eye"></i> {{ 'Open'|t }}</a>
+                  {% if item.unread > 0 %}
+                  <button onclick="sdMarkRead('{{ item.conv.id }}')" class="mw-dropdown-item"><i class="bi bi-check2-all"></i> {{ 'Mark as read'|t }}</button>
+                  {% endif %}
+                  <button onclick="sdDeleteConv('{{ item.conv.id }}')" class="mw-dropdown-item danger"><i class="bi bi-trash3"></i> {{ 'Delete'|t }}</button>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="mw-empty">
+            <i class="bi bi-chat-dots"></i>
+            <p>{{ 'No conversations yet.'|t }}</p>
+          </div>
+          {% endif %}
+          <div class="mw-footer">
+            <a href="{% url 'store:contact_admin' %}" class="mw-footer-link"><i class="bi bi-headset"></i> {{ 'Contact Support'|t }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP SELLING + REVENUE -->
+    <div class="sd-card-grid" id="section-performance">
       <div class="seller-card">
         <div class="seller-card-header">
           <h3><i class="bi bi-trophy"></i> {{ 'Top Selling Products'|t }}</h3>
@@ -109,7 +319,7 @@
           {% for p in top_products %}
           <div class="sd-performance-bar clickable" onclick="location.href='{% url 'store:seller_product_edit' p.product_id %}'" style="cursor:pointer;">
             <div style="width:36px;height:36px;flex-shrink:0;border-radius:8px;overflow:hidden;background:#0e0e0e;display:flex;align-items:center;justify-content:center;">
-              <i class="bi bi-box" style="color:#555;"></i>
+              <i class="bi bi-trophy" style="color:#d4af37;"></i>
             </div>
             <span class="sd-perf-lbl">{{ p.product__name|truncatechars:30 }}</span>
             <div class="sd-perf-bar-bg">
@@ -144,7 +354,7 @@
             <div class="sd-perf-bar-bg">
               <div class="sd-perf-bar-fill" style="width:{% if max_earned > 0 %}{% widthratio p.total_earned max_earned 100 %}{% else %}0{% endif %}%;background:#d4af37;"></div>
             </div>
-            <span class="sd-perf-val">${{ p.total_earned|floatformat:0 }}</span>
+            <span class="sd-perf-val">{{ p.total_earned|currency }}</span>
           </div>
           {% endfor %}
           {% endwith %}
@@ -158,7 +368,8 @@
       </div>
     </div>
 
-    <div class="sd-card-grid">
+    <!-- RECENT ORDERS + PRODUCTS -->
+    <div class="sd-card-grid" id="section-recent">
       <div class="seller-card">
         <div class="seller-card-header">
           <h3><i class="bi bi-clock-history"></i> {{ 'Recent Orders'|t }}</h3>
@@ -192,7 +403,7 @@
                 <td>
                   <span class="sd-status" data-status="{{ order.status }}">{{ order.get_status_display|t }}</span>
                 </td>
-                <td><span style="color:#d4af37;font-weight:600;">${{ order.total_amount }}</span></td>
+                <td><span style="color:#d4af37;font-weight:600;">{{ order.total_amount|currency }}</span></td>
                 <td style="color:#666;font-size:0.75rem;">{{ order.created_at|date:"M d, Y" }}</td>
               </tr>
               {% endfor %}
@@ -233,7 +444,7 @@
             </thead>
             <tbody>
               {% for product in recent_products %}
-              <tr>
+              <tr class="clickable-row" onclick="location.href='{% url 'store:seller_product_edit' product.id %}'">
                 <td>
                   {% if product.image %}
                   <img src="{{ product.image.url }}" alt="" style="width:44px;height:44px;object-fit:cover;border-radius:8px;">
@@ -241,7 +452,7 @@
                   <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#0e0e0e;border-radius:8px;color:#333;"><i class="bi bi-box" style="font-size:1.2rem;"></i></div>
                   {% endif %}
                 </td>
-                <td><a href="{% url 'store:seller_product_edit' product.id %}" class="product-name">{{ product.name|truncatechars:45 }}</a></td>
+                <td><a href="{% url 'store:seller_product_edit' product.id %}" class="product-name" onclick="event.stopPropagation();">{{ product.name|truncatechars:45 }}</a></td>
                 <td style="color:#d4af37;font-weight:600;">{{ product.price|currency }}</td>
                 <td>
                   {% if product.stock == 0 %}
@@ -257,7 +468,7 @@
                   {% if product.is_featured %}<span class="sd-badge sd-badge-featured">{{ 'Featured'|t }}</span>{% endif %}
                   {% if not product.is_sale and not product.is_featured %}<span style="color:#666;">{{ 'Active'|t }}</span>{% endif %}
                 </td>
-                <td><a href="{% url 'store:seller_product_edit' product.id %}" style="color:#3b82f6;font-size:0.75rem;text-decoration:none;font-weight:600;"><i class="bi bi-pencil"></i></a></td>
+                <td><a href="{% url 'store:seller_product_edit' product.id %}" style="color:#3b82f6;font-size:0.75rem;text-decoration:none;font-weight:600;" onclick="event.stopPropagation();"><i class="bi bi-pencil"></i></a></td>
               </tr>
               {% endfor %}
             </tbody>
@@ -266,17 +477,19 @@
           <div class="seller-empty">
             <i class="bi bi-box-seam"></i>
             <p>{{ 'No products yet. Start adding your first product!'|t }}</p>
-            <a href="{% url 'store:seller_product_add' %}" class="seller-card-link">{{ 'Add Product'|t }} →</a>
+            <a href="{% url 'store:seller_product_add' %}" class="seller-card-link" style="margin-top:12px;display:inline-block;">{{ 'Add Product'|t }} →</a>
           </div>
           {% endif %}
         </div>
       </div>
     </div>
 
+    <!-- PERFORMANCE SUMMARY -->
     {% if total_revenue %}
-    <div class="seller-card">
-      <div class="seller-card-header">
+    <div class="seller-card" id="section-performance-summary">
+      <div class="seller-card-header" style="cursor:pointer;" onclick="var e=this.nextElementSibling;e.style.display=e.style.display==='none'?'block':'none';">
         <h3><i class="bi bi-bar-chart"></i> {{ 'Performance Summary'|t }}</h3>
+        <span style="color:#888;font-size:0.72rem;"><i class="bi bi-chevron-down"></i></span>
       </div>
       <div class="seller-card-body" style="padding:16px 20px;">
         <div style="display:flex;flex-wrap:wrap;gap:16px;">
@@ -291,13 +504,13 @@
           <div style="flex:1;min-width:140px;background:#0e0e0e;border-radius:8px;padding:14px 16px;border:1px solid #1a1a1a;">
             <div style="font-size:0.68rem;color:#777;text-transform:uppercase;letter-spacing:1px;font-weight:600;">{{ 'Avg Order Value'|t }}</div>
             <div style="font-size:1.5rem;font-weight:800;color:#f0ece4;margin-top:4px;">
-              {% if total_orders > 0 %}${{ total_revenue|floatformat:0 }}{% else %}$0{% endif %}
+              {% if total_orders > 0 %}{{ total_revenue|currency }}{% else %}$0{% endif %}
             </div>
           </div>
           <div style="flex:1;min-width:140px;background:#0e0e0e;border-radius:8px;padding:14px 16px;border:1px solid #1a1a1a;">
             <div style="font-size:0.68rem;color:#777;text-transform:uppercase;letter-spacing:1px;font-weight:600;">{{ 'Revenue per Unit'|t }}</div>
             <div style="font-size:1.5rem;font-weight:800;color:#f0ece4;margin-top:4px;">
-              {% if total_units_sold > 0 %}${{ revenue_per_unit|floatformat:0 }}{% else %}$0{% endif %}
+              {% if total_units_sold > 0 %}{{ revenue_per_unit|currency }}{% else %}$0{% endif %}
             </div>
           </div>
           <div style="flex:1;min-width:140px;background:#0e0e0e;border-radius:8px;padding:14px 16px;border:1px solid #1a1a1a;">
@@ -314,4 +527,135 @@
     {% endif %}
   </main>
 </div>
+
+<div class="seller-support-bar" style="max-width:1100px;margin:0 auto 24px;padding:0 20px;">
+  <div style="background:linear-gradient(135deg,rgba(212,175,55,0.06),rgba(212,175,55,0.02));border:1px solid rgba(212,175,55,0.12);border-radius:12px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="width:40px;height:40px;border-radius:10px;background:rgba(212,175,55,0.1);display:flex;align-items:center;justify-content:center;">
+        <i class="bi bi-headset" style="color:#d4af37;font-size:1.1rem;"></i>
+      </div>
+      <div>
+        <strong style="color:#f0ece4;font-size:0.88rem;">{{ 'Need Help?'|t }}</strong>
+        <p style="margin:2px 0 0;color:#666;font-size:0.75rem;">{{ 'Contact our support team for assistance with your seller account.'|t }}</p>
+      </div>
+    </div>
+    <a href="{% url 'store:contact_admin' %}" class="sc-btn sc-btn-primary" style="padding:10px 22px;font-size:0.82rem;text-decoration:none;">
+      <i class="bi bi-chat-dots"></i> {{ 'Contact Admin'|t }}
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/pages/scroll_tracker.js' %}"></script>
+<script>
+(function(){
+  var badge = document.getElementById('seller-msg-badge');
+  if(!badge) return;
+  function check(){
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/store/api/messages/unread/', true);
+    xhr.onload = function(){
+      if(xhr.status !== 200) return;
+      try {
+        var data = JSON.parse(xhr.responseText);
+        if(data.unread > 0){
+          badge.textContent = data.unread;
+          badge.style.display = 'inline';
+        } else {
+          badge.style.display = 'none';
+        }
+      } catch(e){}
+    };
+    xhr.send();
+  }
+  check();
+  setInterval(check, 5000);
+})();
+
+// Close any open menus on click outside
+document.addEventListener('click', function(e){
+  document.querySelectorAll('.mw-dropdown').forEach(function(m){
+    if(!m.contains(e.target) && !e.target.closest('.mw-menu-btn')){
+      m.classList.remove('show');
+    }
+  });
+});
+
+function sdToggleMenu(btn){
+  var menu = btn.nextElementSibling;
+  var isOpen = menu.classList.contains('show');
+  document.querySelectorAll('.mw-dropdown').forEach(function(m){ m.classList.remove('show'); });
+  menu.classList.toggle('show', !isOpen);
+}
+
+function sdMsgFilter(el, filter){
+  document.querySelectorAll('.mw-tab').forEach(function(b){
+    b.classList.remove('active');
+  });
+  el.classList.add('active');
+  var items = document.querySelectorAll('#sd-conv-list .mw-item');
+  items.forEach(function(item){
+    var unread = item.getAttribute('data-unread') === '1';
+    var support = item.getAttribute('data-support') === '1';
+    if(filter === 'all') { item.style.display = 'flex'; }
+    else if(filter === 'unread') { item.style.display = unread ? 'flex' : 'none'; }
+    else if(filter === 'support') { item.style.display = support ? 'flex' : 'none'; }
+  });
+  updateUnreadTotal();
+}
+
+function sdFilterConversations(value){
+  var q = value.toLowerCase().trim();
+  var items = document.querySelectorAll('#sd-conv-list .mw-item');
+  items.forEach(function(item){
+    var other = item.getAttribute('data-other') || '';
+    var last = item.getAttribute('data-last') || '';
+    if(other.indexOf(q) !== -1 || last.indexOf(q) !== -1 || q === ''){
+      item.style.display = 'flex';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+  // Reset filter buttons to "All" active state
+  document.querySelectorAll('.mw-tab').forEach(function(b){
+    b.classList.toggle('active', b.getAttribute('data-filter') === 'all');
+  });
+  updateUnreadTotal();
+}
+
+function updateUnreadTotal(){
+  var total = 0;
+  document.querySelectorAll('#sd-conv-list .mw-item').forEach(function(item){
+    if(item.getAttribute('data-unread') === '1' && item.style.display !== 'none'){
+      total++;
+    }
+  });
+  var el = document.getElementById('sd-unread-total');
+  if(el) el.textContent = total;
+}
+
+function sdMarkRead(convId){
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/store/api/messages/mark-read/', true);
+  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.onload = function(){
+    location.reload();
+  };
+  xhr.send('conversation_id=' + convId);
+}
+
+function sdDeleteConv(convId){
+  if(!confirm('Delete this conversation?')) return;
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/store/api/messages/delete-conversation/', true);
+  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.onload = function(){
+    location.reload();
+  };
+  xhr.send('conversation_id=' + convId);
+}
+</script>
 {% endblock %}

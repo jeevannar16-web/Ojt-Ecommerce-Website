@@ -19,7 +19,7 @@ class UserRegistrationForm(forms.Form):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['phone', 'address_line1', 'address_line2', 'city', 'state', 'zip_code', 'country']
+        fields = ['phone', 'address_line1', 'address_line2', 'city', 'state', 'zip_code', 'country', 'avatar']
         widgets = {
             'phone': forms.TextInput(attrs={'placeholder': '+1 234 567 8900'}),
             'address_line1': forms.TextInput(attrs={'placeholder': 'Street address'}),

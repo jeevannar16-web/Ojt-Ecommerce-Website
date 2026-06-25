@@ -30,6 +30,8 @@
 </head>
 <body>
 
+  {% include 'includes/cookie_consent.html' %}
+
   <div id="page-loader" class="page-loader"></div>
   <div id="loader-logo" class="loader-floating-logo">
     <img src="{% static 'images/logo.jpg' %}" alt="" class="loader-floating-img">
@@ -76,11 +78,48 @@
   <script src="{% static 'js/base/mini_cart.js' %}?v=8"></script>
   <script src="{% static 'js/base/search.js' %}?v=7"></script>
   <script src="{% static 'js/base/newsletter.js' %}?v=7"></script>
+  <script src="{% static 'js/base/messages.js' %}?v=1"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="{% static 'js/base/map.js' %}?v=7"></script>
   <script src="{% static 'js/base/map_enhance.js' %}?v=1"></script>
 
   {% block extra_js %}{% endblock %}
+
+  {% if user.is_authenticated %}
+  <!-- Floating Message Bubble (Daraz-style) -->
+  <a href="{% url 'store:messages_list' %}" id="msg-bubble" aria-label="{{ 'Messages'|t }}" style="position:fixed;bottom:28px;right:28px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#d4af37,#e0b940);color:#0d0d0d;display:flex;align-items:center;justify-content:center;z-index:9997;box-shadow:0 8px 32px rgba(212,175,55,0.35);text-decoration:none;transition:all 0.25s cubic-bezier(.4,0,.2,1);">
+    <i class="bi bi-chat-dots-fill" style="font-size:1.5rem;"></i>
+    <span id="msg-bubble-badge" style="position:absolute;top:-3px;right:-3px;min-width:22px;height:22px;border-radius:11px;background:#ef4444;color:#fff;font-size:0.65rem;font-weight:800;display:none;align-items:center;justify-content:center;padding:0 6px;box-shadow:0 2px 8px rgba(239,68,68,0.4);"></span>
+  </a>
+  <script>
+  (function(){
+    var bubble = document.getElementById('msg-bubble');
+    var badge = document.getElementById('msg-bubble-badge');
+    if(!bubble||!badge) return;
+    // Stop polling when user is on a messages page
+    if(window.location.pathname.indexOf('/messages/') !== -1){
+      badge.style.display='none'; return;
+    }
+    bubble.addEventListener('mouseenter',function(){this.style.transform='scale(1.1)';});
+    bubble.addEventListener('mouseleave',function(){this.style.transform='scale(1)';});
+    function check(){
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET','/store/api/messages/unread/',true);
+      xhr.onload=function(){
+        if(xhr.status!==200) return;
+        try{
+          var d=JSON.parse(xhr.responseText);
+          if(d.unread>0){badge.textContent=d.unread;badge.style.display='flex';}
+          else{badge.style.display='none';}
+        }catch(e){}
+      };
+      xhr.send();
+    }
+    check();
+    setInterval(check,5000);
+  })();
+  </script>
+  {% endif %}
 
   <!-- Floating Quick Nav -->
   <div id="floating-nav" role="navigation" aria-label="{{ 'Quick Navigation'|t }}">

@@ -39,6 +39,9 @@ class Profile(models.Model):
     is_phone_verified = models.BooleanField(default=False, help_text="Phone verified via SMS OTP")
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="Default delivery latitude")
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="Default delivery longitude")
+    status_emoji = models.CharField(max_length=10, blank=True, default='🟢', help_text="Custom status emoji (e.g. 🟢, 🔴, 🌙, ⛔)")
+    status_text = models.CharField(max_length=100, blank=True, default='Available', help_text="Custom status text (e.g. Available, Busy, At work, Away)")
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, help_text="Profile photo")
 
     def __str__(self):
         return self.user.username

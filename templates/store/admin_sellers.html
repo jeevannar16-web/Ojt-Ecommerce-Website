@@ -1,0 +1,169 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}{{ 'Sellers Management'|t }} — FITNESS HUB{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/admin_activity_log.css' %}">
+<style>
+.seller-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.seller-stat-card { background: #121212; border: 1px solid #1a1a1a; border-radius: 10px; padding: 18px; text-align: center; }
+.seller-stat-card .num { font-size: 1.6rem; font-weight: 800; color: #d4af37; }
+.seller-stat-card .lbl { font-size: 0.65rem; color: #777; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-top: 2px; }
+.seller-row { cursor: pointer; transition: background 0.2s; }
+.seller-row:hover td { background: rgba(212,175,55,0.04); }
+.seller-row td { vertical-align: middle; }
+.seller-store-name { color: #d4af37; font-weight: 600; }
+.seller-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; }
+.seller-badge.verified { background: rgba(46,204,113,0.12); color: #2ecc71; }
+.seller-badge.unverified { background: rgba(239,68,68,0.12); color: #ef4444; }
+.sort-link { color: #888; text-decoration: none; font-size: 0.72rem; font-weight: 600; padding: 4px 10px; border-radius: 6px; transition: all 0.2s; }
+.sort-link:hover, .sort-link.active { color: #d4af37; background: rgba(212,175,55,0.08); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="brand">
+      <h2>{{ 'Admin'|t }} <span>{{ 'Panel'|t }}</span></h2>
+      <small>{{ request.user.username }}</small>
+    </div>
+    <ul class="admin-nav">
+      <li class="nav-label">{{ 'Management'|t }}</li>
+      <li><a href="{% url 'store:admin_dashboard' %}"><i class="bi bi-speedometer2"></i> {{ 'Dashboard'|t }}</a></li>
+      <li><a href="{% url 'store:admin_sellers' %}" class="active"><i class="bi bi-shop"></i> {{ 'Sellers'|t }}</a></li>
+      <li><a href="{% url 'store:admin_activity_log' %}"><i class="bi bi-clock-history"></i> {{ 'Activity Log'|t }}</a></li>
+      <li><a href="{% url 'store:admin_favorites' %}"><i class="bi bi-heart-fill"></i> {{ 'Favorites'|t }}</a></li>
+      <li><a href="{% url 'store:admin_cart' %}"><i class="bi bi-bag-plus"></i> {{ 'Cart'|t }}</a></li>
+      <li><a href="{% url 'admin:index' %}" target="_blank"><i class="bi bi-gear"></i> {{ 'Django Admin'|t }}</a></li>
+      <li><a href="{% url 'admin:auth_user_changelist' %}" target="_blank"><i class="bi bi-people"></i> {{ 'Users'|t }}</a></li>
+      <li><a href="{% url 'admin:store_product_changelist' %}" target="_blank"><i class="bi bi-box-seam"></i> {{ 'Products'|t }}</a></li>
+      <li><a href="{% url 'admin:store_order_changelist' %}" target="_blank"><i class="bi bi-truck"></i> {{ 'Orders'|t }}</a></li>
+      <li class="nav-label">{{ 'Store'|t }}</li>
+      <li><a href="{% url 'home' %}"><i class="bi bi-shop"></i> {{ 'View Site'|t }}</a></li>
+      <li><a href="{% url 'store:seller_dashboard' %}"><i class="bi bi-shop"></i> {{ 'Seller View'|t }}</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main" id="seller-management-main">
+    <h1><i class="bi bi-shop" style="color:#d4af37;"></i> {{ 'Sellers Management'|t }}</h1>
+    <p class="page-sub">{{ 'Monitor and manage all marketplace sellers.'|t }}</p>
+
+    <div class="seller-card-grid">
+      <div class="seller-stat-card">
+        <div class="num">{{ total_sellers }}</div>
+        <div class="lbl">{{ 'Total Sellers'|t }}</div>
+      </div>
+      <div class="seller-stat-card">
+        <div class="num" style="color:#2ec4b6;">{{ total_seller_products }}</div>
+        <div class="lbl">{{ 'Products Listed'|t }}</div>
+      </div>
+      <div class="seller-stat-card">
+        <div class="num" style="color:#3b82f6;">{{ total_seller_orders }}</div>
+        <div class="lbl">{{ 'Orders Fulfilled'|t }}</div>
+      </div>
+      <div class="seller-stat-card">
+        <div class="num" style="color:#d4af37;">{{ total_seller_revenue|currency }}</div>
+        <div class="lbl">{{ 'Total Revenue'|t }}</div>
+      </div>
+    </div>
+
+    <form method="GET" class="filter-bar">
+      <label>{{ 'Search'|t }}</label>
+      <input type="text" name="search" placeholder="{{ 'Username, store or email...'|t }}" value="{{ current_search }}">
+      <label>{{ 'Verified'|t }}</label>
+      <select name="verified">
+        <option value="">{{ 'All'|t }}</option>
+        <option value="yes" {% if current_verified == 'yes' %}selected{% endif %}>{{ 'Verified'|t }}</option>
+        <option value="no" {% if current_verified == 'no' %}selected{% endif %}>{{ 'Unverified'|t }}</option>
+      </select>
+      <label>{{ 'Sort'|t }}</label>
+      <select name="sort">
+        <option value="name" {% if current_sort == 'name' %}selected{% endif %}>{{ 'Name'|t }}</option>
+        <option value="revenue" {% if current_sort == 'revenue' %}selected{% endif %}>{{ 'Revenue'|t }}</option>
+        <option value="orders" {% if current_sort == 'orders' %}selected{% endif %}>{{ 'Orders'|t }}</option>
+        <option value="products" {% if current_sort == 'products' %}selected{% endif %}>{{ 'Products'|t }}</option>
+        <option value="units" {% if current_sort == 'units' %}selected{% endif %}>{{ 'Units Sold'|t }}</option>
+      </select>
+      <button type="submit" class="filter-btn"><i class="bi bi-funnel"></i> {{ 'Filter'|t }}</button>
+      <a href="{% url 'store:admin_sellers' %}" class="filter-reset">{{ 'Clear'|t }}</a>
+    </form>
+
+    <div class="al-table-wrap">
+      <table class="al-table">
+        <thead>
+          <tr>
+            <th>{{ 'Seller'|t }}</th>
+            <th>{{ 'Store'|t }}</th>
+            <th>{{ 'Email'|t }}</th>
+            <th>{{ 'Verified'|t }}</th>
+            <th>{{ 'Products'|t }}</th>
+            <th>{{ 'Orders'|t }}</th>
+            <th>{{ 'Units Sold'|t }}</th>
+            <th>{{ 'Revenue'|t }}</th>
+            <th>{{ 'Stock'|t }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sd in sellers %}
+          <tr class="seller-row" onclick="location.href='{% url 'store:admin_seller_detail' sd.user.id %}'">
+            <td><span class="al-user">@{{ sd.user.username }}</span></td>
+            <td>
+              {% if sd.profile.store_name %}
+                <span class="seller-store-name">{{ sd.profile.store_name }}</span>
+              {% else %}
+                <span style="color:#555;">—</span>
+              {% endif %}
+            </td>
+            <td style="color:#999;font-size:0.78rem;">{{ sd.user.email }}</td>
+            <td>
+              {% if sd.profile.is_email_verified %}
+                <span class="seller-badge verified"><i class="bi bi-check"></i></span>
+              {% else %}
+                <span class="seller-badge unverified"><i class="bi bi-x"></i></span>
+              {% endif %}
+            </td>
+            <td style="font-weight:600;color:#f0ece4;">{{ sd.product_count }}</td>
+            <td>{{ sd.total_orders }}</td>
+            <td>{{ sd.total_units_sold }}</td>
+            <td><span style="color:#d4af37;font-weight:600;">{{ sd.total_revenue|currency }}</span></td>
+            <td>
+              {% if sd.out_of_stock_count > 0 %}
+                <span style="color:#ef4444;font-weight:600;font-size:0.72rem;">{{ sd.out_of_stock_count }} {{ 'OOS'|t }}</span>
+              {% elif sd.low_stock_count > 0 %}
+                <span style="color:#f57224;font-weight:600;font-size:0.72rem;">{{ sd.low_stock_count }} {{ 'low'|t }}</span>
+              {% else %}
+                <span style="color:#2ec4b6;font-weight:600;font-size:0.72rem;"><i class="bi bi-check"></i></span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="9" style="text-align:center;padding:40px;color:#555;">{{ 'No sellers found.'|t }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% if page_obj.paginator.num_pages > 1 %}
+      <div class="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page=1{% if current_search %}&search={{ current_search }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_verified %}&verified={{ current_verified }}{% endif %}" class="step">&laquo;&laquo;</a>
+        <a href="?page={{ page_obj.previous_page_number }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_verified %}&verified={{ current_verified }}{% endif %}" class="step">&laquo;</a>
+        {% endif %}
+        <span class="current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_verified %}&verified={{ current_verified }}{% endif %}" class="step">&raquo;</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_verified %}&verified={{ current_verified }}{% endif %}" class="step">&raquo;&raquo;</a>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/pages/scroll_tracker.js' %}"></script>
+{% endblock %}

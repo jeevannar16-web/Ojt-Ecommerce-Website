@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Q
 from django.contrib.auth.models import User
 from .models import Product, Order, OrderItem, Category, Review, NewsletterSubscriber, FavoriteItem, CartItem, ActivityLog
 from users.models import Profile
 from .activity_logger import log_action
 from django.utils.html import escape
 from django.core.paginator import Paginator
+from django.db.models.functions import TruncMonth
 
 
 @staff_member_required
@@ -239,3 +240,139 @@ def admin_cart(request):
         'current_date_to': date_to,
     }
     return render(request, 'store/admin_cart.html', context)
+
+
+@staff_member_required
+def admin_sellers(request):
+    search = request.GET.get('search', '').strip()
+    sort = request.GET.get('sort', 'name')
+    verified_filter = request.GET.get('verified', '')
+
+    sellers = Profile.objects.filter(is_seller=True).select_related('user')
+
+    if search:
+        sellers = sellers.filter(Q(user__username__icontains=search) | Q(store_name__icontains=search) | Q(user__email__icontains=search))
+    if verified_filter == 'yes':
+        sellers = sellers.filter(is_email_verified=True)
+    elif verified_filter == 'no':
+        sellers = sellers.filter(is_email_verified=False)
+
+    seller_data = []
+    for p in sellers:
+        products = Product.objects.filter(seller=p.user)
+        prod_count = products.count()
+        order_items = OrderItem.objects.filter(product__in=products.values('id'))
+        total_rev = order_items.aggregate(t=Sum('price'))['t'] or 0
+        total_units = order_items.aggregate(t=Sum('quantity'))['t'] or 0
+        total_orders = order_items.values('order').distinct().count()
+        low_stock_count = products.filter(stock__gt=0, stock__lt=5).count()
+        out_of_stock_count = products.filter(stock=0).count()
+
+        seller_data.append({
+            'profile': p,
+            'user': p.user,
+            'product_count': prod_count,
+            'total_revenue': total_rev,
+            'total_units_sold': total_units,
+            'total_orders': total_orders,
+            'low_stock_count': low_stock_count,
+            'out_of_stock_count': out_of_stock_count,
+        })
+
+    if sort == 'revenue':
+        seller_data.sort(key=lambda x: x['total_revenue'], reverse=True)
+    elif sort == 'orders':
+        seller_data.sort(key=lambda x: x['total_orders'], reverse=True)
+    elif sort == 'products':
+        seller_data.sort(key=lambda x: x['product_count'], reverse=True)
+    elif sort == 'units':
+        seller_data.sort(key=lambda x: x['total_units_sold'], reverse=True)
+    else:
+        seller_data.sort(key=lambda x: x['user'].username.lower())
+
+    paginator = Paginator(seller_data, 20)
+    page = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page)
+
+    total_sellers = Profile.objects.filter(is_seller=True).count()
+    total_seller_revenue = 0
+    total_seller_products = 0
+    total_seller_orders = 0
+    for sd in seller_data:
+        total_seller_revenue += sd['total_revenue']
+        total_seller_products += sd['product_count']
+        total_seller_orders += sd['total_orders']
+
+    context = {
+        'sellers': page_obj,
+        'page_obj': page_obj,
+        'total_sellers': total_sellers,
+        'total_seller_revenue': total_seller_revenue,
+        'total_seller_products': total_seller_products,
+        'total_seller_orders': total_seller_orders,
+        'current_search': search,
+        'current_sort': sort,
+        'current_verified': verified_filter,
+    }
+    return render(request, 'store/admin_sellers.html', context)
+
+
+@staff_member_required
+def admin_seller_detail(request, seller_id):
+    seller = get_object_or_404(User, id=seller_id)
+    profile = get_object_or_404(Profile, user=seller, is_seller=True)
+
+    products = Product.objects.filter(seller=seller).order_by('-created_at')
+
+    search = request.GET.get('search', '').strip()
+    stock_filter = request.GET.get('stock', '')
+    if search:
+        products = products.filter(name__icontains=search)
+    if stock_filter == 'low':
+        products = products.filter(stock__gt=0, stock__lt=5)
+    elif stock_filter == 'out':
+        products = products.filter(stock=0)
+
+    product_paginator = Paginator(products, 15)
+    prod_page = request.GET.get('page', 1)
+    prod_page_obj = product_paginator.get_page(prod_page)
+
+    seller_order_items = OrderItem.objects.filter(product__in=Product.objects.filter(seller=seller).values('id'))
+    total_revenue = seller_order_items.aggregate(t=Sum('price'))['t'] or 0
+    total_units = seller_order_items.aggregate(t=Sum('quantity'))['t'] or 0
+    total_orders = seller_order_items.values('order').distinct().count()
+    pending_orders = Order.objects.filter(id__in=seller_order_items.values('order_id'), status='Pending').count()
+    completed_orders = Order.objects.filter(id__in=seller_order_items.values('order_id'), status='Delivered').count()
+
+    top_products = seller_order_items.values('product__name', 'product_id').annotate(
+        total_sold=Sum('quantity'), total_earned=Sum('price')
+    ).order_by('-total_sold')[:10]
+
+    recent_orders = Order.objects.filter(
+        id__in=seller_order_items.values('order_id')
+    ).order_by('-created_at')[:10]
+
+    monthly_revenue = seller_order_items.annotate(
+        month=TruncMonth('order__created_at')
+    ).values('month').annotate(
+        total=Sum('price')
+    ).order_by('month')
+
+    context = {
+        'seller': seller,
+        'profile': profile,
+        'products': prod_page_obj,
+        'prod_page_obj': prod_page_obj,
+        'total_revenue': total_revenue,
+        'total_units': total_units,
+        'total_orders': total_orders,
+        'pending_orders': pending_orders,
+        'completed_orders': completed_orders,
+        'product_count': Product.objects.filter(seller=seller).count(),
+        'top_products': top_products,
+        'recent_orders': recent_orders,
+        'monthly_revenue': list(monthly_revenue),
+        'current_search': search,
+        'current_stock': stock_filter,
+    }
+    return render(request, 'store/admin_seller_detail.html', context)

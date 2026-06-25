@@ -199,13 +199,47 @@
                             <span>{{ 'Shipping'|t }}</span>
                             <span class="amount" style="color:#2ec4b6;">{{ 'Free'|t }}</span>
                         </div>
+                        {% if discount_amount %}
+                        <div class="total-row" style="color:#2ec4b6;">
+                            <span>{{ 'Discount'|t }} (FIT-CODEX)</span>
+                            <span class="amount">-{{ discount_amount|currency }}</span>
+                        </div>
+                        {% endif %}
                         <div class="total-row grand">
                             <span>{{ 'Total'|t }}</span>
-                            <span class="amount">{{ total_amount|currency }}</span>
+                            <span class="amount">{{ final_amount|default:total_amount|currency }}</span>
                         </div>
                     </div>
 
                     <hr style="margin:16px 0;border-color:rgba(255,255,255,0.06);">
+
+                    <div class="coupon-section" style="background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(212,175,55,0.02));border:1px solid rgba(212,175,55,0.15);border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                            <i class="bi bi-gift" style="color:#d4af37;font-size:1.1rem;flex-shrink:0;"></i>
+                            <div style="font-size:0.75rem;color:#ccc;line-height:1.5;flex:1;">
+                                {{ 'Have a coupon?'|t }} {{ 'Enter code'|t }} <strong style="color:#f0ece4;">FIT-CODEX</strong>
+                                {{ 'for'|t }} <strong style="color:#d4af37;">20% OFF</strong>
+                                <br><small style="color:#888;">{{ 'Min. order'|t }} <strong style="color:#d4af37;">{{ 7|currency }}</strong></small>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:6px;">
+                            <input type="text" name="coupon_code" form="checkout-form" id="coupon-input"
+                                   value="{{ coupon_code|default:'' }}"
+                                   placeholder="{{ 'Enter coupon code'|t }}"
+                                   style="flex:1;background:#1a1a1a;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:8px 10px;color:#fff;font-size:0.8rem;text-transform:uppercase;">
+                            <button type="submit" form="checkout-form" name="apply_coupon" value="1"
+                                    style="background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.3);border-radius:6px;padding:8px 16px;color:#d4af37;cursor:pointer;font-size:0.8rem;font-weight:600;">{{ 'Apply'|t }}</button>
+                        </div>
+                        {% if coupon_valid %}
+                        <div style="margin-top:8px;font-size:0.78rem;color:#2ec4b6;">
+                            <i class="bi bi-check-circle-fill"></i> {{ 'Coupon applied!'|t }} {{ 'You save'|t }} <strong>{{ discount_amount|currency }}</strong>
+                        </div>
+                        {% elif coupon_code %}
+                        <div style="margin-top:8px;font-size:0.78rem;color:#ef4444;">
+                            <i class="bi bi-x-circle-fill"></i> {% if total_amount < 7 %}{{ 'Minimum order'|t }} {{ 7|currency }} {{ 'required for this coupon'|t }}{% else %}{{ 'Invalid coupon code'|t }}{% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
 
                     <button type="submit" form="checkout-form" class="btn-place-order" id="place-order-btn">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

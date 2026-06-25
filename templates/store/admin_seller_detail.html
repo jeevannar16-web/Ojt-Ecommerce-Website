@@ -1,0 +1,328 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}{{ seller.username }} — {{ 'Seller Detail'|t }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/admin_activity_log.css' %}">
+<style>
+.seller-header { display:flex;align-items:center;gap:20px;background:#121212;border:1px solid #1a1a1a;border-radius:12px;padding:24px;margin-bottom:24px; }
+.seller-avatar { width:64px;height:64px;border-radius:50%;background:rgba(212,175,55,0.1);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:#d4af37;font-weight:800;flex-shrink:0; }
+.seller-info h2 { font-family:'Playfair Display',serif;font-size:1.3rem;color:#f0ece4;margin:0 0 4px; }
+.seller-info .store-name { color:#d4af37;font-weight:600;font-size:0.9rem; }
+.seller-info .seller-meta { color:#666;font-size:0.78rem;margin-top:4px;display:flex;flex-wrap:wrap;gap:12px; }
+.seller-info .seller-meta span { display:inline-flex;align-items:center;gap:4px; }
+.seller-stats-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:24px; }
+.seller-stat-box { background:#121212;border:1px solid #1a1a1a;border-radius:10px;padding:16px;text-align:center; }
+.seller-stat-box .num { font-size:1.4rem;font-weight:800; }
+.seller-stat-box .lbl { font-size:0.6rem;color:#777;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-top:2px; }
+.cred-card { background:#0e0e0e;border:1px solid #1a1a1a;border-radius:8px;padding:14px 16px; }
+.cred-card .cred-label { font-size:0.6rem;color:#555;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:4px; }
+.cred-card .cred-value { font-size:0.82rem;color:#f0ece4;font-weight:600;word-break:break-word; }
+.cred-card .cred-value.empty { color:#444;font-weight:400; }
+.cred-grid { display:grid;grid-template-columns:1fr 1fr;gap:10px; }
+@media (max-width:600px){.cred-grid{grid-template-columns:1fr;}}
+.top-product-row { display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #1a1a1a; }
+.top-product-row:last-child { border-bottom:none; }
+.top-product-rank { width:22px;height:22px;border-radius:50%;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:#d4af37;flex-shrink:0; }
+.sort-link { color:#888;text-decoration:none;font-size:0.72rem;font-weight:600;padding:4px 10px;border-radius:6px;transition:all 0.2s; }
+.sort-link:hover,.sort-link.active { color:#d4af37;background:rgba(212,175,55,0.08); }
+.admin-info-grid { display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px; }
+@media (max-width:900px){.admin-info-grid{grid-template-columns:1fr;}}
+.empty-state { text-align:center;padding:28px;color:#555;font-size:0.82rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="brand">
+      <h2>{{ 'Admin'|t }} <span>{{ 'Panel'|t }}</span></h2>
+      <small>{{ request.user.username }}</small>
+    </div>
+    <ul class="admin-nav">
+      <li class="nav-label">{{ 'Management'|t }}</li>
+      <li><a href="{% url 'store:admin_dashboard' %}"><i class="bi bi-speedometer2"></i> {{ 'Dashboard'|t }}</a></li>
+      <li><a href="{% url 'store:admin_sellers' %}" class="active"><i class="bi bi-shop"></i> {{ 'Sellers'|t }}</a></li>
+      <li><a href="{% url 'store:admin_activity_log' %}"><i class="bi bi-clock-history"></i> {{ 'Activity Log'|t }}</a></li>
+      <li><a href="{% url 'store:admin_favorites' %}"><i class="bi bi-heart-fill"></i> {{ 'Favorites'|t }}</a></li>
+      <li><a href="{% url 'store:admin_cart' %}"><i class="bi bi-bag-plus"></i> {{ 'Cart'|t }}</a></li>
+      <li><a href="{% url 'admin:index' %}" target="_blank"><i class="bi bi-gear"></i> {{ 'Django Admin'|t }}</a></li>
+      <li class="nav-label">{{ 'Store'|t }}</li>
+      <li><a href="{% url 'home' %}"><i class="bi bi-shop"></i> {{ 'View Site'|t }}</a></li>
+    </ul>
+  </aside>
+
+  <main class="admin-main" id="seller-detail-main">
+    <a href="{% url 'store:admin_sellers' %}" style="color:#888;text-decoration:none;font-size:0.78rem;margin-bottom:16px;display:inline-block;"><i class="bi bi-arrow-left"></i> {{ 'Back to Sellers'|t }}</a>
+
+    <!-- Header -->
+    <div class="seller-header">
+      <div class="seller-avatar">{{ seller.username|first|upper }}</div>
+      <div class="seller-info">
+        <h2>@{{ seller.username }}</h2>
+        {% if profile.store_name %}
+        <div class="store-name"><i class="bi bi-shop"></i> {{ profile.store_name }}</div>
+        {% endif %}
+        <div class="seller-meta">
+          <span><i class="bi bi-envelope"></i> {{ seller.email }}</span>
+          <span><i class="bi bi-calendar"></i> {{ 'Joined'|t }} {{ seller.date_joined|date:"M d, Y" }}</span>
+          <span>{% if profile.is_email_verified %}<i class="bi bi-check-circle" style="color:#2ec4b6;"></i> {{ 'Verified'|t }}{% else %}<i class="bi bi-x-circle" style="color:#ef4444;"></i> {{ 'Unverified'|t }}{% endif %}</span>
+          {% if profile.store_slug %}
+          <span><a href="{% url 'store:seller_storefront' profile.store_slug %}" target="_blank" style="color:#3b82f6;"><i class="bi bi-box-arrow-up-right"></i> {{ 'Storefront'|t }}</a></span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="seller-stats-grid" id="section-stats">
+      <div class="seller-stat-box">
+        <div class="num" style="color:#f0ece4;">{{ product_count }}</div>
+        <div class="lbl">{{ 'Products'|t }}</div>
+      </div>
+      <div class="seller-stat-box">
+        <div class="num" style="color:#3b82f6;">{{ total_orders }}</div>
+        <div class="lbl">{{ 'Orders'|t }}</div>
+      </div>
+      <div class="seller-stat-box">
+        <div class="num" style="color:#2ec4b6;">{{ total_units }}</div>
+        <div class="lbl">{{ 'Units Sold'|t }}</div>
+      </div>
+      <div class="seller-stat-box">
+        <div class="num" style="color:#d4af37;">{{ total_revenue|currency }}</div>
+        <div class="lbl">{{ 'Revenue'|t }}</div>
+      </div>
+      <div class="seller-stat-box">
+        <div class="num" style="color:#f57224;">{{ pending_orders }}</div>
+        <div class="lbl">{{ 'Pending'|t }}</div>
+      </div>
+      <div class="seller-stat-box">
+        <div class="num" style="color:#2ecc71;">{{ completed_orders }}</div>
+        <div class="lbl">{{ 'Delivered'|t }}</div>
+      </div>
+    </div>
+
+    <!-- Credentials & Profile Info -->
+    <div class="admin-info-grid" id="section-credentials">
+      <div class="admin-card">
+        <div class="card-hd"><h3><i class="bi bi-building"></i> {{ 'Business Credentials'|t }}</h3></div>
+        <div class="card-bd" style="padding:16px 18px;">
+          <div class="cred-grid">
+            <div class="cred-card">
+              <div class="cred-label">{{ 'Store Name'|t }}</div>
+              <div class="cred-value">{{ profile.store_name|default:'—' }}</div>
+            </div>
+            <div class="cred-card">
+              <div class="cred-label">{{ 'Business Type'|t }}</div>
+              <div class="cred-value">{{ profile.get_business_type_display|default:'—' }}</div>
+            </div>
+            <div class="cred-card" style="grid-column:1/-1;">
+              <div class="cred-label">{{ 'Store Description'|t }}</div>
+              <div class="cred-value" style="font-weight:400;font-size:0.78rem;color:#aaa;">{{ profile.store_description|default:'—'|truncatechars:200 }}</div>
+            </div>
+            <div class="cred-card">
+              <div class="cred-label">{{ 'Business Registration'|t }}</div>
+              <div class="cred-value">{{ profile.business_registration|default:'—' }}</div>
+            </div>
+            <div class="cred-card">
+              <div class="cred-label">{{ 'Tax ID'|t }}</div>
+              <div class="cred-value">{{ profile.tax_id|default:'—' }}</div>
+            </div>
+            <div class="cred-card">
+              <div class="cred-label">{{ 'Phone'|t }}</div>
+              <div class="cred-value">{{ profile.phone|default:'—' }}</div>
+            </div>
+            <div class="cred-card">
+              <div class="cred-label">{{ 'ID Proof'|t }}</div>
+              <div class="cred-value">
+                {% if profile.id_proof %}
+                <a href="{{ profile.id_proof.url }}" target="_blank" style="color:#3b82f6;font-weight:600;font-size:0.78rem;"><i class="bi bi-file-earmark-pdf"></i> {{ 'View Document'|t }} →</a>
+                {% else %}<span class="empty">—</span>{% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="card-hd"><h3><i class="bi bi-geo-alt"></i> {{ 'Business Address'|t }}</h3></div>
+        <div class="card-bd" style="padding:16px 18px;">
+          <div class="cred-card" style="margin-bottom:12px;">
+            <div class="cred-label">{{ 'Address'|t }}</div>
+            <div class="cred-value" style="font-weight:400;font-size:0.78rem;color:#aaa;">{{ profile.business_address|default:'—' }}</div>
+          </div>
+          <div class="cred-grid">
+            <div class="cred-card">
+              <div class="cred-label">{{ 'City'|t }}</div>
+              <div class="cred-value">{{ profile.city|default:'—' }}</div>
+            </div>
+            <div class="cred-card">
+              <div class="cred-label">{{ 'State'|t }}</div>
+              <div class="cred-value">{{ profile.state|default:'—' }}</div>
+            </div>
+            <div class="cred-card">
+              <div class="cred-label">{{ 'ZIP / Postal'|t }}</div>
+              <div class="cred-value">{{ profile.zip_code|default:'—' }}</div>
+            </div>
+            <div class="cred-card">
+              <div class="cred-label">{{ 'Country'|t }}</div>
+              <div class="cred-value">{{ profile.country|default:'—' }}</div>
+            </div>
+          </div>
+          {% if profile.latitude and profile.longitude %}
+          <div style="margin-top:10px;font-size:0.7rem;color:#555;">
+            <i class="bi bi-geo"></i> {{ profile.latitude|floatformat:4 }}, {{ profile.longitude|floatformat:4 }}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Revenue & Top Products -->
+    <div class="admin-info-grid" id="section-revenue-and-products">
+      <div class="admin-card" id="section-monthly-revenue">
+        <div class="card-hd"><h3><i class="bi bi-bar-chart"></i> {{ 'Monthly Revenue'|t }}</h3></div>
+        <div class="card-bd" style="padding:16px 20px;">
+          {% if monthly_revenue %}
+          {% with max_rev=monthly_revenue.0.total %}
+          <div style="display:flex;align-items:flex-end;gap:4px;height:80px;padding:10px 0;">
+            {% for m in monthly_revenue %}
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+              <div style="font-size:0.6rem;color:#888;font-weight:600;">${{ m.total|floatformat:0 }}</div>
+              <div style="width:100%;max-width:30px;border-radius:4px 4px 0 0;min-height:4px;transition:height 0.6s ease;height:{% widthratio m.total max_rev 60 %}px;background:linear-gradient(180deg,#d4af37,#f59e0b);"></div>
+              <div style="font-size:0.55rem;color:#555;">{{ m.month|date:"M" }}</div>
+            </div>
+            {% endfor %}
+          </div>
+          {% endwith %}
+          {% else %}
+          <div class="empty-state">{{ 'No revenue data yet.'|t }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="admin-card" id="section-top-products">
+        <div class="card-hd"><h3><i class="bi bi-trophy"></i> {{ 'Top Selling Products'|t }}</h3></div>
+        <div class="card-bd" style="padding:8px 16px;">
+          {% if top_products %}
+          {% for p in top_products %}
+          <div class="top-product-row">
+            <span class="top-product-rank">{{ forloop.counter }}</span>
+            <div style="flex:1;">
+              <div style="color:#f0ece4;font-weight:600;font-size:0.82rem;">{{ p.product__name|truncatechars:40 }}</div>
+              <div style="color:#666;font-size:0.7rem;">{{ p.total_sold }} {{ 'sold'|t }} · {{ p.total_earned|currency }}</div>
+            </div>
+            <div style="font-size:0.78rem;color:#d4af37;font-weight:600;">{{ p.total_earned|currency }}</div>
+          </div>
+          {% endfor %}
+          {% else %}
+          <div class="empty-state">{{ 'No sales data yet.'|t }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Products & Orders -->
+    <div class="admin-info-grid" id="section-products-and-orders">
+      <div class="admin-card">
+        <div class="card-hd">
+          <h3><i class="bi bi-box-seam"></i> {{ 'Products'|t }} ({{ product_count }})</h3>
+          <div style="display:flex;gap:6px;">
+            <a href="?stock=low" class="sort-link {% if current_stock == 'low' %}active{% endif %}">{{ 'Low Stock'|t }}</a>
+            <a href="?stock=out" class="sort-link {% if current_stock == 'out' %}active{% endif %}">{{ 'Out of Stock'|t }}</a>
+            <a href="{% url 'store:admin_seller_detail' seller.id %}" class="sort-link {% if not current_stock %}active{% endif %}">{{ 'All'|t }}</a>
+          </div>
+        </div>
+        <div class="card-bd">
+          {% if products %}
+          <table class="al-table">
+            <thead>
+              <tr>
+                <th>{{ 'Name'|t }}</th>
+                <th>{{ 'Price'|t }}</th>
+                <th>{{ 'Stock'|t }}</th>
+                <th>{{ 'Status'|t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in products %}
+              <tr style="cursor:pointer;" onclick="location.href='{% url 'admin:store_product_change' p.id %}'" target="_blank">
+                <td style="color:#f0ece4;font-weight:500;">{{ p.name|truncatechars:35 }}</td>
+                <td style="color:#d4af37;font-weight:600;white-space:nowrap;">{{ p.price|currency }}</td>
+                <td>
+                  {% if p.stock == 0 %}
+                    <span style="color:#ef4444;font-weight:600;">{{ p.stock }}</span>
+                  {% elif p.stock < 5 %}
+                    <span style="color:#f57224;font-weight:600;">{{ p.stock }}</span>
+                  {% else %}
+                    <span style="color:#2ec4b6;font-weight:600;">{{ p.stock }}</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if p.is_sale %}<span style="color:#ef4444;font-weight:600;font-size:0.7rem;">{{ 'Sale'|t }}</span>{% endif %}
+                  {% if p.is_featured %}<span style="color:#d4af37;font-weight:600;font-size:0.7rem;">{{ 'Featured'|t }}</span>{% endif %}
+                  {% if not p.is_sale and not p.is_featured %}<span style="color:#555;font-size:0.7rem;">{{ 'Active'|t }}</span>{% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="4" style="text-align:center;padding:30px;color:#555;">{{ 'No products found.'|t }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% if prod_page_obj.paginator.num_pages > 1 %}
+          <div class="pagination" style="padding:12px;">
+            {% if prod_page_obj.has_previous %}
+            <a href="?page={{ prod_page_obj.previous_page_number }}{% if current_stock %}&stock={{ current_stock }}{% endif %}" class="step">&laquo;</a>
+            {% endif %}
+            <span class="current">{{ prod_page_obj.number }}/{{ prod_page_obj.paginator.num_pages }}</span>
+            {% if prod_page_obj.has_next %}
+            <a href="?page={{ prod_page_obj.next_page_number }}{% if current_stock %}&stock={{ current_stock }}{% endif %}" class="step">&raquo;</a>
+            {% endif %}
+          </div>
+          {% endif %}
+          {% else %}
+          <div class="empty-state">{{ 'No products yet.'|t }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="card-hd"><h3><i class="bi bi-truck"></i> {{ 'Recent Orders'|t }}</h3></div>
+        <div class="card-bd">
+          {% if recent_orders %}
+          <table class="al-table">
+            <thead>
+              <tr>
+                <th>{{ 'Order'|t }}</th>
+                <th>{{ 'Total'|t }}</th>
+                <th>{{ 'Status'|t }}</th>
+                <th>{{ 'Date'|t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in recent_orders %}
+              <tr style="cursor:pointer;" onclick="location.href='{% url 'admin:store_order_change' order.id %}'" target="_blank">
+                <td style="color:#f0ece4;font-weight:600;">#{{ order.order_number|default:order.id }}</td>
+                <td style="color:#d4af37;font-weight:600;white-space:nowrap;">{{ order.total_amount|currency }}</td>
+                <td><span class="al-action al-action-{{ order.status }}">{{ order.get_status_display|t }}</span></td>
+                <td style="color:#555;font-size:0.72rem;white-space:nowrap;">{{ order.created_at|date:"M d, Y" }}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="4" style="text-align:center;padding:30px;color:#555;">{{ 'No orders yet.'|t }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="empty-state">{{ 'No orders yet.'|t }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/pages/scroll_tracker.js' %}"></script>
+{% endblock %}

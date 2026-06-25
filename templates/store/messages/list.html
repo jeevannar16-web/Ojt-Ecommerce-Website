@@ -1,0 +1,193 @@
+{% extends 'layout/messages_base.html' %}
+{% load static %}
+
+{% block title %}{{ 'Messages'|t }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/messaging_widget.css' %}?v=1">
+<link rel="stylesheet" href="{% static 'css/pages/messages_list.css' %}?v=17">
+<style>
+  html, body { height: 100%; overflow: hidden; }
+  :root { --cl-top: 0px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="cl-page">
+
+  {# ── Header ──────────────────────────────────────────── #}
+  <div class="cl-header">
+    <h1><i class="bi bi-chat-dots"></i> {{ 'Messages'|t }}</h1>
+    <div class="cl-header-actions">
+      {% if unread_total > 0 %}
+      <span class="cl-badge">{{ unread_total }}</span>
+      {% endif %}
+      {% if is_seller or is_admin %}
+      <a href="{% url 'store:contact_admin' %}" class="cl-contact-btn">
+        <i class="bi bi-headset"></i>{{ 'Support'|t }}
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {# ── Search ──────────────────────────────────────────── #}
+  <div class="cl-search">
+    <div class="cl-search-wrap">
+      <i class="bi bi-search"></i>
+      <input type="text" id="cl-search-input"
+             placeholder="{{ 'Search conversations...'|t }}"
+             autocomplete="off">
+    </div>
+  </div>
+
+  {# ── Tabs ────────────────────────────────────────────── #}
+  <div class="cl-tabs">
+    <button class="cl-tab active" data-filter="all">{{ 'All'|t }}</button>
+    <button class="cl-tab" data-filter="unread">{{ 'Unread'|t }}</button>
+    <button class="cl-tab" data-filter="admin">{{ 'Support'|t }}</button>
+  </div>
+  <div class="cl-tabs-divider"></div>
+
+  {# ── Conversation List ───────────────────────────────── #}
+  <div class="cl-list" id="cl-list">
+    {% for item in conversations %}
+    <a href="{% url 'store:conversation_detail' item.conv.id %}"
+       class="cl-row"
+       data-unread="{{ item.unread }}"
+       data-admin="{{ item.conv.is_admin_conversation|lower }}">
+
+      <div class="cl-avatar">
+        {% if item.conv.is_admin_conversation %}
+        <i class="bi bi-shield-shaded"></i>
+        {% else %}
+        {{ item.other_user.username|first|upper }}
+        {% endif %}
+        <span class="cl-status offline" data-user-id="{{ item.other_user.id }}"></span>
+      </div>
+
+      <div class="cl-body">
+        <div class="cl-top">
+          <span class="cl-name">
+            {% if item.other_status_emoji %}{{ item.other_status_emoji }} {% endif %}{{ item.other_user.username }}
+          </span>
+          <div class="cl-top-right">
+            {% if not is_admin and item.store_slug %}
+            <a href="{% url 'store:seller_storefront' item.store_slug %}"
+               class="cl-store"
+               onclick="event.stopPropagation();">{{ 'Store'|t }}</a>
+            {% endif %}
+            {% if item.last_message %}
+            <span class="cl-time">{{ item.last_message.created_at|timesince }}</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="cl-bottom">
+          {% if item.conv.product %}
+          <span class="cl-pname">{{ item.conv.product.name|truncatechars:14 }}</span>
+          <span class="cl-sep">·</span>
+          {% endif %}
+          {% if item.last_message %}
+          <span class="cl-msg">{{ item.last_message.content|truncatechars:38 }}</span>
+          {% else %}
+          <span class="cl-msg cl-empty-text">{{ 'No messages yet'|t }}</span>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if item.unread > 0 %}
+      <span class="cl-unread">{{ item.unread }}</span>
+      {% endif %}
+    </a>
+
+    {% empty %}
+    <div class="cl-empty">
+      <div class="cl-empty-icon"><i class="bi bi-chat-dots"></i></div>
+      <h3>{{ 'No conversations yet'|t }}</h3>
+      <p>{{ "Browse products and chat with sellers about your questions."|t }}</p>
+      <div class="cl-empty-ctas">
+        <a href="{% url 'store:product_list' %}" class="primary">
+          <i class="bi bi-bag"></i> {{ 'Browse Products'|t }}
+        </a>
+        {% if is_seller or is_admin %}
+        <a href="{% url 'store:contact_admin' %}" class="secondary">
+          <i class="bi bi-headset"></i> {{ 'Contact Support'|t }}
+        </a>
+        {% endif %}
+      </div>
+      <div class="cl-empty-tips">
+        <span class="cl-tip"><i class="bi bi-cursor"></i> {{ 'Click Chat with Seller on product pages'|t }}</span>
+        <span class="cl-tip"><i class="bi bi-clock"></i> {{ 'Sellers reply within 24 hours'|t }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>{# /cl-list #}
+</div>{# /cl-page #}
+
+<script>
+(function(){
+  function remeasure(){
+    var top = 0;
+    ['.announce-bar', '.main-nav', '.elite-nav-wrap'].forEach(function(s){
+      var el = document.querySelector(s);
+      if(el && el.offsetHeight) top += el.offsetHeight;
+    });
+    if(top > 0){
+      document.documentElement.style.setProperty('--cl-top', top + 'px');
+    }
+  }
+  remeasure();
+  window.addEventListener('load', remeasure);
+  window.addEventListener('resize', remeasure);
+
+  /* ─ Search ─ */
+  var si = document.getElementById('cl-search-input');
+  var cl = document.getElementById('cl-list');
+  if(!cl) return;
+  if(si){
+    si.addEventListener('input', function(){
+      var q = this.value.toLowerCase().trim();
+      cl.querySelectorAll('.cl-row').forEach(function(c){
+        var n = (c.querySelector('.cl-name') || {}).textContent || '';
+        var p = (c.querySelector('.cl-bottom') || {}).textContent || '';
+        c.style.display = (!q || n.toLowerCase().includes(q) || p.toLowerCase().includes(q)) ? '' : 'none';
+      });
+    });
+  }
+
+  /* ─ Filter Tabs ─ */
+  document.querySelectorAll('.cl-tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      document.querySelectorAll('.cl-tab').forEach(function(x){ x.classList.remove('active'); });
+      this.classList.add('active');
+      var f = this.dataset.filter;
+      cl.querySelectorAll('.cl-row').forEach(function(c){
+        if(f === 'all')         { c.style.display = ''; }
+        else if(f === 'unread') { c.style.display = parseInt(c.dataset.unread) > 0 ? '' : 'none'; }
+        else if(f === 'admin')  { c.style.display = c.dataset.admin === 'true' ? '' : 'none'; }
+      });
+    });
+  });
+
+  /* ─ Online Status Polling ─ */
+  cl.querySelectorAll('.cl-status[data-user-id]').forEach(function(d){
+    if(!d.dataset.userId) return;
+    var uid = d.dataset.userId;
+    var el  = d;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '{% url "store:api_online_status" %}', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRFToken',
+      (document.querySelector('[name=csrfmiddlewaretoken]') || {}).value || '');
+    xhr.onload = function(){
+      if(xhr.status === 200){
+        try{
+          var data = JSON.parse(xhr.responseText);
+          el.className = 'cl-status ' + (data.is_online ? 'online' : 'offline');
+        }catch(e){}
+      }
+    };
+    xhr.send(JSON.stringify({user_id: parseInt(uid)}));
+  });
+})();
+</script>
+{% endblock %}

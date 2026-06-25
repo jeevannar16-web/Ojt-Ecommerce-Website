@@ -50,6 +50,28 @@ def checkout_view(request):
         postal_code = request.POST.get('postal_code', '').strip()
         latitude = request.POST.get('latitude', '').strip()
         longitude = request.POST.get('longitude', '').strip()
+        coupon_code = request.POST.get('coupon_code', '').strip().upper()
+
+        discount_amount = 0.0
+        final_amount = total_amount
+        coupon_valid = False
+        if coupon_code == "FIT-CODEX":
+            if total_amount >= 7.0:
+                discount_amount = round(total_amount * 0.20, 2)
+                final_amount = round(total_amount - discount_amount, 2)
+                coupon_valid = True
+
+        # If "Apply" coupon button was clicked, re-render without creating order
+        if request.POST.get('apply_coupon'):
+            return render(request, 'store/checkout.html', {
+                'cart_items': cart_items,
+                'total_amount': total_amount,
+                'final_amount': final_amount,
+                'form_data': request.POST,
+                'coupon_code': coupon_code,
+                'discount_amount': discount_amount,
+                'coupon_valid': coupon_valid,
+            })
 
         errors = []
         if not full_name:
@@ -63,7 +85,7 @@ def checkout_view(request):
                 errors.append("Please enter a valid email address.")
         if not phone_number:
             errors.append("Phone number is required.")
-        elif not re.match(r'^\+?[\d\s\-\(\)]{7,20}$', phone_number):
+        elif not re.match(r'^\+?[\d\s\-\(\)]{7,20}$', phone_number) or len(re.sub(r'[\s\-\(\)\+]', '', phone_number)) < 7:
             errors.append("Please enter a valid phone number (e.g. +92 300 1234567).")
         if not shipping_address:
             errors.append("Street address is required.")
@@ -78,7 +100,11 @@ def checkout_view(request):
             return render(request, 'store/checkout.html', {
                 'cart_items': cart_items,
                 'total_amount': total_amount,
-                'form_data': request.POST
+                'final_amount': final_amount,
+                'form_data': request.POST,
+                'coupon_code': coupon_code,
+                'discount_amount': discount_amount,
+                'coupon_valid': coupon_valid,
             })
 
         profile.phone = phone_number
@@ -128,7 +154,9 @@ def checkout_view(request):
             shipping_address=full_shipping_address,
             latitude=order_lat,
             longitude=order_lng,
-            total_amount=total_amount,
+            total_amount=final_amount,
+            coupon_code=coupon_code or None,
+            discount_amount=discount_amount,
             status='Pending'
         )
 
@@ -169,5 +197,9 @@ def checkout_view(request):
     return render(request, 'store/checkout.html', {
         'cart_items': cart_items,
         'total_amount': total_amount,
+        'final_amount': total_amount,
+        'coupon_code': '',
+        'discount_amount': 0,
+        'coupon_valid': False,
         'form_data': form_data,
     })

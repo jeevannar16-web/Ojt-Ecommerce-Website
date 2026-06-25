@@ -1,0 +1,244 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}{{ 'Messages'|t }} — {{ 'Admin'|t }} — FITNESS HUB{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/admin_dashboard.css' %}?v=2">
+<link rel="stylesheet" href="{% static 'css/pages/admin_messages.css' %}?v=1">
+{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="brand">
+      <h2>{{ 'Admin'|t }} <span>{{ 'Panel'|t }}</span></h2>
+      <small>{{ request.user.username }}</small>
+    </div>
+    <ul class="admin-nav">
+      <li class="nav-label">{{ 'Management'|t }}</li>
+      <li><a href="{% url 'store:admin_dashboard' %}"><i class="bi bi-speedometer2"></i> {{ 'Dashboard'|t }}</a></li>
+      <li><a href="{% url 'store:admin_sellers' %}"><i class="bi bi-shop"></i> {{ 'Sellers'|t }}</a></li>
+      <li><a href="{% url 'store:admin_activity_log' %}"><i class="bi bi-clock-history"></i> {{ 'Activity Log'|t }}</a></li>
+      <li><a href="{% url 'store:admin_favorites' %}"><i class="bi bi-heart-fill"></i> {{ 'Favorites'|t }}</a></li>
+      <li><a href="{% url 'store:admin_cart' %}"><i class="bi bi-bag-plus"></i> {{ 'Cart'|t }}</a></li>
+      <li><a href="{% url 'store:messages_list' %}" class="active"><i class="bi bi-chat-dots"></i> {{ 'Messages'|t }}</a></li>
+      <li><a href="{% url 'admin:index' %}" target="_blank"><i class="bi bi-gear"></i> {{ 'Django Admin'|t }}</a></li>
+      <li><a href="{% url 'admin:auth_user_changelist' %}" target="_blank"><i class="bi bi-people"></i> {{ 'Users'|t }}</a></li>
+      <li><a href="{% url 'admin:store_product_changelist' %}" target="_blank"><i class="bi bi-box-seam"></i> {{ 'Products'|t }}</a></li>
+      <li><a href="{% url 'admin:store_order_changelist' %}" target="_blank"><i class="bi bi-truck"></i> {{ 'Orders'|t }}</a></li>
+      <li class="nav-label">{{ 'Store'|t }}</li>
+      <li><a href="{% url 'home' %}"><i class="bi bi-shop"></i> {{ 'View Site'|t }}</a></li>
+      <li><a href="{% url 'store:seller_dashboard' %}"><i class="bi bi-shop"></i> {{ 'Seller View'|t }}</a></li>
+    </ul>
+  </aside>
+
+  <div class="am-page" id="admin-messages-page">
+    <h1>
+      <i class="bi bi-chat-dots" style="color:#d4af37;"></i> {{ 'Message Center'|t }}
+      <small>{{ 'Manage all conversations'|t }}</small>
+    </h1>
+    <p class="page-sub">{{ 'Monitor and respond to customer conversations across the platform.'|t }}</p>
+
+    <!-- Stats -->
+    <div class="am-stats">
+      <div class="am-stat">
+        <div class="num">{{ stats.total }}</div>
+        <div class="lbl">{{ 'Total Conversations'|t }}</div>
+      </div>
+      <div class="am-stat">
+        <div class="num warn">{{ stats.unread }}</div>
+        <div class="lbl">{{ 'Unread'|t }}</div>
+      </div>
+      <div class="am-stat">
+        <div class="num danger">{{ stats.overdue }}</div>
+        <div class="lbl">{{ 'Needs Attention'|t }}</div>
+      </div>
+      <div class="am-stat">
+        <div class="num">{{ stats.active_today }}</div>
+        <div class="lbl">{{ 'Active Today'|t }}</div>
+      </div>
+      <div class="am-stat">
+        <div class="num">{{ stats.support }}</div>
+        <div class="lbl">{{ 'Support'|t }}</div>
+      </div>
+      <div class="am-stat">
+        <div class="num">{{ stats.product_inquiries }}</div>
+        <div class="lbl">{{ 'Product Inquiries'|t }}</div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="am-toolbar">
+      <div class="am-filter-tabs">
+        <button class="am-filter-tab active" data-filter="all">{{ 'All'|t }}</button>
+        <button class="am-filter-tab" data-filter="unread">{{ 'Unread'|t }}</button>
+        <button class="am-filter-tab" data-filter="today">{{ 'Today'|t }}</button>
+        <button class="am-filter-tab" data-filter="support">{{ 'Support'|t }}</button>
+        <button class="am-filter-tab" data-filter="product">{{ 'Product'|t }}</button>
+      </div>
+      <div class="am-search-wrap">
+        <i class="bi bi-search"></i>
+        <input type="text" id="am-search" placeholder="{{ 'Search by customer, seller, or product...'|t }}" autocomplete="off">
+      </div>
+      <span class="am-total-badge"><strong>{{ conversations|length }}</strong> {{ 'conversations'|t }}</span>
+    </div>
+
+    <!-- Table -->
+    {% if conversations %}
+    <div class="am-table-wrap">
+      <table class="am-table" id="am-table">
+        <thead>
+          <tr>
+            <th>{{ 'Customer'|t }}</th>
+            <th>{{ 'Seller'|t }}</th>
+            <th>{{ 'Type'|t }}</th>
+            <th>{{ 'Last Message'|t }}</th>
+            <th>{{ 'Unread'|t }}</th>
+            <th>{{ 'Activity'|t }}</th>
+            <th>{{ 'Actions'|t }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in conversations %}
+          <tr class="{% if item.unread > 0 %}am-unread{% endif %}" data-type="{% if item.conv.is_admin_conversation %}support{% elif item.conv.product %}product{% else %}general{% endif %}" data-date="{{ item.conv.updated_at|date:'Y-m-d' }}" data-unread="{{ item.unread }}">
+            <td>
+              <div class="am-user-cell">
+                <div class="am-avatar"><i class="bi bi-person"></i></div>
+                <div class="am-user-info">
+                  <div class="am-name">{{ item.conv.customer.username }}</div>
+                  <div class="am-email">{{ item.conv.customer.email|default:'' }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="am-user-cell">
+                <div class="am-avatar" style="width:30px;height:30px;font-size:0.65rem;"><i class="bi bi-shop"></i></div>
+                <div class="am-user-info">
+                  <div class="am-name" style="font-size:0.78rem;">{{ item.conv.seller.username }}</div>
+                  <div class="am-seller-info">
+                    {% with sp=item.conv.seller.profile %}
+                    {% if sp.store_name %}
+                    <span class="store-tag">{{ sp.store_name }}</span>
+                    {% endif %}
+                    {% endwith %}
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td>
+              {% if item.conv.is_admin_conversation %}
+              <span class="am-type-badge am-type-support"><i class="bi bi-shield-shaded"></i> {{ 'Support'|t }}</span>
+              {% elif item.conv.product %}
+              <span class="am-type-badge am-type-product"><i class="bi bi-box-seam"></i> {{ 'Product'|t }}</span>
+              {% else %}
+              <span class="am-type-badge" style="background:rgba(255,255,255,0.04);color:#888;"><i class="bi bi-chat"></i> {{ 'General'|t }}</span>
+              {% endif %}
+              {% if item.conv.product %}
+              <div style="font-size:0.65rem;color:#555;margin-top:3px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.conv.product.name|truncatechars:20 }}</div>
+              {% endif %}
+            </td>
+            <td>
+              {% if item.last_message %}
+              <div class="am-preview">{{ item.last_message.content|truncatechars:60 }}</div>
+              {% else %}
+              <div class="am-preview" style="color:#444;font-style:italic;">{{ 'No messages yet'|t }}</div>
+              {% endif %}
+            </td>
+            <td>
+              {% if item.unread > 0 %}
+              <span class="am-unread-badge">{{ item.unread }}</span>
+              {% else %}
+              <span style="color:#444;font-size:0.7rem;">—</span>
+              {% endif %}
+            </td>
+            <td>
+              <span class="am-time">{{ item.conv.updated_at|date:"M d, H:i" }}</span>
+            </td>
+            <td>
+              <a href="{% url 'store:conversation_detail' item.conv.id %}" class="am-action-btn am-action-view">
+                <i class="bi bi-chat-dots"></i> {{ 'View'|t }}
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div class="am-empty">
+      <i class="bi bi-chat-dots"></i>
+      <h3>{{ 'No conversations yet'|t }}</h3>
+      <p>{{ 'Customer conversations with sellers and support inquiries will appear here. As users start chatting, you can monitor and manage all communications from this panel.'|t }}</p>
+      <div class="cta-group">
+        <a href="{% url 'store:admin_dashboard' %}" class="cta-primary"><i class="bi bi-speedometer2"></i> {{ 'Back to Dashboard'|t }}</a>
+        <a href="{% url 'admin:store_product_changelist' %}" class="cta-secondary"><i class="bi bi-box-seam"></i> {{ 'Manage Products'|t }}</a>
+        <a href="{% url 'home' %}" class="cta-secondary"><i class="bi bi-shop"></i> {{ 'View Storefront'|t }}</a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  // Filter tabs
+  var tabs = document.querySelectorAll('.am-filter-tab');
+  var rows = document.querySelectorAll('#am-table tbody tr');
+
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){ t.classList.remove('active'); });
+      this.classList.add('active');
+      var filter = this.dataset.filter;
+      var searchVal = (document.getElementById('am-search').value || '').toLowerCase();
+      rows.forEach(function(row){
+        var type = row.dataset.type;
+        var unread = parseInt(row.dataset.unread) || 0;
+        var date = row.dataset.date;
+        var today = new Date().toISOString().slice(0,10);
+        var match = true;
+        if(filter === 'unread' && unread === 0) match = false;
+        if(filter === 'today' && date !== today) match = false;
+        if(filter === 'support' && type !== 'support') match = false;
+        if(filter === 'product' && type !== 'product') match = false;
+        if(searchVal){
+          var text = row.textContent.toLowerCase();
+          if(text.indexOf(searchVal) === -1) match = false;
+        }
+        row.style.display = match ? '' : 'none';
+      });
+      updateCount();
+    });
+  });
+
+  // Search
+  document.getElementById('am-search').addEventListener('input', function(){
+    var activeTab = document.querySelector('.am-filter-tab.active');
+    if(activeTab) activeTab.click();
+  });
+
+  function updateCount(){
+    var visible = document.querySelectorAll('#am-table tbody tr[style*="display:"]:not([style*="display: none"])').length;
+    var all = document.querySelectorAll('#am-table tbody tr').length;
+    var count = 0;
+    document.querySelectorAll('#am-table tbody tr').forEach(function(r){
+      if(r.style.display !== 'none') count++;
+    });
+    var badge = document.querySelector('.am-total-badge strong');
+    if(badge) badge.textContent = count;
+  }
+
+  // Quick unread mark on click
+  document.querySelectorAll('.am-action-view').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var row = this.closest('tr');
+      var convId = this.getAttribute('href').match(/\d+/);
+    });
+  });
+})();
+</script>
+{% endblock %}

@@ -155,13 +155,14 @@
 
       <div class="footer-promo">
         <span class="footer-promo-dot"></span>
-        {{ 'Free shipping over'|t }} {{ 50|currency }} &nbsp;·&nbsp; {{ 'Code'|t }} <strong>FIT-CODEX</strong>
+        {{ 'Free shipping over'|t }} {{ 10|currency }} &nbsp;·&nbsp; {{ 'Code'|t }} <strong>FIT-CODEX</strong>
       </div>
 
       <div class="footer-legal">
         <a href="{% url 'privacy' %}">{{ 'Privacy Policy'|t }}</a>
         <a href="{% url 'terms' %}">{{ 'Terms'|t }}</a>
         <a href="{% url 'cookies' %}">{{ 'Cookies'|t }}</a>
+        <a href="#" onclick="var e=document.getElementById('cc-modal-overlay');if(e)e.classList.add('open');return false;">{{ 'Cookie Settings'|t }}</a>
       </div>
     </div>
 

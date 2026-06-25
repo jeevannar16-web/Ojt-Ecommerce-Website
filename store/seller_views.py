@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Sum, Count, Q
+from django.db.models import Sum, Count, Q, Avg
 from django.utils.text import slugify
-from .models import Product, ProductSize, Order, OrderItem, Category
+from .models import Product, ProductSize, Order, OrderItem, Category, Review, Conversation
 from .activity_logger import log_action
 from users.models import Profile, CredentialHistory
 from django.core.paginator import Paginator
@@ -30,10 +30,44 @@ def seller_center(request):
     seller_count = Profile.objects.filter(is_seller=True).count()
     product_count = Product.objects.count()
     order_count = Order.objects.count()
+    total_revenue = Order.objects.exclude(status='Cancelled').aggregate(t=Sum('total_amount'))['t'] or 0
+
+    pending_sellers_count = Profile.objects.filter(seller_requested=True, is_seller=False).count()
+    avg_order_value = (total_revenue / order_count) if order_count > 0 else 0
+
+    top_sellers = Profile.objects.filter(is_seller=True).select_related('user').annotate(
+        prod_count=Count('user__products')
+    ).order_by('-prod_count')[:5]
+
+    top_seller_data = []
+    for p in top_sellers:
+        seller_products = Product.objects.filter(seller=p.user)
+        seller_rev = OrderItem.objects.filter(product__in=seller_products.values('id')).aggregate(t=Sum('price'))['t'] or 0
+        seller_orders = OrderItem.objects.filter(product__in=seller_products.values('id')).values('order').distinct().count()
+        top_seller_data.append({
+            'profile': p,
+            'product_count': p.prod_count,
+            'revenue': seller_rev,
+            'orders': seller_orders,
+        })
+
+    category_demand = Category.objects.annotate(
+        prod_count=Count('products'),
+        order_count=Count('products__orderitem')
+    ).order_by('-order_count')[:6]
+
+    recent_sellers = Profile.objects.filter(is_seller=True).select_related('user').order_by('-user__date_joined')[:4]
+
     return render(request, 'store/seller_center.html', {
         'seller_count': seller_count,
         'product_count': product_count,
         'order_count': order_count,
+        'total_revenue': total_revenue,
+        'avg_order_value': avg_order_value,
+        'pending_sellers_count': pending_sellers_count,
+        'top_sellers': top_seller_data,
+        'category_demand': category_demand,
+        'recent_sellers': recent_sellers,
     })
 
 
@@ -194,6 +228,59 @@ def seller_dashboard(request):
 
     recent_products = products.order_by('-created_at')[:5]
 
+    seller_categories = set(products.values_list('category_id', flat=True))
+    seller_product_ids = set(products.values_list('id', flat=True))
+
+    if seller_categories:
+        top_rated_in_category = Product.objects.filter(
+            category_id__in=seller_categories
+        ).exclude(id__in=seller_product_ids).filter(stock__gt=0).annotate(
+            avg_rating=Avg('reviews__rating')
+        ).order_by('-avg_rating')[:5]
+    else:
+        top_rated_in_category = Product.objects.filter(
+            stock__gt=0
+        ).annotate(
+            avg_rating=Avg('reviews__rating')
+        ).order_by('-avg_rating')[:5]
+
+    trending_products = Product.objects.filter(
+        is_sale=True, stock__gt=0
+    ).order_by('-created_at')[:5]
+
+    if seller_categories:
+        category_counts = Product.objects.filter(
+            category_id__in=seller_categories
+        ).exclude(id__in=seller_product_ids).values('category__name').annotate(
+            total=Count('id')
+        ).order_by('-total')[:5]
+        high_demand_categories = [c['category__name'] for c in category_counts if c['category__name']]
+    else:
+        top_cats = Category.objects.annotate(pcount=Count('products')).order_by('-pcount')[:5]
+        high_demand_categories = [c.name for c in top_cats]
+
+    low_stock_products_list = products.filter(stock__gt=0, stock__lt=5)[:5] if products.exists() else []
+
+    # Recent conversations for seller
+    recent_convs = Conversation.objects.filter(
+        Q(seller=request.user) | Q(customer=request.user)
+    ).select_related('customer', 'seller', 'product').prefetch_related('messages').order_by('-updated_at')[:6]
+    conv_list = []
+    for c in recent_convs:
+        last = c.last_message()
+        other = c.seller if c.customer == request.user else c.customer
+        conv_list.append({
+            'conv': c,
+            'last_message': last,
+            'unread': c.unread_count(request.user),
+            'other_user': other,
+            'is_support': other.is_staff or other.is_superuser,
+            'other_status_emoji': getattr(other.profile, 'status_emoji', '🟢') if hasattr(other, 'profile') else '🟢',
+            'other_status_text': getattr(other.profile, 'status_text', 'Available') if hasattr(other, 'profile') else 'Available',
+            'product': c.product,
+            'store_slug': getattr(other.profile, 'store_slug', '') if hasattr(other, 'profile') else '',
+        })
+
     context = {
         'total_products': total_products,
         'low_stock': low_stock,
@@ -207,6 +294,12 @@ def seller_dashboard(request):
         'top_products': top_products,
         'recent_orders': recent_orders_list,
         'recent_products': recent_products,
+        'top_rated_in_category': top_rated_in_category,
+        'trending_products': trending_products,
+        'high_demand_categories': high_demand_categories,
+        'low_stock_products_list': low_stock_products_list,
+        'seller_categories_count': len(seller_categories),
+        'recent_conversations': conv_list,
     }
     return render(request, 'store/seller/dashboard.html', context)
 
@@ -286,6 +379,8 @@ def seller_product_add(request):
         if size_names:
             for sz in size_names:
                 ProductSize.objects.create(product=product, size=sz, stock=0)
+                log_action(request.user, 'size_create', f"Added size '{sz}' to product '{name}'",
+                           {'product_id': product.id, 'product_name': name, 'size': sz}, request)
             product.stock = 0
             product.save(update_fields=['stock'])
 
@@ -330,10 +425,18 @@ def seller_product_edit(request, product_id):
             incoming = set(new_size_names)
             for sz in incoming - existing:
                 ProductSize.objects.create(product=product, size=sz, stock=0)
+                log_action(request.user, 'size_create', f"Added size '{sz}' to product '{product.name}'",
+                           {'product_id': product.id, 'product_name': product.name, 'size': sz}, request)
             for sz in existing - incoming:
                 product.sizes.filter(size=sz).delete()
+                log_action(request.user, 'size_delete', f"Removed size '{sz}' from product '{product.name}'",
+                           {'product_id': product.id, 'product_name': product.name, 'size': sz}, request)
         else:
+            deleted = list(product.sizes.values_list('size', flat=True))
             product.sizes.all().delete()
+            for sz in deleted:
+                log_action(request.user, 'size_delete', f"Removed size '{sz}' from product '{product.name}'",
+                           {'product_id': product.id, 'product_name': product.name, 'size': sz}, request)
 
         product.size = sizes_raw or None
         product.save()
@@ -371,6 +474,10 @@ def seller_product_delete(request, product_id):
 
     if request.method == 'POST':
         name = product.name
+        sizes = list(product.sizes.values_list('size', flat=True))
+        for sz in sizes:
+            log_action(request.user, 'size_delete', f"Deleted size '{sz}' with product '{name}'",
+                       {'product_id': product.id, 'product_name': name, 'size': sz}, request)
         log_action(request.user, 'product_delete', f"Deleted product '{name}'",
                    {'product_id': product.id, 'product_name': name}, request)
         product.delete()

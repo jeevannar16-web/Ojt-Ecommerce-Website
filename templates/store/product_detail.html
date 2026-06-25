@@ -71,7 +71,36 @@
                     </span>
                 </div>
 
-                <div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center;">
+                <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
+
+                    <!-- Seller Info + Chat (Daraz-style) -->
+                    {% if product.seller %}
+                    <div style="width:100%; display:flex; align-items:center; gap:12px; padding:12px 16px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; margin-bottom:8px;">
+                        <div style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#d4af37,#b8962e); display:flex; align-items:center; justify-content:center; font-size:0.85rem; color:#0d0d0d; font-weight:800; flex-shrink:0;">{{ product.seller.profile.store_name|default:product.seller.username|first|upper }}</div>
+                        <div style="flex:1; min-width:0;">
+                            <div style="font-size:0.68rem; color:#666; text-transform:uppercase; letter-spacing:0.5px;">{{ 'Sold by'|t }}</div>
+                            <div style="font-size:0.85rem; color:#f0ece4; font-weight:600;">
+                                {% if product.seller.profile.store_slug %}
+                                <a href="{% url 'store:seller_storefront' product.seller.profile.store_slug %}" style="color:#d4af37; text-decoration:none;">{{ product.seller.profile.store_name|default:product.seller.username }}</a>
+                                {% else %}
+                                {{ product.seller.profile.store_name|default:product.seller.username }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if user.is_authenticated %}
+                            {% if product.seller != request.user %}
+                            <a href="{% url 'store:start_conversation' product.id %}" class="btn-chat-seller" style="white-space:nowrap; padding:10px 20px; font-size:0.82rem;">
+                                <i class="bi bi-chat-dots-fill"></i> {{ 'Chat with Seller'|t }}
+                            </a>
+                            {% endif %}
+                        {% else %}
+                        <a href="{% url 'login' %}?next={{ request.path }}" style="white-space:nowrap; padding:10px 20px; border-radius:8px; font-size:0.78rem; font-weight:600; border:1px solid rgba(255,255,255,0.12); background:transparent; color:#888; text-decoration:none; transition:all 0.2s;">
+                            <i class="bi bi-box-arrow-in-right"></i> {{ 'Login to Chat'|t }}
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
                     {% if product.stock > 0 %}
 
                         {% if sizes or product.size %}

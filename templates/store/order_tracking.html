@@ -43,6 +43,9 @@
                             <div>
                                 <span class="meta-label">{{ 'TOTAL CAPITAL'|t }}</span>
                                 <span class="meta-value gold-text">${{ order.total_amount }}</span>
+                                {% if order.discount_amount and order.discount_amount > 0 %}
+                                <span class="meta-label" style="color:#2ec4b6;font-size:0.65rem;">{{ 'Saved'|t }} ${{ order.discount_amount }} ({{ order.coupon_code }})</span>
+                                {% endif %}
                             </div>
                             <div>
                                 <span class="status-pill status-{{ order.status|lower }}">{{ order.get_status_display|t }}</span>
@@ -126,6 +129,9 @@
                             <div>
                                 <span class="meta-label">{{ 'TOTAL CAPITAL'|t }}</span>
                                 <span class="meta-value gold-text">${{ order.total_amount }}</span>
+                                {% if order.discount_amount and order.discount_amount > 0 %}
+                                <span class="meta-label" style="color:#2ec4b6;font-size:0.65rem;">{{ 'Saved'|t }} ${{ order.discount_amount }} ({{ order.coupon_code }})</span>
+                                {% endif %}
                             </div>
                             <div>
                                 <span class="status-pill status-{{ order.status|lower }}">{{ order.get_status_display|t }}</span>

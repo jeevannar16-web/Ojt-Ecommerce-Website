@@ -347,6 +347,9 @@ def cart_batch_delete(request):
                 if ps:
                     ps.stock += qty
                     ps.save()
+                else:
+                    product.stock += qty
+                    product.save()
             else:
                 product.stock += qty
                 product.save()

@@ -1,0 +1,94 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/base/cookie_consent.css' %}">
+
+<!-- ─── COOKIE CONSENT OVERLAY ─── -->
+<div id="cc-overlay" class="cc-overlay" style="display:none;">
+  <div class="cc-card">
+    <div class="cc-header">
+      <div class="cc-icon"><i class="bi bi-shield-check"></i></div>
+      <h2>{{ 'Your Privacy'|t }}</h2>
+    </div>
+    <div class="cc-body">
+      <p>{{ 'We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of all cookies.'|t }}</p>
+      <p><a href="{% url 'cookies' %}" target="_blank" rel="noopener">{{ 'Learn more about our Cookie Policy'|t }}</a></p>
+    </div>
+    <div class="cc-actions">
+      <button id="cc-accept" class="cc-btn cc-btn-accept"><i class="bi bi-check-lg"></i> {{ 'Accept All'|t }}</button>
+      <button id="cc-reject" class="cc-btn cc-btn-reject"><i class="bi bi-x-lg"></i> {{ 'Reject All'|t }}</button>
+      <button id="cc-customize" class="cc-btn cc-btn-customize"><i class="bi bi-sliders"></i> {{ 'Customize'|t }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── CUSTOMIZE MODAL ─── -->
+<div id="cc-modal-overlay" class="cc-modal-overlay">
+  <div class="cc-modal">
+    <h3><i class="bi bi-sliders" style="color:#d4af37;"></i> {{ 'Customize Cookies'|t }}</h3>
+    <p class="cc-sub">{{ 'Choose which cookies to allow. Essential cookies are always required for the site to function.'|t }}</p>
+
+    <div class="cc-category">
+      <div class="cc-cat-info">
+        <span class="cc-cat-name"><i class="bi bi-shield-lock" style="color:#d4af37;margin-right:4px;"></i> {{ 'Essential'|t }}</span>
+        <span class="cc-cat-desc">{{ 'Keep you logged in, remember your cart items, protect checkout security, and save your language preference. Always active.'|t }}</span>
+      </div>
+      <label class="cc-toggle">
+        <input type="checkbox" id="cc-essential" checked disabled>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="cc-category">
+      <div class="cc-cat-info">
+        <span class="cc-cat-name"><i class="bi bi-toggles" style="color:#6a9fb5;margin-right:4px;"></i> {{ 'Functional'|t }}</span>
+        <span class="cc-cat-desc">{{ 'Remembers your default delivery address, product list layout, recently browsed items, and alert preferences for restocks and deals.'|t }}</span>
+      </div>
+      <label class="cc-toggle">
+        <input type="checkbox" id="cc-functional">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="cc-category">
+      <div class="cc-cat-info">
+        <span class="cc-cat-name"><i class="bi bi-graph-up" style="color:#2ecc71;margin-right:4px;"></i> {{ 'Analytics'|t }}</span>
+        <span class="cc-cat-desc">{{ 'Shows us which products and categories are trending, how users navigate the store, and where we can improve — completely anonymous.'|t }}</span>
+      </div>
+      <label class="cc-toggle">
+        <input type="checkbox" id="cc-analytics">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="cc-category">
+      <div class="cc-cat-info">
+        <span class="cc-cat-name"><i class="bi bi-megaphone" style="color:#e67e22;margin-right:4px;"></i> {{ 'Marketing'|t }}</span>
+        <span class="cc-cat-desc">{{ 'Enables tailored product suggestions, fitness gear ads on social media, and special promo offers based on what you browse and buy.'|t }}</span>
+      </div>
+      <label class="cc-toggle">
+        <input type="checkbox" id="cc-marketing">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="cc-modal-actions">
+      <button id="cc-cancel" class="cc-btn-cancel-modal">{{ 'Cancel'|t }}</button>
+      <button id="cc-save" class="cc-btn-save"><i class="bi bi-check-lg"></i> {{ 'Save Preferences'|t }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOAST ─── -->
+<div id="cc-toast" class="cc-toast">
+  <i class="bi bi-check-circle-fill"></i>
+  <span class="cc-toast-msg"></span>
+</div>
+
+<!-- ─── DELAYED REMINDER BAR ─── -->
+<div id="cc-reminder" class="cc-reminder">
+  <i class="bi bi-shield-check"></i>
+  <span class="cc-reminder-msg">{{ 'Cookie preferences saved.'|t }}</span>
+  <a href="#" id="cc-reminder-link" class="cc-reminder-link">{{ 'Change settings'|t }}</a>
+  <button id="cc-reminder-close" class="cc-reminder-close"><i class="bi bi-x"></i></button>
+</div>
+
+<script src="{% static 'js/base/cookie_consent.js' %}"></script>

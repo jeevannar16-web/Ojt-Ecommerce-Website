@@ -387,6 +387,45 @@
   background: #1a1a1a;
 }
 
+/* Scroll tracker styles */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, #d4af37, #f59e0b);
+  z-index: 9999;
+  transition: width 0.1s ease;
+  border-radius: 0 2px 2px 0;
+}
+.scroll-section-nav {
+  position: fixed;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(14,14,14,0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 10px 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.scroll-section-nav a {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #333;
+  display: block;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
 @media (max-width: 768px) {
   .sd-grid-2 { grid-template-columns: 1fr; }
   .sd-top-bar { flex-direction: column; gap: 12px; }
@@ -397,4 +436,6 @@
   .seller-nav li { flex-shrink: 0; }
   .seller-nav .nav-label { display: none; }
   .seller-main { padding: 20px; }
+  .scroll-section-nav { right: 8px; padding: 8px 6px; }
+  .scroll-section-nav a { width: 6px; height: 6px; }
 }

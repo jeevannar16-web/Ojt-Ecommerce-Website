@@ -1,0 +1,182 @@
+{% extends 'layout/messages_base.html' %}
+{% load static %}
+
+{% block title %}{{ 'My Messages'|t }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/customer_messages.css' %}?v=2">
+<style>
+  html, body { height: 100%; overflow: hidden; }
+  :root { --cl-top: 0px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="cm-page">
+  <div class="cm-header">
+    <h1><i class="bi bi-chat-dots"></i> {{ 'My Messages'|t }}
+      {% if unread_total > 0 %}
+      <span class="cm-unread-badge">{{ unread_total }}</span>
+      {% endif %}
+    </h1>
+    <div class="cm-header-actions">
+      <a href="{% url 'store:product_list' %}" class="cm-shop-btn">
+        <i class="bi bi-arrow-left"></i> {{ 'Back to Store'|t }}
+      </a>
+    </div>
+  </div>
+
+  <div class="cm-search">
+    <div class="cm-search-wrap">
+      <i class="bi bi-search"></i>
+      <input type="text" id="cm-search-input"
+             placeholder="{{ 'Search conversations...'|t }}"
+             autocomplete="off">
+    </div>
+  </div>
+
+  <div class="cm-tabs">
+    <button class="cm-tab active" data-filter="all">{{ 'All'|t }}</button>
+    <button class="cm-tab" data-filter="unread">{{ 'Unread'|t }}</button>
+    <button class="cm-tab" data-filter="admin">{{ 'Support'|t }}</button>
+  </div>
+  <div class="cm-tabs-divider"></div>
+
+  <div class="cm-list" id="cm-list">
+    {% for item in conversations %}
+    <a href="{% url 'store:conversation_detail' item.conv.id %}"
+       class="cm-row{% if item.unread > 0 %} unread{% endif %}"
+       data-unread="{{ item.unread }}"
+       data-admin="{{ item.conv.is_admin_conversation|lower }}">
+
+      <div class="cm-avatar {% if item.conv.is_admin_conversation %}admin{% else %}seller{% endif %}">
+        {% if item.conv.is_admin_conversation %}
+        <i class="bi bi-shield-shaded"></i>
+        {% elif item.other_user_profile and item.other_user_profile.avatar %}
+        <img src="{{ item.other_user_profile.avatar.url }}" alt="">
+        {% else %}
+        {{ item.other_user.username|first|upper }}
+        {% endif %}
+        <span class="cm-status-dot offline" data-user-id="{{ item.other_user.id }}"></span>
+      </div>
+
+      <div class="cm-body">
+        <div class="cm-top-row">
+          <span class="cm-name">
+            {% if item.other_status_emoji %}<span class="status-emoji">{{ item.other_status_emoji }}</span>{% endif %}
+            {{ item.other_user.username }}
+            {% if item.conv.is_admin_conversation %}
+            <span class="cm-store-badge">{{ 'Support'|t }}</span>
+            {% elif item.store_name %}
+            <span class="cm-store-badge">{{ item.store_name }}</span>
+            {% endif %}
+          </span>
+          <div class="cm-top-right">
+            {% if item.last_message %}
+            <span class="cm-time">{{ item.last_message.created_at|timesince }}</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="cm-bottom-row">
+          {% if item.conv.product %}
+          <span class="cm-product-name">{{ item.conv.product.name|truncatechars:16 }}</span>
+          <span class="cm-sep">·</span>
+          {% endif %}
+          {% if item.last_message %}
+          <span class="cm-preview">{{ item.last_message.content|truncatechars:42 }}</span>
+          {% else %}
+          <span class="cm-preview cm-preview-empty">{{ 'No messages yet'|t }}</span>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if item.unread > 0 %}
+      <span class="cm-unread">{{ item.unread }}</span>
+      {% endif %}
+    </a>
+
+    {% empty %}
+    <div class="cm-empty">
+      <div class="cm-empty-icon"><i class="bi bi-chat-dots"></i></div>
+      <h3>{{ 'No conversations yet'|t }}</h3>
+      <p>{{ "Browse products and start chatting with sellers."|t }}</p>
+      <div class="cm-empty-ctas">
+        <a href="{% url 'store:product_list' %}" class="primary">
+          <i class="bi bi-bag"></i> {{ 'Browse Products'|t }}
+        </a>
+      </div>
+      <div class="cm-empty-tips">
+        <span class="cm-tip"><i class="bi bi-cursor"></i> {{ 'Click Chat with Seller on product pages'|t }}</span>
+        <span class="cm-tip"><i class="bi bi-clock"></i> {{ 'Sellers reply within 24 hours'|t }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+(function(){
+  var cl = document.getElementById('cm-list');
+  if(!cl) return;
+
+  function remeasure(){
+    var top = 0;
+    ['.announce-bar', '.main-nav', '.elite-nav-wrap'].forEach(function(s){
+      var el = document.querySelector(s);
+      if(el && el.offsetHeight) top += el.offsetHeight;
+    });
+    if(top > 0){
+      document.documentElement.style.setProperty('--cl-top', top + 'px');
+    }
+  }
+  remeasure();
+  window.addEventListener('load', remeasure);
+  window.addEventListener('resize', remeasure);
+
+  var si = document.getElementById('cm-search-input');
+  if(si){
+    si.addEventListener('input', function(){
+      var q = this.value.toLowerCase().trim();
+      cl.querySelectorAll('.cm-row').forEach(function(c){
+        var n = (c.querySelector('.cm-name') || {}).textContent || '';
+        var p = (c.querySelector('.cm-bottom-row') || {}).textContent || '';
+        c.style.display = (!q || n.toLowerCase().includes(q) || p.toLowerCase().includes(q)) ? '' : 'none';
+      });
+    });
+  }
+
+  document.querySelectorAll('.cm-tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      document.querySelectorAll('.cm-tab').forEach(function(x){ x.classList.remove('active'); });
+      this.classList.add('active');
+      var f = this.dataset.filter;
+      cl.querySelectorAll('.cm-row').forEach(function(c){
+        if(f === 'all')         { c.style.display = ''; }
+        else if(f === 'unread') { c.style.display = parseInt(c.dataset.unread) > 0 ? '' : 'none'; }
+        else if(f === 'admin')  { c.style.display = c.dataset.admin === 'true' ? '' : 'none'; }
+      });
+    });
+  });
+
+  cl.querySelectorAll('.cm-status-dot[data-user-id]').forEach(function(d){
+    if(!d.dataset.userId) return;
+    var uid = d.dataset.userId;
+    var el  = d;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '{% url "store:api_online_status" %}', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRFToken',
+      (document.querySelector('[name=csrfmiddlewaretoken]') || {}).value || '');
+    xhr.onload = function(){
+      if(xhr.status === 200){
+        try{
+          var data = JSON.parse(xhr.responseText);
+          el.className = 'cm-status-dot ' + (data.is_online ? 'online' : 'offline');
+        }catch(e){}
+      }
+    };
+    xhr.send(JSON.stringify({user_id: parseInt(uid)}));
+  });
+})();
+</script>
+{% endblock %}

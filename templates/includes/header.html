@@ -110,6 +110,7 @@
           <button class="nav-icon-btn"><i class="bi bi-person"></i></button>
           <div class="dropdown-content">
             <a href="{% url 'profile' %}"><i class="bi bi-person-circle" style="margin-right:8px;"></i>{{ 'nav.profile'|t }}</a>
+            <a href="{% url 'store:messages_list' %}"><i class="bi bi-chat-dots" style="margin-right:8px;"></i>{{ 'Messages'|t }} <span id="msg-badge" style="display:none;background:#d4af37;color:#0d0d0d;font-size:0.6rem;padding:1px 6px;border-radius:8px;margin-left:4px;font-weight:700;"></span></a>
             <a href="{% url 'store:order_history' %}">📦 {{ 'profile.orders'|t }}</a>
             <a href="{% url 'store:seller_center' %}"><i class="bi bi-shop" style="margin-right:8px;"></i>{{ 'Seller Center'|t }}</a>
             {% if user.is_superuser %}

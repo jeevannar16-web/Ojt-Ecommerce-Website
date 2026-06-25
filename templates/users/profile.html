@@ -10,11 +10,23 @@
 {% block content %}
 <div class="profile-wrap">
   <div class="profile-header-card">
-    <div class="profile-avatar">
+    <div class="profile-avatar" id="avatar-wrap">
+      {% if profile.avatar %}
+      <img src="{{ profile.avatar.url }}" alt="{{ request.user.username }}" id="avatar-img">
+      {% else %}
       <span class="initials">{{ request.user.username|first|upper }}</span>
+      {% endif %}
+      <label class="avatar-edit-btn" for="avatar-input" title="{{ 'Change photo'|t }}">
+        <i class="bi bi-camera-fill"></i>
+      </label>
     </div>
     <div class="profile-header-info">
-      <h1>{{ request.user.username }}</h1>
+      <div class="name-edit-wrap">
+        <h1 id="display-name">{{ request.user.username }}</h1>
+        <button type="button" class="name-edit-btn" id="name-edit-toggle" title="{{ 'Edit name'|t }}">
+          <i class="bi bi-pencil-fill"></i>
+        </button>
+      </div>
       <p class="member-since">{{ request.user.email }} · {{ 'Member since'|t }} <span>{{ request.user.date_joined|date:"F Y" }}</span></p>
     </div>
   </div>
@@ -34,8 +46,10 @@
 
   <div id="tab-info" class="tab-panel active">
     <div class="profile-header-card" style="margin-bottom:0;">
-      <form method="POST" style="width:100%;">
+      <form method="POST" style="width:100%;" enctype="multipart/form-data">
         {% csrf_token %}
+        <input type="file" name="avatar" id="avatar-input" accept="image/*" style="display:none;">
+        <input type="hidden" name="username" id="username-input" value="{{ request.user.username }}">
         <div class="profile-form-grid">
           <div class="form-field">
             <label>{{ 'Phone'|t }}</label>
@@ -84,7 +98,59 @@
         <button type="submit" class="profile-submit-btn"><i class="bi bi-check2"></i> {{ 'Save Changes'|t }}</button>
       </form>
     </div>
-  </div>
+
+    <div class="danger-zone" style="margin-top:28px;border-top:1px solid rgba(239,68,68,0.15);padding-top:24px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;">
+          <i class="bi bi-exclamation-triangle" style="color:#ef4444;font-size:1rem;"></i>
+        </div>
+        <div>
+          <h3 style="margin:0;font-size:0.95rem;color:#ef4444;font-weight:700;">{{ 'Danger Zone'|t }}</h3>
+          <p style="margin:2px 0 0;font-size:0.75rem;color:#666;">{{ 'Irreversible actions on your account'|t }}</p>
+        </div>
+      </div>
+      <div style="background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.12);border-radius:12px;padding:18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+          <div>
+            <strong style="color:#f0ece4;font-size:0.88rem;">{{ 'Delete Account'|t }}</strong>
+            <p style="margin:4px 0 0;font-size:0.75rem;color:#666;max-width:360px;">
+              {{ 'Permanently delete your account and all associated data. This cannot be undone.'|t }}
+            </p>
+          </div>
+          <button type="button" onclick="document.getElementById('delete-modal').classList.add('show')" class="profile-submit-btn" style="background:rgba(239,68,68,0.12);color:#ef4444;border:1px solid rgba(239,68,68,0.25);flex-shrink:0;box-shadow:none;">
+            <i class="bi bi-trash3"></i> {{ 'Delete Account'|t }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="delete-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:99999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+      <div style="background:#121212;border:1px solid rgba(239,68,68,0.2);border-radius:16px;padding:28px;max-width:420px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,0.5);">
+        <div style="width:48px;height:48px;border-radius:50%;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+          <i class="bi bi-exclamation-triangle" style="color:#ef4444;font-size:1.3rem;"></i>
+        </div>
+        <h3 style="text-align:center;color:#f0ece4;font-size:1.1rem;margin:0 0 6px;">{{ 'Delete Your Account?'|t }}</h3>
+        <p style="text-align:center;color:#666;font-size:0.82rem;margin:0 0 20px;line-height:1.6;">
+          {{ 'This action is permanent. All your orders, reviews, and data will be removed.'|t }}
+        </p>
+        <form method="POST" action="{% url 'delete_account' %}">
+          {% csrf_token %}
+          <div style="margin-bottom:16px;">
+            <label style="font-size:0.78rem;color:#888;display:block;margin-bottom:6px;">{{ 'Enter your password to confirm'|t }}</label>
+            <input type="password" name="password" required style="width:100%;background:#1a1a1a;border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:10px 14px;color:#fff;font-size:0.88rem;" placeholder="{{ 'Your password'|t }}">
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button type="button" onclick="document.getElementById('delete-modal').classList.remove('show');this.closest('#delete-modal').style.display='none';" style="flex:1;padding:10px;border-radius:8px;border:1px solid #2a2a2a;background:transparent;color:#aaa;cursor:pointer;font-weight:600;">{{ 'Cancel'|t }}</button>
+            <button type="submit" style="flex:1;padding:10px;border-radius:8px;border:none;background:#ef4444;color:#fff;cursor:pointer;font-weight:700;">{{ 'Delete Forever'|t }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    </div>
+
+    <style>
+    #delete-modal.show { display:flex !important; }
+    </style>
 
   <div id="tab-orders" class="tab-panel">
     {% if orders %}
@@ -197,4 +263,70 @@
 {% block extra_js %}
 <script src="{% static 'js/pages/profile.js' %}"></script>
 <script src="{% static 'js/pages/profile_map.js' %}?v=3"></script>
+<script>
+document.addEventListener('click', function(e){
+  document.querySelectorAll('.mw-dropdown').forEach(function(m){
+    if(!m.contains(e.target) && !e.target.closest('.mw-menu-btn')){
+      m.classList.remove('show');
+    }
+  });
+});
+// Name edit toggle
+(function(){
+  var toggle = document.getElementById('name-edit-toggle');
+  var display = document.getElementById('display-name');
+  var input = document.getElementById('username-input');
+  if(toggle && display && input){
+    toggle.addEventListener('click', function(){
+      if(toggle.dataset.editing === 'true'){
+        display.contentEditable = false;
+        display.style.borderBottom = 'none';
+        display.style.padding = '0';
+        input.value = display.textContent.trim();
+        toggle.innerHTML = '<i class="bi bi-pencil-fill"></i>';
+        toggle.title = '{{ "Edit name"|t }}';
+        toggle.dataset.editing = 'false';
+      } else {
+        display.contentEditable = true;
+        display.style.borderBottom = '2px solid var(--clr-accent)';
+        display.style.padding = '0 0 2px';
+        display.focus();
+        toggle.innerHTML = '<i class="bi bi-check-lg"></i>';
+        toggle.title = '{{ "Save name"|t }}';
+        toggle.dataset.editing = 'true';
+      }
+    });
+  }
+})();
+// Avatar preview on file select
+(function(){
+  var fileInput = document.getElementById('avatar-input');
+  var avatarImg = document.getElementById('avatar-img');
+  var avatarWrap = document.getElementById('avatar-wrap');
+  if(fileInput){
+    fileInput.addEventListener('change', function(){
+      var file = this.files[0];
+      if(!file) return;
+      var reader = new FileReader();
+      reader.onload = function(e){
+        if(avatarImg){
+          avatarImg.src = e.target.result;
+          avatarImg.style.display = 'block';
+        } else {
+          var img = document.createElement('img');
+          img.id = 'avatar-img';
+          img.src = e.target.result;
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.objectFit = 'cover';
+          var initials = avatarWrap.querySelector('.initials');
+          if(initials) initials.style.display = 'none';
+          avatarWrap.insertBefore(img, avatarWrap.querySelector('.avatar-edit-btn'));
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+})();
+    </script>
 {% endblock %}

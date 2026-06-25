@@ -56,6 +56,7 @@
 .admin-main {
   flex: 1;
   padding: 28px 32px;
+  max-width: 1400px;
 }
 .admin-main h1 {
   font-family: 'Playfair Display', serif;
@@ -277,6 +278,67 @@
 .admin-btn-decline { background: #ef4444; color: #fff; }
 .admin-btn-revoke { background: #555; color: #fff; }
 
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: #d4af37;
+  color: #080808;
+  font-size: 0.65rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.clickable-hd { cursor: pointer; }
+.clickable-hd:hover { background: rgba(212,175,55,0.03); }
+
+/* Scroll tracker styles */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, #d4af37, #f59e0b);
+  z-index: 9999;
+  transition: width 0.1s ease;
+  border-radius: 0 2px 2px 0;
+}
+.scroll-section-nav {
+  position: fixed;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(14,14,14,0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 10px 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.scroll-section-nav a {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #333;
+  display: block;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+.scroll-section-nav a.active-dot {
+  background: #d4af37;
+  box-shadow: 0 0 8px rgba(212,175,55,0.4);
+  transform: scale(1.3);
+}
+
 @media (max-width: 768px) {
   .admin-layout { flex-direction: column; }
   .admin-sidebar { width: 100%; height: auto; position: static; padding: 12px 0; }
@@ -286,4 +348,6 @@
   .admin-nav .nav-label { display: none; }
   .admin-main { padding: 20px; }
   .admin-grid { grid-template-columns: 1fr; }
+  .scroll-section-nav { right: 8px; padding: 8px 6px; }
+  .scroll-section-nav a { width: 6px; height: 6px; }
 }

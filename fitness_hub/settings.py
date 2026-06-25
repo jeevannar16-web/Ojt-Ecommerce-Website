@@ -19,6 +19,7 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '.lhr.life',
+    '.trycloudflare.com',
 ]
 
 INSTALLED_APPS = [
@@ -128,13 +129,15 @@ ACCOUNT_ADAPTER = 'users.allauth_adapter.CustomAccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'users.allauth_adapter.CustomSocialAccountAdapter'
 SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
-SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
-SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = False
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = False
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 ZEROBOUNCE_API_KEY = os.environ.get('ZEROBOUNCE_API_KEY', '')
 NEVERBOUNCE_API_KEY = os.environ.get('NEVERBOUNCE_API_KEY', '')
 CHECKMAIL_API_KEY = os.environ.get('CHECKMAIL_API_KEY', '')
 MYEMAILVERIFIER_API_KEY = os.environ.get('MYEMAILVERIFIER_API_KEY', '')
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -153,12 +156,16 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'https://*.lhr.life',
+    'https://*.trycloudflare.com',
 ]
 
 # Session Configuration
 SESSION_COOKIE_SECURE = False
 SESSION_COOKIE_HTTPONLY = True
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# Required when behind Cloudflare Tunnel — it handles TLS and forwards to HTTP
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Email backend for password reset (prints to terminal in dev)
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')

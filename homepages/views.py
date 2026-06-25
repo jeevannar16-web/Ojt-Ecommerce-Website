@@ -2,9 +2,10 @@ import random
 import datetime
 from django.shortcuts import render
 from django.db import models
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Sum
 from django.views.generic import TemplateView
 from store.models import Product, Category, OrderItem, CartItem
+from users.models import Profile
 
 def home(request):
     categories = Category.objects.all()
@@ -163,6 +164,45 @@ def home(request):
     else:
         recommendations = Product.objects.filter(is_featured=True)[:4]
 
+    top_selling = list(
+        Product.objects.filter(
+            id__in=OrderItem.objects.values('product_id')
+            .annotate(total=Count('id'))
+            .filter(total__gt=0)
+            .order_by('-total')[:8]
+            .values('product_id')
+        )
+    )
+    rng.shuffle(top_selling)
+
+    seller_count = Profile.objects.filter(is_seller=True).count()
+    total_seller_products = Product.objects.exclude(seller__isnull=True).count()
+    seller_revenue = OrderItem.objects.filter(
+        product__seller__isnull=False
+    ).aggregate(t=Sum('price'))['t'] or 0
+
+    # Recent conversations for logged-in users
+    recent_convs = []
+    if user.is_authenticated:
+        from store.models import Conversation
+        conv_qs = Conversation.objects.filter(
+            Q(customer=user) | Q(seller=user)
+        ).select_related('customer', 'seller', 'product').prefetch_related('messages').order_by('-updated_at')[:6]
+        for c in conv_qs:
+            last = c.last_message()
+            other = c.seller if c.customer == user else c.customer
+            recent_convs.append({
+                'conv': c,
+                'last_message': last,
+                'unread': c.unread_count(user),
+                'other_user': other,
+                'is_support': other.is_staff or other.is_superuser,
+                'other_status_emoji': getattr(other.profile, 'status_emoji', '🟢') if hasattr(other, 'profile') else '🟢',
+                'other_status_text': getattr(other.profile, 'status_text', 'Available') if hasattr(other, 'profile') else 'Available',
+                'product': c.product,
+                'store_slug': getattr(other.profile, 'store_slug', '') if hasattr(other, 'profile') else '',
+            })
+
     context = {
         'categories': categories,
         'featured_products': featured_products,
@@ -180,6 +220,11 @@ def home(request):
         'category_sections': category_sections,
         'best_deals': best_deals,
         'trending': trending,
+        'top_selling': top_selling,
+        'seller_count': seller_count,
+        'total_seller_products': total_seller_products,
+        'seller_revenue': seller_revenue,
+        'recent_conversations': recent_convs,
     }
     return render(request, 'index.html', context)
 

@@ -1,0 +1,1377 @@
+{% extends 'layout/messages_base.html' %}
+{% load static %}
+
+{% block title %}{{ 'Messages'|t }} — {{ other_user.username }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/messages.css' %}?v=10">
+<style>
+/* === THEMES === */
+[data-theme="dark"] { --bg:#0d0d0d; --card-bg:#121212; --border:#1a1a1a; --text:#f0ece4; --text-sec:#888; --text-muted:#555; --msg-mine:rgba(212,175,55,0.12); --msg-theirs:#1a1a1a; --accent:#d4af37; }
+[data-theme="light"] { --bg:#f5f5f0; --card-bg:#ffffff; --border:#e0ddd5; --text:#1a1a1a; --text-sec:#666; --text-muted:#999; --msg-mine:rgba(212,175,55,0.15); --msg-theirs:#ebebe5; --accent:#b8962e; }
+[data-theme="gold"] { --bg:#1a1508; --card-bg:#221d0e; --border:#3a3020; --text:#f5e6c8; --text-sec:#b8a88a; --text-muted:#6a5d45; --msg-mine:rgba(212,175,55,0.2); --msg-theirs:#2a2212; --accent:#ffd700; }
+[data-theme="ocean"] { --bg:#0a1628; --card-bg:#0e1d33; --border:#1a3050; --text:#c8daf0; --text-sec:#7a9fc0; --text-muted:#4a6a8a; --msg-mine:rgba(64,180,255,0.15); --msg-theirs:#132540; --accent:#40b4ff; }
+[data-theme="purple"] { --bg:#12081c; --card-bg:#1c0e2e; --border:#2e1a4a; --text:#e0c8f0; --text-sec:#a07ac0; --text-muted:#5a3a7a; --msg-mine:rgba(160,80,255,0.15); --msg-theirs:#22143a; --accent:#a050ff; }
+
+/* === THEME PICKER === */
+.md-emoji-picker { display:none; position:absolute; bottom:100%; right:0; background:var(--card-bg); border:1px solid var(--border); border-radius:12px; padding:8px; box-shadow:0 -8px 32px rgba(0,0,0,0.4); z-index:30; }
+.md-emoji-picker.open { display:flex; gap:4px; flex-wrap:wrap; width:220px; }
+.md-emoji-picker .ep-btn { width:36px; height:36px; border-radius:8px; border:none; background:transparent; font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.1s; }
+.md-emoji-picker .ep-btn:hover { background:var(--msg-theirs); transform:scale(1.15); }
+.md-theme-picker { display:none; position:absolute; top:100%; right:0; background:var(--card-bg); border:1px solid var(--border); border-radius:12px; padding:8px; box-shadow:0 8px 32px rgba(0,0,0,0.4); z-index:30; }
+.md-theme-picker.open { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; width:200px; }
+.md-theme-opt { padding:8px; border-radius:8px; border:2px solid var(--border); cursor:pointer; text-align:center; font-size:0.65rem; color:var(--text-sec); transition:all 0.15s; background:var(--card-bg); }
+.md-theme-opt:hover { border-color:var(--accent); color:var(--text); }
+.md-theme-opt.active { border-color:var(--accent); color:var(--accent); font-weight:600; }
+.md-theme-opt .tp-preview { width:100%; height:20px; border-radius:4px; margin-bottom:4px; }
+.md-theme-opt .tp-preview.dark { background:#0d0d0d; border:1px solid #1a1a1a; }
+.md-theme-opt .tp-preview.light { background:#f5f5f0; border:1px solid #e0ddd5; }
+.md-theme-opt .tp-preview.gold { background:#1a1508; border:1px solid #3a3020; }
+.md-theme-opt .tp-preview.ocean { background:#0a1628; border:1px solid #1a3050; }
+.md-theme-opt .tp-preview.purple { background:#12081c; border:1px solid #2e1a4a; }
+.md-attach-preview { display:none; align-items:center; gap:10px; padding:8px 12px; background:var(--bg); border:1px solid var(--border); border-radius:8px; margin-bottom:6px; }
+.md-attach-preview.open { display:flex; }
+.md-lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:1000; align-items:center; justify-content:center; cursor:zoom-out; }
+.md-lightbox.open { display:flex; }
+.md-lightbox img { max-width:90vw; max-height:90vh; border-radius:8px; }
+.md-empty { text-align:center; padding:50px 20px; color:var(--text-muted); font-size:0.85rem; }
+.md-profile-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:500; }
+.md-profile-overlay.open { display:block; }
+.md-profile-sidebar { position:fixed; top:0; right:-340px; width:320px; height:100%; background:var(--card-bg); border-left:1px solid var(--border); z-index:501; transition:right 0.3s cubic-bezier(0.4,0,0.2,1); overflow-y:auto; display:flex; flex-direction:column; }
+.md-profile-sidebar.open { right:0; }
+.md-profile-sidebar .md-profile-header { display:flex; align-items:center; gap:10px; padding:16px; border-bottom:1px solid var(--border); flex-shrink:0; }
+.md-profile-sidebar .md-profile-header button { width:32px; height:32px; border-radius:8px; border:none; background:transparent; color:var(--text-sec); font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.md-profile-sidebar .md-profile-header button:hover { background:var(--msg-theirs); color:var(--text); }
+.md-profile-sidebar .md-profile-header h3 { margin:0; font-size:0.9rem; color:var(--text); font-weight:700; }
+.md-profile-sidebar .md-profile-body { padding:20px 16px; flex:1; }
+.md-profile-sidebar .p-avatar { width:72px; height:72px; border-radius:50%; background:rgba(212,175,55,0.08); display:flex; align-items:center; justify-content:center; font-size:1.5rem; color:var(--accent); font-weight:700; margin:0 auto 12px; border:2px solid var(--border); }
+.md-profile-sidebar .p-name { text-align:center; font-size:1rem; color:var(--text); font-weight:700; margin-bottom:4px; }
+.md-profile-sidebar .p-status { text-align:center; font-size:0.72rem; color:var(--text-muted); margin-bottom:16px; }
+.md-profile-sidebar .p-info-item { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); }
+.md-profile-sidebar .p-info-item:last-child { border-bottom:none; }
+.md-profile-sidebar .p-info-item .pii-icon { width:28px; height:28px; border-radius:6px; background:var(--msg-theirs); display:flex; align-items:center; justify-content:center; color:var(--text-sec); font-size:0.75rem; flex-shrink:0; }
+.md-profile-sidebar .p-info-item .pii-label { font-size:0.65rem; color:var(--text-muted); display:block; }
+.md-profile-sidebar .p-info-item .pii-value { font-size:0.82rem; color:var(--text); font-weight:500; }
+.md-profile-sidebar .p-info-item .pii-value.online { color:#2ecc71; }
+.md-sidebar-status-line { display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:16px; }
+.md-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:600; align-items:center; justify-content:center; }
+.md-modal-overlay.open { display:flex; }
+.md-modal { background:var(--card-bg); border:1px solid var(--border); border-radius:16px; padding:24px; max-width:400px; width:90%; }
+.md-modal h3 { margin:0 0 12px; color:var(--text); font-size:1rem; }
+.md-modal p { color:var(--text-sec); font-size:0.85rem; margin:0 0 16px; line-height:1.5; }
+.md-modal-actions { display:flex; gap:8px; justify-content:flex-end; }
+.md-modal select { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px; color:var(--text); font-size:0.85rem; margin-bottom:12px; outline:none; }
+.md-modal textarea { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px; color:var(--text); font-size:0.82rem; margin-bottom:12px; outline:none; resize:vertical; min-height:60px; font-family:inherit; }
+.md-btn-primary { padding:8px 20px; border-radius:8px; border:none; background:var(--accent); color:#0d0d0d; font-size:0.82rem; font-weight:600; cursor:pointer; }
+.md-btn-ghost { padding:8px 20px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--text-sec); font-size:0.82rem; cursor:pointer; }
+.md-pinned-bar { display:none; padding:6px 20px; background:rgba(212,175,55,0.04); border-bottom:1px solid rgba(212,175,55,0.1); align-items:center; gap:8px; font-size:0.75rem; color:var(--accent); flex-shrink:0; }
+.md-pinned-bar.open { display:flex; }
+.md-blocked-banner { padding:12px 20px; text-align:center; font-size:0.82rem; color:#888; background:rgba(231,76,60,0.04); border-top:1px solid rgba(231,76,60,0.08); }
+.md-footer-tools { display:flex; gap:4px; margin-bottom:6px; align-items:center; }
+.md-footer-tools .ft-btn { width:30px; height:30px; border-radius:6px; border:none; background:transparent; color:var(--text-sec); font-size:0.8rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.12s; }
+.md-footer-tools .ft-btn:hover { background:var(--msg-theirs); color:var(--text); }
+.md-footer-tools .ft-btn.active { color:var(--accent); }
+.seen-tooltip { display:none; position:absolute; bottom:calc(100% + 6px); right:0; background:var(--card-bg); border:1px solid var(--border); border-radius:6px; padding:4px 8px; font-size:0.6rem; color:var(--text-sec); white-space:nowrap; box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:10; }
+.md-receipt:hover .seen-tooltip { display:block; }
+</style>
+{% endblock %}
+
+{% block content %}
+{% with user_blocked=is_blocked conv_theme=conversation.theme %}
+<div class="md-page" data-theme="{{ conv_theme }}" id="md-page">
+  <!-- TOP BAR — PREMIUM -->
+  <div class="md-top-bar">
+    <a href="{% url 'store:messages_list' %}" class="md-back"><i class="bi bi-arrow-left"></i></a>
+    <div class="md-avatar-wrap" onclick="openProfileSidebar()">
+      {% if conversation.is_admin_conversation %}
+      <i class="bi bi-shield-shaded" style="font-size:1.1rem;"></i>
+      {% elif other_user_profile and other_user_profile.avatar %}
+      <img src="{{ other_user_profile.avatar.url }}" alt="">
+      {% else %}
+      {{ other_user.username|first|upper }}
+      {% endif %}
+      <span class="md-avatar-status offline" id="avatar-status"></span>
+    </div>
+    <div class="md-top-info" onclick="openProfileSidebar()">
+      <div class="md-top-name">
+        {% if is_admin %}
+        <span>{{ conversation.customer.username }}</span>
+        <span style="color:#555;font-size:0.7rem;">↔</span>
+        <span>{{ conversation.seller.username }}</span>
+        <span class="badge-admin">{{ 'Admin'|t }}</span>
+        {% else %}
+        {{ other_user.username }}
+        {% endif %}
+      </div>
+      <div class="md-status-row">
+        <div class="md-other-status" id="top-status">
+          <span class="status-dot offline" id="status-dot"></span>
+          <span id="status-text">{{ 'offline'|t }}</span>
+        </div>
+        {% if not is_admin and request.user != other_user %}
+        <span class="md-status-sep">·</span>
+        <div class="md-my-status" id="status-display" onclick="toggleStatusPicker(event)">
+          <span class="md-status-emoji" id="my-status-emoji">{{ request.user.profile.status_emoji|default:'🟢' }}</span>
+          <span id="my-status-text">{{ request.user.profile.status_text|default:'Available' }}</span>
+        </div>
+        {% endif %}
+      </div>
+      <div class="md-status-picker" id="status-picker">
+        <div class="sp-header">{{ 'Your Status'|t }}</div>
+        <div class="sp-grid">
+          <button class="md-status-option" data-emoji="🟢" data-text="Available" onclick="setStatus(this)"><span class="so-emoji">🟢</span><span class="so-text">{{ 'Available'|t }}</span></button>
+          <button class="md-status-option" data-emoji="🟠" data-text="Busy" onclick="setStatus(this)"><span class="so-emoji">🟠</span><span class="so-text">{{ 'Busy'|t }}</span></button>
+          <button class="md-status-option" data-emoji="🔴" data-text="Do Not Disturb" onclick="setStatus(this)"><span class="so-emoji">🔴</span><span class="so-text">{{ 'DND'|t }}</span></button>
+          <button class="md-status-option" data-emoji="🌙" data-text="Away" onclick="setStatus(this)"><span class="so-emoji">🌙</span><span class="so-text">{{ 'Away'|t }}</span></button>
+          <button class="md-status-option" data-emoji="💼" data-text="At Work" onclick="setStatus(this)"><span class="so-emoji">💼</span><span class="so-text">{{ 'At Work'|t }}</span></button>
+          <button class="md-status-option" data-emoji="📞" data-text="On Call" onclick="setStatus(this)"><span class="so-emoji">📞</span><span class="so-text">{{ 'On Call'|t }}</span></button>
+          <button class="md-status-option" data-emoji="🏠" data-text="At Home" onclick="setStatus(this)"><span class="so-emoji">🏠</span><span class="so-text">{{ 'At Home'|t }}</span></button>
+          <button class="md-status-option" data-emoji="⚡" data-text="Online" onclick="setStatus(this)"><span class="so-emoji">⚡</span><span class="so-text">{{ 'Online'|t }}</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="md-top-actions">
+      {% if not is_admin and not user_blocked %}
+      <button class="md-icon-btn call-btn-disabled" title="{{ 'Coming soon'|t }}"><i class="bi bi-camera-video-fill"></i></button>
+      {% endif %}
+      <button class="md-icon-btn" id="search-toggle" title="{{ 'Search'|t }}"><i class="bi bi-search"></i></button>
+      <div style="position:relative;">
+        <button class="md-icon-btn" id="theme-toggle" title="{{ 'Theme'|t }}"><i class="bi bi-palette"></i></button>
+        <div class="md-theme-picker" id="theme-picker">
+          {% for t_val, t_label in theme_choices %}
+          <div class="md-theme-opt {% if conv_theme == t_val %}active{% endif %}" data-theme="{{ t_val }}">
+            <div class="tp-preview {{ t_val }}"></div>
+            {{ t_label }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <button class="md-icon-btn" id="more-toggle" title="{{ 'More'|t }}"><i class="bi bi-three-dots-vertical"></i></button>
+    </div>
+  </div>
+
+  <!-- MORE MENU -->
+  <div id="more-menu" style="display:none;position:absolute;top:52px;right:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:6px;z-index:40;box-shadow:0 8px 32px rgba(0,0,0,0.5);min-width:180px;">
+    <form method="POST" action="{% url 'store:block_user' conversation.id %}" style="margin:0;">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="{% if user_blocked %}unblock{% else %}block{% endif %}">
+      <input type="hidden" name="reason" value="">
+      <button type="submit" style="width:100%;padding:8px 12px;background:none;border:none;color:{% if user_blocked %}#2ecc71{% else %}#e74c3c{% endif %};font-size:0.8rem;cursor:pointer;border-radius:6px;display:flex;align-items:center;gap:8px;transition:all 0.1s;" onmouseover="this.style.background='var(--msg-theirs)'" onmouseout="this.style.background='none'">
+        <i class="bi bi-{% if user_blocked %}unlock{% else %}shield-exclamation{% endif %}"></i>
+        {% if user_blocked %}{{ 'Unblock'|t }}{% else %}{{ 'Block & Report'|t }}{% endif %}
+      </button>
+    </form>
+    <button onclick="toggleMute()" style="width:100%;padding:8px 12px;background:none;border:none;color:var(--text);font-size:0.8rem;cursor:pointer;border-radius:6px;display:flex;align-items:center;gap:8px;transition:all 0.1s;" onmouseover="this.style.background='var(--msg-theirs)'" onmouseout="this.style.background='none'">
+      <i class="bi bi-bell{% if conversation.is_muted %}-slash{% endif %}"></i>
+      {% if conversation.is_muted %}{{ 'Unmute'|t }}{% else %}{{ 'Mute'|t }}{% endif %}
+    </button>
+  </div>
+
+  <!-- SEARCH BAR -->
+  <div class="md-search-bar" id="search-bar">
+    <input type="text" id="search-input" placeholder="{{ 'Search messages...'|t }}" autocomplete="off">
+    <button class="md-icon-btn" id="search-close" style="width:30px;height:30px;"><i class="bi bi-x"></i></button>
+    <div class="md-search-results" id="search-results"></div>
+  </div>
+
+  <!-- PINNED BAR -->
+  {% if pinned_message %}
+  <div class="md-pinned-bar open" id="pinned-bar">
+    <i class="bi bi-pin-angle-fill"></i>
+    <span>{{ pinned_message.content|truncatechars:80 }}</span>
+    <button class="unpin-btn" onclick="togglePin({{ pinned_message.id }})"><i class="bi bi-x"></i></button>
+  </div>
+  {% endif %}
+
+  <!-- STORE INFO -->
+  {% if not is_admin and not conversation.is_admin_conversation and seller_profile and seller_profile.store_slug %}
+  <div class="md-store-row">
+    <a href="{% url 'store:seller_storefront' seller_profile.store_slug %}" class="store-badge">
+      <div class="s-avatar">{{ seller_profile.store_name|first|upper }}</div>
+      <span class="s-name">{{ seller_profile.store_name }}</span>
+    </a>
+    <a href="{% url 'store:seller_storefront' seller_profile.store_slug %}" class="store-link storefront-link">
+      <i class="bi bi-shop"></i> {{ 'Storefront'|t }}
+    </a>
+    {% if conversation.product %}
+    <a href="{% url 'store:product_detail' conversation.product.id %}" class="store-link">
+      <i class="bi bi-bag"></i> {{ 'Product'|t }}
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <!-- BLOCKED BANNER -->
+  {% if user_blocked %}
+  <div class="md-blocked-banner">
+    <i class="bi bi-shield-exclamation"></i>
+    {{ "You've blocked this user."|t }}
+    <form method="POST" action="{% url 'store:block_user' conversation.id %}" style="display:inline;">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="unblock">
+      <a href="#" onclick="this.closest('form').submit();return false;">{{ 'Undo'|t }}</a>
+    </form>
+  </div>
+  {% endif %}
+
+  <!-- MESSAGE BODY -->
+  <div class="md-body" id="msg-body">
+    {% for msg in messages %}
+    {% ifchanged msg.created_at|date:"Y-m-d" %}
+    <div class="md-date-divider">
+      {% if msg.created_at|date:"Y-m-d" == now|date:"Y-m-d" %}{{ 'Today'|t }}
+      {% elif msg.created_at|date:"Y-m-d" == yesterday|date:"Y-m-d" %}{{ 'Yesterday'|t }}
+      {% else %}{{ msg.created_at|date:"M d, Y" }}{% endif %}
+    </div>
+    {% endifchanged %}
+    <div class="md-msg-wrap {% if msg.sender == request.user %}mine{% else %}theirs{% endif %}" data-msg-id="{{ msg.id }}">
+      <div class="md-msg-content">
+        {% if msg.is_deleted %}
+        <div class="md-msg-deleted"><i class="bi bi-trash3"></i> {{ 'Message deleted'|t }}</div>
+        {% else %}
+        <div class="md-msg {% if msg.edited %}edited{% endif %}">
+          {% if msg.file_type == 'image' and msg.file %}
+          <img class="md-img" src="{{ msg.file.url }}" alt="" loading="lazy" onclick="openLightbox('{{ msg.file.url }}')">
+          {% elif msg.image %}
+          <img class="md-img" src="{{ msg.image.url }}" alt="" loading="lazy" onclick="openLightbox('{{ msg.image.url }}')">
+          {% endif %}
+          {% if msg.file_type == 'video' and msg.file %}
+          <video class="md-video-player" controls preload="metadata">
+            <source src="{{ msg.file.url }}" type="{{ msg.file_mime_type|default:'video/mp4' }}">
+          </video>
+          {% endif %}
+          {% if msg.file_type == 'audio' and msg.file %}
+          <audio class="md-audio-player" controls preload="metadata">
+            <source src="{{ msg.file.url }}" type="{{ msg.file_mime_type|default:'audio/mpeg' }}">
+          </audio>
+          {% endif %}
+          {% if msg.file_type == 'document' and msg.file %}
+          <a href="{{ msg.file.url }}" class="md-doc-link" download>
+            <i class="bi bi-file-earmark-text doc-icon"></i>
+            <span class="doc-info">
+              <span class="doc-name">{{ msg.file.name|cut:'message_files/'|cut:'documents/' }}</span>
+              <span class="doc-size">{{ msg.file.size|filesizeformat }}</span>
+            </span>
+            <i class="bi bi-download" style="color:var(--text-muted);font-size:0.8rem;"></i>
+          </a>
+          {% endif %}
+          <span class="msg-text">{{ msg.content }}</span>
+        </div>
+        {% if msg.reactions and msg.reactions.items %}
+        <div class="md-msg-reactions">
+          {% for emoji, users in msg.reactions.items %}
+          <span class="md-reaction-badge {% if request.user.username in users %}mine{% endif %}" onclick="reactToMessage({{ msg.id }}, '{{ emoji }}')">
+            {{ emoji }} <span class="r-count">{{ users|length }}</span>
+          </span>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% endif %}
+      </div>
+      {% if not msg.is_deleted %}
+      <div class="md-msg-actions">
+        <button class="md-msg-action" onclick="copyMsg(this)" title="{{ 'Copy'|t }}"><i class="bi bi-clipboard"></i></button>
+        {% if msg.sender == request.user and not msg.image and not msg.file %}
+        <button class="md-msg-action" onclick="editMsg(this)" title="{{ 'Edit'|t }}"><i class="bi bi-pencil"></i></button>
+        {% endif %}
+        <button class="md-msg-action" onclick="showQuickReactions(this, {{ msg.id }})" title="{{ 'React'|t }}"><i class="bi bi-emoji-smile"></i></button>
+        <button class="md-msg-action {% if msg.is_pinned %}pinned{% endif %}" onclick="togglePin({{ msg.id }})" title="{{ 'Pin'|t }}"><i class="bi bi-pin{% if msg.is_pinned %}-fill{% endif %}"></i></button>
+        {% if msg.sender == request.user %}
+        <button class="md-msg-action" onclick="confirmDeleteMsg(this, {{ msg.id }})" title="{{ 'Delete'|t }}"><i class="bi bi-trash3"></i></button>
+        {% endif %}
+        <button class="md-msg-action" onclick="reportMessage({{ msg.id }})" title="{{ 'Report'|t }}"><i class="bi bi-flag"></i></button>
+      </div>
+      {% endif %}
+      <div class="md-msg-meta">
+        <span class="md-msg-time">{{ msg.created_at|date:"H:i" }}</span>
+        {% if msg.sender == request.user and not msg.is_deleted %}
+        <span class="md-receipt {% if msg.is_read %}read{% elif msg.is_delivered %}delivered{% else %}sent{% endif %}" {% if msg.is_read %}title="{{ 'Seen'|t }} {{ msg.read_at|date:'H:i' }}"{% endif %}>
+          {% if msg.is_read %}<i class="bi bi-check2-all"></i>{% else %}<i class="bi bi-check2"></i>{% endif %}
+          {% if msg.read_at %}
+          <span class="seen-tooltip">{{ 'Seen'|t }} {{ msg.read_at|date:'M d, H:i' }}</span>
+          {% endif %}
+        </span>
+        {% endif %}
+      </div>
+    </div>
+    {% empty %}
+    <div class="md-empty">
+      <i class="bi bi-chat-dots" style="font-size:2rem;display:block;margin-bottom:12px;color:var(--text-muted);"></i>
+      {{ 'Send a message to start the conversation.'|t }}
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- ATTACHMENT PREVIEW -->
+  <div class="md-attach-preview" id="attach-preview">
+    <div class="ap-icon" id="attach-icon"><i class="bi bi-file-earmark"></i></div>
+    <div class="ap-info">
+      <span class="ap-name" id="attach-name"></span>
+      <span class="ap-size" id="attach-size"></span>
+    </div>
+    <button class="remove-attach" onclick="clearAttachPreview()"><i class="bi bi-x-circle-fill"></i></button>
+  </div>
+
+  <!-- FILE INPUT (hidden) -->
+  <input type="file" id="file-input" accept="*/*" style="display:none;">
+
+  <!-- FOOTER -->
+  {% if not user_blocked %}
+  <div class="md-footer">
+    <div class="md-footer-tools">
+      <button class="ft-btn" id="attach-btn" title="{{ 'Attach file'|t }}"><i class="bi bi-paperclip"></i></button>
+      <button class="ft-btn" id="emoji-btn" title="{{ 'Emoji'|t }}">
+        <i class="bi bi-emoji-smile"></i>
+      </button>
+      <div style="position:relative;">
+        <div class="md-emoji-picker" id="emoji-picker">
+          <button class="ep-btn" data-emoji="👍">👍</button>
+          <button class="ep-btn" data-emoji="❤️">❤️</button>
+          <button class="ep-btn" data-emoji="😂">😂</button>
+          <button class="ep-btn" data-emoji="😊">😊</button>
+          <button class="ep-btn" data-emoji="😮">😮</button>
+          <button class="ep-btn" data-emoji="😢">😢</button>
+          <button class="ep-btn" data-emoji="🔥">🔥</button>
+          <button class="ep-btn" data-emoji="🎉">🎉</button>
+          <button class="ep-btn" data-emoji="💯">💯</button>
+          <button class="ep-btn" data-emoji="✅">✅</button>
+          <button class="ep-btn" data-emoji="⭐">⭐</button>
+          <button class="ep-btn" data-emoji="🙏">🙏</button>
+        </div>
+      </div>
+    </div>
+    <form method="POST" class="md-form" id="msg-form" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="md-form-input-wrap">
+        <textarea name="content" id="msg-input" rows="1" placeholder="{{ 'Type a message...'|t }}" autocomplete="off"></textarea>
+      </div>
+      <button type="submit" class="md-send-btn" id="msg-send-btn"><i class="bi bi-send-fill"></i></button>
+    </form>
+  </div>
+  {% else %}
+  <div class="md-footer" style="padding:14px;text-align:center;color:var(--text-muted);font-size:0.82rem;">
+    <i class="bi bi-shield-exclamation"></i> {{ 'You cannot send messages to a blocked user.'|t }}
+  </div>
+  {% endif %}
+</div>
+
+<!-- LIGHTBOX -->
+<div class="md-lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<!-- PROFILE SIDEBAR -->
+<div class="md-profile-overlay" id="profile-overlay" onclick="closeProfileSidebar()"></div>
+<div class="md-profile-sidebar" id="profile-sidebar">
+  <div class="md-profile-header">
+    <button onclick="closeProfileSidebar()"><i class="bi bi-x"></i></button>
+    <h3>{{ 'User Info'|t }}</h3>
+  </div>
+  <div class="md-profile-body" id="profile-body">
+    <div class="p-avatar" id="p-avatar">{{ other_user.username|first|upper }}</div>
+    <div class="p-name" id="p-name">{{ other_user.username }}</div>
+    <div class="p-status" id="p-status">
+      <span class="md-online-dot offline" id="sidebar-online-dot" style="width:6px;height:6px;vertical-align:middle;margin-right:4px;"></span>
+      <span id="p-status-text">{{ 'Loading...'|t }}</span>
+    </div>
+    <div class="p-info-item">
+      <div class="pii-icon"><i class="bi bi-envelope"></i></div>
+      <div>
+        <span class="pii-label">{{ 'Email'|t }}</span>
+        <span class="pii-value" id="p-email">—</span>
+      </div>
+    </div>
+    <div class="p-info-item">
+      <div class="pii-icon"><i class="bi bi-telephone"></i></div>
+      <div>
+        <span class="pii-label">{{ 'Phone'|t }}</span>
+        <span class="pii-value" id="p-phone">—</span>
+      </div>
+    </div>
+    <div class="p-info-item">
+      <div class="pii-icon"><i class="bi bi-geo-alt"></i></div>
+      <div>
+        <span class="pii-label">{{ 'City'|t }}</span>
+        <span class="pii-value" id="p-city">—</span>
+      </div>
+    </div>
+    <div class="p-info-item">
+      <div class="pii-icon"><i class="bi bi-shop"></i></div>
+      <div>
+        <span class="pii-label">{{ 'Store'|t }}</span>
+        <span class="pii-value" id="p-store">—</span>
+      </div>
+    </div>
+    <div class="p-info-item">
+      <div class="pii-icon"><i class="bi bi-calendar3"></i></div>
+      <div>
+        <span class="pii-label">{{ 'Member Since'|t }}</span>
+        <span class="pii-value" id="p-member-since">—</span>
+      </div>
+    </div>
+    <div class="p-info-item">
+      <div class="pii-icon"><i class="bi bi-clock-history"></i></div>
+      <div>
+        <span class="pii-label">{{ 'Last Seen'|t }}</span>
+        <span class="pii-value" id="p-last-seen">—</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="md-modal-overlay" id="delete-modal">
+  <div class="md-modal">
+    <h3><i class="bi bi-exclamation-triangle" style="color:#e74c3c;"></i> {{ 'Delete Message?'|t }}</h3>
+    <p>{{ 'This action cannot be undone.'|t }}</p>
+    <div class="md-modal-actions">
+      <button class="md-btn-danger" onclick="deleteForEveryone()"><i class="bi bi-trash3"></i> {{ 'Delete for Everyone'|t }}</button>
+      <button class="md-btn-primary" onclick="deleteForMe()"><i class="bi bi-eye-slash"></i> {{ 'Delete for Me'|t }}</button>
+      <button class="md-btn-ghost" onclick="closeDeleteModal()">{{ 'Cancel'|t }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div class="md-modal-overlay" id="report-modal">
+  <div class="md-modal">
+    <h3><i class="bi bi-flag" style="color:#d4af37;"></i> {{ 'Report Message'|t }}</h3>
+    <select id="report-reason">
+      <option value="Harassment">{{ 'Harassment'|t }}</option>
+      <option value="Spam">{{ 'Spam'|t }}</option>
+      <option value="Inappropriate">{{ 'Inappropriate'|t }}</option>
+      <option value="Other">{{ 'Other'|t }}</option>
+    </select>
+    <textarea id="report-detail" placeholder="{{ 'Additional details...'|t }}" rows="3"></textarea>
+    <div class="md-modal-actions">
+      <button class="md-btn-primary" onclick="submitReport()"><i class="bi bi-send"></i> {{ 'Submit Report'|t }}</button>
+      <button class="md-btn-ghost" onclick="closeReportModal()">{{ 'Cancel'|t }}</button>
+    </div>
+  </div>
+</div>
+
+{% endwith %}
+
+<script>
+(function(){
+  var body = document.getElementById('msg-body');
+  var form = document.getElementById('msg-form');
+  var input = document.getElementById('msg-input');
+  var sendBtn = document.getElementById('msg-send-btn');
+  var convId = {{ conversation.id }};
+  var isBlocked = {{ is_blocked|yesno:'true,false' }};
+  var otherUserId = {{ other_user.id }};
+  var currentUserId = {{ request.user.id }};
+  var csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+  function scrollToBottom(){
+    if(!body) return;
+    body.scrollTop = body.scrollHeight;
+    if(body.scrollTop + body.clientHeight < body.scrollHeight - 10)
+      setTimeout(scrollToBottom, 200);
+  }
+  scrollToBottom();
+  window.addEventListener('load', scrollToBottom);
+  if(body && window.MutationObserver){
+    var obs = new MutationObserver(scrollToBottom);
+    obs.observe(body, {childList:true, subtree:true, attributes:false});
+  }
+
+  // Auto-resize textarea
+  if(input){
+    input.addEventListener('input', function(){
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 130) + 'px';
+    });
+  }
+
+  // === SEND MESSAGE VIA AJAX ===
+  function sendMessage(text){
+    if(!text || isBlocked) return;
+    sendBtn.disabled = true;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '', true);
+    xhr.setRequestHeader('X-CSRFToken', csrf);
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function(){
+      sendBtn.disabled = false;
+      if(xhr.status === 200){
+        try {
+          var d = JSON.parse(xhr.responseText);
+          if(d.id){ addMessageToBody(d); lastId = d.id; }
+        } catch(e){ location.reload(); }
+        input.value = '';
+        input.style.height = 'auto';
+        scrollToBottom();
+      }
+    };
+    xhr.onerror = function(){ sendBtn.disabled = false; };
+    xhr.send('content=' + encodeURIComponent(text));
+  }
+
+  // Enter key sends message
+  if(input){
+    input.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' && !e.shiftKey){
+        e.preventDefault();
+        var text = this.value.trim();
+        if(text && !isBlocked) sendMessage(text);
+      }
+    });
+  }
+
+  // Form submit (button click also works)
+  if(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var text = input.value.trim();
+      if(isBlocked) return;
+      if(pendingFile){ uploadFile(); return; }
+      if(text) sendMessage(text);
+    });
+  }
+
+  // === FILE ATTACHMENT (all types) ===
+  var fileInput = document.getElementById('file-input');
+  var attachBtn = document.getElementById('attach-btn');
+  var previewDiv = document.getElementById('attach-preview');
+  var attachName = document.getElementById('attach-name');
+  var attachSize = document.getElementById('attach-size');
+  var attachIcon = document.getElementById('attach-icon');
+  var pendingFile = null;
+  var MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+
+  if(attachBtn){
+    attachBtn.addEventListener('click', function(){ fileInput.click(); });
+  }
+
+  if(fileInput){
+    fileInput.setAttribute('accept', '*/*');
+    fileInput.addEventListener('change', function(){
+      var file = this.files[0];
+      if(!file) return;
+      if(file.size > MAX_FILE_SIZE){
+        alert('{{ 'File must be under 20MB'|t }}');
+        this.value = '';
+        return;
+      }
+      var iconEl = attachIcon.querySelector('i') || attachIcon;
+      if(file.type.startsWith('image/')){
+        var img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.style.cssText = 'width:36px;height:36px;border-radius:6px;object-fit:cover;';
+        attachIcon.innerHTML = '';
+        attachIcon.appendChild(img);
+      } else if(file.type.startsWith('video/')){
+        attachIcon.innerHTML = '<i class="bi bi-film" style="font-size:1.5rem;color:var(--accent);"></i>';
+      } else if(file.type.startsWith('audio/')){
+        attachIcon.innerHTML = '<i class="bi bi-music-note-beamed" style="font-size:1.5rem;color:var(--accent);"></i>';
+      } else {
+        attachIcon.innerHTML = '<i class="bi bi-file-earmark" style="font-size:1.5rem;color:var(--accent);"></i>';
+      }
+      attachName.textContent = file.name;
+      attachSize.textContent = formatFileSize(file.size);
+      previewDiv.classList.add('open');
+      pendingFile = file;
+    });
+  }
+
+  window.clearAttachPreview = function(){
+    previewDiv.classList.remove('open');
+    attachName.textContent = '';
+    attachSize.textContent = '';
+    attachIcon.innerHTML = '<i class="bi bi-file-earmark"></i>';
+    fileInput.value = '';
+    pendingFile = null;
+  };
+
+  function formatFileSize(bytes){
+    if(bytes < 1024) return bytes + ' B';
+    if(bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
+  }
+
+  function uploadFile(){
+    if(!pendingFile) return;
+    var fd = new FormData();
+    fd.append('conversation_id', convId);
+    fd.append('file', pendingFile);
+    fd.append('content', input.value.trim());
+    sendBtn.disabled = true;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '{% url "store:api_upload_file" %}', true);
+    xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+    xhr.onload = function(){
+      sendBtn.disabled = false;
+      if(xhr.status === 200){
+        clearAttachPreview();
+        input.value = '';
+        input.style.height = 'auto';
+        setTimeout(function(){ body.scrollTop = body.scrollHeight; }, 100);
+      } else {
+        try { var d = JSON.parse(xhr.responseText); alert(d.error || '{{ 'Upload failed'|t }}'); } catch(e){ alert('{{ 'Upload failed'|t }}'); }
+      }
+    };
+    xhr.onerror = function(){ sendBtn.disabled = false; alert('{{ 'Upload failed'|t }}'); };
+    xhr.send(fd);
+  }
+
+  // === EMOJI PICKER ===
+  var emojiBtn = document.getElementById('emoji-btn');
+  var emojiPicker = document.getElementById('emoji-picker');
+  if(emojiBtn){
+    emojiBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      emojiPicker.classList.toggle('open');
+    });
+    emojiPicker.querySelectorAll('.ep-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if(input) input.value += this.dataset.emoji;
+        emojiPicker.classList.remove('open');
+        if(input) input.focus();
+      });
+    });
+    document.addEventListener('click', function(e){
+      if(!emojiPicker.contains(e.target) && e.target !== emojiBtn && !emojiBtn.contains(e.target)){
+        emojiPicker.classList.remove('open');
+      }
+    });
+  }
+
+  // === SEARCH ===
+  var searchToggle = document.getElementById('search-toggle');
+  var searchBar = document.getElementById('search-bar');
+  var searchInput = document.getElementById('search-input');
+  var searchResults = document.getElementById('search-results');
+  var searchClose = document.getElementById('search-close');
+  var searchTimeout = null;
+
+  if(searchToggle){
+    searchToggle.addEventListener('click', function(){
+      searchBar.classList.toggle('open');
+      if(searchBar.classList.contains('open')){
+        setTimeout(function(){ searchInput.focus(); }, 100);
+      } else {
+        searchResults.classList.remove('open');
+      }
+    });
+  }
+  if(searchClose){
+    searchClose.addEventListener('click', function(){
+      searchBar.classList.remove('open');
+      searchResults.classList.remove('open');
+      searchInput.value = '';
+    });
+  }
+  if(searchInput){
+    searchInput.addEventListener('input', function(){
+      clearTimeout(searchTimeout);
+      var q = this.value.trim();
+      if(q.length < 2){
+        searchResults.classList.remove('open');
+        return;
+      }
+      searchTimeout = setTimeout(function(){
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '{% url "store:api_search_messages" conversation.id %}?q=' + encodeURIComponent(q), true);
+        xhr.onload = function(){
+          if(xhr.status !== 200) return;
+          try {
+            var data = JSON.parse(xhr.responseText);
+            searchResults.innerHTML = '';
+            if(!data.results || !data.results.length){
+              searchResults.innerHTML = '<div class="md-search-empty">{{ "No results"|t }}</div>';
+            } else {
+              data.results.forEach(function(r){
+                var item = document.createElement('div');
+                item.className = 'md-search-item';
+                item.innerHTML = '<div class="si-sender">' + r.sender + ' <span class="si-time">' + r.created_at + '</span></div><div class="si-text">' + escHtml(r.content) + '</div>';
+                item.onclick = function(){
+                  var el = body.querySelector('[data-msg-id="' + r.id + '"]');
+                  if(el){
+                    el.scrollIntoView({behavior:'smooth', block:'center'});
+                    el.style.transition = 'background 0.5s';
+                    el.style.background = 'rgba(212,175,55,0.06)';
+                    setTimeout(function(){ el.style.background = ''; }, 2000);
+                  }
+                  searchInput.value = '';
+                  searchResults.classList.remove('open');
+                };
+                searchResults.appendChild(item);
+              });
+            }
+            searchResults.classList.add('open');
+          } catch(e){}
+        };
+        xhr.send();
+      }, 300);
+    });
+  }
+
+  function escHtml(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+  // === THEME PICKER ===
+  var themeToggle = document.getElementById('theme-toggle');
+  var themePicker = document.getElementById('theme-picker');
+  if(themeToggle){
+    themeToggle.addEventListener('click', function(e){
+      e.stopPropagation();
+      themePicker.classList.toggle('open');
+      document.getElementById('more-menu').style.display = 'none';
+    });
+    themePicker.querySelectorAll('.md-theme-opt').forEach(function(opt){
+      opt.addEventListener('click', function(){
+        var theme = this.dataset.theme;
+        // Apply instantly before API
+        document.getElementById('md-page').dataset.theme = theme;
+        themePicker.querySelectorAll('.md-theme-opt').forEach(function(o){ o.classList.remove('active'); });
+        opt.classList.add('active');
+        // Save to server async
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '{% url "store:api_change_theme" %}', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+        xhr.send(JSON.stringify({conversation_id: convId, theme: theme}));
+        themePicker.classList.remove('open');
+      });
+    });
+    document.addEventListener('click', function(e){
+      if(!themePicker.contains(e.target) && e.target !== themeToggle && !themeToggle.contains(e.target)){
+        themePicker.classList.remove('open');
+      }
+    });
+  }
+
+  // === MORE MENU ===
+  var moreToggle = document.getElementById('more-toggle');
+  var moreMenu = document.getElementById('more-menu');
+  if(moreToggle){
+    moreToggle.addEventListener('click', function(e){
+      e.stopPropagation();
+      moreMenu.style.display = moreMenu.style.display === 'block' ? 'none' : 'block';
+      themePicker.classList.remove('open');
+    });
+    document.addEventListener('click', function(e){
+      if(!moreMenu.contains(e.target) && e.target !== moreToggle && !moreToggle.contains(e.target)){
+        moreMenu.style.display = 'none';
+      }
+    });
+  }
+
+  // === REALTIME POLLING ===
+  var lastId = 0;
+  var els = body.querySelectorAll('.md-msg-wrap');
+  if(els.length) lastId = parseInt(els[els.length - 1].dataset.msgId) || 0;
+
+  setInterval(function(){
+    if(isBlocked) return;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '{% url "store:api_new_messages" conversation.id %}?since=' + lastId, true);
+    xhr.onload = function(){
+      if(xhr.status !== 200) return;
+      try {
+        var data = JSON.parse(xhr.responseText);
+        if(!data.messages || !data.messages.length) return;
+        var empty = body.querySelector('.md-empty');
+        if(empty) empty.remove();
+        data.messages.forEach(function(m){
+          if(m.id <= lastId) return;
+          addMessageToBody(m);
+          lastId = m.id;
+        });
+        body.scrollTop = body.scrollHeight;
+        // Browser notification
+        if(document.hidden && Notification && Notification.permission === 'granted'){
+          var lastMsg = data.messages[data.messages.length - 1];
+          if(!lastMsg.is_mine){
+            new Notification('{{ other_user.username }}', {body: lastMsg.content, icon: '/static/favicon.ico'});
+          }
+        }
+      } catch(e){}
+    };
+    xhr.send();
+  }, 2500);
+
+  // === NOTIFICATION PERMISSION ===
+  if('Notification' in window && Notification.permission === 'default'){
+    Notification.requestPermission();
+  }
+
+  // === ONLINE STATUS POLLING ===
+  function pollOnlineStatus(){
+    if(isBlocked || !otherUserId) return;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '{% url "store:api_online_status" %}', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+    xhr.onload = function(){
+      if(xhr.status !== 200) return;
+      try {
+        var data = JSON.parse(xhr.responseText);
+        // Top bar status
+        var avatarStatus = document.getElementById('avatar-status');
+        var statusDot = document.getElementById('status-dot');
+        var statusText = document.getElementById('status-text');
+        // Sidebar status
+        var sidebarDot = document.getElementById('sidebar-online-dot');
+        var sidebarLabel = document.getElementById('p-status-text');
+
+        // Custom status from user
+        var customEmoji = data.status_emoji || '';
+        var customText = data.status_text || '';
+
+        if(data.is_online){
+          [avatarStatus, statusDot, sidebarDot].forEach(function(el){
+            if(el){ el.classList.remove('offline', 'typing'); el.classList.add('online'); }
+          });
+          var onlineLabel = customEmoji + ' ' + customText || '{{ 'Online'|t }}';
+          if(statusText) statusText.textContent = onlineLabel;
+          if(sidebarLabel) sidebarLabel.textContent = onlineLabel;
+        } else if(data.is_typing){
+          [avatarStatus, statusDot, sidebarDot].forEach(function(el){
+            if(el){ el.classList.remove('offline', 'online'); el.classList.add('typing'); }
+          });
+          if(statusText) statusText.innerHTML = '<span class="typing-indicator"><span></span><span></span><span></span></span> {{ 'typing'|t }}';
+          if(sidebarLabel) sidebarLabel.textContent = '{{ 'Typing...'|t }}';
+        } else {
+          [avatarStatus, statusDot, sidebarDot].forEach(function(el){
+            if(el){ el.classList.remove('online', 'typing'); el.classList.add('offline'); }
+          });
+          var offlineLabel = customEmoji ? (customEmoji + ' ' + customText) : (data.last_seen_label || '{{ 'Offline'|t }}');
+          if(statusText) statusText.textContent = offlineLabel;
+          if(sidebarLabel) sidebarLabel.textContent = offlineLabel;
+        }
+      } catch(e){}
+    };
+    xhr.send(JSON.stringify({user_id: otherUserId}));
+  }
+
+  pollOnlineStatus();
+  setInterval(pollOnlineStatus, 30000);
+
+})();
+
+// === PROFILE SIDEBAR ===
+function openProfileSidebar(){
+  document.getElementById('profile-overlay').classList.add('open');
+  document.getElementById('profile-sidebar').classList.add('open');
+  fetchUserInfo();
+}
+
+function closeProfileSidebar(){
+  document.getElementById('profile-overlay').classList.remove('open');
+  document.getElementById('profile-sidebar').classList.remove('open');
+}
+
+function fetchUserInfo(){
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '{% url "store:api_user_info" %}', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+  xhr.onload = function(){
+    if(xhr.status !== 200) return;
+    try {
+      var data = JSON.parse(xhr.responseText);
+      document.getElementById('p-avatar').textContent = (data.username || '?')[0].toUpperCase();
+      document.getElementById('p-name').textContent = data.username || '—';
+      document.getElementById('p-email').textContent = data.email || '—';
+      document.getElementById('p-phone').textContent = data.phone || '—';
+      document.getElementById('p-city').textContent = data.city || '—';
+      document.getElementById('p-store').textContent = data.store || '—';
+      document.getElementById('p-member-since').textContent = data.member_since || '—';
+      document.getElementById('p-last-seen').textContent = data.last_seen || '—';
+      var sbDot = document.getElementById('sidebar-online-dot');
+      var sbLabel = document.getElementById('p-status-text');
+      var avStat = document.getElementById('avatar-status');
+      var sDot = document.getElementById('status-dot');
+      var sText = document.getElementById('status-text');
+      if(data.is_online){
+        [sbDot, avStat, sDot].forEach(function(el){
+          if(el){ el.classList.remove('offline'); el.classList.add('online'); }
+        });
+        if(sbLabel) sbLabel.textContent = '{{ 'Online'|t }}';
+        if(sText) sText.textContent = '{{ 'Online'|t }}';
+      } else {
+        [sbDot, avStat, sDot].forEach(function(el){
+          if(el){ el.classList.remove('online'); el.classList.add('offline'); }
+        });
+        var offLabel = data.last_seen_label || '{{ 'Offline'|t }}';
+        if(sbLabel) sbLabel.textContent = offLabel;
+        if(sText) sText.textContent = offLabel;
+      }
+    } catch(e){}
+  };
+  xhr.send(JSON.stringify({user_id: {{ other_user.id }}}));
+}
+
+// === DELETE MESSAGE ===
+var deleteMsgId = null;
+
+function confirmDeleteMsg(btn, msgId){
+  deleteMsgId = msgId;
+  document.getElementById('delete-modal').classList.add('open');
+}
+
+function closeDeleteModal(){
+  deleteMsgId = null;
+  document.getElementById('delete-modal').classList.remove('open');
+}
+
+document.getElementById('delete-modal').addEventListener('click', function(e){
+  if(e.target === this) closeDeleteModal();
+});
+
+function deleteForEveryone(){
+  if(!deleteMsgId) return;
+  deleteMessage(deleteMsgId, 'everyone');
+  closeDeleteModal();
+}
+
+function deleteForMe(){
+  if(!deleteMsgId) return;
+  deleteMessage(deleteMsgId, 'me');
+  closeDeleteModal();
+}
+
+function deleteMessage(msgId, scope){
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '{% url "store:api_delete_message" %}', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+  xhr.onload = function(){
+    if(xhr.status === 200){
+      var wrap = document.querySelector('[data-msg-id="' + msgId + '"]');
+      if(wrap){
+        if(scope === 'me'){
+          wrap.style.transition = 'all 0.4s ease-out';
+          wrap.style.opacity = '0';
+          wrap.style.transform = 'translateX(40px)';
+          setTimeout(function(){ wrap.remove(); }, 400);
+        } else {
+          wrap.style.transition = 'all 0.5s ease-out';
+          wrap.style.opacity = '0';
+          wrap.style.transform = 'scale(0.8)';
+          setTimeout(function(){
+            var content = wrap.querySelector('.md-msg-content');
+            var actions = wrap.querySelector('.md-msg-actions');
+            var meta = wrap.querySelector('.md-msg-meta');
+            if(actions) actions.remove();
+            if(content){
+              content.innerHTML = '<div class="md-msg-deleted"><i class="bi bi-trash3"></i> {{ 'Message deleted'|t }}</div>';
+            }
+            if(meta){
+              var time = meta.querySelector('.md-msg-time');
+              meta.innerHTML = '';
+              if(time) meta.appendChild(time);
+            }
+            wrap.style.opacity = '1';
+            wrap.style.transform = 'none';
+          }, 500);
+        }
+      }
+    } else {
+      try { var d = JSON.parse(xhr.responseText); alert(d.error || '{{ 'Delete failed'|t }}'); } catch(e){ alert('{{ 'Delete failed'|t }}'); }
+    }
+  };
+  xhr.send(JSON.stringify({message_id: msgId, scope: scope}));
+}
+
+// === REPORT MESSAGE ===
+var reportMsgId = null;
+
+function reportMessage(msgId){
+  reportMsgId = msgId;
+  document.getElementById('report-modal').classList.add('open');
+}
+
+function closeReportModal(){
+  reportMsgId = null;
+  document.getElementById('report-modal').classList.remove('open');
+  document.getElementById('report-reason').selectedIndex = 0;
+  document.getElementById('report-detail').value = '';
+}
+
+document.getElementById('report-modal').addEventListener('click', function(e){
+  if(e.target === this) closeReportModal();
+});
+
+function submitReport(){
+  if(!reportMsgId) return;
+  var reason = document.getElementById('report-reason').value;
+  var detail = document.getElementById('report-detail').value.trim();
+  if(!reason){ alert('{{ 'Please select a reason'|t }}'); return; }
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '{% url "store:api_report_message" %}', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+  xhr.onload = function(){
+    if(xhr.status === 200){
+      alert('{{ 'Report submitted. We will review it shortly.'|t }}');
+      closeReportModal();
+    } else {
+      try { var d = JSON.parse(xhr.responseText); alert(d.error || '{{ 'Report failed'|t }}'); } catch(e){ alert('{{ 'Report failed'|t }}'); }
+    }
+  };
+  xhr.send(JSON.stringify({message_id: reportMsgId, reason: reason, detail: detail}));
+}
+
+// === VIDEO CALL (disabled - coming soon) ===
+function startVideoCall(){
+  showToast('{{ 'Video calls coming soon!'|t }}');
+}
+
+// === ADD MESSAGE TO BODY ===
+function addMessageToBody(m){
+  var body = document.getElementById('msg-body');
+  var wrap = document.createElement('div');
+  wrap.className = 'md-msg-wrap ' + (m.is_mine ? 'mine' : 'theirs');
+  wrap.classList.add('animate-in');
+  wrap.dataset.msgId = m.id;
+
+  var content = document.createElement('div');
+  content.className = 'md-msg-content';
+
+  if(m.is_deleted){
+    var deletedDiv = document.createElement('div');
+    deletedDiv.className = 'md-msg-deleted';
+    deletedDiv.innerHTML = '<i class="bi bi-trash3"></i> {{ 'Message deleted'|t }}';
+    content.appendChild(deletedDiv);
+  } else {
+    var msg = document.createElement('div');
+    msg.className = 'md-msg';
+    if(m.edited) msg.classList.add('edited');
+
+    if(m.file_type === 'image' && m.file_url){
+      var img = document.createElement('img');
+      img.className = 'md-img';
+      img.src = m.file_url;
+      img.loading = 'lazy';
+      img.onclick = function(){ openLightbox(m.file_url); };
+      msg.appendChild(img);
+    }
+
+    if(m.file_type === 'video' && m.file_url){
+      var video = document.createElement('video');
+      video.className = 'md-video-player';
+      video.controls = true;
+      video.preload = 'metadata';
+      var source = document.createElement('source');
+      source.src = m.file_url;
+      source.type = m.file_mime_type || 'video/mp4';
+      video.appendChild(source);
+      msg.appendChild(video);
+    }
+
+    if(m.file_type === 'audio' && m.file_url){
+      var audio = document.createElement('audio');
+      audio.className = 'md-audio-player';
+      audio.controls = true;
+      audio.preload = 'metadata';
+      var source = document.createElement('source');
+      source.src = m.file_url;
+      source.type = m.file_mime_type || 'audio/mpeg';
+      audio.appendChild(source);
+      msg.appendChild(audio);
+    }
+
+    if(m.file_type === 'document' && m.file_url){
+      var docLink = document.createElement('a');
+      docLink.className = 'md-doc-link';
+      docLink.href = m.file_url;
+      docLink.download = '';
+      docLink.innerHTML = '<i class="bi bi-file-earmark-text doc-icon"></i><span class="doc-info"><span class="doc-name">' + (m.file_name || '{{ 'Document'|t }}') + '</span><span class="doc-size">' + (m.file_size || '') + '</span></span><i class="bi bi-download" style="color:var(--text-muted);font-size:0.8rem;"></i>';
+      msg.appendChild(docLink);
+    }
+
+    var textSpan = document.createElement('span');
+    textSpan.className = 'msg-text';
+    textSpan.textContent = m.content || '';
+    msg.appendChild(textSpan);
+    content.appendChild(msg);
+
+    // Reactions
+    if(m.reactions && Object.keys(m.reactions).length){
+      var rDiv = document.createElement('div');
+      rDiv.className = 'md-msg-reactions';
+      Object.keys(m.reactions).forEach(function(emoji){
+        var users = m.reactions[emoji];
+        var badge = document.createElement('span');
+        badge.className = 'md-reaction-badge' + (users.includes('{{ request.user.username }}') ? ' mine' : '');
+        badge.innerHTML = emoji + ' <span class="r-count">' + users.length + '</span>';
+        badge.onclick = function(){ reactToMessage(m.id, emoji); };
+        rDiv.appendChild(badge);
+      });
+      content.appendChild(rDiv);
+    }
+  }
+
+  wrap.appendChild(content);
+
+  if(!m.is_deleted){
+    // Actions
+    var actions = document.createElement('div');
+    actions.className = 'md-msg-actions';
+    var copyBtn = document.createElement('button');
+    copyBtn.className = 'md-msg-action';
+    copyBtn.innerHTML = '<i class="bi bi-clipboard"></i>';
+    copyBtn.onclick = function(){ copyMsg(this); };
+    actions.appendChild(copyBtn);
+    if(m.is_mine && !m.file_url){
+      var editBtn = document.createElement('button');
+      editBtn.className = 'md-msg-action';
+      editBtn.innerHTML = '<i class="bi bi-pencil"></i>';
+      editBtn.onclick = function(){ editMsg(this); };
+      actions.appendChild(editBtn);
+    }
+    var reactBtn = document.createElement('button');
+    reactBtn.className = 'md-msg-action';
+    reactBtn.innerHTML = '<i class="bi bi-emoji-smile"></i>';
+    reactBtn.onclick = function(){ showQuickReactions(this, m.id); };
+    actions.appendChild(reactBtn);
+    var pinBtn = document.createElement('button');
+    pinBtn.className = 'md-msg-action' + (m.is_pinned ? ' pinned' : '');
+    pinBtn.innerHTML = '<i class="bi bi-pin' + (m.is_pinned ? '-fill' : '') + '"></i>';
+    pinBtn.onclick = function(){ togglePin(m.id); };
+    actions.appendChild(pinBtn);
+    if(m.is_mine){
+      var delBtn = document.createElement('button');
+      delBtn.className = 'md-msg-action';
+      delBtn.innerHTML = '<i class="bi bi-trash3"></i>';
+      delBtn.onclick = function(){ confirmDeleteMsg(this, m.id); };
+      actions.appendChild(delBtn);
+    }
+    var reportBtn = document.createElement('button');
+    reportBtn.className = 'md-msg-action';
+    reportBtn.innerHTML = '<i class="bi bi-flag"></i>';
+    reportBtn.onclick = function(){ reportMessage(m.id); };
+    actions.appendChild(reportBtn);
+    wrap.appendChild(actions);
+  }
+
+  // Meta
+  var meta = document.createElement('div');
+  meta.className = 'md-msg-meta';
+  var time = document.createElement('span');
+  time.className = 'md-msg-time';
+  time.textContent = m.created_at;
+  meta.appendChild(time);
+  if(m.is_mine && !m.is_deleted){
+    var receipt = document.createElement('span');
+    receipt.className = 'md-receipt ' + (m.is_read ? 'read' : (m.is_delivered ? 'delivered' : 'sent'));
+    var icon = m.is_read ? '<i class="bi bi-check2-all"></i>' : '<i class="bi bi-check2"></i>';
+    receipt.innerHTML = icon;
+    if(m.read_at){
+      var tooltip = document.createElement('span');
+      tooltip.className = 'seen-tooltip';
+      tooltip.textContent = '{{ 'Seen'|t }} ' + m.read_at;
+      receipt.appendChild(tooltip);
+    }
+    meta.appendChild(receipt);
+  }
+  wrap.appendChild(meta);
+
+  body.appendChild(wrap);
+}
+
+// === REACTIONS ===
+function reactToMessage(msgId, emoji){
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '{% url "store:api_react_message" %}', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+  xhr.onload = function(){
+    if(xhr.status === 200){
+      try {
+        var data = JSON.parse(xhr.responseText);
+        updateReactionsDisplay(msgId, data.reactions);
+      } catch(e){}
+    }
+  };
+  xhr.send(JSON.stringify({message_id: msgId, emoji: emoji}));
+}
+
+function updateReactionsDisplay(msgId, reactions){
+  var wrap = document.querySelector('[data-msg-id="' + msgId + '"]');
+  if(!wrap) return;
+  var content = wrap.querySelector('.md-msg-content');
+  var existing = wrap.querySelector('.md-msg-reactions');
+  if(existing) existing.remove();
+  if(!reactions || !Object.keys(reactions).length) return;
+  var rDiv = document.createElement('div');
+  rDiv.className = 'md-msg-reactions';
+  var myUsername = '{{ request.user.username }}';
+  Object.keys(reactions).forEach(function(emoji){
+    var users = reactions[emoji];
+    var badge = document.createElement('span');
+    badge.className = 'md-reaction-badge' + (users.includes(myUsername) ? ' mine' : '');
+    badge.innerHTML = emoji + ' <span class="r-count">' + users.length + '</span>';
+    badge.onclick = function(){ reactToMessage(msgId, emoji); };
+    rDiv.appendChild(badge);
+  });
+  content.appendChild(rDiv);
+}
+
+function showQuickReactions(btn, msgId){
+  var existing = document.getElementById('qr-' + msgId);
+  if(existing){ existing.remove(); return; }
+  var picker = document.createElement('div');
+  picker.id = 'qr-' + msgId;
+  picker.style.cssText = 'position:absolute;bottom:100%;left:0;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:4px;display:flex;gap:2px;z-index:30;box-shadow:0 -4px 16px rgba(0,0,0,0.3);';
+  ['👍','❤️','😂','😊','😮','😢','🔥','🎉'].forEach(function(e){
+    var b = document.createElement('button');
+    b.textContent = e;
+    b.style.cssText = 'width:30px;height:30px;border-radius:6px;border:none;background:transparent;font-size:1rem;cursor:pointer;';
+    b.onmouseover = function(){ this.style.background = 'var(--msg-theirs)'; };
+    b.onmouseout = function(){ this.style.background = 'transparent'; };
+    b.onclick = function(){ reactToMessage(msgId, e); picker.remove(); };
+    picker.appendChild(b);
+  });
+  var wrap = btn.closest('.md-msg-wrap');
+  wrap.appendChild(picker);
+  setTimeout(function(){ document.addEventListener('click', function rm(e){ if(!picker.contains(e.target)){ picker.remove(); document.removeEventListener('click', rm); } }); }, 10);
+}
+
+// === PIN ===
+function togglePin(msgId){
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '{% url "store:api_pin_message" %}', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+  xhr.onload = function(){
+    if(xhr.status === 200){
+      location.reload();
+    }
+  };
+  xhr.send(JSON.stringify({message_id: msgId}));
+}
+
+// === MUTE ===
+function toggleMute(){
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '{% url "store:api_mute_conversation" %}', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+  xhr.onload = function(){
+    if(xhr.status === 200) location.reload();
+  };
+  xhr.send(JSON.stringify({conversation_id: {{ conversation.id }}}));
+}
+
+// === COPY ===
+function copyMsg(btn){
+  var wrap = btn.closest('.md-msg-wrap');
+  var text = wrap.querySelector('.msg-text').textContent;
+  navigator.clipboard.writeText(text).then(function(){
+    btn.classList.add('copied');
+    btn.innerHTML = '<i class="bi bi-check"></i>';
+    setTimeout(function(){ btn.classList.remove('copied'); btn.innerHTML = '<i class="bi bi-clipboard"></i>'; }, 1500);
+  });
+}
+
+// === EDIT ===
+function editMsg(btn){
+  var wrap = btn.closest('.md-msg-wrap');
+  var msgDiv = wrap.querySelector('.md-msg');
+  var textSpan = msgDiv.querySelector('.msg-text');
+  var original = textSpan.textContent;
+  if(msgDiv.querySelector('.md-edit-input')) return;
+  textSpan.style.display = 'none';
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'md-edit-input';
+  input.style.cssText = 'width:100%;background:transparent;border:1px solid rgba(212,175,55,0.3);border-radius:6px;padding:6px 10px;color:var(--text);font-size:0.85rem;outline:none;';
+  input.value = original;
+  msgDiv.appendChild(input);
+  input.focus();
+  input.setSelectionRange(input.value.length, input.value.length);
+  var actions = document.createElement('div');
+  actions.style.cssText = 'display:flex;gap:4px;margin-top:4px;justify-content:flex-end;';
+  var saveBtn = document.createElement('button');
+  saveBtn.textContent = 'Save';
+  saveBtn.style.cssText = 'padding:2px 10px;border-radius:4px;border:none;font-size:0.65rem;cursor:pointer;font-weight:600;background:var(--accent);color:#0d0d0d;';
+  var cancelBtn = document.createElement('button');
+  cancelBtn.textContent = 'Cancel';
+  cancelBtn.style.cssText = 'padding:2px 10px;border-radius:4px;border:none;font-size:0.65rem;cursor:pointer;font-weight:600;background:var(--msg-theirs);color:var(--text-sec);';
+  saveBtn.onclick = function(){
+    var newText = input.value.trim();
+    if(!newText || newText === original){ cancelEdit(); return; }
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '{% url "store:api_edit_message" %}', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+    xhr.onload = function(){
+      if(xhr.status === 200){
+        textSpan.textContent = newText;
+        msgDiv.classList.add('edited');
+        cancelEdit();
+      } else {
+        try { var err = JSON.parse(xhr.responseText); alert(err.error || 'Edit failed'); } catch(e){ alert('Edit failed'); }
+        cancelEdit();
+      }
+    };
+    xhr.send(JSON.stringify({message_id: parseInt(wrap.dataset.msgId), content: newText}));
+  };
+  cancelBtn.onclick = function cancelEdit(){
+    textSpan.style.display = '';
+    if(input.parentNode) input.remove();
+    if(actions.parentNode) actions.remove();
+  };
+  actions.appendChild(saveBtn);
+  actions.appendChild(cancelBtn);
+  msgDiv.appendChild(actions);
+  input.addEventListener('keydown', function(e){
+    if(e.key === 'Enter') saveBtn.click();
+    if(e.key === 'Escape') cancelBtn.click();
+  });
+}
+
+// === LIGHTBOX ===
+function openLightbox(src){
+  var lb = document.getElementById('lightbox');
+  var img = document.getElementById('lightbox-img');
+  img.src = src;
+  lb.classList.add('open');
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+// === STATUS PICKER ===
+function toggleStatusPicker(e){
+  e.stopPropagation();
+  var picker = document.getElementById('status-picker');
+  if(!picker) return;
+  picker.classList.toggle('open');
+}
+
+function setStatus(btn){
+  var emoji = btn.dataset.emoji;
+  var text = btn.dataset.text;
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '{% url "store:api_update_status" %}', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+  xhr.onload = function(){
+    if(xhr.status === 200){
+      document.getElementById('my-status-emoji').textContent = emoji;
+      document.getElementById('my-status-text').textContent = text;
+      document.getElementById('status-picker').classList.remove('open');
+      // Mark active
+      document.querySelectorAll('.md-status-option').forEach(function(o){ o.classList.remove('active'); });
+      btn.classList.add('active');
+    }
+  };
+  xhr.send(JSON.stringify({emoji: emoji, text: text}));
+}
+
+// Close status picker on outside click
+document.addEventListener('click', function(e){
+  var picker = document.getElementById('status-picker');
+  var display = document.getElementById('status-display');
+  if(picker && display && !picker.contains(e.target) && !display.contains(e.target)){
+    picker.classList.remove('open');
+  }
+});
+</script>
+{% endblock %}

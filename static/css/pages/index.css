@@ -700,6 +700,134 @@
 }
 .fcard-price { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 
+/* ═══ SELLER INSPIRATION — "You Can Do This Too" ═══ */
+.seller-inspire-section { margin-top: 10px; }
+.inspire-wrap {
+  background: linear-gradient(135deg, #0e0e0e 0%, #141414 50%, #0e0e0e 100%);
+  border: 1px solid #1f1f1f;
+  border-radius: 16px;
+  padding: 28px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.inspire-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #d4af37, #f59e0b, #d4af37, transparent);
+}
+.inspire-header { text-align: center; margin-bottom: 20px; }
+.inspire-badge {
+  display: inline-block;
+  background: rgba(212,175,55,0.1);
+  border: 1px solid rgba(212,175,55,0.2);
+  color: #d4af37;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+.inspire-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #f0ece4;
+  margin: 0 0 8px;
+}
+.inspire-sub { color: #888; font-size: 0.88rem; margin: 0; }
+.inspire-sub strong { color: #f0ece4; }
+
+.inspire-stats {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.inspire-stat {
+  text-align: center;
+  background: #0e0e0e;
+  border: 1px solid #1a1a1a;
+  border-radius: 10px;
+  padding: 14px 24px;
+  min-width: 120px;
+}
+.inspire-num {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #f0ece4;
+  font-family: 'Playfair Display', serif;
+}
+.inspire-lbl {
+  font-size: 0.6rem;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.inspire-products { margin-bottom: 24px; }
+.inspire-label {
+  font-size: 0.78rem;
+  color: #aaa;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.inspire-label i { color: #ef4444; }
+
+.inspire-card { position: relative; }
+.inspire-card .hc-seller {
+  font-size: 0.65rem;
+  color: #d4af37;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.inspire-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: rgba(212,175,55,0.04);
+  border: 1px solid rgba(212,175,55,0.12);
+  border-radius: 12px;
+  padding: 20px 24px;
+  flex-wrap: wrap;
+}
+.inspire-cta-text h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: #f0ece4;
+  margin: 0 0 4px;
+}
+.inspire-cta-text p { color: #888; font-size: 0.82rem; margin: 0; }
+.inspire-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #d4af37;
+  color: #0d0d0d;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.inspire-btn:hover { background: #e0b940; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(212,175,55,0.25); }
+
 /* ════════════════════════════════════════════════
    RESPONSIVE
    ════════════════════════════════════════════════ */

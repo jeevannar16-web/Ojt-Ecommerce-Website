@@ -137,6 +137,8 @@ class Order(models.Model):
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="Delivery latitude from map picker")
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="Delivery longitude from map picker")
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    coupon_code = models.CharField(max_length=50, blank=True, null=True)
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -199,6 +201,9 @@ class ActivityLog(models.Model):
         ('review_add', 'Added Review'),
         ('login', 'User Login'),
         ('logout', 'User Logout'),
+        ('size_create', 'Size Created'),
+        ('size_update', 'Size Updated'),
+        ('size_delete', 'Size Deleted'),
     ]
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
@@ -229,3 +234,103 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.user.username} — {self.product.name} ({self.rating}★)"
+
+
+class UserOnline(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='online_status')
+    last_seen = models.DateTimeField(auto_now=True)
+    is_online = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user.username} {'online' if self.is_online else 'offline'}'"
+
+
+class Conversation(models.Model):
+    THEME_CHOICES = [
+        ('dark', 'Dark'),
+        ('light', 'Light'),
+        ('gold', 'Gold'),
+        ('ocean', 'Ocean'),
+        ('purple', 'Purple'),
+    ]
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='conversations_as_customer')
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='conversations_as_seller')
+    product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True, blank=True)
+    subject = models.CharField(max_length=255, blank=True)
+    is_admin_conversation = models.BooleanField(default=False)
+    is_muted = models.BooleanField(default=False)
+    theme = models.CharField(max_length=20, choices=THEME_CHOICES, default='dark')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-updated_at']
+
+    def __str__(self):
+        return f"{self.customer.username} ↔ {self.seller.username} #{self.id}"
+
+    def last_message(self):
+        return self.messages.order_by('-created_at').first()
+
+    def unread_count(self, user):
+        return self.messages.filter(is_read=False).exclude(sender=user).count()
+
+    def other_user(self, user):
+        if user == self.customer:
+            return self.seller
+        return self.customer
+
+
+class Message(models.Model):
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    image = models.ImageField(upload_to='chat_images/%Y/%m/%d/', null=True, blank=True)
+    reactions = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+    is_delivered = models.BooleanField(default=False)
+    edited = models.BooleanField(default=False)
+    is_pinned = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
+    file = models.FileField(upload_to='chat_files/%Y/%m/%d/', null=True, blank=True)
+    file_type = models.CharField(max_length=20, blank=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"[{self.created_at:%H:%M}] {self.sender.username}: {self.content[:50]}"
+
+
+class BlockedUser(models.Model):
+    blocker = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blocked_users')
+    blocked = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blocked_by')
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    reason = models.CharField(max_length=500, blank=True)
+
+    class Meta:
+        unique_together = ('blocker', 'blocked')
+
+    def __str__(self):
+        return f"{self.blocker.username} blocked {self.blocked.username}"
+
+
+class MessageReport(models.Model):
+    REASON_CHOICES = [
+        ('spam', 'Spam'),
+        ('harassment', 'Harassment'),
+        ('inappropriate', 'Inappropriate Content'),
+        ('scam', 'Scam / Fraud'),
+        ('other', 'Other'),
+    ]
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='reports')
+    reported_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    reason = models.CharField(max_length=50, choices=REASON_CHOICES)
+    detail = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    resolved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Report #{self.id} by {self.reported_by.username} ({self.reason})"

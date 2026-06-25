@@ -329,6 +329,76 @@
 </div>
 {% endif %}
 
+<!-- ═══ SELLER INSPIRATION — "YOU CAN DO THIS TOO" ═══ -->
+{% if top_selling %}
+<div class="home-section seller-inspire-section" id="seller-inspire">
+  <div class="inspire-wrap">
+    <div class="inspire-header">
+      <div class="inspire-badge">{{ 'Seller Spotlight'|t }}</div>
+      <h2><i class="bi bi-shop" style="color:#d4af37;"></i> {{ 'What'|t }} <span style="color:#d4af37;">{{ 'Sellers Are Selling'|t }}</span></h2>
+      <p class="inspire-sub">{{ 'Real products, real sales. Join'|t }} <strong>{{ seller_count }}</strong> {{ 'sellers earning on our marketplace.'|t }}</p>
+    </div>
+
+    <div class="inspire-stats">
+      <div class="inspire-stat">
+        <div class="inspire-num">{{ seller_count }}</div>
+        <div class="inspire-lbl">{{ 'Active Sellers'|t }}</div>
+      </div>
+      <div class="inspire-stat">
+        <div class="inspire-num" style="color:#2ec4b6;">{{ total_seller_products }}</div>
+        <div class="inspire-lbl">{{ 'Products Listed'|t }}</div>
+      </div>
+      <div class="inspire-stat">
+        <div class="inspire-num" style="color:#d4af37;">{{ seller_revenue|currency }}</div>
+        <div class="inspire-lbl">{{ 'Seller Revenue'|t }}</div>
+      </div>
+    </div>
+
+    <div class="inspire-products">
+      <div class="inspire-label"><i class="bi bi-fire"></i> {{ 'Top Selling Products Right Now'|t }}</div>
+      <div class="h-scroll">
+        {% for product in top_selling %}
+        <a href="{% url 'store:product_detail' product.id %}" class="h-card inspire-card">
+          <div class="hc-img">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name|t }}">
+            {% else %}
+            <div class="cat-card-placeholder" style="height:100%;font-size:2.5rem;">🏋️</div>
+            {% endif %}
+            {% if product.stock < 5 and product.stock > 0 %}
+            <span class="hc-badge low">{{ 'Low Stock'|t }}</span>
+            {% elif product.discount_percent > 0 %}
+            <span class="hc-badge sale">-{{ product.discount_percent }}%</span>
+            {% else %}
+            <span class="hc-badge hot"><i class="bi bi-graph-up-arrow"></i> {{ 'Top'|t }}</span>
+            {% endif %}
+          </div>
+          <div class="hc-body">
+            <div class="hc-cat">{{ product.category.name|t }}</div>
+            <div class="hc-name">{{ product.name|t }}</div>
+            <span class="hc-price">{{ product.price|currency }}</span>
+            {% if product.seller %}
+            <div class="hc-seller"><i class="bi bi-shop"></i> {{ product.seller.username }}</div>
+            {% endif %}
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="inspire-cta">
+      <div class="inspire-cta-text">
+        <h3>{{ 'Want to start selling too?'|t }}</h3>
+        <p>{{ 'Set up your store in minutes. No fees to start.'|t }}</p>
+      </div>
+      <a href="{% url 'store:seller_center' %}" class="inspire-btn">
+        <i class="bi bi-shop"></i> {{ 'Start Selling Today'|t }} →
+      </a>
+    </div>
+  </div>
+</div>
+{% endif %}
+
 <!-- ═══ RECOMMENDED FOR YOU ═══ -->
 {% if recommendations and user.is_authenticated %}
 <div class="home-section" id="recommended">
@@ -404,6 +474,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'js/pages/scroll_tracker.js' %}"></script>
 <script>
 /* ─── MEGA BANNER ─── */
 (function(){
@@ -447,5 +518,6 @@ function loadMoreProducts(){
     else { btn.disabled = false; btn.innerHTML = '{{ 'LOAD MORE'|t }} <i class="bi bi-arrow-down"></i>'; }
   }, 500);
 }
+
 </script>
 {% endblock %}

@@ -1,21 +1,56 @@
-  {% if messages %}
-  <div class="messages-wrap">
-    {% for message in messages %}
-      <div class="msg-toast">{{ message|t }}</div>
-    {% endfor %}
+{% if messages %}
+<div class="messages-wrap" id="msg-wrap">
+  {% for message in messages %}
+  <div class="msg-toast {{ message.tags }}" role="alert">
+    <span class="msg-icon">
+      {% if 'error' in message.tags %}<i class="bi bi-x"></i>
+      {% elif 'warning' in message.tags %}<i class="bi bi-exclamation"></i>
+      {% elif 'info' in message.tags %}<i class="bi bi-info"></i>
+      {% elif 'debug' in message.tags %}<i class="bi bi-bug"></i>
+      {% else %}<i class="bi bi-check"></i>
+      {% endif %}
+    </span>
+    <span class="msg-text">{{ message|t }}</span>
+    <button class="msg-close" onclick="dismissToast(this)" aria-label="Close"><i class="bi bi-x"></i></button>
+    <div class="msg-progress"></div>
   </div>
-  <script>
-    (function(){
-      var toasts = document.querySelectorAll('.msg-toast');
-      for(var i=0;i<toasts.length;i++){
-        (function(t){
-          setTimeout(function(){
-            t.style.transition='opacity 0.5s ease';
-            t.style.opacity='0';
-            setTimeout(function(){ t.remove(); },500);
-          },3500);
-        })(toasts[i]);
-      }
-    })();
-  </script>
-  {% endif %}
+  {% endfor %}
+</div>
+<script>
+(function(){
+  function setupToast(t){
+    var closeBtn = t.querySelector('.msg-close');
+    var progress = t.querySelector('.msg-progress');
+    var timer = setTimeout(function(){ dismissToast(t); }, 4000);
+
+    if(closeBtn){
+      closeBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        clearTimeout(timer);
+        dismissToast(t);
+      });
+    }
+
+    t.addEventListener('mouseenter', function(){
+      clearTimeout(timer);
+      if(progress) progress.style.animationPlayState = 'paused';
+    });
+
+    t.addEventListener('mouseleave', function(){
+      if(progress) progress.style.animationPlayState = 'running';
+      timer = setTimeout(function(){ dismissToast(t); }, 2000);
+    });
+  }
+
+  window.dismissToast = function(el){
+    var t = el.closest ? el.closest('.msg-toast') : el;
+    if(!t || t.classList.contains('removing')) return;
+    t.classList.add('removing');
+    setTimeout(function(){ if(t.parentNode) t.remove(); }, 300);
+  };
+
+  var toasts = document.querySelectorAll('.msg-toast');
+  toasts.forEach(function(t){ setupToast(t); });
+})();
+</script>
+{% endif %}

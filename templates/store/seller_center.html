@@ -4,36 +4,200 @@
 {% block title %}{{ 'Seller Center'|t }} — {{ 'Start Selling on'|t }} FITNESS HUB{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/pages/seller_center.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/seller_center.css' %}?v=3">
 {% endblock %}
 
 {% block content %}
-<section class="sc-hero">
+<section class="sc-hero" id="top">
   <div class="sc-hero-bg"></div>
   <div class="sc-hero-content">
     <span class="sc-badge">{{ 'Seller Program'|t }}</span>
     <h1>{{ 'Start Selling on'|t }} <span>FitnessHub</span></h1>
     <p>{{ 'Join our marketplace and reach fitness-conscious buyers. Build your brand, manage your store, and grow your business.'|t }}</p>
     <div class="sc-hero-actions">
-      <a href="{% url 'register' %}" class="sc-btn sc-btn-primary">{{ 'Start Selling Today'|t }}</a>
-      <a href="#how-it-works" class="sc-btn sc-btn-outline">{{ 'Learn More'|t }}</a>
+      {% if user.is_authenticated %}
+        {% if user.profile.is_seller %}
+          <a href="{% url 'store:seller_dashboard' %}" class="sc-btn sc-btn-primary"><i class="bi bi-shop"></i> {{ 'Go to Dashboard'|t }}</a>
+        {% elif user.profile.seller_requested %}
+          <a href="{% url 'profile' %}" class="sc-btn sc-btn-primary"><i class="bi bi-clock"></i> {{ 'Check Status'|t }}</a>
+        {% else %}
+          <a href="{% url 'store:seller_apply' %}" class="sc-btn sc-btn-primary"><i class="bi bi-rocket-takeoff"></i> {{ 'Apply to Sell'|t }}</a>
+        {% endif %}
+      {% else %}
+        <a href="{% url 'register' %}" class="sc-btn sc-btn-primary"><i class="bi bi-person-plus"></i> {{ 'Create Seller Account'|t }}</a>
+        <a href="{% url 'login' %}" class="sc-btn sc-btn-outline">{{ 'Log In'|t }}</a>
+      {% endif %}
     </div>
     <div class="sc-hero-stats">
       <div class="sc-stat">
-        <span class="sc-stat-num">{{ seller_count|default:0 }}+</span>
+        <span class="sc-stat-num">{{ seller_count }}+</span>
         <span class="sc-stat-lbl">{{ 'Active Sellers'|t }}</span>
       </div>
       <div class="sc-stat">
-        <span class="sc-stat-num">{{ product_count|default:0 }}+</span>
+        <span class="sc-stat-num">{{ product_count }}+</span>
         <span class="sc-stat-lbl">{{ 'Products Listed'|t }}</span>
       </div>
       <div class="sc-stat">
-        <span class="sc-stat-num">{{ order_count|default:0 }}+</span>
+        <span class="sc-stat-num">{{ order_count }}+</span>
         <span class="sc-stat-lbl">{{ 'Orders Fulfilled'|t }}</span>
       </div>
     </div>
   </div>
 </section>
+
+<!-- Marketplace Metrics -->
+<div class="sc-mw">
+  <div class="sc-metrics">
+    <div class="sc-metric-card">
+      <div class="sc-metric-num">{{ seller_count }}</div>
+      <div class="sc-metric-lbl">{{ 'Total Sellers'|t }}</div>
+    </div>
+    <div class="sc-metric-card">
+      <div class="sc-metric-num teal">{{ product_count }}</div>
+      <div class="sc-metric-lbl">{{ 'Products Listed'|t }}</div>
+    </div>
+    <div class="sc-metric-card">
+      <div class="sc-metric-num blue">{{ order_count }}</div>
+      <div class="sc-metric-lbl">{{ 'Orders Fulfilled'|t }}</div>
+    </div>
+    <div class="sc-metric-card">
+      <div class="sc-metric-num gold">{{ total_revenue|currency }}</div>
+      <div class="sc-metric-lbl">{{ 'Total Revenue'|t }}</div>
+    </div>
+    <div class="sc-metric-card">
+      <div class="sc-metric-num orange">{{ total_revenue|floatformat:0 }}$</div>
+      <div class="sc-metric-lbl">{{ 'Avg Order Value'|t }}</div>
+    </div>
+    <div class="sc-metric-card">
+      <div class="sc-metric-num purple">{{ pending_sellers_count }}</div>
+      <div class="sc-metric-lbl">{{ 'Pending Applications'|t }}</div>
+    </div>
+  </div>
+
+  <!-- Top Sellers Leaderboard + Category Demand -->
+  <div class="sc-grid-2" id="marketplace-data">
+    <div class="sc-card" id="top-sellers">
+      <div class="sc-card-hd">
+        <h3><i class="bi bi-trophy"></i> {{ 'Top Sellers'|t }}</h3>
+        <span class="sc-badge-sm">{{ 'by products listed'|t }}</span>
+      </div>
+      <div class="sc-card-bd">
+        {% if top_sellers %}
+        {% for s in top_sellers %}
+        <div class="sc-lb-row" {% if s.profile.store_slug %}onclick="location.href='{% url 'store:seller_storefront' s.profile.store_slug %}'"{% endif %}>
+          <div class="sc-lb-rank {% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% else %}default{% endif %}">
+            {{ forloop.counter }}
+          </div>
+          <div class="sc-lb-info">
+            <div class="sc-lb-name">{{ s.profile.user.username }}</div>
+            <div class="sc-lb-store">{{ s.profile.store_name }}</div>
+          </div>
+          <div class="sc-lb-meta">
+            <span><i class="bi bi-box-seam"></i> {{ s.product_count }}</span>
+            <span><i class="bi bi-truck"></i> {{ s.orders }}</span>
+            <span><i class="bi bi-currency-dollar"></i> {{ s.revenue|currency }}</span>
+          </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="sc-card-empty">{{ 'No sellers yet.'|t }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="sc-card" id="category-demand">
+      <div class="sc-card-hd">
+        <h3><i class="bi bi-graph-up-arrow"></i> {{ 'Category Demand'|t }}</h3>
+        <span class="sc-badge-sm">{{ 'by order volume'|t }}</span>
+      </div>
+      <div class="sc-card-bd-pad">
+        {% if category_demand %}
+        {% with max_demand=category_demand.0.order_count %}
+        {% for cat in category_demand %}
+        <div class="sc-dem-bar">
+          <span class="sc-dem-bar-name">{{ cat.name }}</span>
+          <div class="sc-dem-bar-bg">
+            <div class="sc-dem-bar-fill" style="width:{% if max_demand > 0 %}{% widthratio cat.order_count max_demand 100 %}{% else %}0{% endif %}%;background:{% cycle '#d4af37' '#3b82f6' '#2ecc71' '#8b5cf6' '#f57224' '#ef4444' %};"></div>
+          </div>
+          <span class="sc-dem-bar-val">{{ cat.order_count }} {{ 'orders'|t }}</span>
+        </div>
+        {% endfor %}
+        {% endwith %}
+        {% else %}
+        <div class="sc-card-empty">{{ 'No order data yet.'|t }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Seller Tips + Recent Sellers -->
+  <div class="sc-grid-3" id="seller-tips">
+    <div class="sc-tip-card">
+      <div class="sc-tip-icon gold"><i class="bi bi-star"></i></div>
+      <div class="sc-tip-content">
+        <h4>{{ 'High Quality Images'|t }}</h4>
+        <p>{{ 'Products with clear photos sell 3x more. Show multiple angles.'|t }}</p>
+      </div>
+    </div>
+    <div class="sc-tip-card">
+      <div class="sc-tip-icon blue"><i class="bi bi-pencil"></i></div>
+      <div class="sc-tip-content">
+        <h4>{{ 'Detailed Descriptions'|t }}</h4>
+        <p>{{ 'Include dimensions, materials, and care instructions.'|t }}</p>
+      </div>
+    </div>
+    <div class="sc-tip-card">
+      <div class="sc-tip-icon green"><i class="bi bi-truck"></i></div>
+      <div class="sc-tip-content">
+        <h4>{{ 'Fast Shipping'|t }}</h4>
+        <p>{{ 'Sellers with quick dispatch get better visibility and ratings.'|t }}</p>
+      </div>
+    </div>
+    <div class="sc-tip-card">
+      <div class="sc-tip-icon orange"><i class="bi bi-people"></i></div>
+      <div class="sc-tip-content">
+        <h4>{{ 'Respond to Reviews'|t }}</h4>
+        <p>{{ 'Engage with customer feedback to build trust and loyalty.'|t }}</p>
+      </div>
+    </div>
+    <div class="sc-tip-card">
+      <div class="sc-tip-icon gold"><i class="bi bi-tags"></i></div>
+      <div class="sc-tip-content">
+        <h4>{{ 'Competitive Pricing'|t }}</h4>
+        <p>{{ 'Research similar products and price competitively to stand out.'|t }}</p>
+      </div>
+    </div>
+    <div class="sc-tip-card">
+      <div class="sc-tip-icon blue"><i class="bi bi-box"></i></div>
+      <div class="sc-tip-content">
+        <h4>{{ 'Manage Inventory'|t }}</h4>
+        <p>{{ 'Keep stock updated. Low stock items get flagged to buyers.'|t }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Sellers -->
+  <div class="sc-card" id="recent-sellers">
+    <div class="sc-card-hd">
+      <h3><i class="bi bi-person-plus"></i> {{ 'Recently Joined Sellers'|t }}</h3>
+    </div>
+    <div class="sc-card-bd">
+      <div class="sc-recent-grid">
+        {% for p in recent_sellers %}
+        <div class="sc-recent-seller">
+          <div class="sc-recent-avatar">{{ p.user.username|first|upper }}</div>
+          <div class="sc-recent-info">
+            <div class="sc-recent-name">{{ p.store_name|default:p.user.username }}</div>
+            <div class="sc-recent-meta">{{ 'Joined'|t }} {{ p.user.date_joined|date:"M d, Y" }}</div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="sc-card-empty">{{ 'No sellers yet.'|t }}</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
 
 <section class="sc-benefits" id="benefits">
   <div class="sc-section-header">
@@ -44,22 +208,22 @@
     <div class="sc-benefit-card">
       <div class="sc-benefit-icon"><i class="bi bi-currency-dollar"></i></div>
       <h3>{{ 'Free to Start'|t }}</h3>
-      <p>{{ 'No listing fees, no monthly subscriptions. Pay only when you make a sale. Start your business with zero upfront cost.'|t }}</p>
+      <p>{{ 'No listing fees, no monthly subscriptions. Pay only when you make a sale.'|t }}</p>
     </div>
     <div class="sc-benefit-card">
       <div class="sc-benefit-icon"><i class="bi bi-graph-up-arrow"></i></div>
       <h3>{{ 'Easy Management'|t }}</h3>
-      <p>{{ 'Powerful seller dashboard to manage products, track orders, and monitor your performance in real time.'|t }}</p>
+      <p>{{ 'Powerful seller dashboard to manage products, track orders, and monitor performance.'|t }}</p>
     </div>
     <div class="sc-benefit-card">
       <div class="sc-benefit-icon"><i class="bi bi-wallet2"></i></div>
       <h3>{{ 'Fast Payments'|t }}</h3>
-      <p>{{ 'Get paid quickly after delivery. Transparent pricing with no hidden fees. Your earnings, your control.'|t }}</p>
+      <p>{{ 'Get paid quickly after delivery. Transparent pricing with no hidden fees.'|t }}</p>
     </div>
     <div class="sc-benefit-card">
       <div class="sc-benefit-icon"><i class="bi bi-headset"></i></div>
       <h3>{{ '24/7 Support'|t }}</h3>
-      <p>{{ 'Our dedicated seller support team is here to help you every step of the way. From onboarding to scaling up.'|t }}</p>
+      <p>{{ 'Our dedicated seller support team is here to help you every step of the way.'|t }}</p>
     </div>
   </div>
 </section>
@@ -74,28 +238,28 @@
       <div class="sc-step-num">1</div>
       <div class="sc-step-content">
         <h3>{{ 'Create Your Account'|t }}</h3>
-        <p>{{ 'Sign up as a seller with your store details. Tell us about your business and what you plan to sell.'|t }}</p>
+        <p>{{ 'Sign up as a seller with your store details.'|t }}</p>
       </div>
     </div>
     <div class="sc-step">
       <div class="sc-step-num">2</div>
       <div class="sc-step-content">
         <h3>{{ 'Get Verified'|t }}</h3>
-        <p>{{ 'Our team reviews your application. Once approved, you can start listing products immediately.'|t }}</p>
+        <p>{{ 'Our team reviews your application. Start listing once approved.'|t }}</p>
       </div>
     </div>
     <div class="sc-step">
       <div class="sc-step-num">3</div>
       <div class="sc-step-content">
         <h3>{{ 'List Your Products'|t }}</h3>
-        <p>{{ 'Add your products with descriptions, prices, and images. Set sizes and manage inventory effortlessly.'|t }}</p>
+        <p>{{ 'Add products with descriptions, prices, and images.'|t }}</p>
       </div>
     </div>
     <div class="sc-step">
       <div class="sc-step-num">4</div>
       <div class="sc-step-content">
         <h3>{{ 'Start Selling'|t }}</h3>
-        <p>{{ 'Receive orders, manage shipments, and grow your business. Track everything from your seller dashboard.'|t }}</p>
+        <p>{{ 'Receive orders, manage shipments, and grow your business.'|t }}</p>
       </div>
     </div>
   </div>
@@ -108,15 +272,15 @@
     <div class="sc-cta-actions">
       {% if user.is_authenticated %}
         {% if user.profile.is_seller %}
-          <a href="{% url 'store:seller_dashboard' %}" class="sc-btn sc-btn-primary"><i class="bi bi-shop"></i> {{ 'Go to Seller Dashboard'|t }}</a>
+          <a href="{% url 'store:seller_dashboard' %}" class="sc-btn sc-btn-primary"><i class="bi bi-shop"></i> {{ 'Go to Dashboard'|t }}</a>
         {% elif user.profile.seller_requested %}
-          <a href="{% url 'profile' %}" class="sc-btn sc-btn-primary"><i class="bi bi-clock"></i> {{ 'Check Application Status'|t }}</a>
+          <a href="{% url 'profile' %}" class="sc-btn sc-btn-primary"><i class="bi bi-clock"></i> {{ 'Check Status'|t }}</a>
         {% else %}
           <a href="{% url 'store:seller_apply' %}" class="sc-btn sc-btn-primary"><i class="bi bi-rocket-takeoff"></i> {{ 'Apply to Sell'|t }}</a>
         {% endif %}
       {% else %}
-        <a href="{% url 'register' %}" class="sc-btn sc-btn-primary"><i class="bi bi-person-plus"></i> {{ 'Create Seller Account'|t }}</a>
-        <a href="{% url 'login' %}" class="sc-btn sc-btn-outline">{{ 'Already a Seller? Log In'|t }}</a>
+        <a href="{% url 'register' %}" class="sc-btn sc-btn-primary"><i class="bi bi-person-plus"></i> {{ 'Create Account'|t }}</a>
+        <a href="{% url 'login' %}" class="sc-btn sc-btn-outline">{{ 'Log In'|t }}</a>
       {% endif %}
     </div>
   </div>
@@ -133,45 +297,40 @@
         <i class="bi bi-chevron-down"></i>
       </button>
       <div class="sc-faq-a">
-        <p>{{ "It's completely free to join and list products. We take a small commission only when you make a sale. There are no hidden fees or monthly charges."|t }}</p>
+        <p>{{ "It's completely free to join. We take a small commission only on sales."|t }}</p>
       </div>
     </div>
     <div class="sc-faq-item">
       <button class="sc-faq-q" onclick="this.parentElement.classList.toggle('open')">
-        <span>{{ 'How long does the verification process take?'|t }}</span>
+        <span>{{ 'How long does verification take?'|t }}</span>
         <i class="bi bi-chevron-down"></i>
       </button>
       <div class="sc-faq-a">
-        <p>{{ "Most applications are reviewed within 24-48 hours. You'll receive a notification once your account is approved or if we need more information."|t }}</p>
+        <p>{{ 'Most applications are reviewed within 24-48 hours.'|t }}</p>
       </div>
     </div>
     <div class="sc-faq-item">
       <button class="sc-faq-q" onclick="this.parentElement.classList.toggle('open')">
-        <span>{{ 'Can I sell both physical and digital products?'|t }}</span>
+        <span>{{ 'What products can I sell?'|t }}</span>
         <i class="bi bi-chevron-down"></i>
       </button>
       <div class="sc-faq-a">
-        <p>{{ 'Currently, FitnessHub supports physical fitness-related products including equipment, apparel, supplements, and accessories.'|t }}</p>
+        <p>{{ 'FitnessHub supports physical fitness-related products including equipment, apparel, supplements, and accessories.'|t }}</p>
       </div>
     </div>
     <div class="sc-faq-item">
       <button class="sc-faq-q" onclick="this.parentElement.classList.toggle('open')">
-        <span>{{ 'How do I get paid?'|t }}</span>
+        <span>{{ 'What if my application is declined?'|t }}</span>
         <i class="bi bi-chevron-down"></i>
       </button>
       <div class="sc-faq-a">
-        <p>{{ 'Payments are processed after order delivery. You can track your earnings in the seller dashboard and withdraw them to your linked account.'|t }}</p>
-      </div>
-    </div>
-    <div class="sc-faq-item">
-      <button class="sc-faq-q" onclick="this.parentElement.classList.toggle('open')">
-        <span>{{ 'What if my seller application is declined?'|t }}</span>
-        <i class="bi bi-chevron-down"></i>
-      </button>
-      <div class="sc-faq-a">
-        <p>{{ "If your application is declined, we'll provide a reason. You can address the issues and re-apply at any time through your profile settings."|t }}</p>
+        <p>{{ "We'll provide a reason. You can address the issues and re-apply anytime."|t }}</p>
       </div>
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/pages/scroll_tracker.js' %}"></script>
 {% endblock %}

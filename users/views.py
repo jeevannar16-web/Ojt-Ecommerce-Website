@@ -146,7 +146,7 @@ def profile(request):
                        {'username': request.user.username}, request)
             messages.success(request, "Seller request submitted! An admin will review it.")
             return redirect('store:seller_apply')
-        form = UserProfileForm(request.POST, instance=user_profile)
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             form.save()
             lat = request.POST.get('latitude', '').strip()
@@ -162,6 +162,10 @@ def profile(request):
                 except (ValueError, TypeError):
                     pass
             user_profile.save()
+            new_username = request.POST.get('username', '').strip()
+            if new_username and new_username != request.user.username:
+                request.user.username = new_username
+                request.user.save()
             messages.success(request, "Profile updated successfully!")
             return redirect('profile')
     else:
@@ -170,13 +174,53 @@ def profile(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     favorites = FavoriteItem.objects.filter(user=request.user).select_related('product')
 
+    from store.models import Conversation
+    from django.db.models import Q
+    recent_convs = Conversation.objects.filter(
+        Q(seller=request.user) | Q(customer=request.user)
+    ).select_related('customer', 'seller', 'product').prefetch_related('messages').order_by('-updated_at')[:6]
+    conv_list = []
+    for c in recent_convs:
+        last = c.last_message()
+        other = c.seller if c.customer == request.user else c.customer
+        conv_list.append({
+            'conv': c,
+            'last_message': last,
+            'unread': c.unread_count(request.user),
+            'other_user': other,
+            'is_support': other.is_staff or other.is_superuser,
+            'other_status_emoji': getattr(other.profile, 'status_emoji', '🟢') if hasattr(other, 'profile') else '🟢',
+            'other_status_text': getattr(other.profile, 'status_text', 'Available') if hasattr(other, 'profile') else 'Available',
+            'product': c.product,
+            'store_slug': getattr(other.profile, 'store_slug', '') if hasattr(other, 'profile') else '',
+        })
+
     context = {
         'form': form,
         'profile': user_profile,
         'orders': orders,
         'favorites': favorites,
+        'recent_conversations': conv_list,
     }
     return render(request, 'users/profile.html', context)
+
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        password = request.POST.get('password', '')
+        user = request.user
+        if not user.check_password(password):
+            messages.error(request, "Incorrect password. Account not deleted.")
+            return redirect('profile')
+        uid = user.id
+        uname = user.username
+        log_action(user, 'account_delete', f"Account deleted: {uname} (ID: {uid})",
+                   {'username': uname}, request)
+        user.delete()
+        messages.success(request, "Your account has been permanently deleted.")
+        return redirect('home')
+    return redirect('profile')
 
 
 def user_logout(request):

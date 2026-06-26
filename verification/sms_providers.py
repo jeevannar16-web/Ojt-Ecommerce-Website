@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: verification.sms_providers
-# Description: SMS provider abstraction
-# ==============================================================================
+"""SMS provider abstraction layer — supports multiple backends for sending OTPs."""
 
 import logging
 from abc import ABC, abstractmethod

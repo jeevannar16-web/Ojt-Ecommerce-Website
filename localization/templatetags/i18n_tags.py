@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: localization.templatetags.i18n_tags
-# Description: Internationalization template tags
-# ==============================================================================
+"""Template tags for translation (|t) and currency (|currency) filters."""
 
 from django import template
 from django.conf import settings

@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: users.models
-# Description: User profile and credential history models
-# ==============================================================================
+"""User profiles, business credentials, and seller-related model fields."""
 
 from django.db import models
 from django.contrib.auth.models import User

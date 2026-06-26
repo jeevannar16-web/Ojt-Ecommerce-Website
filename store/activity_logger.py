@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.activity_logger
-# Description: Activity logging utility
-# ==============================================================================
+"""Centralized activity logging — records admin and user actions for the audit trail in the dashboard."""
 
 from .models import ActivityLog
 

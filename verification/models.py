@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: verification.models
-# Description: Email and phone verification models
-# ==============================================================================
+"""Models for email and phone verification (OTP codes, expiry, attempts)."""
 
 import secrets
 from datetime import timedelta

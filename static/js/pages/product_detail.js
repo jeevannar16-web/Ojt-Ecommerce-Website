@@ -1,7 +1,4 @@
-// ==============================================================================
-// File: product_detail.js
-// Description: Size selection, quantity adjustment, add-to-cart, review submission
-// ==============================================================================
+// product_detail.js — size picker, qty adjustment, add-to-cart, and review form submission
 
 // ==============================================================================
 // SECTION: Size Selection

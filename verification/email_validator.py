@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: verification.email_validator
-# Description: Email deliverability validation
-# ==============================================================================
+"""Email deliverability checks — multiple third-party APIs plus DNS MX fallback."""
 
 import re
 import logging

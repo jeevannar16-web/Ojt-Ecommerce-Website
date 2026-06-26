@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.views.product_views
-# Description: Product listing and detail views
-# ==============================================================================
+"""Product views — listing grid, detail page, search, category browsing, and seller storefronts."""
 
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse

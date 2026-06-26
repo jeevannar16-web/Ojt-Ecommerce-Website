@@ -1,7 +1,4 @@
-// ==============================================================================
-// File: navigation.js
-// Description: Dropdown toggles, category navigation scroll with drag support
-// ==============================================================================
+// navigation.js — dropdown menus, category scroll with drag, mobile nav toggles
 
 // ==============================================================================
 // SECTION: Dropdown Toggle

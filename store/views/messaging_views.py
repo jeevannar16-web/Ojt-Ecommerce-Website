@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.views.messaging_views
-# Description: Messaging and chat views
-# ==============================================================================
+"""Messaging system — buyer-seller chat, seller-admin support tickets, conversation lists, and unread polling."""
 
 import json
 from django.shortcuts import render, get_object_or_404, redirect

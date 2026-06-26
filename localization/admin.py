@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: localization.admin
-# Description: Admin configuration for localization
-# ==============================================================================
+"""Django admin configuration for Translation and Language models."""
 
 from django.contrib import admin
 

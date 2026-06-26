@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: users.apps
-# Description: Users app configuration
-# ==============================================================================
+"""Django AppConfig for the users app."""
 
 from django.apps import AppConfig
 

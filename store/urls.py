@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.urls
-# Description: URL routing for store app
-# ==============================================================================
+"""URL routing for every endpoint in the store app — products, cart, checkout, orders, messaging, and dashboards."""
 
 from django.urls import path
 from . import views

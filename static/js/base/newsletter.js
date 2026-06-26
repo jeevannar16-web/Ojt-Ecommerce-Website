@@ -1,7 +1,4 @@
-// ==============================================================================
-// File: newsletter.js
-// Description: AJAX newsletter subscription with validation and feedback
-// ==============================================================================
+// newsletter.js — AJAX newsletter signup with inline validation and success/error feedback
 
 // ==============================================================================
 // SECTION: DOM References & Validation

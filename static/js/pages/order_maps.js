@@ -1,7 +1,4 @@
-// ==============================================================================
-// File: order_maps.js
-// Description: Initialize Leaflet maps for each order delivery location
-// ==============================================================================
+// order_maps.js — render a Leaflet map for each order's delivery location on the profile page
 
 // ==============================================================================
 // SECTION: Order Map Initialization

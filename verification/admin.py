@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: verification.admin
-# Description: Admin configuration for verification app
-# ==============================================================================
+"""Django admin config for verification models."""
 
 from django.contrib import admin
 

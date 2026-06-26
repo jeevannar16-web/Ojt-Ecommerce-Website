@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.context_processors
-# Description: Global template context processors
-# ==============================================================================
+"""Template context processors — injects cart count, categories, and other global data into every page."""
 
 from .models import Product, Category, FavoriteItem, CartItem
 from django.db.models import Sum

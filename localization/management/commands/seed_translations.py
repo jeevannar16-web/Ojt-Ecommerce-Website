@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: localization.management.commands.seed_translations
-# Description: Seed translation data
-# ==============================================================================
+"""Management command to auto-discover and translate all |t strings in templates and views."""
 
 import os, re, ast, time
 from django.core.management.base import BaseCommand

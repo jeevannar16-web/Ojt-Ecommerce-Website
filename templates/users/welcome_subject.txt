@@ -1,1 +1,2 @@
+<!-- Welcome email subject line -->
 Welcome to FitnessHub, {{ username }}!

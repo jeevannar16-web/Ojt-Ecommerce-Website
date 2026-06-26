@@ -1,7 +1,4 @@
-// ==============================================================================
-// File: main.js
-// Description: Search validation, CSRF cookie, toast notifications, back-to-top
-// ==============================================================================
+// main.js — site-wide stuff: search validation, CSRF token handling, toast notifications, back-to-top button
 
 // ==============================================================================
 // SECTION: Search Validation

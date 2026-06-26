@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: homepages.models
-# Description: Database models for homepages app
-# ==============================================================================
+"""Homepage banner and featured section models."""
 
 from django.db import models
 

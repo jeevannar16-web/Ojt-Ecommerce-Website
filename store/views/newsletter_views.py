@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.views.newsletter_views
-# Description: Newsletter subscription and unsubscribe views
-# ==============================================================================
+"""Newsletter signup and unsubscribe — handles email subscription with confirmation and removal."""
 
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect

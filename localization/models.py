@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: localization.models
-# Description: Language and translation models
-# ==============================================================================
+"""DB-backed Translation model for multi-language content."""
 
 from django.db import models
 from django.core.cache import cache

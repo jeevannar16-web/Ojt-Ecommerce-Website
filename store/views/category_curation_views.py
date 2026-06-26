@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.views.category_curation_views
-# Description: Category curation views
-# ==============================================================================
+"""Admin category curation — organizes products into curated sections on category pages."""
 
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse

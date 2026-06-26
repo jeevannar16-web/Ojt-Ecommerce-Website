@@ -1,7 +1,4 @@
-// ==============================================================================
-// File: map.js
-// Description: Footer map initialization with Leaflet and OpenStreetMap
-// ==============================================================================
+// map.js — kick off the Leaflet map in the footer, centered on Kathmandu
 
 // ==============================================================================
 // SECTION: Map Initialization

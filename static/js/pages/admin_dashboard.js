@@ -1,7 +1,4 @@
-// ==============================================================================
-// File: admin_dashboard.js
-// Description: Seller decline confirmation with rejection reason prompt
-// ==============================================================================
+// admin_dashboard.js — seller decline confirmation with a prompt for the rejection reason
 
 // ==============================================================================
 // SECTION: Seller Decline Confirmation

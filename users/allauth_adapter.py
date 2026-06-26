@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: users.allauth_adapter
-# Description: Custom allauth adapters
-# ==============================================================================
+"""Custom allauth adapter to enforce email uniqueness."""
 
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter

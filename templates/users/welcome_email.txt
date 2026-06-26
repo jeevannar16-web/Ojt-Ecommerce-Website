@@ -1,3 +1,4 @@
+<!-- Welcome email — plain-text email greeting new user -->
 Welcome to FitnessHub!
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

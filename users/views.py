@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: users.views
-# Description: User authentication and profile views
-# ==============================================================================
+"""Registration, login, profile editing, and seller request management."""
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash

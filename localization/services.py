@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: localization.services
-# Description: Translation service
-# ==============================================================================
+"""Translation service — fetches and stores translations from external APIs."""
 
 from django.conf import settings
 from django.core.cache import cache

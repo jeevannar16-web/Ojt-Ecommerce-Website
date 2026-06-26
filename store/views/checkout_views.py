@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.views.checkout_views
-# Description: Checkout views
-# ==============================================================================
+"""Checkout flow — delivery address, shipping selection, payment, and order placement with map picking."""
 
 from django.shortcuts import render, redirect
 from django.contrib import messages

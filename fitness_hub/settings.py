@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: fitness_hub.settings
-# Description: Django project settings and configuration
-# ==============================================================================
+"""All the Django config — apps, middleware, database, templates, static files, and third-party integrations."""
 
 import os
 from dotenv import load_dotenv

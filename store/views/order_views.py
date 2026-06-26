@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.views.order_views
-# Description: Order history views
-# ==============================================================================
+"""Order history and detail — lists past orders with delivery location maps and status tracking."""
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages

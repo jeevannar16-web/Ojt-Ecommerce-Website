@@ -1,7 +1,4 @@
-// ==============================================================================
-// File: loading.js
-// Description: Page loader, offline banner, and navigation spinner
-// ==============================================================================
+// loading.js — page preloader spinner, offline connection banner, and nav transition feedback
 
 (function () {
   var bar = document.getElementById('page-loader');

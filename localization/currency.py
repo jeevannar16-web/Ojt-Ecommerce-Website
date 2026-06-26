@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: localization.currency
-# Description: Currency conversion service
-# ==============================================================================
+"""Auto-currency conversion — live exchange rates with file-based caching."""
 
 import json
 import os

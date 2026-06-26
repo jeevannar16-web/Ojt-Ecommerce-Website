@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.seller_views
-# Description: Seller dashboard and storefront views
-# ==============================================================================
+"""Seller dashboard and storefront — product CRUD, order management, performance stats, and seller application."""
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required

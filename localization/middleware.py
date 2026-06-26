@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: localization.middleware
-# Description: Language detection middleware
-# ==============================================================================
+"""Language detection middleware — reads ?lang= query param and sets the active language."""
 
 import threading
 

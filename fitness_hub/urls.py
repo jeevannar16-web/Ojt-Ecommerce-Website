@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: fitness_hub.urls
-# Description: Root URL configuration
-# ==============================================================================
+"""Root URL configuration — maps paths to views across all apps."""
 
 from django.contrib import admin
 from django.urls import path, include

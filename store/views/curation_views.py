@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.views.curation_views
-# Description: Product curation views
-# ==============================================================================
+"""Product curation — featured and hand-picked product selections for the homepage and promotional sections."""
 
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse

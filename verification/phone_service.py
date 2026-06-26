@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: verification.phone_service
-# Description: Phone verification service
-# ==============================================================================
+"""Phone number verification — sends and validates SMS OTP codes."""
 
 import logging
 import re

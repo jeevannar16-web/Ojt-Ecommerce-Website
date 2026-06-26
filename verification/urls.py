@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: verification.urls
-# Description: URL routing for verification app
-# ==============================================================================
+"""URL patterns for email and phone verification endpoints."""
 
 from django.urls import path
 from . import views

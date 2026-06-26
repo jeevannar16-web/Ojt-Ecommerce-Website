@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.views.favorite_views
-# Description: Favorites/wishlist views
-# ==============================================================================
+"""Favorites/wishlist — toggle products on and off the wishlist and list them for the logged-in user."""
 
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse

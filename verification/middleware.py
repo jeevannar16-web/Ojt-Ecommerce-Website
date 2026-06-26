@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: verification.middleware
-# Description: Email verification middleware
-# ==============================================================================
+"""Middleware that redirects unverified users to the verification page."""
 
 from django.conf import settings
 from django.shortcuts import redirect

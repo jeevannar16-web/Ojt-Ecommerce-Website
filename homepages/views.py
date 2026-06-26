@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: homepages.views
-# Description: Homepage and static page views
-# ==============================================================================
+"""Homepage, about, contact, and other static page views."""
 
 import random
 import datetime

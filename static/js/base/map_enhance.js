@@ -1,7 +1,4 @@
-// ==============================================================================
-// File: map_enhance.js
-// Description: Map enhancements - fullscreen toggle, pan arrows, location button
-// ==============================================================================
+// map_enhance.js — fullscreen toggle, pan arrows, and a "go to my location" button for the footer map
 
 // ==============================================================================
 // SECTION: Full-Screen Toggle

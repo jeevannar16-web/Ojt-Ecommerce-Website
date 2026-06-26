@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: users.admin
-# Description: Admin configuration for users app
-# ==============================================================================
+"""Django admin config for user and profile models."""
 
 
 

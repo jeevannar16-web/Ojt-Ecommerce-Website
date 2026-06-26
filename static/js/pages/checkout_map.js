@@ -1,7 +1,4 @@
-// ==============================================================================
-// File: checkout_map.js
-// Description: Checkout map picker with marker, geocode, home button, search
-// ==============================================================================
+// checkout_map.js — map picker on checkout with draggable marker, geocoding, and "Use My Location"
 
 // ==============================================================================
 // SECTION: DOM Elements & State

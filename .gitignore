@@ -60,6 +60,7 @@ cover/
 local_settings.py
 # db.sqlite3 — tracked in git so clones get full data
 # db.sqlite3-journal
+staticfiles/
 
 # Flask stuff:
 instance/

@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: users.urls
-# Description: URL routing for users app
-# ==============================================================================
+"""URL patterns for authentication, profiles, and credential history."""
 
 from django.urls import path
 from django.contrib.auth import views as auth_views

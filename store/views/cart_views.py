@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.views.cart_views
-# Description: Shopping cart views
-# ==============================================================================
+"""Cart operations — add, remove, update quantities, clear, and coupon validation."""
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse

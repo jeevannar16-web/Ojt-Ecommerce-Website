@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: fitness_hub.wsgi
-# Description: WSGI application entry point
-# ==============================================================================
+"""WSGI entry point — serves the project via production-ready web servers like Gunicorn."""
 
 """
 WSGI config for fitness_hub project.

@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.models
-# Description: Database models for store app
-# ==============================================================================
+"""Database models for the store — products, categories, orders, cart items, reviews, and everything in between."""
 
 from django.db import models
 from django.contrib.auth.models import User

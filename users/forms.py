@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: users.forms
-# Description: User registration and profile forms
-# ==============================================================================
+"""Form classes for user registration, profile editing, and seller applications."""
 
 from django import forms
 from django.contrib.auth.models import User

@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: verification.management.commands.cleanup_verifications
-# Description: Cleanup expired verifications
-# ==============================================================================
+"""Management command to clean up expired verification records."""
 
 from django.core.management.base import BaseCommand
 from verification.models import EmailVerification, PhoneVerification

@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: localization.context_processors
-# Description: Template context processors for localization
-# ==============================================================================
+"""Injects available languages into all template contexts."""
 
 from django.conf import settings
 

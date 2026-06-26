@@ -1,7 +1,4 @@
-// ==============================================================================
-// File: cart.js
-// Description: Add to cart, stock display updates, cart badge management
-// ==============================================================================
+// cart.js — add to cart, update the cart badge, size/stock display, all the cart interaction
 
 // ==============================================================================
 // SECTION: Add to Cart

@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: verification.views
-# Description: Email and phone verification views
-# ==============================================================================
+"""Views for sending and verifying email/phone OTP codes."""
 
 import json
 

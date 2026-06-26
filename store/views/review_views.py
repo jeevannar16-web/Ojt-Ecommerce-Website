@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.views.review_views
-# Description: Product review views
-# ==============================================================================
+"""Product reviews — submit, edit, and display ratings and comments for purchased items."""
 
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse

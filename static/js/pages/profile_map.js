@@ -1,7 +1,4 @@
-// ==============================================================================
-// File: profile_map.js
-// Description: Profile map picker for setting default delivery location
-// ==============================================================================
+// profile_map.js — map picker in the profile page to set a default delivery location
 
 // ==============================================================================
 // SECTION: DOM Elements & State

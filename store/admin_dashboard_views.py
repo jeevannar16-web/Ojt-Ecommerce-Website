@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.admin_dashboard_views
-# Description: Admin dashboard views
-# ==============================================================================
+"""Admin dashboard — sales stats, order management, seller approvals, low stock alerts, and activity log viewer."""
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required

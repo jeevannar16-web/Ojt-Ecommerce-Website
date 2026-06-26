@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.views
-# Description: View imports for store app
-# ==============================================================================
+"""Re-exports all view functions so `from store.views import ...` works cleanly."""
 
 # ════════════════════════════════════════════════════════════════
 # STORE VIEWS MODULE - RE-EXPORTS

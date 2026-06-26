@@ -1,7 +1,4 @@
-// ==============================================================================
-// File: messages.js
-// Description: Polls unread message count every 5 seconds
-// ==============================================================================
+// messages.js — polls for unread message count every 5 seconds and updates the chat bubble
 
 // ==============================================================================
 // SECTION: Unread Count Polling

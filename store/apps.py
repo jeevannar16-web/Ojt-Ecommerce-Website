@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: store.apps
-# Description: Store app configuration
-# ==============================================================================
+"""Django app config for the store — registers signals and sets up the application namespace."""
 
 from django.apps import AppConfig
 

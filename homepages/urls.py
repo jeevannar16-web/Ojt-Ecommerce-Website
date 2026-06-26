@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: homepages.urls
-# Description: URL routing for homepages app
-# ==============================================================================
+"""URL patterns for homepage and static pages."""
 
 from django.urls import path
 from . import views

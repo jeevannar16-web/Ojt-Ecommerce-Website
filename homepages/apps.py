@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: homepages.apps
-# Description: Homepages app configuration
-# ==============================================================================
+"""Django AppConfig for the homepages app."""
 
 from django.apps import AppConfig
 

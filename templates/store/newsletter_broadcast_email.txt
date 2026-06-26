@@ -1,3 +1,4 @@
+<!-- Newsletter broadcast plaintext email template -->
 {{ subject }}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

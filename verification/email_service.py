@@ -1,7 +1,4 @@
-# ==============================================================================
-# Module: verification.email_service
-# Description: Email verification service
-# ==============================================================================
+"""Sends verification emails with OTP codes via Django's email backend."""
 
 import logging
 from datetime import timedelta

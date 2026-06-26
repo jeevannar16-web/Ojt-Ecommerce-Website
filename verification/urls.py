@@ -1,5 +1,14 @@
+# ==============================================================================
+# Module: verification.urls
+# Description: URL routing for verification app
+# ==============================================================================
+
 from django.urls import path
 from . import views
+
+# ==============================================================================
+# SECTION: URL Patterns
+# ==============================================================================
 
 urlpatterns = [
     path('setup/', views.verification_setup, name='verification_setup'),

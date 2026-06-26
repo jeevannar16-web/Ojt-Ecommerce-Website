@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: verification.phone_service
+# Description: Phone verification service
+# ==============================================================================
+
 import logging
 import re
 
@@ -9,6 +14,10 @@ from .sms_providers import get_sms_provider
 
 logger = logging.getLogger(__name__)
 
+
+# ==============================================================================
+# SECTION: PhoneVerificationService
+# ==============================================================================
 
 class PhoneVerificationService:
     provider = None

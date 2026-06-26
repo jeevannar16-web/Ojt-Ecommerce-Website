@@ -1,7 +1,10 @@
+<!-- ========================================================================= -->
+<!-- Include: Cookie Consent Overlay + Customize Modal                        -->
+<!-- ========================================================================= -->
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/base/cookie_consent.css' %}">
 
-<!-- ─── COOKIE CONSENT OVERLAY ─── -->
+<!-- Cookie Consent: Main Overlay -->
 <div id="cc-overlay" class="cc-overlay" style="display:none;">
   <div class="cc-card">
     <div class="cc-header">
@@ -20,7 +23,7 @@
   </div>
 </div>
 
-<!-- ─── CUSTOMIZE MODAL ─── -->
+<!-- Cookie Consent: Customize Modal -->
 <div id="cc-modal-overlay" class="cc-modal-overlay">
   <div class="cc-modal">
     <h3><i class="bi bi-sliders" style="color:#d4af37;"></i> {{ 'Customize Cookies'|t }}</h3>
@@ -77,13 +80,13 @@
   </div>
 </div>
 
-<!-- ─── TOAST ─── -->
+<!-- Cookie Consent: Toast Notification -->
 <div id="cc-toast" class="cc-toast">
   <i class="bi bi-check-circle-fill"></i>
   <span class="cc-toast-msg"></span>
 </div>
 
-<!-- ─── DELAYED REMINDER BAR ─── -->
+<!-- Cookie Consent: Delayed Reminder Bar -->
 <div id="cc-reminder" class="cc-reminder">
   <i class="bi bi-shield-check"></i>
   <span class="cc-reminder-msg">{{ 'Cookie preferences saved.'|t }}</span>

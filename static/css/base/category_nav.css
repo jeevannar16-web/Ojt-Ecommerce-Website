@@ -1,3 +1,16 @@
+/* ==============================================================================
+   File: base/category_nav.css
+   Description: Category navigation bar with horizontal scroll
+   ============================================================================== */
+
+
+/* ==============================================================================
+   SECTION: Wrapper
+   ============================================================================== */
+
+
+
+
 .elite-nav-wrap {
   position: sticky;
   top: 72px;
@@ -7,6 +20,14 @@
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
+
+/* ==============================================================================
+   SECTION: Inner Container
+   ============================================================================== */
+
+
+
+
 .elite-nav-inner {
   display: flex;
   align-items: center;
@@ -35,6 +56,14 @@
 }
 .elite-nav-inner.show-left-fade::before  { opacity: 1; }
 .elite-nav-inner.show-right-fade::after  { opacity: 1; }
+
+/* ==============================================================================
+   SECTION: Arrows
+   ============================================================================== */
+
+
+
+
 .elite-nav-arrow {
   flex-shrink: 0;
   width: 40px; height: 52px;
@@ -45,6 +74,14 @@
 }
 .elite-nav-arrow:hover { color: #d4af37; }
 .elite-nav-arrow:disabled { opacity: 0.18; cursor: default; pointer-events: none; }
+
+/* ==============================================================================
+   SECTION: Scroll Track
+   ============================================================================== */
+
+
+
+
 .elite-nav-track {
   display: flex;
   align-items: center;
@@ -57,6 +94,14 @@
   padding: 0 4px;
 }
 .elite-nav-track::-webkit-scrollbar { display: none; }
+
+/* ==============================================================================
+   SECTION: All Categories Link
+   ============================================================================== */
+
+
+
+
 .elite-cat-all {
   flex-shrink: 0;
   padding: 5px 16px;
@@ -83,6 +128,14 @@
   border-color: rgba(212,175,55,0.45);
   color: #d4af37;
 }
+
+/* ==============================================================================
+   SECTION: Category Items
+   ============================================================================== */
+
+
+
+
 .elite-cat-item {
   flex-shrink: 0;
   display: flex;

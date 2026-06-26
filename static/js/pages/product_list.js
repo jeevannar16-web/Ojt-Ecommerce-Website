@@ -1,3 +1,12 @@
+// ==============================================================================
+// File: product_list.js
+// Description: Product listing with filters, infinite scroll, sort, and pagination
+// ==============================================================================
+
+// ==============================================================================
+// SECTION: DOM References & State
+// ==============================================================================
+
 (function() {
     const grid = document.getElementById('product-grid');
     const sentinel = document.getElementById('scroll-sentinel');
@@ -26,6 +35,14 @@
         return params;
     }
 
+
+
+
+
+    // ==============================================================================
+    // SECTION: URL & Parameter Utilities
+    // ==============================================================================
+
     function updateUrlFromParams(params) {
         const url = new URL(window.location.pathname, window.location.origin);
         for (const [k, v] of Object.entries(params)) {
@@ -37,6 +54,14 @@
         }
         window.history.pushState({ params: url.searchParams.toString() }, '', url.toString());
     }
+
+
+
+
+
+    // ==============================================================================
+    // SECTION: Product Loading
+    // ==============================================================================
 
     async function loadProducts(params, append) {
         if (isLoading) return;
@@ -131,6 +156,14 @@
         }
     }
 
+
+
+
+
+    // ==============================================================================
+    // SECTION: Filter Event Handlers
+    // ==============================================================================
+
     filterForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const params = collectFormParams();
@@ -212,6 +245,14 @@
         });
     }
 
+
+
+
+
+    // ==============================================================================
+    // SECTION: Infinite Scroll
+    // ==============================================================================
+
     if (sentinel) {
         var observer = new IntersectionObserver(async function(entries) {
             var entry = entries[0];
@@ -260,6 +301,14 @@
 
         observer.observe(sentinel);
     }
+
+
+
+
+
+    // ==============================================================================
+    // SECTION: Pop State Handler
+    // ==============================================================================
 
     window.addEventListener('popstate', function() {
         window.location.href = window.location.href;

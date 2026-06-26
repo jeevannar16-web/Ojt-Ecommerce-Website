@@ -1,3 +1,12 @@
+// ==============================================================================
+// File: product_detail.js
+// Description: Size selection, quantity adjustment, add-to-cart, review submission
+// ==============================================================================
+
+// ==============================================================================
+// SECTION: Size Selection
+// ==============================================================================
+
 function selectSize(btn, size) {
     document.querySelectorAll('.size-btn').forEach(function(b) { b.classList.remove('selected'); });
     btn.classList.add('selected');
@@ -5,6 +14,14 @@ function selectSize(btn, size) {
     var err = document.getElementById('size-error');
     if (err) err.style.display = 'none';
 }
+
+
+
+
+
+// ==============================================================================
+// SECTION: Quantity Adjustment
+// ==============================================================================
 
 function changeQty(delta) {
     var input = document.getElementById('qty-input');
@@ -18,6 +35,14 @@ function changeQty(delta) {
     if (minus) minus.disabled = val <= 1;
     if (plus) plus.disabled = val >= max;
 }
+
+
+
+
+
+// ==============================================================================
+// SECTION: Add to Cart with Size
+// ==============================================================================
 
 function addToCartWithSize(event, productId) {
     var sizeInput = document.getElementById('selected-size');
@@ -33,6 +58,14 @@ function addToCartWithSize(event, productId) {
     var qty = parseInt(document.getElementById('qty-input').value) || 1;
     addToCart(event, productId, null, qty, selectedSize);
 }
+
+
+
+
+
+// ==============================================================================
+// SECTION: Buy Now
+// ==============================================================================
 
 function shopNow(evt, productId) {
     var sizeInput = document.getElementById('selected-size');
@@ -52,6 +85,14 @@ function shopNow(evt, productId) {
         window.location.href = '/store/checkout/';
     }, 800);
 }
+
+
+
+
+
+// ==============================================================================
+// SECTION: Review Submission
+// ==============================================================================
 
 function submitReview(productId) {
     var ratingInput = document.querySelector('#star-selector input[name="rating"]:checked');

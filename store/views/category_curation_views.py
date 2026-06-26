@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: store.views.category_curation_views
+# Description: Category curation views
+# ==============================================================================
+
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -6,6 +11,9 @@ import base64
 from ..models import Category
 
 
+# ════════════════════════════════════════════════════════════════
+# CATEGORY CURATION & IMAGE MANAGEMENT
+# ════════════════════════════════════════════════════════════════
 def category_curation_workspace(request):
     """Display category curation workspace - ALLOW EDITING ANYTIME."""
     current_id = request.GET.get('id')
@@ -43,6 +51,10 @@ def category_curation_workspace(request):
 
     return render(request, 'store/curation_category.html', context)
 
+
+# ==============================================================================
+# SECTION: Update Category Asset
+# ==============================================================================
 
 @csrf_exempt
 def update_category_asset(request):

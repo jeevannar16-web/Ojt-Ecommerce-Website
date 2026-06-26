@@ -1,3 +1,12 @@
+// ==============================================================================
+// File: favorites.js
+// Description: Remove items from wishlist page with AJAX and DOM animation
+// ==============================================================================
+
+// ==============================================================================
+// SECTION: Remove Wishlist Item
+// ==============================================================================
+
 function removeWishlistItem(event, productId) {
     if (event) {
         event.preventDefault();
@@ -53,6 +62,14 @@ function removeWishlistItem(event, productId) {
         cardElement.classList.remove('removing');
     });
 }
+
+
+
+
+
+// ==============================================================================
+// SECTION: Cookie Utility
+// ==============================================================================
 
 function getCookie(name) {
     let cookieValue = null;

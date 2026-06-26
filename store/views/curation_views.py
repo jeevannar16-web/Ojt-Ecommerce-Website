@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: store.views.curation_views
+# Description: Product curation views
+# ==============================================================================
+
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -6,6 +11,9 @@ import base64
 from ..models import Product
 
 
+# ════════════════════════════════════════════════════════════════
+# PRODUCT CURATION & IMAGE MANAGEMENT
+# ════════════════════════════════════════════════════════════════
 def curation_workspace(request):
     """Display the curation workspace with a single product - ALLOW EDITING ANYTIME."""
     current_id = request.GET.get('id')
@@ -46,6 +54,10 @@ def curation_workspace(request):
     
     return render(request, 'store/curation.html', context)
 
+
+# ==============================================================================
+# SECTION: Update Curation Asset
+# ==============================================================================
 
 @csrf_exempt
 def update_curation_asset(request):

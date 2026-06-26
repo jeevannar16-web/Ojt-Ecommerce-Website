@@ -1,8 +1,17 @@
+# ==============================================================================
+# Module: store.admin_dashboard_views
+# Description: Admin dashboard views
+# ==============================================================================
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.db.models import Sum, Count, Q
 from django.contrib.auth.models import User
+from django.conf import settings
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils import timezone
 from .models import Product, Order, OrderItem, Category, Review, NewsletterSubscriber, FavoriteItem, CartItem, ActivityLog
 from users.models import Profile
 from .activity_logger import log_action
@@ -10,6 +19,10 @@ from django.utils.html import escape
 from django.core.paginator import Paginator
 from django.db.models.functions import TruncMonth
 
+
+# ==============================================================================
+# SECTION: Admin Dashboard
+# ==============================================================================
 
 @staff_member_required
 def admin_dashboard(request):
@@ -113,6 +126,10 @@ def admin_dashboard(request):
     return render(request, 'store/admin_dashboard.html', context)
 
 
+# ==============================================================================
+# SECTION: Admin Activity Log
+# ==============================================================================
+
 @staff_member_required
 def admin_activity_log(request):
     logs = ActivityLog.objects.all().select_related('user')
@@ -155,6 +172,10 @@ def admin_activity_log(request):
     return render(request, 'store/admin_activity_log.html', context)
 
 
+# ==============================================================================
+# SECTION: Admin Favorites
+# ==============================================================================
+
 @staff_member_required
 def admin_favorites(request):
     favorites = FavoriteItem.objects.select_related('user', 'product').order_by('-created_at')
@@ -195,6 +216,10 @@ def admin_favorites(request):
     }
     return render(request, 'store/admin_favorites.html', context)
 
+
+# ==============================================================================
+# SECTION: Admin Cart
+# ==============================================================================
 
 @staff_member_required
 def admin_cart(request):
@@ -241,6 +266,10 @@ def admin_cart(request):
     }
     return render(request, 'store/admin_cart.html', context)
 
+
+# ==============================================================================
+# SECTION: Admin Sellers
+# ==============================================================================
 
 @staff_member_required
 def admin_sellers(request):
@@ -317,6 +346,10 @@ def admin_sellers(request):
     return render(request, 'store/admin_sellers.html', context)
 
 
+# ==============================================================================
+# SECTION: Admin Seller Detail
+# ==============================================================================
+
 @staff_member_required
 def admin_seller_detail(request, seller_id):
     seller = get_object_or_404(User, id=seller_id)
@@ -376,3 +409,96 @@ def admin_seller_detail(request, seller_id):
         'current_stock': stock_filter,
     }
     return render(request, 'store/admin_seller_detail.html', context)
+
+
+# ==============================================================================
+# SECTION: Newsletter — Broadcast
+# ==============================================================================
+
+@staff_member_required
+def admin_newsletter_broadcast(request):
+    if request.method == 'POST':
+        subject = request.POST.get('subject', '').strip()
+        body = request.POST.get('body', '').strip()
+        cta_text = request.POST.get('cta_text', '').strip()
+        cta_url = request.POST.get('cta_url', '').strip()
+
+        if not subject or not body:
+            messages.error(request, "Subject and body are required.")
+            return redirect('store:admin_newsletter_broadcast')
+
+        subscribers = NewsletterSubscriber.objects.filter(active=True)
+        sent = 0
+        errors = 0
+        for sub in subscribers:
+            try:
+                ctx = {
+                    'subject': subject,
+                    'body': body,
+                    'cta_text': cta_text,
+                    'cta_url': cta_url,
+                    'token': sub.token,
+                    'subscriber_name': '',
+                    'base_url': settings.BASE_URL,
+                    'current_year': timezone.now().year,
+                }
+                html = render_to_string('store/newsletter_broadcast_email.html', ctx)
+                text = render_to_string('store/newsletter_broadcast_email.txt', ctx)
+                send_mail(subject, text, settings.DEFAULT_FROM_EMAIL,
+                          [sub.email], html_message=html)
+                sent += 1
+            except Exception:
+                errors += 1
+
+        log_action(request.user, 'newsletter_broadcast',
+                   f"Broadcast sent to {sent} subscribers ({errors} failed)",
+                   {'subject': subject, 'sent': sent, 'errors': errors}, request)
+        messages.success(request, f"Broadcast sent to {sent} subscribers ({errors} failed).")
+        return redirect('store:admin_dashboard')
+
+    return render(request, 'store/admin_newsletter_broadcast.html')
+
+
+# ==============================================================================
+# SECTION: Newsletter — Subscriber Management
+# ==============================================================================
+
+@staff_member_required
+def admin_manage_subscribers(request):
+    subscribers = NewsletterSubscriber.objects.all().order_by('-subscribed_at')
+
+    search = request.GET.get('q', '').strip()
+    if search:
+        subscribers = subscribers.filter(email__icontains=search)
+
+    status_filter = request.GET.get('status', '')
+    if status_filter == 'active':
+        subscribers = subscribers.filter(active=True)
+    elif status_filter == 'inactive':
+        subscribers = subscribers.filter(active=False)
+
+    paginator = Paginator(subscribers, 50)
+    page = request.GET.get('page', 1)
+    subscribers_page = paginator.get_page(page)
+
+    if request.method == 'POST':
+        action = request.POST.get('action', '')
+        sub_id = request.POST.get('subscriber_id', '')
+        sub = get_object_or_404(NewsletterSubscriber, id=sub_id)
+        if action == 'toggle':
+            sub.active = not sub.active
+            sub.save(update_fields=['active'])
+            status = 'activated' if sub.active else 'deactivated'
+            messages.success(request, f"{sub.email} {status}.")
+        elif action == 'delete':
+            sub.delete()
+            messages.success(request, f"{sub.email} deleted.")
+        return redirect('store:admin_manage_subscribers')
+
+    context = {
+        'subscribers': subscribers_page,
+        'current_search': search,
+        'current_status': status_filter,
+        'total_count': NewsletterSubscriber.objects.count(),
+    }
+    return render(request, 'store/admin_manage_subscribers.html', context)

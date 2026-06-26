@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: store.models
+# Description: Database models for store app
+# ==============================================================================
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -25,6 +30,10 @@ product_image_path = _UploadToPath('products', subfolder_attr='category')
 category_image_path = _UploadToPath('category_images')
 
 
+# ==============================================================================
+# SECTION: Category Model
+# ==============================================================================
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to=category_image_path, blank=True, null=True)
@@ -44,6 +53,10 @@ class Category(models.Model):
             self.image = image_file
         super().save(*args, **kwargs)
 
+
+# ==============================================================================
+# SECTION: Product Model
+# ==============================================================================
 
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
@@ -89,6 +102,10 @@ class Product(models.Model):
         return 0
 
 
+# ==============================================================================
+# SECTION: ProductSize Model
+# ==============================================================================
+
 class ProductSize(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='sizes')
     size = models.CharField(max_length=50, help_text="e.g. S, M, L, XL or 5kg, 10kg")
@@ -100,6 +117,10 @@ class ProductSize(models.Model):
     def __str__(self):
         return f"{self.product.name} - {self.size} ({self.stock})"
 
+
+# ==============================================================================
+# SECTION: CartItem Model
+# ==============================================================================
 
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart_items')
@@ -119,6 +140,10 @@ class CartItem(models.Model):
     def total_price(self):
         return self.product.price * self.quantity
 
+
+# ==============================================================================
+# SECTION: Order Model
+# ==============================================================================
 
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -146,6 +171,10 @@ class Order(models.Model):
         return f"Order #{self.id} - {self.order_number if self.order_number else 'No Number'}"
 
 
+# ==============================================================================
+# SECTION: OrderItem Model
+# ==============================================================================
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
@@ -160,6 +189,10 @@ class OrderItem(models.Model):
         return label
 
 
+# ==============================================================================
+# SECTION: FavoriteItem Model
+# ==============================================================================
+
 class FavoriteItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -172,13 +205,29 @@ class FavoriteItem(models.Model):
         return f"{self.user.username} favorited {self.product.name}"
 
 
+# ==============================================================================
+# SECTION: NewsletterSubscriber Model
+# ==============================================================================
+
 class NewsletterSubscriber(models.Model):
     email = models.EmailField(unique=True, max_length=254)
     subscribed_at = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=True, help_text="Is this subscriber still active?")
+    token = models.CharField(max_length=64, unique=True, blank=True, null=True, help_text="Unique token for unsubscribe")
+
+    def save(self, *args, **kwargs):
+        import uuid
+        if not self.token:
+            self.token = uuid.uuid4().hex
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.email
+        return f"{self.email} ({'active' if self.active else 'inactive'})"
 
+
+# ==============================================================================
+# SECTION: ActivityLog Model
+# ==============================================================================
 
 class ActivityLog(models.Model):
     ACTION_TYPES = [
@@ -222,6 +271,10 @@ class ActivityLog(models.Model):
         return f"{username} — {self.get_action_type_display()} ({self.created_at})"
 
 
+# ==============================================================================
+# SECTION: Review Model
+# ==============================================================================
+
 class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -236,6 +289,10 @@ class Review(models.Model):
         return f"{self.user.username} — {self.product.name} ({self.rating}★)"
 
 
+# ==============================================================================
+# SECTION: UserOnline Model
+# ==============================================================================
+
 class UserOnline(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='online_status')
     last_seen = models.DateTimeField(auto_now=True)
@@ -245,6 +302,10 @@ class UserOnline(models.Model):
         return f"{self.user.username} {'online' if self.is_online else 'offline'}'"
 
 
+# ==============================================================================
+# SECTION: Conversation Model
+# ==============================================================================
+
 class Conversation(models.Model):
     THEME_CHOICES = [
         ('dark', 'Dark'),
@@ -252,6 +313,16 @@ class Conversation(models.Model):
         ('gold', 'Gold'),
         ('ocean', 'Ocean'),
         ('purple', 'Purple'),
+        ('fifa', 'FIFA'),
+        ('cricket', 'Cricket'),
+        ('anime', 'Anime'),
+        ('dev', 'Dev'),
+        ('spiderman', 'Spiderman'),
+        ('batman', 'Batman'),
+        ('ironman', 'Iron Man'),
+        ('naruto', 'Naruto'),
+        ('goku', 'Goku'),
+        ('onepiece', 'One Piece'),
     ]
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='conversations_as_customer')
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='conversations_as_seller')
@@ -281,6 +352,10 @@ class Conversation(models.Model):
         return self.customer
 
 
+# ==============================================================================
+# SECTION: Message Model
+# ==============================================================================
+
 class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -303,6 +378,10 @@ class Message(models.Model):
         return f"[{self.created_at:%H:%M}] {self.sender.username}: {self.content[:50]}"
 
 
+# ==============================================================================
+# SECTION: BlockedUser Model
+# ==============================================================================
+
 class BlockedUser(models.Model):
     blocker = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blocked_users')
     blocked = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blocked_by')
@@ -316,6 +395,10 @@ class BlockedUser(models.Model):
     def __str__(self):
         return f"{self.blocker.username} blocked {self.blocked.username}"
 
+
+# ==============================================================================
+# SECTION: MessageReport Model
+# ==============================================================================
 
 class MessageReport(models.Model):
     REASON_CHOICES = [

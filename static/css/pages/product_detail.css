@@ -1,4 +1,17 @@
-    .btn-catalog:hover {
+/* ==============================================================================
+   File: pages/product_detail.css
+   Description: Product detail page with reviews, favorites, and cart actions
+   ============================================================================== */
+
+    
+/* ==============================================================================
+   SECTION: Catalog Button
+   ============================================================================== */
+
+
+
+
+.btn-catalog:hover {
         background: rgba(255, 255, 255, 0.08) !important;
         border-color: #fff !important;
     }
@@ -13,7 +26,15 @@
         transform: translateY(-5px);
         border-color: rgba(212, 175, 55, 0.3) !important;
     }
-    .detail-fav-btn {
+    
+/* ==============================================================================
+   SECTION: Favorite Button
+   ============================================================================== */
+
+
+
+
+.detail-fav-btn {
         display: inline-flex;
         align-items: center;
         gap: 8px;
@@ -60,7 +81,15 @@
         transform: translateY(-2px);
         box-shadow: 0 10px 28px rgba(239,68,68,0.5);
     }
-    @keyframes heartBeat {
+    
+/* ==============================================================================
+   SECTION: Heart Animation
+   ============================================================================== */
+
+
+
+
+@keyframes heartBeat {
         0%   { transform: scale(1); }
         25%  { transform: scale(1.5); }
         50%  { transform: scale(0.9); }
@@ -68,7 +97,15 @@
         100% { transform: scale(1); }
     }
     .detail-fav-btn.pop i { animation: heartBeat 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-    @keyframes floatHeart {
+    
+/* ==============================================================================
+   SECTION: Heart Particles
+   ============================================================================== */
+
+
+
+
+@keyframes floatHeart {
         0%   { opacity: 1; transform: translateY(0) scale(1); }
         100% { opacity: 0; transform: translateY(-40px) scale(0.5); }
     }
@@ -79,7 +116,15 @@
         pointer-events: none;
         animation: floatHeart 0.8s ease forwards;
     }
-    .btn-add-bag {
+    
+/* ==============================================================================
+   SECTION: Add to Cart Button
+   ============================================================================== */
+
+
+
+
+.btn-add-bag {
         background: transparent;
         color: #f57224;
         padding: 14px 32px;
@@ -98,7 +143,15 @@
     .btn-add-bag:hover { background: rgba(245,114,36,0.08); color: #e0651a; border-color: #e0651a; transform: translateY(-2px); }
     .btn-add-bag:disabled { background: #444; color: #888; border-color: #444; cursor: not-allowed; transform: none; }
 
-    .btn-shop-now {
+    
+/* ==============================================================================
+   SECTION: Buy Now Button
+   ============================================================================== */
+
+
+
+
+.btn-shop-now {
         background: #f57224;
         color: #fff;
         padding: 14px 32px;
@@ -123,7 +176,15 @@
         flex-shrink: 0;
     }
 
-    .qty-picker {
+    
+/* ==============================================================================
+   SECTION: Quantity Picker
+   ============================================================================== */
+
+
+
+
+.qty-picker {
         display: inline-flex; align-items: center;
         border: 1px solid rgba(255,255,255,0.12);
         border-radius: 8px; overflow: hidden;
@@ -151,7 +212,15 @@
     .qty-picker input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     .qty-picker input[type=number] { -moz-appearance: textfield; }
 
-    /* ─── Review Styles ─── */
+    
+/* ==============================================================================
+   SECTION: Review Section
+   ============================================================================== */
+
+
+
+
+/* ─── Review Styles ─── */
     .review-section {
         margin-top: 5rem;
         border-top: 1px solid rgba(255,255,255,0.05);
@@ -201,7 +270,15 @@
     .review-total { color: #666; font-size: 0.85rem; margin-top: 2px; }
 
     /* Star selector */
-    .star-selector {
+    
+/* ==============================================================================
+   SECTION: Star Selector
+   ============================================================================== */
+
+
+
+
+.star-selector {
         display: flex;
         gap: 4px;
         flex-direction: row-reverse;
@@ -223,7 +300,15 @@
     .star-selector label:hover { transform: scale(1.2); }
 
     /* Review form */
-    .review-form-wrap {
+    
+/* ==============================================================================
+   SECTION: Review Form
+   ============================================================================== */
+
+
+
+
+.review-form-wrap {
         background: rgba(255,255,255,0.02);
         border: 1px solid rgba(212,175,55,0.12);
         border-radius: 16px;
@@ -275,7 +360,15 @@
     }
 
     /* Review cards */
-    .review-card {
+    
+/* ==============================================================================
+   SECTION: Review Cards
+   ============================================================================== */
+
+
+
+
+.review-card {
         background: rgba(255,255,255,0.02);
         border: 1px solid rgba(255,255,255,0.05);
         border-radius: 14px;
@@ -331,7 +424,15 @@
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
-    .no-reviews-msg {
+    
+/* ==============================================================================
+   SECTION: No Reviews
+   ============================================================================== */
+
+
+
+
+.no-reviews-msg {
         text-align: center;
         padding: 3rem 2rem;
         background: rgba(255,255,255,0.01);
@@ -341,6 +442,14 @@
         font-size: 0.95rem;
     }
     .no-reviews-msg span { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+
+/* ==============================================================================
+   SECTION: Size Buttons
+   ============================================================================== */
+
+
+
+
 .size-btn:hover {
     border-color: rgba(212,175,55,0.5) !important;
     color: #d4af37 !important;
@@ -351,6 +460,14 @@
     background: #d4af37 !important;
     color: #0d0d0d !important;
 }
+
+/* ==============================================================================
+   SECTION: Chat Seller Button
+   ============================================================================== */
+
+
+
+
 .btn-chat-seller {
     display: inline-flex;
     align-items: center;

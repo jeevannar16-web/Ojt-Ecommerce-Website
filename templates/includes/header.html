@@ -1,10 +1,17 @@
+<!-- ========================================================================= -->
+<!-- Include: Main Header / Navigation                                        -->
+<!-- ========================================================================= -->
 {% load static %}
 <nav class="main-nav">
+    <!-- Left: Logo, Language Switcher, Mobile Menu Toggle -->
     <div class="nav-left-brand">
       <a href="{% url 'home' %}" class="nav-logo">
         <img src="{% static 'images/logo.jpg' %}" alt="FitnessHub" class="logo-img">
       </a>
       <div class="nav-lang-split"></div>
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
       <div class="nav-lang">
         <button class="nav-lang-btn">
           <span class="nav-lang-flag">{{ LANGUAGE_CODE|slice:":2"|upper }}</span>
@@ -24,6 +31,7 @@
       </div>
     </div>
 
+    <!-- Center: Search Bar with Autocomplete -->
     <div class="search-wrap" style="position:relative; width:100%; max-width:600px; margin:0 auto;">
       <form action="{% url 'store:product_list' %}" method="GET" style="display:flex; gap:8px; margin:0;" onsubmit="return validateSearch()">
         <div style="position:relative; flex:1;">
@@ -59,7 +67,19 @@
       </div>
     </div>
 
+    <!-- Right: Theme, Favorites, Cart, User Dropdown / Auth -->
     <div class="nav-actions">
+      <!-- Theme Picker (right before favorites) -->
+      <div class="theme-picker-wrap" style="position:relative;">
+        <button id="theme-picker-btn" class="tp-btn" title="{{ 'Change Theme'|t }}">
+          <span class="tp-btn-icon">🌑</span>
+          <span class="tp-btn-label">{{ 'Theme'|t }}</span>
+        </button>
+        <div id="theme-picker-dropdown" class="theme-picker-dropdown"
+             style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:var(--bg-dropdown,#141414);border:1px solid var(--border-color,rgba(255,255,255,0.06));border-radius:14px;padding:10px;min-width:200px;box-shadow:0 16px 48px rgba(0,0,0,0.5);z-index:9999;grid-template-columns:1fr 1fr;gap:5px;">
+        </div>
+      </div>
+      <!-- Favorites Button -->
       <a href="{% url 'store:favorites_list' %}"
          style="position:relative; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; color:#fff; transition:all 0.2s;"
          onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
@@ -70,6 +90,7 @@
         </span>
       </a>
 
+      <!-- Cart Dropdown -->
       <div class="cart-dropdown-wrap" style="position:relative;">
         <button class="nav-icon-btn" id="cart-toggle-btn" title="{{ 'nav.cart'|t }}" style="position:relative; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; width:40px; height:40px; color:#fff; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center;" onmouseover="this.style.borderColor='#d4af37'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
           <i class="bi bi-bag" style="font-size:1.2rem;"></i>
@@ -99,12 +120,15 @@
         </div>
       </div>
 
+      <!-- Delivery Location Badge -->
       {% if user.is_authenticated and user.profile.city %}
       <a href="{% url 'profile' %}#tab-info" class="nav-icon-btn" title="{{ 'Delivery Location'|t }}" style="text-decoration:none;position:relative;display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0 12px;color:#888;font-size:0.72rem;font-weight:500;height:40px;transition:all 0.2s;" onmouseover="this.style.borderColor='#2ec4b6'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
         <i class="bi bi-geo-alt-fill" style="color:#2ec4b6;font-size:0.85rem;"></i>
         <span style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ user.profile.city }}</span>
       </a>
       {% endif %}
+
+      <!-- User Dropdown / Auth Buttons -->
       {% if user.is_authenticated %}
         <div class="user-dropdown">
           <button class="nav-icon-btn"><i class="bi bi-person"></i></button>
@@ -131,6 +155,45 @@
         <a href="{% url 'store:seller_center' %}" class="btn-seller-center">{{ 'Sell'|t }}</a>
         <a href="{% url 'login' %}" class="btn-login">{{ 'nav.login'|t }}</a>
         <a href="{% url 'register' %}" class="btn-register">{{ 'nav.register'|t }}</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <!-- Mobile Navigation Overlay + Panel -->
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
+  <nav class="mobile-nav-panel" id="mobile-nav-panel">
+    <div class="mobile-nav-head">
+      <span class="mobile-nav-title">{{ 'Menu'|t }}</span>
+      <button class="mobile-nav-close" id="mobile-nav-close" aria-label="{{ 'Close'|t }}"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="mobile-nav-body">
+      {% if user.is_authenticated %}
+      <div class="mobile-nav-user">
+        <i class="bi bi-person-circle"></i>
+        <span>{{ user.username }}</span>
+      </div>
+      {% endif %}
+      <a href="{% url 'store:favorites_list' %}" class="mobile-nav-item"><i class="bi bi-heart"></i> {{ 'Wishlist'|t }} <span class="mobile-fav-count">({{ global_favorited_ids|length }})</span></a>
+      <a href="{% url 'store:cart' %}" class="mobile-nav-item"><i class="bi bi-bag"></i> {{ 'Cart'|t }} <span class="mobile-cart-count">({{ cart_count }})</span></a>
+      <a href="{% url 'store:messages_list' %}" class="mobile-nav-item"><i class="bi bi-chat-dots"></i> {{ 'Messages'|t }} <span class="mobile-msg-badge" id="mobile-msg-badge" style="display:none;"></span></a>
+      <a href="{% url 'store:order_history' %}" class="mobile-nav-item"><i class="bi bi-box"></i> {{ 'profile.orders'|t }}</a>
+      <a href="{% url 'profile' %}" class="mobile-nav-item"><i class="bi bi-person"></i> {{ 'nav.profile'|t }}</a>
+      <a href="{% url 'store:seller_center' %}" class="mobile-nav-item"><i class="bi bi-shop"></i> {{ 'Seller Center'|t }}</a>
+      {% if user.profile.is_seller or user.is_superuser %}
+      <a href="{% url 'store:seller_dashboard' %}" class="mobile-nav-item"><i class="bi bi-speedometer2"></i> {{ 'nav.seller_dashboard'|t }}</a>
+      {% endif %}
+      {% if user.is_superuser %}
+      <a href="{% url 'store:admin_dashboard' %}" class="mobile-nav-item"><i class="bi bi-shield"></i> {{ 'nav.admin_dashboard'|t }}</a>
+      {% endif %}
+      <div class="mobile-nav-divider"></div>
+      {% if user.is_authenticated %}
+      <form method="post" action="{% url 'logout' %}" class="mobile-nav-logout-form">
+        {% csrf_token %}
+        <button type="submit" class="mobile-nav-item mobile-nav-logout"><i class="bi bi-box-arrow-right"></i> {{ 'nav.logout'|t }}</button>
+      </form>
+      {% else %}
+      <a href="{% url 'login' %}" class="mobile-nav-item"><i class="bi bi-box-arrow-in-right"></i> {{ 'nav.login'|t }}</a>
+      <a href="{% url 'register' %}" class="mobile-nav-item mobile-nav-register"><i class="bi bi-person-plus"></i> {{ 'nav.register'|t }}</a>
       {% endif %}
     </div>
   </nav>

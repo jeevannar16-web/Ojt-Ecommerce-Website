@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Store: Admin Dashboard (Stats, Orders, Sellers, Activity)               -->
+<!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
 
@@ -43,6 +46,9 @@
       <li class="nav-label">{{ 'Store'|t }}</li>
       <li><a href="{% url 'home' %}"><i class="bi bi-shop"></i> {{ 'View Site'|t }}</a></li>
       <li><a href="{% url 'store:seller_dashboard' %}"><i class="bi bi-shop"></i> {{ 'Seller View'|t }}</a></li>
+      <li class="nav-label">{{ 'Newsletter'|t }}</li>
+      <li><a href="{% url 'store:admin_newsletter_broadcast' %}"><i class="bi bi-send"></i> {{ 'Send Broadcast'|t }}</a></li>
+      <li><a href="{% url 'store:admin_manage_subscribers' %}"><i class="bi bi-person-lines-fill"></i> {{ 'Subscribers'|t }}</a></li>
     </ul>
   </aside>
 
@@ -98,9 +104,10 @@
         <div class="num">{{ total_reviews }}</div>
         <div class="lbl">{{ 'Reviews'|t }}</div>
       </a>
-      <a href="{% url 'admin:store_newslettersubscriber_changelist' %}" target="_blank" class="stat-box drill-down">
+      <a href="{% url 'store:admin_manage_subscribers' %}" class="stat-box drill-down">
         <div class="num">{{ total_subscribers }}</div>
         <div class="lbl">{{ 'Subscribers'|t }}</div>
+        <div class="stat-trend" style="color:#22c55e;">{{ 'Manage'|t }}</div>
       </a>
       <a href="{% url 'store:admin_favorites' %}" class="stat-box drill-down" style="border-left:3px solid #ef4444;">
         <div class="num" style="color:#ef4444;">{{ total_favorites_count }}</div>

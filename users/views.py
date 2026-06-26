@@ -1,17 +1,32 @@
+# ==============================================================================
+# Module: users.views
+# Description: User authentication and profile views
+# ==============================================================================
+
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
-from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
+from django.contrib.auth import views as auth_views
 from django import forms
+from django.utils import timezone
+from django.conf import settings
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 from .forms import UserRegistrationForm, UserProfileForm
 from .models import Profile
 from store.models import Order, FavoriteItem
 from store.activity_logger import log_action
 from verification.email_validator import validate_email_deliverability
 
+
+# ════════════════════════════════════════════════════════════════
+# AUTHENTICANTION
+# ════════════════════════════════════════════════════════════════
+_sent_recently = {}
 
 class CustomPasswordResetForm(PasswordResetForm):
     def clean_email(self):
@@ -20,11 +35,25 @@ class CustomPasswordResetForm(PasswordResetForm):
             raise forms.ValidationError('No account found with this email address.')
         return email
 
+    def send_mail(self, subject_template_name, email_template_name, context,
+                  from_email, to_email, html_email_template_name=None):
+        global _sent_recently
+        key = to_email
+        now = timezone.now().timestamp()
+        last = _sent_recently.get(key, 0)
+        if now - last < 60:
+            return
+        _sent_recently[key] = now
+        context['current_year'] = timezone.now().year
+        super().send_mail(subject_template_name, email_template_name, context,
+                          from_email, to_email, html_email_template_name=html_email_template_name)
+
 
 class CustomPasswordResetView(PasswordResetView):
     form_class = CustomPasswordResetForm
     template_name = 'users/password_reset.html'
-    email_template_name = 'users/password_reset_email.html'
+    email_template_name = 'users/password_reset_email.txt'
+    html_email_template_name = 'users/password_reset_email.html'
     subject_template_name = 'users/password_reset_subject.txt'
 
     def form_valid(self, form):
@@ -34,6 +63,7 @@ class CustomPasswordResetView(PasswordResetView):
             local, domain = email.split('@')
             masked = local[:4] + '***' + '@' + domain if len(local) > 4 else local[:1] + '***' + '@' + domain
             self.request.session['password_reset_email'] = masked
+            self.request.session['password_reset_raw_email'] = email
         return super().form_valid(form)
 
 
@@ -44,6 +74,29 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
         ctx = super().get_context_data(**kwargs)
         ctx['masked_email'] = self.request.session.pop('password_reset_email', None)
         return ctx
+
+
+# ════════════════════════════════════════════════════════════════
+# REGISTRATION & LOGIN HANDLERS
+# ════════════════════════════════════════════════════════════════
+
+
+def _send_welcome_email(user):
+    if not user.email:
+        return
+    try:
+        ctx = {
+            'username': user.username,
+            'base_url': settings.BASE_URL,
+            'current_year': timezone.now().year,
+        }
+        html = render_to_string('users/welcome_email.html', ctx)
+        text = render_to_string('users/welcome_email.txt', ctx)
+        subject = render_to_string('users/welcome_subject.txt', ctx).strip()
+        send_mail(subject, text, settings.DEFAULT_FROM_EMAIL, [user.email],
+                  html_message=html)
+    except Exception:
+        pass  # welcome email is best-effort
 
 
 def register(request):
@@ -93,6 +146,9 @@ def register(request):
         user = User.objects.create_user(username=username, email=email, password=password)
         log_action(user, 'user_register', f"New user registered: {username}",
                    {'username': username, 'email': email, 'want_seller': want_seller}, request)
+
+        _send_welcome_email(user)
+
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         if want_seller:
             messages.success(request, "Account created! Let's verify your email first so you can start selling.")
@@ -104,6 +160,10 @@ def register(request):
 
     return render(request, 'users/register.html', {'form': form, 'remembered': remembered_data})
 
+
+# ==============================================================================
+# SECTION: Login
+# ==============================================================================
 
 def user_login(request):
     remembered_username = request.session.get('remembered_username', '')
@@ -130,6 +190,10 @@ def user_login(request):
             messages.error(request, "Invalid username or password.")
     return render(request, 'users/login.html', {'remembered_username': remembered_username})
 
+
+# ==============================================================================
+# SECTION: Profile
+# ==============================================================================
 
 @login_required
 def profile(request):
@@ -205,6 +269,10 @@ def profile(request):
     return render(request, 'users/profile.html', context)
 
 
+# ==============================================================================
+# SECTION: Delete Account
+# ==============================================================================
+
 @login_required
 def delete_account(request):
     if request.method == 'POST':
@@ -222,6 +290,38 @@ def delete_account(request):
         return redirect('home')
     return redirect('profile')
 
+
+# ==============================================================================
+# SECTION: Password Change (Logged-In Users)
+# ==============================================================================
+
+class CustomPasswordChangeView(auth_views.PasswordChangeView):
+    template_name = 'users/password_change.html'
+    success_url = '/profile/'
+
+    def form_valid(self, form):
+        resp = super().form_valid(form)
+        if self.request.user.email:
+            try:
+                ctx = {
+                    'username': self.request.user.username,
+                    'base_url': settings.BASE_URL,
+                    'current_year': timezone.now().year,
+                }
+                html = render_to_string('users/password_changed_email.html', ctx)
+                text = render_to_string('users/password_changed_email.txt', ctx)
+                subject = render_to_string('users/password_changed_subject.txt', ctx).strip()
+                send_mail(subject, text, settings.DEFAULT_FROM_EMAIL,
+                          [self.request.user.email], html_message=html)
+            except Exception:
+                pass
+        messages.success(self.request, "Password changed successfully!")
+        return resp
+
+
+# ==============================================================================
+# SECTION: Logout
+# ==============================================================================
 
 def user_logout(request):
     logout(request)

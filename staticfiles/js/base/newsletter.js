@@ -1,3 +1,12 @@
+// ==============================================================================
+// File: newsletter.js
+// Description: AJAX newsletter subscription with validation and feedback
+// ==============================================================================
+
+// ==============================================================================
+// SECTION: DOM References & Validation
+// ==============================================================================
+
 (function() {
   const form = document.getElementById('ajax-newsletter-form');
   const input = document.getElementById('newsletter-email-input');
@@ -7,10 +16,24 @@
 
   const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
 
+
+
+  // ==============================================================================
+  // SECTION: Input Validation
+  // ==============================================================================
+
   input.addEventListener('input', function() {
     if (errEl) errEl.style.display = 'none';
     input.style.borderColor = '#2a2a2a';
   });
+
+
+
+
+
+  // ==============================================================================
+  // SECTION: Form Submission
+  // ==============================================================================
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();

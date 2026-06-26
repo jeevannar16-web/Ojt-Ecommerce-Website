@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Messages: Conversation Detail (Chat Log, Reply Form)                    -->
+<!-- ========================================================================= -->
 {% extends 'layout/messages_base.html' %}
 {% load static %}
 
@@ -6,29 +9,77 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/messages.css' %}?v=10">
 <style>
-/* === THEMES === */
-[data-theme="dark"] { --bg:#0d0d0d; --card-bg:#121212; --border:#1a1a1a; --text:#f0ece4; --text-sec:#888; --text-muted:#555; --msg-mine:rgba(212,175,55,0.12); --msg-theirs:#1a1a1a; --accent:#d4af37; }
-[data-theme="light"] { --bg:#f5f5f0; --card-bg:#ffffff; --border:#e0ddd5; --text:#1a1a1a; --text-sec:#666; --text-muted:#999; --msg-mine:rgba(212,175,55,0.15); --msg-theirs:#ebebe5; --accent:#b8962e; }
-[data-theme="gold"] { --bg:#1a1508; --card-bg:#221d0e; --border:#3a3020; --text:#f5e6c8; --text-sec:#b8a88a; --text-muted:#6a5d45; --msg-mine:rgba(212,175,55,0.2); --msg-theirs:#2a2212; --accent:#ffd700; }
-[data-theme="ocean"] { --bg:#0a1628; --card-bg:#0e1d33; --border:#1a3050; --text:#c8daf0; --text-sec:#7a9fc0; --text-muted:#4a6a8a; --msg-mine:rgba(64,180,255,0.15); --msg-theirs:#132540; --accent:#40b4ff; }
-[data-theme="purple"] { --bg:#12081c; --card-bg:#1c0e2e; --border:#2e1a4a; --text:#e0c8f0; --text-sec:#a07ac0; --text-muted:#5a3a7a; --msg-mine:rgba(160,80,255,0.15); --msg-theirs:#22143a; --accent:#a050ff; }
+/* Default theme — CSS variables used by structural selectors */
+.md-page { --chat-bg:#0d0d0d; --chat-surface:#121212; --chat-border:rgba(255,255,255,0.05); --chat-text:#f0ece4; --chat-text-sec:#888; --chat-text-muted:#555; --sender-bubble:linear-gradient(135deg,rgba(212,175,55,0.14),rgba(212,175,55,0.04)); --sender-text:#f0ece4; --receiver-bubble:rgba(255,255,255,0.04); --receiver-text:#f0ece4; --accent:#d4af37; --chat-wallpaper:none; position:relative; z-index:1; }
+.md-page .md-top-bar,
+.md-page .md-footer,
+.md-page .md-store-row,
+.md-page .md-pinned-bar,
+.md-page .md-blocked-banner,
+.md-page .md-body { position:relative; z-index:2; }
+.md-page .md-body { background: transparent; }
+/* Wallpaper layer sits between page bg and content */
+.md-page[data-theme]::before {
+  content: ''; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: var(--chat-wallpaper);
+  transition: opacity 0.6s ease;
+}
+.md-page[data-theme] {
+  background: var(--chat-bg);
+  color: var(--chat-text);
+  transition: background 0.4s ease, color 0.3s ease;
+}
+.md-page[data-theme],
+.md-page[data-theme] * { transition: background 0.35s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
+.md-page[data-theme] .md-top-bar,
+.md-page[data-theme] .md-footer,
+.md-page[data-theme] .md-store-row,
+.md-page[data-theme] .md-search-bar,
+.md-page[data-theme] .md-pinned-bar,
+.md-page[data-theme] .md-profile-sidebar,
+.md-page[data-theme] .md-modal { background: var(--chat-surface); }
+.md-page[data-theme] .md-top-name,
+.md-page[data-theme] .s-name { color: var(--chat-text); }
+.md-page[data-theme] .md-other-status,
+.md-page[data-theme] .md-icon-btn,
+.md-page[data-theme] .md-btn-ghost { color: var(--chat-text-sec); }
+.md-page[data-theme] .md-empty,
+.md-page[data-theme] .md-msg-time,
+.md-page[data-theme] .p-status { color: var(--chat-text-muted); }
+.md-page[data-theme] .md-msg-wrap.mine .md-msg { background: var(--sender-bubble); color: var(--sender-text); }
+.md-page[data-theme] .md-msg-wrap.theirs .md-msg { background: var(--receiver-bubble); color: var(--receiver-text); }
+.md-page[data-theme] .md-send-btn { background: var(--accent); }
+.md-page[data-theme] .md-receipt.read { color: var(--accent); }
+.md-page[data-theme] .md-date-divider span { background: var(--chat-bg); }
+.md-page[data-theme] .md-icon-btn:hover { background: var(--receiver-bubble); color: var(--chat-text); }
+/* Message bubble tail corners */
+.md-page[data-theme] .md-msg-wrap.mine .md-msg { border-bottom-right-radius: 4px; }
+.md-page[data-theme] .md-msg-wrap.theirs .md-msg { border-bottom-left-radius: 4px; }
+/* Accent-aware helpers */
+.md-page[data-theme] .md-icon-btn.active { color: var(--accent); }
+.md-page[data-theme] .md-store-row .store-badge .s-name { color: var(--chat-text); }
+.md-page[data-theme] .md-msg-action.pinned { color: var(--accent); }
+.md-page[data-theme] .md-msg-action:hover { color: var(--chat-text); background: var(--receiver-bubble); }
+.md-page[data-theme] .md-msg-time { color: var(--chat-text-muted); }
+.md-page[data-theme] .md-receipt.sent { color: var(--chat-text-muted); }
+.md-page[data-theme] .md-receipt.delivered { color: var(--chat-text-sec); }
+.md-page[data-theme] .md-empty i { color: var(--chat-text-muted); }
+.md-page[data-theme] .md-back { color: var(--chat-text-sec); }
+.md-page[data-theme] .md-back:hover { color: var(--chat-text); }
+.md-page[data-theme] .md-store-row .store-link { color: var(--accent); }
+
+/* ── Glassmorphic receiver bubbles for wallpaper themes ── */
+.md-page[data-theme]:not([data-theme="dark"]):not([data-theme="light"]) .md-msg-wrap.theirs .md-msg {
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid var(--chat-border);
+}
 
 /* === THEME PICKER === */
 .md-emoji-picker { display:none; position:absolute; bottom:100%; right:0; background:var(--card-bg); border:1px solid var(--border); border-radius:12px; padding:8px; box-shadow:0 -8px 32px rgba(0,0,0,0.4); z-index:30; }
 .md-emoji-picker.open { display:flex; gap:4px; flex-wrap:wrap; width:220px; }
 .md-emoji-picker .ep-btn { width:36px; height:36px; border-radius:8px; border:none; background:transparent; font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.1s; }
 .md-emoji-picker .ep-btn:hover { background:var(--msg-theirs); transform:scale(1.15); }
-.md-theme-picker { display:none; position:absolute; top:100%; right:0; background:var(--card-bg); border:1px solid var(--border); border-radius:12px; padding:8px; box-shadow:0 8px 32px rgba(0,0,0,0.4); z-index:30; }
-.md-theme-picker.open { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; width:200px; }
-.md-theme-opt { padding:8px; border-radius:8px; border:2px solid var(--border); cursor:pointer; text-align:center; font-size:0.65rem; color:var(--text-sec); transition:all 0.15s; background:var(--card-bg); }
-.md-theme-opt:hover { border-color:var(--accent); color:var(--text); }
-.md-theme-opt.active { border-color:var(--accent); color:var(--accent); font-weight:600; }
-.md-theme-opt .tp-preview { width:100%; height:20px; border-radius:4px; margin-bottom:4px; }
-.md-theme-opt .tp-preview.dark { background:#0d0d0d; border:1px solid #1a1a1a; }
-.md-theme-opt .tp-preview.light { background:#f5f5f0; border:1px solid #e0ddd5; }
-.md-theme-opt .tp-preview.gold { background:#1a1508; border:1px solid #3a3020; }
-.md-theme-opt .tp-preview.ocean { background:#0a1628; border:1px solid #1a3050; }
-.md-theme-opt .tp-preview.purple { background:#12081c; border:1px solid #2e1a4a; }
 .md-attach-preview { display:none; align-items:center; gap:10px; padding:8px 12px; background:var(--bg); border:1px solid var(--border); border-radius:8px; margin-bottom:6px; }
 .md-attach-preview.open { display:flex; }
 .md-lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:1000; align-items:center; justify-content:center; cursor:zoom-out; }
@@ -77,11 +128,12 @@
 {% endblock %}
 
 {% block content %}
-{% with user_blocked=is_blocked conv_theme=conversation.theme %}
-<div class="md-page" data-theme="{{ conv_theme }}" id="md-page">
+{% with user_blocked=is_blocked %}
+<div class="md-page" id="md-page">
   <!-- TOP BAR — PREMIUM -->
   <div class="md-top-bar">
     <a href="{% url 'store:messages_list' %}" class="md-back"><i class="bi bi-arrow-left"></i></a>
+    <a href="{% url 'home' %}" class="md-home-btn" title="{{ 'Home'|t }}"><i class="bi bi-house-door"></i></a>
     <div class="md-avatar-wrap" onclick="openProfileSidebar()">
       {% if conversation.is_admin_conversation %}
       <i class="bi bi-shield-shaded" style="font-size:1.1rem;"></i>
@@ -135,17 +187,6 @@
       <button class="md-icon-btn call-btn-disabled" title="{{ 'Coming soon'|t }}"><i class="bi bi-camera-video-fill"></i></button>
       {% endif %}
       <button class="md-icon-btn" id="search-toggle" title="{{ 'Search'|t }}"><i class="bi bi-search"></i></button>
-      <div style="position:relative;">
-        <button class="md-icon-btn" id="theme-toggle" title="{{ 'Theme'|t }}"><i class="bi bi-palette"></i></button>
-        <div class="md-theme-picker" id="theme-picker">
-          {% for t_val, t_label in theme_choices %}
-          <div class="md-theme-opt {% if conv_theme == t_val %}active{% endif %}" data-theme="{{ t_val }}">
-            <div class="tp-preview {{ t_val }}"></div>
-            {{ t_label }}
-          </div>
-          {% endfor %}
-        </div>
-      </div>
       <button class="md-icon-btn" id="more-toggle" title="{{ 'More'|t }}"><i class="bi bi-three-dots-vertical"></i></button>
     </div>
   </div>
@@ -435,7 +476,7 @@
 <!-- REPORT MODAL -->
 <div class="md-modal-overlay" id="report-modal">
   <div class="md-modal">
-    <h3><i class="bi bi-flag" style="color:#d4af37;"></i> {{ 'Report Message'|t }}</h3>
+    <h3><i class="bi bi-flag" style="color:var(--accent);"></i> {{ 'Report Message'|t }}</h3>
     <select id="report-reason">
       <option value="Harassment">{{ 'Harassment'|t }}</option>
       <option value="Spam">{{ 'Spam'|t }}</option>
@@ -711,38 +752,6 @@
 
   function escHtml(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
 
-  // === THEME PICKER ===
-  var themeToggle = document.getElementById('theme-toggle');
-  var themePicker = document.getElementById('theme-picker');
-  if(themeToggle){
-    themeToggle.addEventListener('click', function(e){
-      e.stopPropagation();
-      themePicker.classList.toggle('open');
-      document.getElementById('more-menu').style.display = 'none';
-    });
-    themePicker.querySelectorAll('.md-theme-opt').forEach(function(opt){
-      opt.addEventListener('click', function(){
-        var theme = this.dataset.theme;
-        // Apply instantly before API
-        document.getElementById('md-page').dataset.theme = theme;
-        themePicker.querySelectorAll('.md-theme-opt').forEach(function(o){ o.classList.remove('active'); });
-        opt.classList.add('active');
-        // Save to server async
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '{% url "store:api_change_theme" %}', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
-        xhr.send(JSON.stringify({conversation_id: convId, theme: theme}));
-        themePicker.classList.remove('open');
-      });
-    });
-    document.addEventListener('click', function(e){
-      if(!themePicker.contains(e.target) && e.target !== themeToggle && !themeToggle.contains(e.target)){
-        themePicker.classList.remove('open');
-      }
-    });
-  }
-
   // === MORE MENU ===
   var moreToggle = document.getElementById('more-toggle');
   var moreMenu = document.getElementById('more-menu');
@@ -750,7 +759,6 @@
     moreToggle.addEventListener('click', function(e){
       e.stopPropagation();
       moreMenu.style.display = moreMenu.style.display === 'block' ? 'none' : 'block';
-      themePicker.classList.remove('open');
     });
     document.addEventListener('click', function(e){
       if(!moreMenu.contains(e.target) && e.target !== moreToggle && !moreToggle.contains(e.target)){
@@ -1217,7 +1225,12 @@ function showQuickReactions(btn, msgId){
   if(existing){ existing.remove(); return; }
   var picker = document.createElement('div');
   picker.id = 'qr-' + msgId;
-  picker.style.cssText = 'position:absolute;bottom:100%;left:0;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:4px;display:flex;gap:2px;z-index:30;box-shadow:0 -4px 16px rgba(0,0,0,0.3);';
+  var rect = btn.getBoundingClientRect();
+  var pickerW = 260;
+  var left = rect.right - pickerW;
+  if(left < 8) left = 8;
+  if(left + pickerW > window.innerWidth - 8) left = window.innerWidth - pickerW - 8;
+  picker.style.cssText = 'position:fixed;bottom:' + (window.innerHeight - rect.top + 4) + 'px;left:' + left + 'px;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:4px;display:flex;gap:2px;z-index:9999;box-shadow:0 -4px 16px rgba(0,0,0,0.3);';
   ['👍','❤️','😂','😊','😮','😢','🔥','🎉'].forEach(function(e){
     var b = document.createElement('button');
     b.textContent = e;
@@ -1227,8 +1240,7 @@ function showQuickReactions(btn, msgId){
     b.onclick = function(){ reactToMessage(msgId, e); picker.remove(); };
     picker.appendChild(b);
   });
-  var wrap = btn.closest('.md-msg-wrap');
-  wrap.appendChild(picker);
+  document.body.appendChild(picker);
   setTimeout(function(){ document.addEventListener('click', function rm(e){ if(!picker.contains(e.target)){ picker.remove(); document.removeEventListener('click', rm); } }); }, 10);
 }
 

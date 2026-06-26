@@ -1,7 +1,16 @@
+# ==============================================================================
+# Module: verification.admin
+# Description: Admin configuration for verification app
+# ==============================================================================
+
 from django.contrib import admin
 
 from .models import EmailVerification, PhoneVerification
 
+
+# ==============================================================================
+# SECTION: EmailVerification Admin
+# ==============================================================================
 
 @admin.register(EmailVerification)
 class EmailVerificationAdmin(admin.ModelAdmin):
@@ -10,6 +19,10 @@ class EmailVerificationAdmin(admin.ModelAdmin):
     search_fields = ['user__username', 'user__email', 'email']
     readonly_fields = ['token', 'otp']
 
+
+# ==============================================================================
+# SECTION: PhoneVerification Admin
+# ==============================================================================
 
 @admin.register(PhoneVerification)
 class PhoneVerificationAdmin(admin.ModelAdmin):

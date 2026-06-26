@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: verification.views
+# Description: Email and phone verification views
+# ==============================================================================
+
 import json
 
 from django.contrib.auth.decorators import login_required
@@ -11,6 +16,10 @@ from .models import EmailVerification, PhoneVerification
 from .email_service import EmailVerificationService
 from .phone_service import PhoneVerificationService
 
+
+# ==============================================================================
+# SECTION: Verification Setup
+# ==============================================================================
 
 @login_required
 def verification_setup(request):
@@ -97,6 +106,10 @@ def verification_setup(request):
     return render(request, 'verification/setup.html', context)
 
 
+# ==============================================================================
+# SECTION: Email Verification
+# ==============================================================================
+
 @login_required
 def send_email_verification(request):
     if request.method == 'POST':
@@ -141,6 +154,10 @@ def resend_email_verification(request):
         messages.error(request, msg)
     return redirect('profile')
 
+
+# ==============================================================================
+# SECTION: Phone Verification
+# ==============================================================================
 
 @login_required
 def send_phone_verification(request):

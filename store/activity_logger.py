@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: store.activity_logger
+# Description: Activity logging utility
+# ==============================================================================
+
 from .models import ActivityLog
 
 

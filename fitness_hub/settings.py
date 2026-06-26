@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: fitness_hub.settings
+# Description: Django project settings and configuration
+# ==============================================================================
+
 import os
 from dotenv import load_dotenv
 
@@ -6,6 +11,9 @@ from pathlib import Path
 load_dotenv()
 
 
+# ==============================================================================
+# SECTION: Core Settings
+# ==============================================================================
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,6 +29,10 @@ ALLOWED_HOSTS = [
     '.lhr.life',
     '.trycloudflare.com',
 ]
+
+# ==============================================================================
+# SECTION: Installed Apps
+# ==============================================================================
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -46,6 +58,10 @@ INSTALLED_APPS = [
 ]
 
 
+# ==============================================================================
+# SECTION: Middleware
+# ==============================================================================
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -58,6 +74,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# ==============================================================================
+# SECTION: Templates
+# ==============================================================================
 
 ROOT_URLCONF = 'fitness_hub.urls'
 
@@ -81,6 +101,10 @@ TEMPLATES = [
     },
 ]
 
+# ==============================================================================
+# SECTION: Database & Auth
+# ==============================================================================
+
 WSGI_APPLICATION = 'fitness_hub.wsgi.application'
 
 DATABASES = {
@@ -99,6 +123,10 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+# ==============================================================================
+# SECTION: Internationalization & Static Files
+# ==============================================================================
+
 LANGUAGE_CODE = 'en'
 TIME_ZONE = 'Asia/Kathmandu'
 USE_I18N = True
@@ -111,6 +139,10 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# ==============================================================================
+# SECTION: Authentication Settings
+# ==============================================================================
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'home'
@@ -118,7 +150,10 @@ LOGOUT_REDIRECT_URL = 'home'
 
 LOGIN_URL = 'login'
 
-# ── django-allauth ─────────────────────────────────────────────
+
+# ==============================================================================
+# SECTION: django-allauth
+# ==============================================================================
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 ACCOUNT_EMAIL_VERIFICATION = 'none'
@@ -137,7 +172,7 @@ NEVERBOUNCE_API_KEY = os.environ.get('NEVERBOUNCE_API_KEY', '')
 CHECKMAIL_API_KEY = os.environ.get('CHECKMAIL_API_KEY', '')
 MYEMAILVERIFIER_API_KEY = os.environ.get('MYEMAILVERIFIER_API_KEY', '')
 
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -147,8 +182,9 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
-
-
+# ==============================================================================
+# SECTION: CSRF & Sessions
+# ==============================================================================
 
 CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_HTTPONLY = False
@@ -159,16 +195,19 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.trycloudflare.com',
 ]
 
-# Session Configuration
 SESSION_COOKIE_SECURE = False
 SESSION_COOKIE_HTTPONLY = True
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
-# Required when behind Cloudflare Tunnel — it handles TLS and forwards to HTTP
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# Email backend for password reset (prints to terminal in dev)
-EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+
+# ==============================================================================
+# SECTION: Email Configuration
+# ==============================================================================
+
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.filebased.EmailBackend')
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true'
@@ -176,8 +215,13 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@fitnesshub.com')
 BASE_URL = os.environ.get('BASE_URL', 'http://localhost:8000')
+PASSWORD_RESET_TIMEOUT = 300
 
-# SMS / Twilio Configuration
+
+# ==============================================================================
+# SECTION: SMS / Twilio Configuration
+# ==============================================================================
+
 SMS_PROVIDER = os.environ.get('SMS_PROVIDER', 'console')
 TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
 TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN', '')
@@ -186,8 +230,11 @@ TWILIO_VERIFY_SERVICE_SID = os.environ.get('TWILIO_VERIFY_SERVICE_SID', '')
 TWILIO_MESSAGING_SERVICE_SID = os.environ.get('TWILIO_MESSAGING_SERVICE_SID', '')
 DEFAULT_COUNTRY_CODE = os.environ.get('DEFAULT_COUNTRY_CODE', 'US')
 
-# Verification cooldown (seconds before resend)
+
+# ==============================================================================
+# SECTION: Verification Settings
+# ==============================================================================
+
 VERIFICATION_COOLDOWN_MINUTES = int(os.environ.get('VERIFICATION_COOLDOWN_MINUTES', 1))
 
-# Email verification gate — blocks unverified users from accessing pages
 EMAIL_VERIFICATION_REQUIRED = os.environ.get('EMAIL_VERIFICATION_REQUIRED', 'True').lower() == 'true'

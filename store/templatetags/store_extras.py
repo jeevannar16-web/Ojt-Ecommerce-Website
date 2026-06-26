@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: store.templatetags.store_extras
+# Description: Extra template tags for store app
+# ==============================================================================
+
 from django import template
 
 # This variable MUST be named exactly 'register'

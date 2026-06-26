@@ -1,0 +1,14 @@
+{{ subject }}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Hi {% if subscriber_name %}{{ subscriber_name }}{% else %}there{% endif %},
+
+{{ body }}
+
+{% if cta_text and cta_url %}{{ cta_text }}: {{ cta_url }}{% endif %}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+No longer want these emails? Unsubscribe: {{ base_url }}{% url 'store:newsletter_unsubscribe' token=token %}
+
+© {{ current_year }} FitnessHub. All rights reserved.
+This is an automated message — do not reply.

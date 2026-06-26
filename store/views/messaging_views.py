@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: store.views.messaging_views
+# Description: Messaging and chat views
+# ==============================================================================
+
 import json
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -12,6 +17,10 @@ from django.contrib.auth.models import User
 from users.models import Profile
 from django.views.decorators.http import require_POST
 
+
+# ==============================================================================
+# SECTION: Conversation List
+# ==============================================================================
 
 @login_required
 def conversation_list(request):
@@ -126,6 +135,10 @@ def conversation_list(request):
     return render(request, 'store/messages/list.html', base_ctx)
 
 
+# ==============================================================================
+# SECTION: Conversation Detail
+# ==============================================================================
+
 @login_required
 def conversation_detail(request, conversation_id):
     conv = get_object_or_404(Conversation, id=conversation_id)
@@ -219,6 +232,10 @@ def conversation_detail(request, conversation_id):
     return render(request, 'store/messages/detail.html', context)
 
 
+# ==============================================================================
+# SECTION: Start Conversation
+# ==============================================================================
+
 @login_required
 def start_conversation(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -248,6 +265,10 @@ def start_conversation(request, product_id):
 
     return redirect('store:conversation_detail', conversation_id=conv.id)
 
+
+# ==============================================================================
+# SECTION: Contact Admin
+# ==============================================================================
 
 @login_required
 def contact_admin(request):
@@ -281,6 +302,10 @@ def contact_admin(request):
     return redirect('store:conversation_detail', conversation_id=conv.id)
 
 
+# ==============================================================================
+# SECTION: API - Edit Message
+# ==============================================================================
+
 @login_required
 def api_edit_message(request):
     if request.method != 'POST':
@@ -300,6 +325,10 @@ def api_edit_message(request):
     return JsonResponse({'ok': True, 'content': new_content})
 
 
+# ==============================================================================
+# SECTION: API - Unread Count
+# ==============================================================================
+
 @login_required
 def api_unread_count(request):
     user = request.user
@@ -312,6 +341,10 @@ def api_unread_count(request):
     total = sum(c.unread_count(user) for c in conversations)
     return JsonResponse({'unread': total})
 
+
+# ==============================================================================
+# SECTION: API - New Messages
+# ==============================================================================
 
 @login_required
 def api_new_messages(request, conversation_id):
@@ -360,8 +393,12 @@ def api_new_messages(request, conversation_id):
             'is_deleted': m.is_deleted,
             'read_at': None,
         })
-    return JsonResponse({'messages': data, 'now': timezone.now().timestamp()})
+    return JsonResponse({'messages': data, 'now': timezone.now().timestamp(), 'theme': conv.theme})
 
+
+# ==============================================================================
+# SECTION: API - React to Message
+# ==============================================================================
 
 @login_required
 @require_POST
@@ -393,6 +430,10 @@ def api_react_message(request):
     return JsonResponse({'ok': True, 'reactions': reactions})
 
 
+# ==============================================================================
+# SECTION: API - Upload Image
+# ==============================================================================
+
 @login_required
 @require_POST
 def api_upload_image(request):
@@ -423,6 +464,10 @@ def api_upload_image(request):
     })
 
 
+# ==============================================================================
+# SECTION: API - Pin Message
+# ==============================================================================
+
 @login_required
 @require_POST
 def api_pin_message(request):
@@ -437,6 +482,10 @@ def api_pin_message(request):
     msg.save(update_fields=['is_pinned'])
     return JsonResponse({'ok': True, 'is_pinned': msg.is_pinned})
 
+
+# ==============================================================================
+# SECTION: API - Search Messages
+# ==============================================================================
 
 @login_required
 def api_search_messages(request, conversation_id):
@@ -458,6 +507,10 @@ def api_search_messages(request, conversation_id):
         })
     return JsonResponse({'results': data})
 
+
+# ==============================================================================
+# SECTION: Block User
+# ==============================================================================
 
 @login_required
 def block_user(request, conversation_id):
@@ -487,6 +540,10 @@ def block_user(request, conversation_id):
     return redirect('store:conversation_detail', conversation_id=conv.id)
 
 
+# ==============================================================================
+# SECTION: API - Mute Conversation
+# ==============================================================================
+
 @login_required
 @require_POST
 def api_mute_conversation(request):
@@ -500,6 +557,10 @@ def api_mute_conversation(request):
     conv.save(update_fields=['is_muted'])
     return JsonResponse({'ok': True, 'is_muted': conv.is_muted})
 
+
+# ==============================================================================
+# SECTION: API - Change Theme
+# ==============================================================================
 
 @login_required
 @require_POST
@@ -518,6 +579,10 @@ def api_change_theme(request):
     conv.save(update_fields=['theme'])
     return JsonResponse({'ok': True, 'theme': theme})
 
+
+# ==============================================================================
+# SECTION: API - Upload File
+# ==============================================================================
 
 @login_required
 @require_POST
@@ -564,6 +629,10 @@ def api_upload_file(request):
     })
 
 
+# ==============================================================================
+# SECTION: API - Delete Message
+# ==============================================================================
+
 @login_required
 @require_POST
 def api_delete_message(request):
@@ -583,6 +652,10 @@ def api_delete_message(request):
     msg.save(update_fields=['is_deleted', 'content'])
     return JsonResponse({'ok': True, 'scope': scope})
 
+
+# ==============================================================================
+# SECTION: API - Report Message
+# ==============================================================================
 
 @login_required
 @require_POST
@@ -608,6 +681,10 @@ def api_report_message(request):
                {'message_id': msg_id, 'reason': reason}, request)
     return JsonResponse({'ok': True})
 
+
+# ==============================================================================
+# SECTION: API - Online Status
+# ==============================================================================
 
 @login_required
 @require_POST
@@ -664,6 +741,10 @@ def api_online_status(request):
         'status_text': status_text,
     })
 
+
+# ==============================================================================
+# SECTION: API - User Info
+# ==============================================================================
 
 @login_required
 @require_POST
@@ -724,6 +805,10 @@ def api_user_info(request):
     })
 
 
+# ==============================================================================
+# SECTION: API - Start Call
+# ==============================================================================
+
 @login_required
 @require_POST
 def api_start_call(request):
@@ -733,6 +818,10 @@ def api_start_call(request):
         'redirect_url': None,
     })
 
+
+# ==============================================================================
+# SECTION: API - Update Status
+# ==============================================================================
 
 @login_required
 @require_POST
@@ -750,6 +839,10 @@ def api_update_status(request):
     return JsonResponse({'ok': True, 'emoji': emoji, 'text': text})
 
 
+# ==============================================================================
+# SECTION: API - Mark Read
+# ==============================================================================
+
 @login_required
 def api_mark_read(request):
     if request.method != 'POST':
@@ -764,6 +857,10 @@ def api_mark_read(request):
     conv.messages.filter(is_read=False).exclude(sender=user).update(is_read=True)
     return JsonResponse({'ok': True})
 
+
+# ==============================================================================
+# SECTION: API - Delete Conversation
+# ==============================================================================
 
 @login_required
 def api_delete_conversation(request):

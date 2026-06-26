@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: localization.models
+# Description: Language and translation models
+# ==============================================================================
+
 from django.db import models
 from django.core.cache import cache
 from django.conf import settings
@@ -10,6 +15,10 @@ LANGUAGE_CHOICES = [
     ('ko', 'Korean'),
 ]
 
+
+# ==============================================================================
+# SECTION: Language Model
+# ==============================================================================
 
 class Language(models.Model):
     code = models.CharField(max_length=10, unique=True, choices=LANGUAGE_CHOICES)
@@ -25,6 +34,10 @@ class Language(models.Model):
     def __str__(self):
         return f'{self.name} ({self.code})'
 
+
+# ==============================================================================
+# SECTION: Translation Model
+# ==============================================================================
 
 class Translation(models.Model):
     key = models.SlugField(

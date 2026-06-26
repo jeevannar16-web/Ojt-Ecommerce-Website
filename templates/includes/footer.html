@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Include: Site Footer with Map, Newsletter, Links                        -->
+<!-- ========================================================================= -->
 {% load static %}
 <footer class="site-footer">
     <div class="footer-glow-line"></div>
@@ -12,24 +15,15 @@
         <p class="footer-brand-tagline">{{ 'Curated fitness goods, beautifully delivered. Find what moves you.'|t }}</p>
         <div class="footer-socials">
           <a href="https://github.com/jeevannar16-web" target="_blank" rel="noopener noreferrer" class="footer-social-btn" aria-label="GitHub" title="GitHub">
-            <i class="bi bi-github"></i>
+            <i class="bi bi-github" style="font-size:1.4rem;"></i>
           </a>
-          <a href="#" class="footer-social-btn" aria-label="Twitter" title="Twitter">
-            <i class="bi bi-twitter-x"></i>
-          </a>
-          <a href="#" class="footer-social-btn" aria-label="Instagram" title="Instagram">
-            <i class="bi bi-instagram"></i>
-          </a>
-          <a href="#" class="footer-social-btn" aria-label="LinkedIn" title="LinkedIn">
-            <i class="bi bi-linkedin"></i>
-          </a>
-          <a href="#" class="footer-social-btn" aria-label="YouTube" title="YouTube">
-            <i class="bi bi-youtube"></i>
+          <a href="mailto:jeevannar16@gmail.com" class="footer-social-btn" aria-label="Email" title="Email">
+            <i class="bi bi-envelope-fill" style="font-size:1.4rem;"></i>
           </a>
         </div>
       </div>
 
-      <!-- Col 2: Shop — only real working URLs -->
+      <!-- Col 2: Shop Links -->
       <div>
         <div class="footer-col-heading">{{ 'Shop'|t }}</div>
         <ul class="footer-nav-list">
@@ -56,7 +50,7 @@
         </ul>
       </div>
 
-      <!-- Col 3: Account — only real working URLs -->
+      <!-- Col 3: Account Links -->
       <div>
         <div class="footer-col-heading">{{ 'Account'|t }}</div>
         <ul class="footer-nav-list">
@@ -147,9 +141,9 @@
         </p>
       </div>
 
-    </div><!-- /footer-body -->
+    </div>
 
-    <!-- Bottom bar -->
+    <!-- Footer: Bottom Bar -->
     <div class="footer-bottom-bar">
       <p class="footer-copy">© {% now "Y" %} FITNESS HUB. {{ 'All rights reserved.'|t }}</p>
 

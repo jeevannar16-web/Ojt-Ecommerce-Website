@@ -98,8 +98,42 @@ Complete full e-commerce platform with admin dashboard, seller marketplace, prof
 ### In Progress
 - (none)
 
-### Blocked
-- (none)
+## This Session
+
+### Done
+- **Theme removal from chat**: removed theme picker HTML/CSS/JS from both `detail.html` and `customer_detail.html` + `customer_messages.css` (color swatches, theme toggle button, theme polling, CD_THEMES object, applyCdTheme function, data-theme attribute, conv_theme context)
+- **Admin messages clickable rows**: each row in the admin conversation list now links to the conversation detail on click (with `cursor:pointer`, gold left-border on hover, ignores clicks on links/buttons/inputs)
+- **start.sh / start.bat**: simple startup scripts that kill stale process, activate venv, launch dev server on port 8000 (customizable via arg)
+
+## This Session
+### Done
+- **Fully responsive CSS** (`static/css/responsive.css`) — comprehensive Daraz-style mobile/tablet/desktop layout for ALL pages:
+  - **Homepage**: hero stacks, category grid 2-col, horizontal scroll cards shrink (140px), flash sale/mega banner compact, featured grid 2-col, inspire section stacks, all padding reduced
+  - **Product List**: 2-col grid on mobile, sidebar hidden + filter toggle button, sort bar horizontal scroll, compact cards
+  - **Product Detail**: inner layout stacks full-width (override inline `flex-basis`), review section compact, action buttons full-width, qty picker smaller
+  - **Cart**: row wraps with image left, totals full-width, checkout card stacks, delivery search stacks
+  - **Checkout**: steps shrink, form cards compact, summary images smaller, city-grid single column
+  - **Profile**: form single-column, tabs horizontal scroll, order cards stack, favorites 2-col
+  - **Favorites**: 2-col grid, smaller cards, compact buttons
+  - **Order Tracking**: timeline stacks vertically (dots on left), items list single column, padding reduced
+  - **Seller Center**: hero compact, stats grid 2-col, all section padding reduced, benefit/steps stack
+  - **Seller Dashboard**: sidebar becomes horizontal scroll, stat cards 2-col, tables compact, all grids 1-col
+  - **Admin Dashboard**: sidebar becomes horizontal scroll, stat boxes 2-col, tables compact, order status scroll
+  - **Seller Apply**: card padding reduced, form fields compact, actions stack
+  - **Seller Storefront**: header stacks, sidebar becomes horizontal categories, products 2-col
+  - **Messages List**: header/search/tabs compact, rows smaller padding
+  - **Admin Activity Log**: table horizontally scrollable, filter bar compact
+  - **Login/Register**: card padding reduced
+  - **Footer**: collapses to 1-col, newsletter form stacks, navigation compact
+  - **Floating elements**: msg bubble (48px), fn-toggle (40px), toasts narrower
+- **Mobile filter toggle button**: added to `product_list.html` — `.pl-mobile-filter-toggle` with JS toggle for sidebar
+- **Product detail class**: added `.product-detail-inner` for responsive targeting
+- No existing colors/fonts/shadows/borders were changed — only layout properties
+
+### To Note
+- `manage.py check` passes with 0 errors
+- Server at `http://localhost:8000`
+- All responsive overrides in a single `responsive.css` — page-level CSS files untouched
 
 ## Key Decisions
 - Email validation runs ALL services in parallel order; if any says invalid → reject (stricter than "first result wins")
@@ -131,6 +165,7 @@ Complete full e-commerce platform with admin dashboard, seller marketplace, prof
 - Run `./venv/bin/python manage.py check` to verify no issues
 - `.env` has CHECKMAIL_API_KEY and MYEMAILVERIFIER_API_KEY active; NEVERBOUNCE_API_KEY emptied; ZEROBOUNCE_API_KEY empty
 - Server runs on `http://localhost:8000`
+- Quick start: `./start.sh` (Linux) or `start.bat` (Windows)
 - Dev server restart command: `setsid ./venv/bin/python manage.py runserver 0.0.0.0:8000 &>/tmp/django.log &`
 - Cloudflare Tunnel: run `setsid cloudflared tunnel --url http://localhost:8000 &>/tmp/cloudflared.log &` then get URL with `grep -o 'https://[a-z-]*\.trycloudflare\.com' /tmp/cloudflared.log | tail -1`
 - `.trycloudflare.com` added to ALLOWED_HOSTS in settings.py

@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: localization.apps
+# Description: Localization app configuration
+# ==============================================================================
+
 from django.apps import AppConfig
 
 

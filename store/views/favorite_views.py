@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: store.views.favorite_views
+# Description: Favorites/wishlist views
+# ==============================================================================
+
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -6,6 +11,10 @@ from ..models import Product, FavoriteItem
 from ..activity_logger import log_action
 
 
+# ════════════════════════════════════════════════════════════════
+# FAVORITES / WISHLIST MANAGEMENT
+# ════════════════════════════════════════════════════════════════
+@login_required(login_url='/users/login/')
 def toggle_favorite(request, product_id):
     if not request.user.is_authenticated:
         return JsonResponse({
@@ -37,6 +46,10 @@ def toggle_favorite(request, product_id):
         'total_favorites': total_favorites
     })
 
+
+# ==============================================================================
+# SECTION: Favorites List
+# ==============================================================================
 
 @login_required(login_url='/users/login/')
 def favorites_list(request):

@@ -1,3 +1,12 @@
+// ==============================================================================
+// File: navigation.js
+// Description: Dropdown toggles, category navigation scroll with drag support
+// ==============================================================================
+
+// ==============================================================================
+// SECTION: Dropdown Toggle
+// ==============================================================================
+
 (function () {
   /* ── Click-toggle dropdowns (lang + user) — delegated ── */
   function toggleDropdown(btn) {
@@ -18,6 +27,14 @@
       el.classList.remove('open');
     });
   });
+
+
+
+
+
+  // ==============================================================================
+  // SECTION: Category Navigation Scroll
+  // ==============================================================================
 
   const track = document.getElementById('elite-nav-track');
   const inner = document.getElementById('elite-nav-inner');

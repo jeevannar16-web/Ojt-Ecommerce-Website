@@ -1,8 +1,29 @@
+/* ==============================================================================
+   File: base/footer.css
+   Description: Site footer with grid layout, newsletter, and map
+   ============================================================================== */
+
+
+/* ==============================================================================
+   SECTION: Footer Container
+   ============================================================================== */
+
+
+
+
 .site-footer {
   background: #0a0a0a;
   position: relative;
   z-index: 1;
 }
+
+/* ==============================================================================
+   SECTION: Glow Line
+   ============================================================================== */
+
+
+
+
 .footer-glow-line {
   height: 1px;
   background: linear-gradient(90deg,
@@ -21,12 +42,45 @@
   grid-template-columns: 2fr 1fr 1fr 1.8fr;
   gap: 56px;
 }
+.footer-body > div:nth-child(5) {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+}
+.footer-map {
+  width: 100%; aspect-ratio: 2.8 / 1; min-height: 120px; max-height: 200px;
+  border-radius: 10px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.footer-map-addr {
+  font-size: 0.78rem; color: var(--clr-muted); margin-top: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.footer-map-icon { color: var(--clr-accent); }
+@media (max-width: 560px) {
+  .footer-map { aspect-ratio: 3 / 1; min-height: 100px; }
+}
 @media (max-width: 900px) {
   .footer-body { grid-template-columns: 1fr 1fr; gap: 36px; }
 }
 @media (max-width: 560px) {
-  .footer-body { grid-template-columns: 1fr; gap: 32px; }
+  
+/* ==============================================================================
+   SECTION: Footer Body Grid
+   ============================================================================== */
+
+
+
+
+.footer-body { grid-template-columns: 1fr; gap: 32px; }
 }
+
+
+/* ==============================================================================
+   SECTION: Logo and Brand
+   ============================================================================== */
+
+
+
 
 .footer-logo-link {
   display: inline-block;
@@ -65,6 +119,14 @@
   max-width: 230px;
   margin-bottom: 24px;
 }
+
+/* ==============================================================================
+   SECTION: Social Links
+   ============================================================================== */
+
+
+
+
 .footer-socials { display: flex; gap: 8px; }
 .footer-social-btn {
   width: 36px; height: 36px;
@@ -83,6 +145,14 @@
   background: rgba(232,201,126,0.06);
 }
 
+
+/* ==============================================================================
+   SECTION: Column Headings
+   ============================================================================== */
+
+
+
+
 .footer-col-heading {
   font-size: 0.67rem;
   font-weight: 700;
@@ -100,6 +170,14 @@
   height: 1px;
   background: #222;
 }
+
+
+/* ==============================================================================
+   SECTION: Navigation Links
+   ============================================================================== */
+
+
+
 
 .footer-nav-list {
   list-style: none;
@@ -125,6 +203,14 @@
 }
 .footer-nav-list a:hover { color: var(--clr-text); }
 .footer-nav-list a:hover .ft-arrow { opacity: 1; margin-right: 5px; }
+
+
+/* ==============================================================================
+   SECTION: Newsletter
+   ============================================================================== */
+
+
+
 
 .footer-nl-box {
   background: #111;
@@ -185,6 +271,14 @@
   gap: 5px;
 }
 
+
+/* ==============================================================================
+   SECTION: Bottom Bar
+   ============================================================================== */
+
+
+
+
 .footer-bottom-bar {
   max-width: 1200px;
   margin: 52px auto 0;
@@ -217,6 +311,14 @@
   50%      { opacity: 0.4; transform: scale(0.7); }
 }
 .footer-promo strong { color: var(--clr-accent); }
+
+/* ==============================================================================
+   SECTION: Legal Links
+   ============================================================================== */
+
+
+
+
 .footer-legal { display: flex; gap: 20px; }
 .footer-legal a {
   font-size: 0.78rem;

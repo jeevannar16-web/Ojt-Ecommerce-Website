@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: localization.middleware
+# Description: Language detection middleware
+# ==============================================================================
+
 import threading
 
 from django.conf import settings

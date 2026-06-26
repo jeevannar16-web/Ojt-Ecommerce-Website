@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Store: Admin Activity Log (Filter + Paginated Log Table)                 -->
+<!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
 {% load store_filters %}
@@ -10,6 +13,7 @@
 
 {% block content %}
 <div class="admin-layout">
+  <!-- Admin Sidebar -->
   <aside class="admin-sidebar">
     <div class="brand">
       <h2>{{ 'Admin'|t }} <span>{{ 'Panel'|t }}</span></h2>
@@ -35,9 +39,10 @@
     <h1>{{ 'Activity Log'|t }}</h1>
     <p class="page-sub">{{ 'Every user action tracked in real time.'|t }}</p>
 
+    <!-- Filter Bar -->
     <form method="GET" class="filter-bar">
       <label>{{ 'Action'|t }}</label>
-      <select name="action">
+      <select name="action" onchange="this.form.submit()">
         <option value="">{{ 'All Actions'|t }}</option>
         {% for code, label in action_types %}
         <option value="{{ code }}" {% if current_action == code %}selected{% endif %}>{{ label }}</option>

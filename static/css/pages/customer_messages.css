@@ -1,24 +1,45 @@
+/* ==============================================================================
+   File: pages/customer_messages.css
+   Description: Customer messages list and chat detail with premium animations
+   ============================================================================== */
+
 /* ═══════════════════════════════════════════════════════════
    CUSTOMER MESSAGES — Premium Animated Edition
    ═══════════════════════════════════════════════════════════ */
 
 /* ── CUSTOM PROPERTIES ── */
+
+/* ==============================================================================
+   SECTION: Custom Properties
+   ============================================================================== */
+
+
+
+
 :root {
   --cm-bg: #0f0f12;
   --cm-surface: #16161d;
   --cm-border: rgba(255, 255, 255, 0.07);
-  --cm-text: var(--cm-text);
+  --cm-text: #f0ece4;
   --cm-text-sec: #b0a8a0;
   --cm-text-muted: #6a6a7a;
-  --cm-accent: var(--cm-accent);
+  --cm-accent: #d4af37;
   --cm-accent-glow: rgba(212, 175, 55, 0.15);
-  --cm-accent-light: var(--cm-accent-light);
+  --cm-accent-light: rgba(212, 175, 55, 0.08);
   --cm-danger: #ff4757;
-  --cm-online: var(--cm-online);
-  --cm-online-glow: var(--cm-online-glow);
+  --cm-online: #2ecc71;
+  --cm-online-glow: rgba(46, 204, 113, 0.3);
 }
 
 /* ── GLOBAL ANIMATIONS ── */
+
+/* ==============================================================================
+   SECTION: Global Animations
+   ============================================================================== */
+
+
+
+
 @keyframes fadeSlideIn {
   0% { opacity: 0; transform: translateY(12px); }
   100% { opacity: 1; transform: translateY(0); }
@@ -118,6 +139,14 @@
 }
 
 /* ── LAYOUT ── */
+
+/* ==============================================================================
+   SECTION: Page Layout
+   ============================================================================== */
+
+
+
+
 .cm-page {
   position: fixed;
   inset: 0;
@@ -212,6 +241,14 @@ main:has(.cm-page) {
 .cm-shop-btn:hover i {
   animation: iconBounce 0.6s ease infinite;
 }
+.cm-home-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05); color: var(--cm-text-sec);
+  border: 1px solid var(--cm-border); text-decoration: none;
+  transition: border-color 0.2s, color 0.2s; font-size: 1.1rem;
+}
+.cm-home-btn:hover { border-color: rgba(212, 175, 55, 0.35); color: var(--cm-acc); background: rgba(212, 175, 55, 0.06); }
 
 .cm-unread-badge {
   background: var(--cm-accent);
@@ -325,6 +362,14 @@ main:has(.cm-page) {
 }
 
 /* ── LIST ── */
+
+/* ==============================================================================
+   SECTION: Conversation List
+   ============================================================================== */
+
+
+
+
 .cm-list {
   flex: 1;
   min-height: 0;
@@ -423,6 +468,14 @@ main:has(.cm-page) {
   transform: scale(1.1);
 }
 
+
+/* ==============================================================================
+   SECTION: Status Dot
+   ============================================================================== */
+
+
+
+
 .cm-status-dot {
   position: absolute;
   bottom: 0;
@@ -441,6 +494,14 @@ main:has(.cm-page) {
 .cm-status-dot.offline {
   background: var(--cm-text-muted);
 }
+
+
+/* ==============================================================================
+   SECTION: Message Body
+   ============================================================================== */
+
+
+
 
 .cm-body {
   flex: 1;
@@ -487,9 +548,25 @@ main:has(.cm-page) {
   white-space: nowrap;
   transition: all 0.25s ease;
 }
-.cm-row:hover .cm-store-badge {
+.cm-row:hover 
+/* ==============================================================================
+   SECTION: Store Badge
+   ============================================================================== */
+
+
+
+
+.cm-store-badge {
   background: rgba(212, 175, 55, 0.18);
 }
+
+
+/* ==============================================================================
+   SECTION: Top Right
+   ============================================================================== */
+
+
+
 
 .cm-top-right {
   display: flex;
@@ -507,6 +584,14 @@ main:has(.cm-page) {
 .cm-row:hover .cm-time {
   color: var(--cm-text-sec);
 }
+
+
+/* ==============================================================================
+   SECTION: Bottom Row
+   ============================================================================== */
+
+
+
 
 .cm-bottom-row {
   display: flex;
@@ -559,7 +644,15 @@ main:has(.cm-page) {
   animation: badgePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   transition: all 0.25s ease;
 }
-.cm-row:hover .cm-unread {
+.cm-row:hover 
+/* ==============================================================================
+   SECTION: Unread Badge
+   ============================================================================== */
+
+
+
+
+.cm-unread {
   transform: scale(1.12);
   box-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
 }
@@ -698,6 +791,14 @@ main:has(.cm-page) {
 }
 
 
+
+/* ==============================================================================
+   SECTION: Chat Detail Page
+   ============================================================================== */
+
+
+
+
 /* ═══════════════════════════════════════════════════════════
    CUSTOMER CHAT DETAIL — Premium Animated Edition
    ═══════════════════════════════════════════════════════════ */
@@ -747,6 +848,8 @@ main:has(.cm-page) {
 .cd-back:active {
   transform: translateX(0) scale(0.92);
 }
+.cd-home-btn { color: var(--cm-text-sec); font-size: 1.4rem; text-decoration: none; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; margin-left: -2px; }
+.cd-home-btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--cm-acc); }
 
 .cd-avatar-wrap {
   width: 48px;
@@ -911,6 +1014,14 @@ main:has(.cm-page) {
   transform: scale(0.9);
 }
 
+
+/* ==============================================================================
+   SECTION: Store Info Banner
+   ============================================================================== */
+
+
+
+
 /* ── Store Info Banner ── */
 .cd-store-row {
   display: flex;
@@ -989,6 +1100,14 @@ main:has(.cm-page) {
   transform: scale(1.15);
 }
 
+
+/* ==============================================================================
+   SECTION: Search Bar
+   ============================================================================== */
+
+
+
+
 /* ── Search bar ── */
 .cd-search-bar {
   display: none;
@@ -1037,6 +1156,14 @@ main:has(.cm-page) {
   animation: scaleIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+
+/* ==============================================================================
+   SECTION: Pinned Bar
+   ============================================================================== */
+
+
+
+
 /* ── Pinned bar ── */
 .cd-pinned-bar {
   display: none;
@@ -1053,6 +1180,14 @@ main:has(.cm-page) {
   display: flex;
   animation: slideDown 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+
+/* ==============================================================================
+   SECTION: Blocked Banner
+   ============================================================================== */
+
+
+
 
 /* ── Blocked Banner ── */
 .cd-blocked-banner {
@@ -1087,6 +1222,14 @@ main:has(.cm-page) {
   transition: background 0.3s;
 }
 .cd-body::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.12); }
+
+
+/* ==============================================================================
+   SECTION: Date Dividers
+   ============================================================================== */
+
+
+
 
 .cd-date-divider {
   text-align: center;
@@ -1235,6 +1378,14 @@ main:has(.cm-page) {
   transform: translateX(2px);
 }
 
+
+/* ==============================================================================
+   SECTION: Reactions
+   ============================================================================== */
+
+
+
+
 /* ── Reactions ── */
 .cd-msg-reactions {
   display: flex;
@@ -1266,6 +1417,14 @@ main:has(.cm-page) {
   background: rgba(212, 175, 55, 0.1);
   border-color: rgba(212, 175, 55, 0.2);
 }
+
+
+/* ==============================================================================
+   SECTION: Hover Actions
+   ============================================================================== */
+
+
+
 
 /* ── Actions ── */
 .cd-msg-actions {
@@ -1314,6 +1473,14 @@ main:has(.cm-page) {
   color: var(--cm-accent);
 }
 
+
+/* ==============================================================================
+   SECTION: Meta Line
+   ============================================================================== */
+
+
+
+
 /* ── Meta line ── */
 .cd-msg-meta {
   display: flex;
@@ -1338,6 +1505,14 @@ main:has(.cm-page) {
 .cd-receipt.sent { color: var(--cm-text-muted); }
 .cd-receipt.delivered { color: #777; }
 .cd-receipt.read { color: var(--cm-accent); }
+
+
+/* ==============================================================================
+   SECTION: Footer
+   ============================================================================== */
+
+
+
 
 /* ── Footer ── */
 .cd-footer {
@@ -1458,6 +1633,14 @@ main:has(.cm-page) {
   box-shadow: none;
 }
 
+
+/* ==============================================================================
+   SECTION: Emoji Picker
+   ============================================================================== */
+
+
+
+
 /* ── Emoji picker ── */
 .cd-emoji-picker {
   display: none;
@@ -1509,6 +1692,14 @@ main:has(.cm-page) {
   transform: scale(1.2) rotate(-8deg);
 }
 
+
+/* ==============================================================================
+   SECTION: Attach Preview
+   ============================================================================== */
+
+
+
+
 /* ── Attach preview ── */
 .cd-attach-preview {
   display: none;
@@ -1524,6 +1715,14 @@ main:has(.cm-page) {
   display: flex;
   animation: attachSlide 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+
+/* ==============================================================================
+   SECTION: More Menu
+   ============================================================================== */
+
+
+
 
 /* ── More menu ── */
 .cd-more-menu {
@@ -1574,63 +1773,24 @@ main:has(.cm-page) {
   color: #ff6b6b;
 }
 
+
+/* ==============================================================================
+   SECTION: Theme Picker
+   ============================================================================== */
+
+
+
+
 /* ── Theme picker ── */
-.cd-theme-picker {
-  display: none;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: var(--cm-surface);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-  padding: 8px;
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
-  z-index: 30;
-}
-.cd-theme-picker.open {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  width: 180px;
-  animation: scaleIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.cd-theme-opt {
-  padding: 6px;
-  border-radius: 8px;
-  border: 2px solid rgba(255, 255, 255, 0.06);
-  cursor: pointer;
-  text-align: center;
-  font-size: 0.6rem;
-  color: var(--cm-text-sec);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  background: var(--cm-surface);
-}
-.cd-theme-opt:hover {
-  border-color: rgba(212, 175, 55, 0.35);
-  color: var(--cm-text);
-  transform: scale(1.05);
-}
-.cd-theme-opt.active {
-  border-color: var(--cm-accent);
-  color: var(--cm-accent);
-  font-weight: 600;
-  box-shadow: 0 0 16px rgba(212, 175, 55, 0.12);
-}
-.cd-theme-opt .tp-preview {
-  width: 100%;
-  height: 18px;
-  border-radius: 4px;
-  margin-bottom: 3px;
-  transition: all 0.3s;
-}
-.cd-theme-opt:hover .tp-preview {
-  transform: scaleY(1.2);
-}
-.cd-theme-opt .tp-preview.dark { background: var(--cm-bg); border: 1px solid var(--cm-surface); }
-.cd-theme-opt .tp-preview.light { background: #f5f5f0; border: 1px solid #e0ddd5; }
-.cd-theme-opt .tp-preview.gold { background: #1a1508; border: 1px solid #3a3020; }
-.cd-theme-opt .tp-preview.ocean { background: #0a1628; border: 1px solid #1a3050; }
-.cd-theme-opt .tp-preview.purple { background: #12081c; border: 1px solid #2e1a4a; }
+
+
+
+/* ==============================================================================
+   SECTION: Lightbox
+   ============================================================================== */
+
+
+
 
 /* ── Lightbox ── */
 .cd-lightbox {
@@ -1654,6 +1814,14 @@ main:has(.cm-page) {
   border-radius: 12px;
   animation: scaleIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+
+/* ==============================================================================
+   SECTION: Profile Sidebar
+   ============================================================================== */
+
+
+
 
 /* ── Profile Sidebar ── */
 .cd-profile-overlay {
@@ -1685,6 +1853,14 @@ main:has(.cm-page) {
 .cd-profile-sidebar.open {
   right: 0;
 }
+
+
+/* ==============================================================================
+   SECTION: Modals
+   ============================================================================== */
+
+
+
 
 /* ── Modals ── */
 .cd-modal-overlay {
@@ -1808,6 +1984,14 @@ main:has(.cm-page) {
   transform: translateY(-1px);
 }
 
+
+/* ==============================================================================
+   SECTION: Status Picker
+   ============================================================================== */
+
+
+
+
 /* ── Status picker ── */
 .cd-status-picker {
   display: none;
@@ -1911,6 +2095,14 @@ main:has(.cm-page) {
   font-weight: 700;
 }
 
+
+/* ==============================================================================
+   SECTION: Quick Reactions
+   ============================================================================== */
+
+
+
+
 /* ── Quick reactions ── */
 .cd-quick-reactions {
   display: none;
@@ -1947,29 +2139,77 @@ main:has(.cm-page) {
   transform: scale(1.25) rotate(-10deg);
 }
 
+
+/* ==============================================================================
+   SECTION: Responsive
+   ============================================================================== */
+
+
+
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  .cm-header {
+  
+/* ==============================================================================
+   SECTION: Header
+   ============================================================================== */
+
+
+
+
+.cm-header {
     padding: 14px 16px 10px;
   }
   .cm-header h1 {
     font-size: 1.05rem;
   }
-  .cm-search {
+  
+/* ==============================================================================
+   SECTION: Search
+   ============================================================================== */
+
+
+
+
+.cm-search {
     padding: 8px 16px;
   }
-  .cm-tabs {
+  
+/* ==============================================================================
+   SECTION: Tabs
+   ============================================================================== */
+
+
+
+
+.cm-tabs {
     padding: 6px 16px 0;
   }
   .cm-tab {
     padding: 6px 12px;
     font-size: 0.74rem;
   }
-  .cm-row {
+  
+/* ==============================================================================
+   SECTION: Conversation Row
+   ============================================================================== */
+
+
+
+
+.cm-row {
     padding: 12px 14px;
     gap: 11px;
   }
-  .cm-avatar {
+  
+/* ==============================================================================
+   SECTION: Avatar
+   ============================================================================== */
+
+
+
+
+.cm-avatar {
     width: 44px;
     height: 44px;
     font-size: 0.95rem;
@@ -1977,28 +2217,84 @@ main:has(.cm-page) {
   .cm-name {
     font-size: 0.84rem;
   }
-  .cm-preview {
+  
+/* ==============================================================================
+   SECTION: Preview Text
+   ============================================================================== */
+
+
+
+
+.cm-preview {
     font-size: 0.76rem;
   }
-  .cm-empty {
+  
+/* ==============================================================================
+   SECTION: Empty State
+   ============================================================================== */
+
+
+
+
+.cm-empty {
     padding: 40px 16px;
   }
-  .cd-top-bar {
+  
+/* ==============================================================================
+   SECTION: Top Bar
+   ============================================================================== */
+
+
+
+
+.cd-top-bar {
     padding: 10px 14px;
     gap: 10px;
   }
-  .cd-avatar-wrap {
+  
+/* ==============================================================================
+   SECTION: Avatar Wrap
+   ============================================================================== */
+
+
+
+
+.cd-avatar-wrap {
     width: 40px;
     height: 40px;
     font-size: 0.9rem;
   }
-  .cd-body {
+  
+/* ==============================================================================
+   SECTION: Chat Body
+   ============================================================================== */
+
+
+
+
+.cd-body {
     padding: 14px 14px;
   }
-  .cd-msg-wrap {
+  
+/* ==============================================================================
+   SECTION: Message Wrap
+   ============================================================================== */
+
+
+
+
+.cd-msg-wrap {
     max-width: 88%;
   }
-  .cd-msg {
+  
+/* ==============================================================================
+   SECTION: Message Bubble
+   ============================================================================== */
+
+
+
+
+.cd-msg {
     padding: 10px 16px;
     font-size: 0.88rem;
   }

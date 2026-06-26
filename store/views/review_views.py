@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: store.views.review_views
+# Description: Product review views
+# ==============================================================================
+
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -7,6 +12,9 @@ from ..activity_logger import log_action
 from django.db.models import Avg
 
 
+# ════════════════════════════════════════════════════════════════
+# PRODUCT REVIEWS & RATINGS
+# ════════════════════════════════════════════════════════════════
 @login_required
 def submit_review(request, product_id):
     if request.method != 'POST':

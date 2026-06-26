@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Users: Sign In (Minimal, Clean Form)                                     -->
+<!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
 
@@ -5,6 +8,8 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/login.css' %}">
+<link rel="preconnect" href="https://accounts.google.com">
+<link rel="preconnect" href="https://lh3.googleusercontent.com">
 {% endblock %}
 
 {% block content %}

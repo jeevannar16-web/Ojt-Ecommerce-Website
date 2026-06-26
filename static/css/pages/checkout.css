@@ -1,8 +1,29 @@
-    :root {
+/* ==============================================================================
+   File: pages/checkout.css
+   Description: Checkout page with steps, form, map picker, and summary
+   ============================================================================== */
+
+    
+/* ==============================================================================
+   SECTION: Custom Properties
+   ============================================================================== */
+
+
+
+
+:root {
         --dz-orange: #f57224;
         --dz-orange-dark: #e0651a;
     }
-    .checkout-page {
+    
+/* ==============================================================================
+   SECTION: Page Container
+   ============================================================================== */
+
+
+
+
+.checkout-page {
         background: radial-gradient(circle at top, #161616 0%, #0a0a0a 100%);
         min-height: 100vh;
         padding: 40px 0;
@@ -78,7 +99,15 @@
     }
     .card-title-dz i { color: var(--dz-orange); }
 
-    .form-label-dz {
+    
+/* ==============================================================================
+   SECTION: Form Labels
+   ============================================================================== */
+
+
+
+
+.form-label-dz {
         font-size: 0.8rem;
         font-weight: 600;
         color: #aaa;
@@ -87,7 +116,15 @@
     }
     .form-label-dz .required { color: #e63946; margin-left: 2px; }
 
-    .form-control-dz {
+    
+/* ==============================================================================
+   SECTION: Form Controls
+   ============================================================================== */
+
+
+
+
+.form-control-dz {
         border: 1px solid rgba(255,255,255,0.1);
         border-radius: 6px;
         padding: 10px 12px;
@@ -122,7 +159,15 @@
         gap: 12px;
     }
 
-    .summary-item {
+    
+/* ==============================================================================
+   SECTION: Summary Items
+   ============================================================================== */
+
+
+
+
+.summary-item {
         display: flex;
         gap: 12px;
         padding: 12px 0;
@@ -156,7 +201,15 @@
         white-space: nowrap;
     }
 
-    .total-row {
+    
+/* ==============================================================================
+   SECTION: Total Rows
+   ============================================================================== */
+
+
+
+
+.total-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -174,7 +227,15 @@
     }
     .total-row.grand .amount { color: var(--dz-orange); font-size: 1.3rem; }
 
-    .btn-place-order {
+    
+/* ==============================================================================
+   SECTION: Place Order Button
+   ============================================================================== */
+
+
+
+
+.btn-place-order {
         background: var(--dz-orange);
         color: #fff;
         border: none;
@@ -201,7 +262,15 @@
         fill: currentColor;
     }
 
-    .payment-option, .delivery-option {
+    
+/* ==============================================================================
+   SECTION: Option Selectors
+   ============================================================================== */
+
+
+
+
+.payment-option, .delivery-option {
         border: 1px solid rgba(255,255,255,0.08);
         border-radius: 8px;
         padding: 14px 16px;
@@ -236,7 +305,15 @@
         margin-left: auto;
     }
 
-    .msg-box {
+    
+/* ==============================================================================
+   SECTION: Message Boxes
+   ============================================================================== */
+
+
+
+
+.msg-box {
         padding: 12px 16px;
         border-radius: 8px;
         font-size: 0.85rem;
@@ -251,10 +328,26 @@
     .msg-box ul { margin: 4px 0 0 0; padding-left: 18px; }
     .msg-box ul li { margin-bottom: 2px; }
 
-    #checkout-map { z-index: 0; }
+    
+/* ==============================================================================
+   SECTION: Map
+   ============================================================================== */
+
+
+
+
+#checkout-map { z-index: 0; }
     #checkout-map + .leaflet-container { border-radius: 10px; }
 
-    #location-search::-webkit-input-placeholder { color: #555; }
+    
+/* ==============================================================================
+   SECTION: Placeholders
+   ============================================================================== */
+
+
+
+
+#location-search::-webkit-input-placeholder { color: #555; }
     #location-search::-moz-placeholder { color: #555; }
     #location-search:-ms-input-placeholder { color: #555; }
     #location-search::placeholder { color: #555; }
@@ -264,9 +357,41 @@
 
 
 
-    @media (max-width: 768px) {
-        .city-grid { grid-template-columns: 1fr; }
-        .checkout-steps { font-size: 0.7rem; }
+    
+/* ==============================================================================
+   SECTION: Responsive
+   ============================================================================== */
+
+
+
+
+@media (max-width: 768px) {
+        
+/* ==============================================================================
+   SECTION: City Grid
+   ============================================================================== */
+
+
+
+
+.city-grid { grid-template-columns: 1fr; }
+        
+/* ==============================================================================
+   SECTION: Steps Bar
+   ============================================================================== */
+
+
+
+
+.checkout-steps { font-size: 0.7rem; }
         .step-line { width: 20px; margin: 0 4px; }
-        .card-dz { padding: 16px; }
+        
+/* ==============================================================================
+   SECTION: Cards
+   ============================================================================== */
+
+
+
+
+.card-dz { padding: 16px; }
     }

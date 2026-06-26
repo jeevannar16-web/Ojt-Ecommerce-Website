@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: store.views.checkout_views
+# Description: Checkout views
+# ==============================================================================
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -9,6 +14,10 @@ from ..activity_logger import log_action
 from users.models import Profile
 import uuid
 
+
+# ==============================================================================
+# SECTION: Checkout View
+# ==============================================================================
 
 @login_required
 def checkout_view(request):

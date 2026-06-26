@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Store: Checkout (Map, Shipping, Payment, Order Summary)                 -->
+<!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
 
@@ -8,6 +11,7 @@
 {% block content %}
 <div class="checkout-page">
     <div class="checkout-container">
+        <!-- Checkout Steps -->
         <div class="checkout-steps">
             <div class="step-item completed">
                 <span class="step-num">✓</span> {{ 'Cart'|t }}

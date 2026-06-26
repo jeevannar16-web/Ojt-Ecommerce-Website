@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Layout: Messages Base Template (Full-Height Chat UI)                    -->
+<!-- ========================================================================= -->
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE|slice:':2' }}" style="color-scheme:only dark;">
 <head>
@@ -6,17 +9,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>{% block title %}Messages — FITNESS HUB{% endblock %}</title>
 
+  <!-- Head: Fonts, Icons, Favicon -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
   {% load static %}
   <link rel="icon" type="image/jpeg" href="{% static 'images/logo.jpg' %}">
+  <!-- Head: Base CSS -->
   <link rel="stylesheet" href="{% static 'css/base/variables.css' %}?v=7">
   <link rel="stylesheet" href="{% static 'css/base/reset.css' %}?v=7">
   <link rel="stylesheet" href="{% static 'css/base/scrollbar.css' %}?v=7">
 
   {% block extra_css %}{% endblock %}
+  <!-- Head: Messages Layout Overrides -->
   <style>
     html, body {
       margin: 0; padding: 0; height: 100%; overflow: hidden;
@@ -29,9 +35,13 @@
   </style>
 </head>
 <body>
+  <!-- CSRF Token -->
   <div style="display:none;">{% csrf_token %}</div>
+  <!-- Main Content -->
   {% block content %}{% endblock %}
+  <!-- Toast Container -->
   <div id="toast-container" style="position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;"></div>
+  <!-- Scripts: Toast Notification -->
   <script>
   function showToast(msg, type){
     type = type || 'info';
@@ -47,6 +57,7 @@
   <style>
   @keyframes toastIn { from{opacity:0;transform:translateY(-12px);} to{opacity:1;transform:translateY(0);} }
   </style>
+  <!-- Scripts: Page-Level Extra JS -->
   {% block extra_js %}{% endblock %}
 </body>
 </html>

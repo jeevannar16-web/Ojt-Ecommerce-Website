@@ -1,0 +1,14 @@
+Welcome to FitnessHub!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Hi {{ username }},
+
+Your account has been created successfully. We're thrilled to have you on board.
+
+Explore our premium collection, track your orders, and enjoy a seamless shopping experience.
+
+Start shopping: {{ base_url }}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+© {{ current_year }} FitnessHub. All rights reserved.
+This is an automated message — do not reply.

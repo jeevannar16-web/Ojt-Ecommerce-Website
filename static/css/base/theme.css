@@ -1,0 +1,655 @@
+/* ==============================================================================
+   File: theme.css
+   Description: 13 themes — 8 solid dark + 5 animated premium.
+   Uses data-global-theme to avoid conflict with chat messaging themes.
+   Animated themes use CSS gradient animations (zero JS, no performance hit).
+   ============================================================================== */
+
+/* ══════════════════════════════════════════════════════════════════
+   ANIMATION KEYFRAMES
+   ══════════════════════════════════════════════════════════════════ */
+@keyframes gradShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Aurora — Butterfly path + wing flap ──────────────── */
+@keyframes auroraFlutter {
+  0%   { top: 85%; left: -8%; transform: scaleX(0.5) rotate(3deg); }
+  12%  { top: 55%; left: 18%; transform: scaleX(1)   rotate(-2deg); }
+  25%  { top: 30%; left: 35%; transform: scaleX(0.5) rotate(5deg); }
+  37%  { top: 15%; left: 50%; transform: scaleX(1)   rotate(-1deg); }
+  50%  { top: 10%; left: 68%; transform: scaleX(0.5) rotate(-4deg); }
+  62%  { top: 25%; left: 78%; transform: scaleX(1)   rotate(2deg); }
+  75%  { top: 45%; left: 72%; transform: scaleX(0.5) rotate(4deg); }
+  87%  { top: 65%; left: 55%; transform: scaleX(1)   rotate(-2deg); }
+  100% { top: 85%; left: -8%; transform: scaleX(0.5) rotate(3deg); }
+}
+
+/* ── Galaxy — Shooting star streaks ──────────────────── */
+@keyframes shootingStar1 {
+  0%   { top: -10%; left: -10%; opacity: 0; transform: translate(0,0) rotate(-35deg); }
+  5%   { top: -5%;  left: -5%;  opacity: 1; }
+  30%  { top: 40%;  left: 50%;  opacity: 1; }
+  40%  { top: 55%;  left: 70%;  opacity: 0; transform: translate(30px,30px) rotate(-35deg); }
+  100% { top: 55%;  left: 70%;  opacity: 0; }
+}
+
+/* ── Sunset — Bird flight path ───────────────────────── */
+@keyframes birdFly {
+  0%   { top: 30%;  left: -8%;  opacity: 0; }
+  5%   { top: 28%;  left: -4%;  opacity: 1; }
+  25%  { top: 18%;  left: 25%;  opacity: 1; }
+  50%  { top: 12%;  left: 50%;  opacity: 1; }
+  75%  { top: 20%;  left: 75%;  opacity: 1; }
+  95%  { top: 28%;  left: 100%; opacity: 1; }
+  100% { top: 28%;  left: 104%; opacity: 0; }
+}
+/* ── Nebula — Crystal float + rotation ────────────────── */
+@keyframes crystalFloat {
+  0%   { transform: translate(0,0) rotate(0deg) scale(1); opacity: 0; }
+  10%  { opacity: 0.5; }
+  50%  { transform: translate(40px,-60px) rotate(180deg) scale(1.3); opacity: 0.7; }
+  90%  { opacity: 0.3; }
+  100% { transform: translate(80px,-120px) rotate(360deg) scale(0.6); opacity: 0; }
+}
+
+/* ── Starlight — 15-comet shower ─────────────────────── */
+@keyframes cometShower {
+  0%   { transform: translateX(0);    opacity: 0; }
+  2%   { opacity: 0.6; }
+  4%   { opacity: 1; }
+  96%  { opacity: 1; }
+  98%  { opacity: 0.4; }
+  100% { transform: translateX(-200vw); opacity: 0; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   THEME COLOR DEFINITIONS
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Obsidian (default) ────────────────────────────────────── */
+:root, [data-global-theme="obsidian"] {
+  --bg-primary: #08080c;
+  --bg-card: rgba(18,18,24,0.92);
+  --bg-surface: #141416;
+  --bg-input: rgba(255,255,255,0.03);
+  --bg-dropdown: #141416;
+  --text-primary: #f0ece4;
+  --text-secondary: rgba(255,255,255,0.47);
+  --text-muted: rgba(255,255,255,0.24);
+  --border-color: rgba(212,175,55,0.10);
+  --border-input: rgba(255,255,255,0.06);
+  --clr-accent: #d4af37;
+  --shadow-card: 0 32px 96px rgba(0,0,0,0.6);
+}
+
+/* ── 2. Midnight (dark navy) ──────────────────────────────────── */
+[data-global-theme="midnight"] {
+  --bg-primary: #080c1a;
+  --bg-card: rgba(12,18,34,0.94);
+  --bg-surface: #0c1222;
+  --bg-input: rgba(60,120,220,0.04);
+  --bg-dropdown: #0c1222;
+  --text-primary: #e0e8f0;
+  --text-secondary: rgba(200,220,240,0.50);
+  --text-muted: rgba(200,220,240,0.25);
+  --border-color: rgba(80,140,200,0.10);
+  --border-input: rgba(80,140,200,0.08);
+  --clr-accent: #5a9fe0;
+  --shadow-card: 0 32px 96px rgba(0,0,0,0.7);
+}
+
+/* ── 3. Forest (dark green) ───────────────────────────────────── */
+[data-global-theme="forest"] {
+  --bg-primary: #070e08;
+  --bg-card: rgba(10,22,14,0.94);
+  --bg-surface: #0a160e;
+  --bg-input: rgba(60,180,80,0.04);
+  --bg-dropdown: #0a160e;
+  --text-primary: #dce8dc;
+  --text-secondary: rgba(180,220,180,0.48);
+  --text-muted: rgba(180,220,180,0.22);
+  --border-color: rgba(80,180,80,0.10);
+  --border-input: rgba(80,180,80,0.08);
+  --clr-accent: #5abf5a;
+  --shadow-card: 0 32px 96px rgba(0,0,0,0.7);
+}
+
+/* ── 4. Wine (dark burgundy) ──────────────────────────────────── */
+[data-global-theme="wine"] {
+  --bg-primary: #100608;
+  --bg-card: rgba(26,10,14,0.94);
+  --bg-surface: #1a0a0e;
+  --bg-input: rgba(200,60,80,0.04);
+  --bg-dropdown: #1a0a0e;
+  --text-primary: #f0dce0;
+  --text-secondary: rgba(240,180,190,0.48);
+  --text-muted: rgba(240,180,190,0.22);
+  --border-color: rgba(200,80,100,0.10);
+  --border-input: rgba(200,80,100,0.08);
+  --clr-accent: #e06078;
+  --shadow-card: 0 32px 96px rgba(0,0,0,0.7);
+}
+
+/* ── 5. Plum (dark purple) ────────────────────────────────────── */
+[data-global-theme="plum"] {
+  --bg-primary: #0e0614;
+  --bg-card: rgba(20,10,30,0.94);
+  --bg-surface: #140a1e;
+  --bg-input: rgba(140,60,200,0.04);
+  --bg-dropdown: #140a1e;
+  --text-primary: #e8dcee;
+  --text-secondary: rgba(200,160,220,0.48);
+  --text-muted: rgba(200,160,220,0.22);
+  --border-color: rgba(150,80,200,0.10);
+  --border-input: rgba(150,80,200,0.08);
+  --clr-accent: #b070d6;
+  --shadow-card: 0 32px 96px rgba(0,0,0,0.7);
+}
+
+/* ── 6. Slate (dark gray-blue) ────────────────────────────────── */
+[data-global-theme="slate"] {
+  --bg-primary: #0c0e12;
+  --bg-card: rgba(16,18,26,0.94);
+  --bg-surface: #10121a;
+  --bg-input: rgba(160,180,200,0.03);
+  --bg-dropdown: #10121a;
+  --text-primary: #e0e4ea;
+  --text-secondary: rgba(180,190,210,0.50);
+  --text-muted: rgba(180,190,210,0.24);
+  --border-color: rgba(160,180,200,0.08);
+  --border-input: rgba(160,180,200,0.06);
+  --clr-accent: #a0b0c0;
+  --shadow-card: 0 32px 96px rgba(0,0,0,0.6);
+}
+
+/* ── 7. Charcoal (medium dark) ────────────────────────────────── */
+[data-global-theme="charcoal"] {
+  --bg-primary: #14151a;
+  --bg-card: rgba(24,26,34,0.92);
+  --bg-surface: #1a1c24;
+  --bg-input: rgba(255,255,255,0.04);
+  --bg-dropdown: #1a1c24;
+  --text-primary: #e8e4e0;
+  --text-secondary: rgba(200,196,190,0.50);
+  --text-muted: rgba(200,196,190,0.25);
+  --border-color: rgba(200,180,140,0.10);
+  --border-input: rgba(255,255,255,0.07);
+  --clr-accent: #c8a040;
+  --shadow-card: 0 24px 72px rgba(0,0,0,0.5);
+}
+
+/* ── 8. Copper (warm dark brown) ──────────────────────────────── */
+[data-global-theme="copper"] {
+  --bg-primary: #120e0a;
+  --bg-card: rgba(22,18,14,0.94);
+  --bg-surface: #16120e;
+  --bg-input: rgba(200,140,60,0.04);
+  --bg-dropdown: #16120e;
+  --text-primary: #ece4d8;
+  --text-secondary: rgba(220,200,170,0.48);
+  --text-muted: rgba(220,200,170,0.22);
+  --border-color: rgba(200,150,80,0.10);
+  --border-input: rgba(200,150,80,0.08);
+  --clr-accent: #d4883a;
+  --shadow-card: 0 32px 96px rgba(0,0,0,0.6);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ANIMATED PREMIUM THEMES
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── 9. Aurora — Butterfly Meadow ─────────────────────────────────
+   A CSS butterfly flies across the screen with wing-flap over
+   shifting aurora borealis curtains.                             */
+[data-global-theme="aurora"] {
+  --bg-primary: #060a12;
+  --bg-card: rgba(10,14,24,0.90);
+  --bg-surface: #0c101e;
+  --bg-input: rgba(80,220,160,0.04);
+  --bg-dropdown: #0c101e;
+  --text-primary: #e0f0ea;
+  --text-secondary: rgba(160,230,210,0.45);
+  --text-muted: rgba(160,230,210,0.22);
+  --border-color: rgba(80,200,160,0.10);
+  --border-input: rgba(80,200,160,0.08);
+  --clr-accent: #40d0a8;
+  --shadow-card: 0 32px 96px rgba(0,0,0,0.7);
+}
+[data-global-theme="aurora"] body {
+  background: linear-gradient(160deg, #060a12, #08101e, #0a0e20, #060a12);
+  background-size: 400% 400%;
+  animation: gradShift 14s ease infinite;
+}
+[data-global-theme="aurora"] body::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 35% at 30% 25%, rgba(0,220,160,0.10), transparent 60%),
+    radial-gradient(ellipse 55% 40% at 70% 30%, rgba(100,80,240,0.08), transparent 60%),
+    radial-gradient(ellipse 45% 50% at 50% 70%, rgba(0,200,220,0.06), transparent 60%),
+    radial-gradient(ellipse 80% 20% at 20% 60%, rgba(0,255,180,0.04), transparent 50%);
+  animation: gradShift 10s ease-in-out infinite alternate;
+}
+[data-global-theme="aurora"] body::after {
+  content: '';
+  position: fixed;
+  width: 40px; height: 32px;
+  z-index: 5; pointer-events: none;
+  background:
+    /* left upper wing */
+    radial-gradient(ellipse 55% 45% at 30% 35%, rgba(80,230,200,0.55), transparent 80%),
+    /* right upper wing */
+    radial-gradient(ellipse 55% 45% at 70% 35%, rgba(80,230,200,0.55), transparent 80%),
+    /* left lower wing */
+    radial-gradient(ellipse 35% 35% at 25% 70%, rgba(180,120,255,0.30), transparent 75%),
+    /* right lower wing */
+    radial-gradient(ellipse 35% 35% at 75% 70%, rgba(180,120,255,0.30), transparent 75%),
+    /* body */
+    linear-gradient(90deg, transparent 46%, rgba(200,245,255,0.60) 46%, rgba(200,245,255,0.60) 54%, transparent 54%);
+  box-shadow:
+    0 0 8px rgba(80,230,200,0.3),
+    0 0 20px rgba(80,230,200,0.15),
+    0 0 40px rgba(80,230,200,0.08);
+  border-radius: 50%;
+  animation: auroraFlutter 16s ease-in-out infinite;
+}
+
+/* ── 10. Galaxy — Shooting Star Storm ─────────────────────────────
+     Starfield background with twinkling stars and 2 shooting
+     stars that streak across at different angles.               */
+[data-global-theme="galaxy"] {
+  --bg-primary: #04040a;
+  --bg-card: rgba(10,8,20,0.90);
+  --bg-surface: #0a0a16;
+  --bg-input: rgba(120,80,220,0.04);
+  --bg-dropdown: #0a0a16;
+  --text-primary: #e8e0f0;
+  --text-secondary: rgba(200,180,230,0.45);
+  --text-muted: rgba(200,180,230,0.20);
+  --border-color: rgba(120,80,200,0.10);
+  --border-input: rgba(120,80,200,0.08);
+  --clr-accent: #a080e0;
+  --shadow-card: 0 32px 96px rgba(0,0,0,0.8);
+}
+[data-global-theme="galaxy"] body {
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(60,20,120,0.15), transparent),
+    radial-gradient(ellipse 30% 30% at 30% 40%, rgba(100,40,200,0.08), transparent),
+    /* second shooting star trail */
+    linear-gradient(135deg, transparent 40%, rgba(180,160,255,0.06) 42%, rgba(180,160,255,0.02) 44%, transparent 46%),
+    #04040a;
+  background-size: 100% 100%, 100% 100%, 200% 200%;
+  background-position: 0 0, 0 0, 100% 100%;
+  animation: gradShift 12s ease-in-out infinite;
+}
+[data-global-theme="galaxy"] body::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    /* Stars as tiny dots using radial-gradients + box-shadow technique */
+    radial-gradient(1px 1px at 8% 12%,  rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px at 20% 35%, rgba(255,255,255,0.9), transparent),
+    radial-gradient(1.5px 1.5px at 33% 8%,  rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 48% 65%,  rgba(200,180,255,0.7), transparent),
+    radial-gradient(1px 1px at 62% 25%,  rgba(255,255,255,0.6), transparent),
+    radial-gradient(1.5px 1.5px at 78% 50%,  rgba(200,180,255,0.5), transparent),
+    radial-gradient(1px 1px at 12% 72%,  rgba(200,200,255,0.7), transparent),
+    radial-gradient(1px 1px at 55% 82%,  rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 85% 10%, rgba(180,180,255,0.6), transparent),
+    radial-gradient(1.5px 1.5px at 40% 55%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 3% 88%, rgba(200,180,255,0.5), transparent),
+    radial-gradient(1px 1px at 72% 78%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 50% 30%, rgba(220,200,255,0.7), transparent),
+    radial-gradient(1.5px 1.5px at 92% 5%,  rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 25% 50%, rgba(200,180,255,0.5), transparent);
+  animation: gradShift 6s ease-in-out infinite alternate;
+}
+[data-global-theme="galaxy"] body::after {
+  content: '';
+  position: fixed;
+  width: 80px; height: 3px;
+  top: -10%; left: -10%;
+  z-index: 5; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255,220,160,0.8) 20%, rgba(255,200,100,0.4) 50%, transparent);
+  border-radius: 2px;
+  filter: blur(0.5px);
+  box-shadow:
+    0 0 8px rgba(255,200,100,0.5),
+    0 0 24px rgba(255,200,100,0.25);
+  animation: shootingStar1 8s ease-in-out infinite;
+}
+
+
+/* ── 11. Sunset — Firefly Dusk ────────────────────────────────────
+     Warm sunset gradient shifts slowly. Glowing firefly particles
+     float upward like embers, and a bird silhouette flies across. */
+[data-global-theme="sunset"] {
+  --bg-primary: #120804;
+  --bg-card: rgba(22,12,8,0.92);
+  --bg-surface: #18100a;
+  --bg-input: rgba(255,140,60,0.04);
+  --bg-dropdown: #18100a;
+  --text-primary: #f0e4d8;
+  --text-secondary: rgba(240,200,170,0.45);
+  --text-muted: rgba(240,200,170,0.22);
+  --border-color: rgba(255,120,60,0.10);
+  --border-input: rgba(255,120,60,0.08);
+  --clr-accent: #ff6b35;
+  --shadow-card: 0 32px 96px rgba(0,0,0,0.6);
+}
+[data-global-theme="sunset"] body {
+  background: linear-gradient(135deg, #120804, #1a0e06, #1c0c10, #0e0804);
+  background-size: 400% 400%;
+  animation: gradShift 20s ease infinite;
+}
+[data-global-theme="sunset"] body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    /* sun glow */
+    radial-gradient(ellipse 60% 25% at 50% 80%, rgba(255,120,40,0.10), transparent 60%),
+    radial-gradient(ellipse 40% 15% at 50% 78%, rgba(255,200,80,0.06), transparent 50%),
+    /* horizon glow */
+    radial-gradient(ellipse 80% 10% at 50% 90%, rgba(255,80,20,0.05), transparent 60%);
+  animation: gradShift 8s ease-in-out infinite alternate;
+}
+[data-global-theme="sunset"] body::after {
+  content: '';
+  position: fixed;
+  width: 34px; height: 14px;
+  z-index: 5; pointer-events: none;
+  /* V-shaped bird silhouette with shadow */
+  background:
+    /* left wing */
+    linear-gradient(-55deg, transparent 28%, rgba(25,18,10,0.55) 28%, rgba(25,18,10,0.55) 50%, transparent 50%),
+    /* right wing */
+    linear-gradient(55deg, transparent 28%, rgba(25,18,10,0.55) 28%, rgba(25,18,10,0.55) 50%, transparent 50%);
+  filter: drop-shadow(0 0 4px rgba(255,120,40,0.15));
+  animation: birdFly 18s ease-in-out infinite;
+}
+
+/* ── 12. Nebula — Prism Dance ─────────────────────────────────────
+     Cosmic purple nebula clouds. Diamond crystals float upward
+     and rotate with a rainbow shimmer.                            */
+[data-global-theme="nebula"] {
+  --bg-primary: #08040e;
+  --bg-card: rgba(14,8,22,0.92);
+  --bg-surface: #0e0a1a;
+  --bg-input: rgba(160,60,220,0.04);
+  --bg-dropdown: #0e0a1a;
+  --text-primary: #e8dff0;
+  --text-secondary: rgba(200,160,230,0.45);
+  --text-muted: rgba(200,160,230,0.22);
+  --border-color: rgba(160,80,200,0.10);
+  --border-input: rgba(160,80,200,0.08);
+  --clr-accent: #c070e0;
+  --shadow-card: 0 32px 96px rgba(0,0,0,0.7);
+}
+[data-global-theme="nebula"] body {
+  background: linear-gradient(135deg, #08040e, #12081e, #0e0a1c, #08040e);
+  background-size: 400% 400%;
+  animation: gradShift 25s ease infinite;
+}
+[data-global-theme="nebula"] body::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(ellipse 50% 50% at 30% 40%, rgba(160,60,220,0.10), transparent 60%),
+    radial-gradient(ellipse 40% 60% at 70% 60%, rgba(80,40,200,0.08), transparent 60%),
+    radial-gradient(ellipse 60% 30% at 50% 20%, rgba(200,100,240,0.07), transparent 60%);
+}
+[data-global-theme="nebula"] body::after {
+  content: '';
+  position: fixed;
+  width: 24px; height: 24px;
+  bottom: -10%; left: 25%;
+  z-index: 5; pointer-events: none;
+  background: linear-gradient(135deg, rgba(200,120,255,0.5), rgba(120,60,220,0.3), rgba(200,120,255,0.15));
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  box-shadow: 0 0 12px rgba(200,120,255,0.3);
+  animation: crystalFloat 12s ease-in-out infinite;
+}
+
+/* ── 13. Starlight — Golden Comet Shower ──────────────────────────
+     Deep amber base. Golden comets fall diagonally with trailing
+     glow, and sparkle bursts erupt at random intervals.           */
+[data-global-theme="starlight"] {
+  --bg-primary: #0c0806;
+  --bg-card: rgba(18,14,10,0.92);
+  --bg-surface: #14100a;
+  --bg-input: rgba(255,200,100,0.04);
+  --bg-dropdown: #14100a;
+  --text-primary: #f0e8dc;
+  --text-secondary: rgba(240,210,170,0.45);
+  --text-muted: rgba(240,210,170,0.22);
+  --border-color: rgba(255,200,100,0.08);
+  --border-input: rgba(255,200,100,0.07);
+  --clr-accent: #e8c040;
+  --shadow-card: 0 32px 96px rgba(0,0,0,0.6);
+}
+[data-global-theme="starlight"] body {
+  background: linear-gradient(135deg, #0c0806, #141006, #100a0a, #08080a);
+  background-size: 400% 400%;
+  animation: gradShift 30s ease infinite;
+}
+[data-global-theme="starlight"] body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    /* scattered golden sparkle dots */
+    radial-gradient(2px 2px at 15% 25%, rgba(255,220,120,0.5), transparent),
+    radial-gradient(2px 2px at 40% 60%, rgba(255,200,80,0.4), transparent),
+    radial-gradient(1.5px 1.5px at 65% 15%, rgba(255,240,180,0.5), transparent),
+    radial-gradient(2px 2px at 80% 70%, rgba(255,220,120,0.3), transparent),
+    radial-gradient(1.5px 1.5px at 30% 80%, rgba(255,200,80,0.4), transparent),
+    radial-gradient(2px 2px at 55% 40%, rgba(255,240,180,0.3), transparent),
+    radial-gradient(1.5px 1.5px at 90% 35%, rgba(255,220,120,0.5), transparent),
+    radial-gradient(2px 2px at 10% 55%, rgba(255,200,80,0.3), transparent),
+    radial-gradient(1.5px 1.5px at 70% 85%, rgba(255,240,180,0.4), transparent),
+    radial-gradient(2px 2px at 45% 10%, rgba(255,220,120,0.5), transparent);
+  animation: gradShift 8s ease-in-out infinite alternate;
+}
+[data-global-theme="starlight"] body::after {
+  content: '';
+  position: fixed;
+  top: 2%; left: 100vw;
+  width: 55px; height: 3px;
+  z-index: 5; pointer-events: none;
+  /* Single comet trail – head on right, fading tail to left */
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,230,150,0.15) 15px,
+    rgba(255,230,150,0.40) 30px,
+    rgba(255,200,80,0.75) 45px,
+    rgba(255,240,200,0.95) 51px,
+    transparent 55px
+  );
+  border-radius: 2px;
+  filter: blur(0.4px);
+  /* 15 comets staggered vertically via box-shadow copies */
+  box-shadow:
+    0 35px 0   0 rgba(255,230,150,0.55),
+    0 70px 0  -0.5px rgba(255,200,80,0.35),
+    0 105px 0  0 rgba(255,240,180,0.45),
+    0 140px 0 -0.5px rgba(255,210,110,0.55),
+    0 175px 0  0 rgba(255,230,150,0.30),
+    0 210px 0 -0.5px rgba(255,200,80,0.50),
+    0 245px 0  0 rgba(255,240,180,0.35),
+    0 280px 0 -0.5px rgba(255,220,120,0.55),
+    0 315px 0  0 rgba(255,230,150,0.40),
+    0 350px 0 -0.5px rgba(255,200,80,0.60),
+    0 385px 0  0 rgba(255,240,180,0.30),
+    0 420px 0 -0.5px rgba(255,210,110,0.50),
+    0 455px 0  0 rgba(255,230,150,0.45),
+    0 490px 0 -0.5px rgba(255,200,80,0.35),
+    0 525px 0  0 rgba(255,240,180,0.50);
+  animation: cometShower 10s linear infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   STRUCTURAL OVERRIDES (shared across all themes)
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Body + wrappers ──────────────────────────────────────────── */
+[data-global-theme] body { background: var(--bg-primary); }
+[data-global-theme] .auth-wrap,
+[data-global-theme] .admin-layout,
+[data-global-theme] .bc-wrap,
+[data-global-theme] .ms-wrap,
+[data-global-theme] .sd-wrap,
+[data-global-theme] .profile-wrap,
+[data-global-theme] .product-detail-wrap,
+[data-global-theme] .cart-page-wrap,
+[data-global-theme] .checkout-wrap,
+[data-global-theme] .order-tracking-wrap,
+[data-global-theme] .favorites-page-wrap,
+[data-global-theme] .pl-wrap,
+[data-global-theme] .seller-center-wrap,
+[data-global-theme] .messages-wrap,
+[data-global-theme] .footer-map-wrap {
+  background: var(--bg-primary);
+}
+
+/* ── Cards / panels ───────────────────────────────────────────── */
+[data-global-theme] .auth-card,
+[data-global-theme] .bc-card,
+[data-global-theme] .ms-card,
+[data-global-theme] .profile-card,
+[data-global-theme] .product-detail-inner,
+[data-global-theme] .cart-card,
+[data-global-theme] .checkout-card,
+[data-global-theme] .order-card,
+[data-global-theme] .favorites-card,
+[data-global-theme] .pl-card,
+[data-global-theme] .admin-sidebar,
+[data-global-theme] .admin-main .stat-box,
+[data-global-theme] .admin-table-wrap,
+[data-global-theme] .sd-sidebar,
+[data-global-theme] .sd-stat-card,
+[data-global-theme] .sd-table-wrap,
+[data-global-theme] .review-card {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-card);
+  color: var(--text-primary);
+}
+
+/* ── Navigation ───────────────────────────────────────────────── */
+[data-global-theme] .main-nav,
+[data-global-theme] .announcement-bar { background: var(--bg-surface); border-color: var(--border-color); }
+[data-global-theme] .admin-sidebar { background: var(--bg-surface); }
+[data-global-theme] .admin-nav a { color: var(--text-secondary); }
+[data-global-theme] .admin-nav a:hover,
+[data-global-theme] .admin-nav a.active { color: var(--clr-accent); }
+
+/* ── Inputs ───────────────────────────────────────────────────── */
+[data-global-theme] input,
+[data-global-theme] textarea,
+[data-global-theme] select {
+  background: var(--bg-input);
+  border-color: var(--border-input);
+  color: var(--text-primary);
+}
+[data-global-theme] .search-wrap input {
+  background: var(--bg-input);
+  border-color: var(--border-input);
+  color: var(--text-primary);
+}
+[data-global-theme] .search-wrap input::placeholder { color: var(--text-muted); }
+
+/* ── Typography ───────────────────────────────────────────────── */
+[data-global-theme] h1, [data-global-theme] h2, [data-global-theme] h3, [data-global-theme] h4,
+[data-global-theme] .greeting, [data-global-theme] .auth-card h1, [data-global-theme] .section-title { color: var(--text-primary); }
+[data-global-theme] p, [data-global-theme] .text, [data-global-theme] .sent-text,
+[data-global-theme] .sub, [data-global-theme] .lbl, [data-global-theme] td, [data-global-theme] th { color: var(--text-secondary); }
+[data-global-theme] a:not(.btn):not(.auth-btn):not(.submit-btn):not(.action-btn):not(.badge) { color: var(--text-primary); }
+
+/* ── Dropdowns ────────────────────────────────────────────────── */
+[data-global-theme] .user-dropdown .dropdown-content {
+  background: var(--bg-dropdown); border-color: var(--border-color);
+}
+[data-global-theme] .user-dropdown .dropdown-content a,
+[data-global-theme] .user-dropdown .dropdown-content button { color: var(--text-primary); }
+[data-global-theme] .user-dropdown .dropdown-content a:hover,
+[data-global-theme] .user-dropdown .dropdown-content button:hover { background: rgba(128,128,128,0.06); }
+[data-global-theme] .nav-lang-drop,
+[data-global-theme] #search-dropdown,
+[data-global-theme] #mini-cart-dropdown { background: var(--bg-dropdown); border-color: var(--border-color); }
+
+/* ── Mobile nav ───────────────────────────────────────────────── */
+[data-global-theme] .mobile-nav-panel { background: var(--bg-surface); }
+[data-global-theme] .mobile-nav-item { color: var(--text-primary); }
+[data-global-theme] .pl-sidebar-wrap { background: var(--bg-card); border-color: var(--border-color); }
+[data-global-theme] .footer { border-top-color: var(--border-color); }
+[data-global-theme] .btn-seller-center,
+[data-global-theme] .btn-login,
+[data-global-theme] .btn-register { border-color: var(--border-color); color: var(--text-primary); }
+
+/* ── Page-level filter overrides ──────────────────────────────── */
+[data-global-theme] .filter-bar input,
+[data-global-theme] .filter-bar select {
+  background: var(--bg-input) !important;
+  border-color: var(--border-input) !important;
+  color: var(--text-primary) !important;
+}
+[data-global-theme] table th,
+[data-global-theme] table td { border-color: var(--border-color) !important; color: var(--text-secondary) !important; }
+[data-global-theme] .pagination a,
+[data-global-theme] .pagination span { border-color: var(--border-color) !important; color: var(--text-muted) !important; }
+[data-global-theme] .pagination .current { background: rgba(128,128,128,0.08) !important; color: var(--clr-accent) !important; }
+
+/* ── Theme Picker Button (animated to catch attention) ────────── */
+.tp-btn {
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:0 12px;
+  height:40px;
+  background:rgba(212,175,55,0.04);
+  border:1px solid rgba(212,175,55,0.12);
+  border-radius:12px;
+  color:#d4af37;
+  cursor:pointer;
+  transition:all 0.3s;
+  font-family:inherit;
+  font-size:0.78rem;
+  font-weight:600;
+  letter-spacing:0.3px;
+  text-transform:uppercase;
+  animation:tpPulse 3s ease-in-out infinite;
+}
+.tp-btn:hover {
+  background:rgba(212,175,55,0.08);
+  border-color:rgba(212,175,55,0.25);
+  transform:translateY(-1px);
+  animation:none;
+}
+.tp-btn-icon { font-size:1rem; line-height:1; }
+.tp-btn-label { line-height:1; white-space:nowrap; }
+@keyframes tpPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(212,175,55,0); }
+  50% { box-shadow: 0 0 0 4px rgba(212,175,55,0.06); }
+}
+/* ── Theme Picker Dropdown ────────────────────────────────────── */
+.theme-picker-dropdown.open { display: grid !important; }
+.tp-opt {
+  display:flex; align-items:center; gap:7px; padding:8px 10px;
+  border-radius:8px; cursor:pointer; transition:all 0.15s;
+  font-size:0.78rem; color:var(--text-primary,#e0e0e0);
+  position:relative;
+}
+.tp-opt:hover { background:rgba(128,128,128,0.06); }
+.tp-opt.tp-active { background:rgba(212,175,55,0.08); color:var(--clr-accent,#d4af37); font-weight:600; }
+.tp-opt-icon { font-size:0.9rem; line-height:1; width:16px; text-align:center; }
+.tp-opt-label { line-height:1; flex:1; }
+.tp-sep {
+  grid-column:1/-1; font-size:0.65rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:1px; color:rgba(255,255,255,0.2); padding:6px 10px 2px; text-align:center;
+  border-bottom:1px solid rgba(255,255,255,0.04); margin-bottom:2px;
+}
+.tp-opt-swatch {
+  width:14px; height:14px; border-radius:50%; flex-shrink:0;
+  border:1px solid rgba(128,128,128,0.15);
+  box-shadow:0 1px 3px rgba(0,0,0,0.2);
+}

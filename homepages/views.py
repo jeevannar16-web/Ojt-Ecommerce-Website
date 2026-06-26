@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: homepages.views
+# Description: Homepage and static page views
+# ==============================================================================
+
 import random
 import datetime
 from django.shortcuts import render
@@ -6,6 +11,11 @@ from django.db.models import Q, Count, Sum
 from django.views.generic import TemplateView
 from store.models import Product, Category, OrderItem, CartItem
 from users.models import Profile
+
+
+# ==============================================================================
+# SECTION: Home View
+# ==============================================================================
 
 def home(request):
     categories = Category.objects.all()
@@ -228,6 +238,10 @@ def home(request):
     }
     return render(request, 'index.html', context)
 
+
+# ==============================================================================
+# SECTION: Static Pages
+# ==============================================================================
 
 class PrivacyPolicyView(TemplateView):
     template_name = 'homepages/privacy.html'

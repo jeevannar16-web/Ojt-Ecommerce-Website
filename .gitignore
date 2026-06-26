@@ -58,8 +58,8 @@ cover/
 # Django stuff:
 *.log
 local_settings.py
-db.sqlite3
-db.sqlite3-journal
+# db.sqlite3 — tracked in git so clones get full data
+# db.sqlite3-journal
 
 # Flask stuff:
 instance/
@@ -217,3 +217,4 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 .aider*
+sent_emails/

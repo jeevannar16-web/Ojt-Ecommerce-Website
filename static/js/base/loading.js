@@ -1,3 +1,8 @@
+// ==============================================================================
+// File: loading.js
+// Description: Page loader, offline banner, and navigation spinner
+// ==============================================================================
+
 (function () {
   var bar = document.getElementById('page-loader');
   var logo = document.getElementById('loader-logo');
@@ -5,6 +10,10 @@
   if (!bar) return;
 
   var timer = null;
+
+  // ==============================================================================
+  // SECTION: Loader Show/Hide Functions
+  // ==============================================================================
 
   function show() {
     bar.classList.add('active');
@@ -19,10 +28,26 @@
     timer = setTimeout(show, delay || 200);
   }
 
+
+
+
+
+  // ==============================================================================
+  // SECTION: Page Lifecycle Events
+  // ==============================================================================
+
   if (document.readyState === 'loading') show();
   document.addEventListener('DOMContentLoaded', function () { setTimeout(hide, 500); });
   window.addEventListener('beforeunload', show);
   window.addEventListener('pageshow', function (e) { if (e.persisted) setTimeout(hide, 250); });
+
+
+
+
+
+  // ==============================================================================
+  // SECTION: Navigation Click Handler
+  // ==============================================================================
 
   document.addEventListener('click', function (e) {
     var link = e.target.closest('a[href]');
@@ -34,10 +59,26 @@
     showDelayed(250);
   });
 
+
+
+
+
+  // ==============================================================================
+  // SECTION: Form Submit Handler
+  // ==============================================================================
+
   document.addEventListener('submit', function (e) {
     if (e.target.getAttribute('data-no-loader') === 'true') return;
     showDelayed(150);
   });
+
+
+
+
+
+  // ==============================================================================
+  // SECTION: Offline Detection
+  // ==============================================================================
 
   if (navigator.onLine === false && banner) banner.style.display = 'flex';
   window.addEventListener('offline', function () { if (banner) banner.style.display = 'flex'; });

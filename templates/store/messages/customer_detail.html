@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Messages: Customer Conversation Detail (Chat Log, Reply Form)           -->
+<!-- ========================================================================= -->
 {% extends 'layout/messages_base.html' %}
 {% load static %}
 
@@ -6,31 +9,37 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/customer_messages.css' %}?v=2">
 <style>
-/* ── THEMES ── */
-[data-theme="dark"] { --cd-bg:#0d0d0d; --cd-card:#121212; --cd-border:rgba(255,255,255,0.05); --cd-text:#f0ece4; --cd-sec:#888; --cd-muted:#555; --cd-mine:linear-gradient(135deg,rgba(212,175,55,0.12),rgba(212,175,55,0.05)); --cd-theirs:rgba(255,255,255,0.04); --cd-acc:#d4af37; }
-[data-theme="light"] { --cd-bg:#f5f5f0; --cd-card:#ffffff; --cd-border:#e0ddd5; --cd-text:#1a1a1a; --cd-sec:#666; --cd-muted:#999; --cd-mine:linear-gradient(135deg,rgba(212,175,55,0.15),rgba(212,175,55,0.05)); --cd-theirs:#ebebe5; --cd-acc:#b8962e; }
-[data-theme="gold"] { --cd-bg:#1a1508; --cd-card:#221d0e; --cd-border:#3a3020; --cd-text:#f5e6c8; --cd-sec:#b8a88a; --cd-muted:#6a5d45; --cd-mine:linear-gradient(135deg,rgba(212,175,55,0.2),rgba(212,175,55,0.08)); --cd-theirs:#2a2212; --cd-acc:#ffd700; }
-[data-theme="ocean"] { --cd-bg:#0a1628; --cd-card:#0e1d33; --cd-border:#1a3050; --cd-text:#c8daf0; --cd-sec:#7a9fc0; --cd-muted:#4a6a8a; --cd-mine:linear-gradient(135deg,rgba(64,180,255,0.15),rgba(64,180,255,0.05)); --cd-theirs:#132540; --cd-acc:#40b4ff; }
-[data-theme="purple"] { --cd-bg:#12081c; --cd-card:#1c0e2e; --cd-border:#2e1a4a; --cd-text:#e0c8f0; --cd-sec:#a07ac0; --cd-muted:#5a3a7a; --cd-mine:linear-gradient(135deg,rgba(160,80,255,0.15),rgba(160,80,255,0.05)); --cd-theirs:#22143a; --cd-acc:#a050ff; }
-
-.cd-page[data-theme] { background: var(--cd-bg); }
-.cd-top-bar, .cd-store-row, .cd-search-bar, .cd-pinned-bar, .cd-blocked-banner, .cd-footer { background: var(--cd-card); }
-.cd-body { background: var(--cd-bg); }
+/* Default theme — CSS variables used by structural selectors */
+.cd-page { --cd-bg:#0d0d0d; --cd-surface:#121212; --cd-border:rgba(255,255,255,0.05); --cd-text:#f0ece4; --cd-sec:#888; --cd-muted:#555; --cd-mine:linear-gradient(135deg,rgba(212,175,55,0.14),rgba(212,175,55,0.04)); --cd-theirs:rgba(255,255,255,0.04); --cd-acc:#d4af37; --cd-wallpaper:none; position:relative; }
+.cd-page[data-theme] { background: var(--cd-bg); transition: background 0.4s ease; }
+.cd-page[data-theme] * { transition: background 0.35s ease, color 0.25s ease, border-color 0.25s ease; }
+.cd-top-bar, .cd-store-row, .cd-search-bar, .cd-pinned-bar, .cd-blocked-banner, .cd-footer { background: var(--cd-surface); }
+.cd-body { background: transparent; }
 .cd-msg-wrap.mine .cd-msg { background: var(--cd-mine); color: var(--cd-text); }
 .cd-msg-wrap.theirs .cd-msg { background: var(--cd-theirs); color: var(--cd-text); }
 .cd-receipt.read { color: var(--cd-acc); }
 .cd-date-divider span { background: var(--cd-bg); }
 .cd-send-btn { background: var(--cd-acc); }
+/* Wallpaper layer */
+.cd-page[data-theme]::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: var(--cd-wallpaper);
+  transition: opacity 0.6s ease;
+}
+.cd-page .cd-top-bar,
+.cd-page .cd-footer,
+.cd-page .cd-body { position:relative; z-index:1; }
 </style>
 {% endblock %}
 
 {% block content %}
-{% with user_blocked=is_blocked conv_theme=conversation.theme %}
-<div class="cd-page" data-theme="{{ conv_theme }}" id="cd-page">
+{% with user_blocked=is_blocked %}
+<div class="cd-page" id="cd-page">
 
   <!-- ─── TOP BAR ─── -->
   <div class="cd-top-bar">
     <a href="{% url 'store:messages_list' %}" class="cd-back"><i class="bi bi-arrow-left"></i></a>
+    <a href="{% url 'home' %}" class="cd-home-btn" title="{{ 'Home'|t }}"><i class="bi bi-house-door"></i></a>
     <div class="cd-avatar-wrap {% if conversation.is_admin_conversation %}admin{% else %}seller{% endif %}"
          onclick="openProfileSidebar()">
       {% if conversation.is_admin_conversation %}
@@ -74,16 +83,6 @@
       </a>
       <button class="cd-icon-btn" id="search-toggle" title="{{ 'Search'|t }}"><i class="bi bi-search"></i></button>
       <div style="position:relative;">
-        <button class="cd-icon-btn" id="theme-toggle" title="{{ 'Theme'|t }}"><i class="bi bi-palette"></i></button>
-        <div class="cd-theme-picker" id="theme-picker">
-          {% for t_val, t_label in theme_choices %}
-          <div class="cd-theme-opt {% if conv_theme == t_val %}active{% endif %}" data-theme="{{ t_val }}">
-            <div class="tp-preview {{ t_val }}"></div>
-            {{ t_label }}
-          </div>
-          {% endfor %}
-        </div>
-      </div>
       <button class="cd-icon-btn" id="more-toggle" title="{{ 'More'|t }}"><i class="bi bi-three-dots-vertical"></i></button>
     </div>
   </div>
@@ -320,18 +319,18 @@
 
 <style>
 .ps-header { display:flex;align-items:center;gap:10px;padding:16px;border-bottom:1px solid var(--cd-border,rgba(255,255,255,0.06));flex-shrink:0; }
-.ps-header button { width:32px;height:32px;border-radius:8px;border:none;background:transparent;color:#888;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center; }
-.ps-header button:hover { background:rgba(255,255,255,0.04);color:#f0ece4; }
-.ps-header h3 { margin:0;font-size:0.9rem;color:#f0ece4;font-weight:700; }
+.ps-header button { width:32px;height:32px;border-radius:8px;border:none;background:transparent;color:var(--cd-sec,#888);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center; }
+.ps-header button:hover { background:rgba(255,255,255,0.04);color:var(--cd-text,#f0ece4); }
+.ps-header h3 { margin:0;font-size:0.9rem;color:var(--cd-text,#f0ece4);font-weight:700; }
 .ps-body { padding:20px 16px;flex:1; }
-.ps-avatar { width:72px;height:72px;border-radius:50%;background:rgba(212,175,55,0.08);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:#d4af37;font-weight:700;margin:0 auto 12px;border:2px solid rgba(255,255,255,0.06); }
-.ps-name { text-align:center;font-size:1rem;color:#f0ece4;font-weight:700;margin-bottom:4px; }
-.ps-status-line { text-align:center;font-size:0.72rem;color:#555;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:4px; }
-.ps-item { display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06); }
+.ps-avatar { width:72px;height:72px;border-radius:50%;background:rgba(128,128,128,0.08);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--cd-acc,#d4af37);font-weight:700;margin:0 auto 12px;border:2px solid var(--cd-border,rgba(255,255,255,0.06)); }
+.ps-name { text-align:center;font-size:1rem;color:var(--cd-text,#f0ece4);font-weight:700;margin-bottom:4px; }
+.ps-status-line { text-align:center;font-size:0.72rem;color:var(--cd-muted,#555);margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:4px; }
+.ps-item { display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--cd-border,rgba(255,255,255,0.06)); }
 .ps-item:last-child { border-bottom:none; }
-.ps-icon { width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;color:#888;font-size:0.75rem;flex-shrink:0; }
-.ps-label { font-size:0.65rem;color:#555;display:block; }
-.ps-value { font-size:0.82rem;color:#f0ece4;font-weight:500; }
+.ps-icon { width:28px;height:28px;border-radius:6px;background:rgba(128,128,128,0.06);display:flex;align-items:center;justify-content:center;color:var(--cd-sec,#888);font-size:0.75rem;flex-shrink:0; }
+.ps-label { font-size:0.65rem;color:var(--cd-muted,#555);display:block; }
+.ps-value { font-size:0.82rem;color:var(--cd-text,#f0ece4);font-weight:500; }
 .dot.online { background:#2ecc71 !important; }
 </style>
 
@@ -693,25 +692,6 @@
     if(el){ el.scrollIntoView({behavior:'smooth', block:'center'}); el.style.background = 'rgba(212,175,55,0.08)'; el.style.borderRadius = '8px'; setTimeout(function(){ el.style.background = 'none'; }, 2000); }
   }
 
-  /* ── Theme Picker ── */
-  var themeToggle = document.getElementById('theme-toggle');
-  var themePicker = document.getElementById('theme-picker');
-  if(themeToggle) themeToggle.addEventListener('click', function(e){ e.stopPropagation(); themePicker.classList.toggle('open'); });
-
-  document.querySelectorAll('.cd-theme-opt').forEach(function(opt){
-    opt.addEventListener('click', function(){
-      var theme = this.dataset.theme;
-      document.getElementById('cd-page').dataset.theme = theme;
-      document.querySelectorAll('.cd-theme-opt').forEach(function(o){ o.classList.remove('active'); });
-      this.classList.add('active');
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', '{% url "store:api_change_theme" %}', true);
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.setRequestHeader('X-CSRFToken', csrf);
-      xhr.send(JSON.stringify({conversation_id: convId, theme: theme}));
-    });
-  });
-
   /* ── More Menu ── */
   var moreToggle = document.getElementById('more-toggle');
   var moreMenu = document.getElementById('more-menu');
@@ -719,7 +699,6 @@
 
   document.addEventListener('click', function(e){
     if(moreMenu && moreMenu.classList.contains('open') && !moreMenu.contains(e.target) && e.target !== moreToggle) moreMenu.classList.remove('open');
-    if(themePicker && themePicker.classList.contains('open') && !themePicker.contains(e.target) && e.target !== themeToggle) themePicker.classList.remove('open');
   });
 
   /* ── Mute ── */

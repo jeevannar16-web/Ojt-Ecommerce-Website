@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Messages: Conversation List (Tabs, Search, Inbox Rows)                  -->
+<!-- ========================================================================= -->
 {% extends 'layout/messages_base.html' %}
 {% load static %}
 
@@ -19,6 +22,7 @@
   <div class="cl-header">
     <h1><i class="bi bi-chat-dots"></i> {{ 'Messages'|t }}</h1>
     <div class="cl-header-actions">
+      <a href="{% url 'home' %}" class="cl-home-btn" title="{{ 'Home'|t }}"><i class="bi bi-house-door"></i></a>
       {% if unread_total > 0 %}
       <span class="cl-badge">{{ unread_total }}</span>
       {% endif %}

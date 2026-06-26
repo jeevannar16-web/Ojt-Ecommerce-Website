@@ -1,6 +1,15 @@
+# ==============================================================================
+# Module: store.context_processors
+# Description: Global template context processors
+# ==============================================================================
+
 from .models import Product, Category, FavoriteItem, CartItem
 from django.db.models import Sum
 
+
+# ==============================================================================
+# SECTION: Global Context
+# ==============================================================================
 
 def global_context(request):
     categories = Category.objects.all()

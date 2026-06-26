@@ -1,3 +1,16 @@
+/* ==============================================================================
+   File: base/navigation.css
+   Description: Main navigation bar with logo, search, actions, and dropdowns
+   ============================================================================== */
+
+
+/* ==============================================================================
+   SECTION: Main Nav Bar
+   ============================================================================== */
+
+
+
+
 .main-nav {
   position: sticky;
   top: 0;
@@ -12,6 +25,14 @@
   justify-content: space-between;
   padding: 0 2rem;
 }
+
+
+/* ==============================================================================
+   SECTION: Brand and Logo
+   ============================================================================== */
+
+
+
 
 .nav-left-brand { display: flex; align-items: center; gap: 16px; }
 .nav-logo {
@@ -47,6 +68,14 @@
   50% { box-shadow: 0 0 60px rgba(232,201,126,0.18), 0 4px 20px rgba(0,0,0,0.3); }
 }
 
+
+/* ==============================================================================
+   SECTION: Action Icons
+   ============================================================================== */
+
+
+
+
 .nav-actions { display: flex; align-items: center; gap: 12px; }
 .nav-icon-btn {
   background: transparent;
@@ -60,6 +89,14 @@
   position: relative;
 }
 .nav-icon-btn:hover { border-color: var(--clr-accent); color: var(--clr-accent); }
+
+
+/* ==============================================================================
+   SECTION: Auth Buttons
+   ============================================================================== */
+
+
+
 
 .btn-login {
   color: var(--clr-text); text-decoration: none; font-size: 0.88rem; font-weight: 500;
@@ -77,6 +114,14 @@
   border-radius: 50px; transition: all 0.2s;
 }
 .btn-seller-center:hover { background: #d4af37; color: #0d0d0d; }
+
+
+
+
+/* ==============================================================================
+   SECTION: Language Switcher
+   ============================================================================== */
+
 
 
 
@@ -148,6 +193,14 @@
 .nav-lang-opt-flag { font-size: 1.1rem; line-height: 1; }
 .nav-lang-opt-name { flex: 1; }
 .nav-lang-opt-check { margin-left: auto; flex-shrink: 0; color: var(--clr-accent); }
+
+
+/* ==============================================================================
+   SECTION: User Dropdown
+   ============================================================================== */
+
+
+
 
 .user-dropdown { position: relative; display: inline-block; }
 .user-dropdown.open .dropdown-content {

@@ -1,10 +1,31 @@
-  .wishlist-container {
+/* ==============================================================================
+   File: pages/favorites.css
+   Description: Favorites/wishlist page with product grid
+   ============================================================================== */
+
+  
+/* ==============================================================================
+   SECTION: Container
+   ============================================================================== */
+
+
+
+
+.wishlist-container {
     max-width: 1240px;
     margin: 0 auto;
     padding: 40px 2rem 80px 2rem;
   }
   
-  .wishlist-header {
+  
+/* ==============================================================================
+   SECTION: Header
+   ============================================================================== */
+
+
+
+
+.wishlist-header {
     border-bottom: 1px solid var(--clr-border);
     padding-bottom: 16px;
     margin-bottom: 36px;
@@ -23,7 +44,15 @@
     color: var(--clr-accent);
   }
 
-  .wishlist-grid {
+  
+/* ==============================================================================
+   SECTION: Product Grid
+   ============================================================================== */
+
+
+
+
+.wishlist-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 24px;
@@ -31,7 +60,15 @@
   }
 
   /* Product Card Container */
-  .card-product {
+  
+/* ==============================================================================
+   SECTION: Product Card
+   ============================================================================== */
+
+
+
+
+.card-product {
     background: var(--clr-card);
     border: 1px solid var(--clr-border);
     border-radius: var(--radius);
@@ -49,13 +86,29 @@
   }
 
   /* JavaScript Smooth Fade-Out Hook Class */
-  .card-product.removing {
+  
+/* ==============================================================================
+   SECTION: Fade-Out Hook
+   ============================================================================== */
+
+
+
+
+.card-product.removing {
     opacity: 0;
     transform: scale(0.85) translateY(10px);
     pointer-events: none;
   }
 
-  .card-img-wrap {
+  
+/* ==============================================================================
+   SECTION: Image Wrap
+   ============================================================================== */
+
+
+
+
+.card-img-wrap {
     position: relative;
     aspect-ratio: 1;
     background: #111;
@@ -82,7 +135,15 @@
   }
 
   /* ✨ Floating Cross Delete Button Icon Badge */
-  .btn-remove-floating {
+  
+/* ==============================================================================
+   SECTION: Floating Delete Button
+   ============================================================================== */
+
+
+
+
+.btn-remove-floating {
     position: absolute;
     top: 12px;
     right: 12px;
@@ -114,14 +175,30 @@
     box-shadow: 0 6px 16px rgba(220, 38, 38, 0.6);
   }
 
-  .card-body-custom {
+  
+/* ==============================================================================
+   SECTION: Card Body
+   ============================================================================== */
+
+
+
+
+.card-body-custom {
     padding: 16px;
     display: flex;
     flex-direction: column;
     flex: 1;
   }
 
-  .card-category {
+  
+/* ==============================================================================
+   SECTION: Category Label
+   ============================================================================== */
+
+
+
+
+.card-category {
     font-size: 0.7rem;
     font-weight: 600;
     color: var(--clr-accent2);
@@ -129,7 +206,15 @@
     margin-bottom: 6px;
   }
 
-  .card-title-text {
+  
+/* ==============================================================================
+   SECTION: Title
+   ============================================================================== */
+
+
+
+
+.card-title-text {
     font-size: 0.95rem;
     font-weight: 600;
     color: var(--clr-text);
@@ -142,7 +227,15 @@
     height: 2.8em;
   }
 
-  .card-price-row {
+  
+/* ==============================================================================
+   SECTION: Price Row
+   ============================================================================== */
+
+
+
+
+.card-price-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -156,7 +249,15 @@
     font-weight: 700;
   }
 
-  .btn-cart-full {
+  
+/* ==============================================================================
+   SECTION: Cart Button
+   ============================================================================== */
+
+
+
+
+.btn-cart-full {
     background: var(--clr-accent);
     border: none;
     border-radius: 8px;
@@ -176,7 +277,15 @@
     transform: translateY(-1px);
   }
 
-  .wishlist-empty {
+  
+/* ==============================================================================
+   SECTION: Empty State
+   ============================================================================== */
+
+
+
+
+.wishlist-empty {
     text-align: center;
     padding: 80px 2rem;
     background: var(--clr-card);
@@ -187,7 +296,15 @@
     animation: fadeInEmpty 0.5s ease forwards;
   }
 
-  @keyframes fadeInEmpty {
+  
+/* ==============================================================================
+   SECTION: Empty Animation
+   ============================================================================== */
+
+
+
+
+@keyframes fadeInEmpty {
     from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
   }

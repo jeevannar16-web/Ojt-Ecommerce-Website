@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: localization.templatetags.i18n_tags
+# Description: Internationalization template tags
+# ==============================================================================
+
 from django import template
 from django.conf import settings
 
@@ -7,6 +12,10 @@ from localization.middleware import get_current_language
 
 register = template.Library()
 
+
+# ==============================================================================
+# SECTION: Translation Tags
+# ==============================================================================
 
 @register.simple_tag(takes_context=True)
 def trans(context, key, default=None, **params):
@@ -55,6 +64,10 @@ def lang_url(context, target_lang):
 def switch_lang(context, target_lang):
     return lang_url(context, target_lang)
 
+
+# ==============================================================================
+# SECTION: Currency Filter
+# ==============================================================================
 
 @register.filter
 def currency(value, arg=None):

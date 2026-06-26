@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: verification.email_validator
+# Description: Email deliverability validation
+# ==============================================================================
+
 import re
 import logging
 import requests
@@ -5,6 +10,10 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
+
+# ==============================================================================
+# SECTION: DNS MX Check
+# ==============================================================================
 
 def _check_mx(domain):
     try:
@@ -27,6 +36,10 @@ def _check_mx(domain):
         logger.warning(f"MX check failed for {domain}: {e}")
         return True, None
 
+
+# ==============================================================================
+# SECTION: Validation Services Registry
+# ==============================================================================
 
 SERVICES = []
 
@@ -140,6 +153,10 @@ _register_service('NeverBounce', _check_neverbounce)
 _register_service('Check-Mail', _check_checkmail)
 _register_service('MyEmailVerifier', _check_myemailverifier)
 
+
+# ==============================================================================
+# SECTION: Main Validator
+# ==============================================================================
 
 def validate_email_deliverability(email):
     if not email or '@' not in email:

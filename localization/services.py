@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: localization.services
+# Description: Translation service
+# ==============================================================================
+
 from django.conf import settings
 from django.core.cache import cache
 
@@ -5,6 +10,10 @@ from .models import Language, Translation
 
 _cache = {}
 
+
+# ==============================================================================
+# SECTION: Translator Class
+# ==============================================================================
 
 class Translator:
     def __init__(self, language_code=None):

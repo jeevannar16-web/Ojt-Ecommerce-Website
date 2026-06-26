@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Messages: Customer Conversation List (Inbox from Sellers)               -->
+<!-- ========================================================================= -->
 {% extends 'layout/messages_base.html' %}
 {% load static %}
 
@@ -20,6 +23,7 @@
       {% endif %}
     </h1>
     <div class="cm-header-actions">
+      <a href="{% url 'home' %}" class="cm-home-btn" title="{{ 'Home'|t }}"><i class="bi bi-house-door"></i></a>
       <a href="{% url 'store:product_list' %}" class="cm-shop-btn">
         <i class="bi bi-arrow-left"></i> {{ 'Back to Store'|t }}
       </a>

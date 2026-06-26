@@ -1,9 +1,18 @@
+# ==============================================================================
+# Module: localization.context_processors
+# Description: Template context processors for localization
+# ==============================================================================
+
 from django.conf import settings
 
 from .currency import LANG_CURRENCY, convert_price
 from .models import Language, Translation
 from .services import Translator
 
+
+# ==============================================================================
+# SECTION: Localization Context
+# ==============================================================================
 
 def localization_context(request):
     lang_code = getattr(request, 'LANGUAGE_CODE', settings.LANGUAGE_CODE)

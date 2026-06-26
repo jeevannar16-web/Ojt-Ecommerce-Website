@@ -1,0 +1,48 @@
+<!-- ========================================================================= -->
+<!-- Users: Welcome Email (Dark Professional)                                -->
+<!-- ========================================================================= -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Welcome to FitnessHub</title>
+<style>
+body{margin:0;padding:0;background:#08080c;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;-webkit-text-size-adjust:100%}
+.wrap{max-width:520px;margin:0 auto;padding:40px 20px;background:radial-gradient(ellipse at 50% 20%,rgba(232,201,126,0.05),transparent 70%)}
+.card{background:rgba(18,18,24,0.88);border-radius:24px;border:1px solid rgba(232,201,126,0.1);box-shadow:0 0 0 1px rgba(232,201,126,0.03),0 24px 80px rgba(0,0,0,0.6);position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;inset:-1px;border-radius:25px;padding:1px;background:linear-gradient(135deg,rgba(232,201,126,0.12),transparent 30%,transparent 70%,rgba(196,120,58,0.08));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.header{padding:36px 28px 20px;text-align:center}
+.brand{font-size:1.35rem;font-weight:800;background:linear-gradient(135deg,#e8c97e,#d4af37 40%,#c4783a 70%,#e8c97e);background-size:200% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1.5px;text-transform:uppercase;display:inline-flex;align-items:center;gap:10px;animation:shimmer 3s ease-in-out infinite}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.brand::before{content:'🎉';-webkit-text-fill-color:initial;font-size:1.5rem}
+.body{padding:0 28px 24px}
+.greeting{font-size:0.95rem;color:#e0e0e0;font-weight:600;margin:0 0 6px}
+.text{font-size:0.85rem;color:rgba(255,255,255,0.45);line-height:1.7;margin:0 0 24px}
+.btn-cell{text-align:center;margin:0 0 20px}
+.btn{display:inline-block;padding:16px 48px;border-radius:14px;background:linear-gradient(135deg,#e8c97e,#d4af37 50%,#c4783a);color:#08080c;font-size:0.9rem;font-weight:800;text-decoration:none;letter-spacing:0.5px;text-transform:uppercase;box-shadow:0 0 0 1px rgba(232,201,126,0.15),0 4px 24px rgba(232,201,126,0.15)}
+.footer{padding:24px 28px;text-align:center;border-top:1px solid rgba(255,255,255,0.03)}
+.footer small{display:block;color:rgba(255,255,255,0.15);font-size:0.7rem;margin:2px 0}
+.footer .brand-name{color:#c4783a;font-weight:600;opacity:0.7}
+@media(max-width:480px){.wrap{padding:20px 12px}.body,.footer{padding-left:20px!important;padding-right:20px!important}.btn{width:100%;box-sizing:border-box}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="card">
+  <div class="header"><div class="brand">FITNESS HUB</div></div>
+  <div class="body">
+    <div class="greeting">Welcome, {{ username }}!</div>
+    <div class="text">Your account has been created successfully. We're thrilled to have you on board. Explore our premium collection, track your orders, and enjoy a seamless shopping experience.</div>
+    <div class="btn-cell">
+      <a href="{{ base_url }}" class="btn" target="_blank">Start Shopping</a>
+    </div>
+  </div>
+  <div class="footer">
+    <small>© {{ current_year }} <span class="brand-name">FitnessHub</span>. All rights reserved.</small>
+    <small>This is an automated message — do not reply.</small>
+  </div>
+</div>
+</div>
+</body>
+</html>

@@ -1,3 +1,16 @@
+/* ==============================================================================
+   File: base/announcement.css
+   Description: Announcement bar styles
+   ============================================================================== */
+
+
+/* ==============================================================================
+   SECTION: Announcement Bar
+   ============================================================================== */
+
+
+
+
 .announce-bar {
   background: linear-gradient(90deg, var(--clr-accent2), var(--clr-accent), var(--clr-accent2));
   background-size: 200% 100%;
@@ -11,4 +24,12 @@
   text-transform: uppercase;
   z-index: 1001;
 }
+
+/* ==============================================================================
+   SECTION: Shimmer Animation
+   ============================================================================== */
+
+
+
+
 @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }

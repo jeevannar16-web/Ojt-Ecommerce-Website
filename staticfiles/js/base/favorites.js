@@ -1,3 +1,12 @@
+// ==============================================================================
+// File: favorites.js
+// Description: Toggle product favorites with CSRF AJAX and heart animation
+// ==============================================================================
+
+// ==============================================================================
+// SECTION: Toggle Favorite
+// ==============================================================================
+
 function toggleFavorite(event, productId, btn) {
   if (event) event.stopPropagation();
   if (!productId || !btn) return;

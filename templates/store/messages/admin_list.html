@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Messages: Admin Conversation List (Inbox from Sellers)                  -->
+<!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
 
@@ -101,7 +104,7 @@
         </thead>
         <tbody>
           {% for item in conversations %}
-          <tr class="{% if item.unread > 0 %}am-unread{% endif %}" data-type="{% if item.conv.is_admin_conversation %}support{% elif item.conv.product %}product{% else %}general{% endif %}" data-date="{{ item.conv.updated_at|date:'Y-m-d' }}" data-unread="{{ item.unread }}">
+          <tr class="am-clickable {% if item.unread > 0 %}am-unread{% endif %}" data-type="{% if item.conv.is_admin_conversation %}support{% elif item.conv.product %}product{% else %}general{% endif %}" data-date="{{ item.conv.updated_at|date:'Y-m-d' }}" data-unread="{{ item.unread }}" data-href="{% url 'store:conversation_detail' item.conv.id %}">
             <td>
               <div class="am-user-cell">
                 <div class="am-avatar"><i class="bi bi-person"></i></div>
@@ -232,13 +235,17 @@
     if(badge) badge.textContent = count;
   }
 
-  // Quick unread mark on click
-  document.querySelectorAll('.am-action-view').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var row = this.closest('tr');
-      var convId = this.getAttribute('href').match(/\d+/);
+  // Clickable rows — navigate on click (ignore clicks inside <a> / <button>)
+  var rows = document.querySelectorAll('#am-table tbody tr.am-clickable');
+  if(rows.length){
+    rows.forEach(function(row){
+      row.addEventListener('click', function(e){
+        if(e.target.closest('a') || e.target.closest('button') || e.target.closest('input') || e.target.closest('select') || e.target.closest('textarea')) return;
+        var href = this.dataset.href;
+        if(href) window.location.href = href;
+      });
     });
-  });
+  }
 })();
 </script>
 {% endblock %}

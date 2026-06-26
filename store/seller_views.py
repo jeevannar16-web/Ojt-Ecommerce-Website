@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: store.seller_views
+# Description: Seller dashboard and storefront views
+# ==============================================================================
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -9,6 +14,10 @@ from users.models import Profile, CredentialHistory
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 
+
+# ==============================================================================
+# SECTION: Helper Functions
+# ==============================================================================
 
 def _is_seller(user):
     return user.is_superuser or getattr(user, 'profile', None).is_seller
@@ -24,6 +33,10 @@ def _parse_sizes(size_str):
         return []
     return [s.strip() for s in size_str.split(',') if s.strip()]
 
+
+# ==============================================================================
+# SECTION: Seller Center (Public)
+# ==============================================================================
 
 def seller_center(request):
     """Public seller center landing page."""
@@ -70,6 +83,10 @@ def seller_center(request):
         'recent_sellers': recent_sellers,
     })
 
+
+# ==============================================================================
+# SECTION: Seller Apply
+# ==============================================================================
 
 @login_required
 def seller_apply(request):
@@ -155,6 +172,10 @@ def seller_apply(request):
     })
 
 
+# ==============================================================================
+# SECTION: Seller Storefront
+# ==============================================================================
+
 def seller_storefront(request, slug):
     """Public storefront for a seller — Daraz-style."""
     profile = get_object_or_404(Profile, store_slug=slug, is_seller=True)
@@ -196,6 +217,10 @@ def seller_storefront(request, slug):
         'current_search': search,
     })
 
+
+# ==============================================================================
+# SECTION: Seller Dashboard
+# ==============================================================================
 
 @login_required
 def seller_dashboard(request):
@@ -304,6 +329,10 @@ def seller_dashboard(request):
     return render(request, 'store/seller/dashboard.html', context)
 
 
+# ==============================================================================
+# SECTION: Seller Product List
+# ==============================================================================
+
 @login_required
 def seller_product_list(request):
     if not _is_seller(request.user):
@@ -328,6 +357,10 @@ def seller_product_list(request):
         'stock_filter': stock_filter,
     })
 
+
+# ==============================================================================
+# SECTION: Seller Product Add
+# ==============================================================================
 
 @login_required
 def seller_product_add(request):
@@ -393,6 +426,10 @@ def seller_product_add(request):
         'categories': categories,
     })
 
+
+# ==============================================================================
+# SECTION: Seller Product Edit
+# ==============================================================================
 
 @login_required
 def seller_product_edit(request, product_id):
@@ -461,6 +498,10 @@ def seller_product_edit(request, product_id):
     })
 
 
+# ==============================================================================
+# SECTION: Seller Product Delete
+# ==============================================================================
+
 @login_required
 def seller_product_delete(request, product_id):
     if not _is_seller(request.user):
@@ -484,6 +525,10 @@ def seller_product_delete(request, product_id):
         messages.success(request, f"Product '{name}' deleted.")
     return redirect('store:seller_product_list')
 
+
+# ==============================================================================
+# SECTION: Seller Orders
+# ==============================================================================
 
 @login_required
 def seller_orders(request):

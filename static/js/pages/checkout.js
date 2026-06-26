@@ -1,3 +1,12 @@
+// ==============================================================================
+// File: checkout.js
+// Description: Payment/delivery selection, phone validation, form submission
+// ==============================================================================
+
+// ==============================================================================
+// SECTION: Payment Method Selection
+// ==============================================================================
+
 document.querySelectorAll('.payment-option').forEach(function(el) {
     el.addEventListener('click', function() {
         document.querySelectorAll('.payment-option').forEach(function(p) { p.classList.remove('selected'); });
@@ -11,6 +20,15 @@ document.querySelectorAll('input[name="payment_method"]').forEach(function(r) {
         this.closest('.payment-option').classList.add('selected');
     });
 });
+
+
+
+
+
+// ==============================================================================
+// SECTION: Delivery Method Selection
+// ==============================================================================
+
 document.querySelectorAll('.delivery-option').forEach(function(el) {
     el.addEventListener('click', function() {
         document.querySelectorAll('.delivery-option').forEach(function(p) { p.classList.remove('selected'); });
@@ -24,6 +42,14 @@ document.querySelectorAll('input[name="delivery_method"]').forEach(function(r) {
         this.closest('.delivery-option').classList.add('selected');
     });
 });
+
+
+
+
+
+// ==============================================================================
+// SECTION: Phone Validation
+// ==============================================================================
 
 (function() {
     var form = document.getElementById('checkout-form');
@@ -69,6 +95,14 @@ document.querySelectorAll('input[name="delivery_method"]').forEach(function(r) {
         phoneInput.style.borderColor = '#22c55e';
         return true;
     }
+
+
+
+
+
+    // ==============================================================================
+    // SECTION: Form Submission
+    // ==============================================================================
 
     form.addEventListener('submit', function(e) {
         var btn = document.getElementById('place-order-btn');

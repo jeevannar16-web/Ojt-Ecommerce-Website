@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: verification.apps
+# Description: Verification app configuration
+# ==============================================================================
+
 from django.apps import AppConfig
 
 

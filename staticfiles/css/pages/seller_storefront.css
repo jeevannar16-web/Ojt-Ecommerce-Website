@@ -1,9 +1,30 @@
+/* ==============================================================================
+   File: pages/seller_storefront.css
+   Description: Seller storefront with header, sidebar, and product grid
+   ============================================================================== */
+
 /* ═══ SELLER STOREFRONT — Daraz-style ═══ */
+
+/* ==============================================================================
+   SECTION: Wrapper
+   ============================================================================== */
+
+
+
+
 .sf-wrap {
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
 }
+
+/* ==============================================================================
+   SECTION: Header
+   ============================================================================== */
+
+
+
+
 .sf-header {
   position: relative;
   border-radius: 16px;
@@ -103,9 +124,25 @@
 .sf-cat-list a:hover { background: #1a1a1a; color: #f0ece4; }
 .sf-cat-list a.active { background: rgba(212,175,55,0.1); color: #d4af37; font-weight: 600; }
 
+
+/* ==============================================================================
+   SECTION: Main Content
+   ============================================================================== */
+
+
+
+
 .sf-main { flex: 1; min-width: 0; }
 
 /* Toolbar */
+
+/* ==============================================================================
+   SECTION: Toolbar
+   ============================================================================== */
+
+
+
+
 .sf-toolbar {
   display: flex;
   align-items: center;
@@ -237,6 +274,14 @@
 .sf-product-stock.sf-out { color: #ef4444; }
 
 /* Empty state */
+
+/* ==============================================================================
+   SECTION: Empty State
+   ============================================================================== */
+
+
+
+
 .sf-empty {
   text-align: center;
   padding: 60px 20px;
@@ -261,13 +306,53 @@
 }
 .sf-sell-link:hover { background: #d4af37; color: #0d0d0d; }
 
+
+/* ==============================================================================
+   SECTION: Responsive
+   ============================================================================== */
+
+
+
+
 @media (max-width: 768px) {
   .sf-header-content { flex-wrap: wrap; }
-  .sf-sell-link { margin-top: 8px; }
-  .sf-body { flex-direction: column; }
-  .sf-sidebar { width: 100%; }
+  
+/* ==============================================================================
+   SECTION: Sell Link
+   ============================================================================== */
+
+
+
+
+.sf-sell-link { margin-top: 8px; }
+  
+/* ==============================================================================
+   SECTION: Body Layout
+   ============================================================================== */
+
+
+
+
+.sf-body { flex-direction: column; }
+  
+/* ==============================================================================
+   SECTION: Sidebar
+   ============================================================================== */
+
+
+
+
+.sf-sidebar { width: 100%; }
   .sf-cat-list { display: flex; gap: 4px; flex-wrap: wrap; }
   .sf-header-content { flex-direction: column; text-align: center; }
   .sf-store-meta { justify-content: center; }
-  .sf-products { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  
+/* ==============================================================================
+   SECTION: Products Grid
+   ============================================================================== */
+
+
+
+
+.sf-products { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
 }

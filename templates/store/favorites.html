@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Store: Favorites / Wishlist List                                        -->
+<!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
 
@@ -11,6 +14,7 @@
 {% csrf_token %}
 
 <div class="wishlist-container">
+  <!-- Wishlist Header -->
   <div class="wishlist-header">
     <h1>{{ 'My'|t }} <span>{{ 'Wishlist'|t }}</span> <i class="bi bi-heart-fill" style="color: #ef4444; font-size: 1.8rem;"></i></h1>
   </div>

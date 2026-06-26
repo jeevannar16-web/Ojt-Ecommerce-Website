@@ -1,7 +1,20 @@
+/* ==============================================================================
+   File: pages/admin_messages.css
+   Description: Admin messages page with inbox, filters, and table
+   ============================================================================== */
+
 .am-page { flex:1; padding:28px 32px; max-width:1400px; }
 .am-page h1 { font-family:'Playfair Display',serif; font-size:1.5rem; color:#f0ece4; margin:0 0 4px; display:flex; align-items:center; gap:12px; }
 .am-page h1 small { font-size:0.7rem; color:#666; font-weight:400; }
 .am-page .page-sub { color:#666; font-size:0.85rem; margin:0 0 24px; }
+
+
+/* ==============================================================================
+   SECTION: Stats Cards
+   ============================================================================== */
+
+
+
 
 .am-stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px; margin-bottom:24px; }
 .am-stat { background:#121212; border:1px solid #1a1a1a; border-radius:10px; padding:16px; text-align:center; }
@@ -28,24 +41,82 @@
 .am-table td { padding:10px 14px; font-size:0.8rem; color:#bbb; border-bottom:1px solid #181818; vertical-align:middle; }
 .am-table tr:last-child td { border-bottom:none; }
 .am-table tr:hover td { background:#181818; }
+.am-table tr.am-clickable { cursor:pointer; }
+.am-table tr.am-clickable:hover td:first-child { border-left:3px solid #d4af37; padding-left:11px; }
 .am-table tr.am-unread td { border-left:3px solid #d4af37; }
 .am-table tr.am-unread td:first-child { padding-left:11px; }
+
+
+/* ==============================================================================
+   SECTION: User Cell
+   ============================================================================== */
+
+
+
 
 .am-user-cell { display:flex; align-items:center; gap:10px; }
 .am-avatar { width:34px; height:34px; border-radius:50%; background:rgba(212,175,55,0.08); display:flex; align-items:center; justify-content:center; font-size:0.75rem; color:#d4af37; font-weight:700; flex-shrink:0; border:1px solid rgba(212,175,55,0.1); }
 .am-user-info .am-name { color:#f0ece4; font-weight:600; font-size:0.82rem; }
 .am-user-info .am-email { color:#666; font-size:0.68rem; }
 
+
+/* ==============================================================================
+   SECTION: Type Badges
+   ============================================================================== */
+
+
+
+
 .am-type-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:6px; font-size:0.68rem; font-weight:600; }
 .am-type-support { background:rgba(212,175,55,0.08); color:#d4af37; }
 .am-type-product { background:rgba(59,130,246,0.08); color:#3b82f6; }
 
+
+/* ==============================================================================
+   SECTION: Preview Cell
+   ============================================================================== */
+
+
+
+
 .am-preview { max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:0.75rem; color:#666; }
+
+/* ==============================================================================
+   SECTION: Unread Badge
+   ============================================================================== */
+
+
+
+
 .am-unread-badge { display:inline-flex; align-items:center; justify-content:center; min-width:22px; height:22px; padding:0 6px; border-radius:11px; background:#d4af37; color:#0d0d0d; font-size:0.65rem; font-weight:800; }
+
+/* ==============================================================================
+   SECTION: Timestamp
+   ============================================================================== */
+
+
+
+
 .am-time { font-size:0.68rem; color:#555; white-space:nowrap; }
+
+/* ==============================================================================
+   SECTION: Action Buttons
+   ============================================================================== */
+
+
+
+
 .am-action-btn { padding:5px 10px; border-radius:6px; border:none; font-size:0.72rem; font-weight:600; cursor:pointer; transition:all 0.15s; font-family:inherit; text-decoration:none; display:inline-flex; align-items:center; gap:4px; }
 .am-action-view { background:rgba(212,175,55,0.08); color:#d4af37; }
 .am-action-view:hover { background:rgba(212,175,55,0.15); }
+
+
+/* ==============================================================================
+   SECTION: Empty State
+   ============================================================================== */
+
+
+
 
 .am-empty { text-align:center; padding:60px 20px; }
 .am-empty i { font-size:3rem; color:#222; margin-bottom:16px; }
@@ -58,20 +129,68 @@
 .am-empty .cta-secondary { background:#1a1a1a; color:#ccc; border:1px solid #2a2a2a; }
 .am-empty .cta-secondary:hover { border-color:#d4af37; color:#f0ece4; }
 
+
+/* ==============================================================================
+   SECTION: Pagination
+   ============================================================================== */
+
+
+
+
 .am-pagination { display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; border-top:1px solid #1a1a1a; }
 .am-pagination .page-btn { padding:6px 12px; border-radius:6px; border:1px solid #2a2a2a; background:#121212; color:#888; font-size:0.75rem; font-weight:600; cursor:pointer; text-decoration:none; transition:all 0.15s; }
 .am-pagination .page-btn:hover { border-color:#d4af37; color:#f0ece4; }
 .am-pagination .page-btn.active { background:rgba(212,175,55,0.08); border-color:#d4af37; color:#d4af37; }
 .am-pagination .page-info { color:#555; font-size:0.75rem; }
 
+
+/* ==============================================================================
+   SECTION: Seller Info
+   ============================================================================== */
+
+
+
+
 .am-seller-info { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
 .am-seller-info .store-tag { background:rgba(212,175,55,0.06); color:#d4af37; font-size:0.65rem; padding:1px 6px; border-radius:4px; font-weight:600; }
 
+
+/* ==============================================================================
+   SECTION: Responsive
+   ============================================================================== */
+
+
+
+
 @media(max-width:900px){
-  .am-page { padding:20px 16px; }
-  .am-table-wrap { overflow-x:auto; }
+  
+/* ==============================================================================
+   SECTION: Page Layout
+   ============================================================================== */
+
+
+
+
+.am-page { padding:20px 16px; }
+  
+/* ==============================================================================
+   SECTION: Table Wrapper
+   ============================================================================== */
+
+
+
+
+.am-table-wrap { overflow-x:auto; }
   .am-table { min-width:700px; }
-  .am-toolbar { flex-direction:column; align-items:stretch; }
+  
+/* ==============================================================================
+   SECTION: Toolbar
+   ============================================================================== */
+
+
+
+
+.am-toolbar { flex-direction:column; align-items:stretch; }
   .am-search-wrap { min-width:auto; }
   .am-filter-tabs { overflow-x:auto; }
 }

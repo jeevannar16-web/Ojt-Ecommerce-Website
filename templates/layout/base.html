@@ -1,11 +1,16 @@
+<!-- ========================================================================= -->
+<!-- Layout: Base HTML Template                                               -->
+<!-- ========================================================================= -->
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE|slice:':2' }}" style="color-scheme:only dark;">
 <head>
   <meta name="color-scheme" content="only dark">
+  <script>(function(){var t=localStorage.getItem('fitnesshub_theme');if(t&&t!=='system'&&t!=='obsidian'){document.documentElement.setAttribute('data-global-theme',t)}})()</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>{% block title %}FITNESS HUB{% endblock %}</title>
 
+  <!-- Head: Fonts, Icons, Leaflet -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -13,10 +18,12 @@
 
   {% load static %}
   <link rel="icon" type="image/jpeg" href="{% static 'images/logo.jpg' %}">
+  <!-- Head: Base CSS -->
   <link rel="stylesheet" href="{% static 'css/base/loading.css' %}?v=7">
   <link rel="stylesheet" href="{% static 'css/base/variables.css' %}?v=7">
   <link rel="stylesheet" href="{% static 'css/base/reset.css' %}?v=7">
   <link rel="stylesheet" href="{% static 'css/base/scrollbar.css' %}?v=7">
+  <link rel="stylesheet" href="{% static 'css/base/theme.css' %}?v=1">
   <link rel="stylesheet" href="{% static 'css/base/announcement.css' %}?v=7">
   <link rel="stylesheet" href="{% static 'css/base/navigation.css' %}?v=7">
   <link rel="stylesheet" href="{% static 'css/base/category_nav.css' %}?v=7">
@@ -25,38 +32,50 @@
   <link rel="stylesheet" href="{% static 'css/base/back_to_top.css' %}?v=7">
   <link rel="stylesheet" href="{% static 'css/base/map_common.css' %}?v=7">
   <link rel="stylesheet" href="{% static 'css/base/search.css' %}?v=7">
+  <link rel="stylesheet" href="{% static 'css/responsive.css' %}?v=1">
 
   {% block extra_css %}{% endblock %}
 </head>
 <body>
 
+  <!-- Pre-Header: Cookie Consent -->
   {% include 'includes/cookie_consent.html' %}
 
+  <!-- Pre-Header: Page Loader -->
   <div id="page-loader" class="page-loader"></div>
   <div id="loader-logo" class="loader-floating-logo">
     <img src="{% static 'images/logo.jpg' %}" alt="" class="loader-floating-img">
     <div class="loader-floating-ring"></div>
   </div>
 
+  <!-- Pre-Header: Offline Banner -->
   <div id="offline-banner" class="offline-banner" style="display:none;">
     <i class="bi bi-wifi-off"></i>
     <span>{{ 'You are offline. Some features may be unavailable.'|t }}</span>
   </div>
 
+  <!-- Header: Announcement Bar -->
   {% include 'includes/announcement_bar.html' %}
+  <!-- Header: Main Navigation -->
   {% include 'includes/header.html' %}
+  <!-- Header: Category Navigation -->
   {% include 'includes/category_nav.html' %}
+  <!-- Header: Messages / Alerts -->
   {% include 'includes/messages.html' %}
 
+  <!-- CSRF Token -->
   <div style="display:none;">{% csrf_token %}</div>
 
+  <!-- Main Content -->
   <main>
     {% block content %}{% endblock %}
   </main>
 
+  <!-- Footer Includes -->
   {% include 'includes/footer.html' %}
   {% include 'includes/toast_container.html' %}
 
+  <!-- Scripts: Cart Count Refresh -->
   <script>
   (function(){
     var bc = document.getElementById('cart-count');
@@ -70,6 +89,24 @@
     });
   })();
   </script>
+  <!-- Scripts: Mobile Menu Toggle -->
+  <script>
+  (function(){
+    var btn = document.getElementById('mobile-menu-btn');
+    var panel = document.getElementById('mobile-nav-panel');
+    var overlay = document.getElementById('mobile-nav-overlay');
+    var closeBtn = document.getElementById('mobile-nav-close');
+    if (!btn || !panel) return;
+    function open(){ panel.classList.add('open'); if(overlay) overlay.classList.add('open'); btn.classList.add('active'); document.body.style.overflow='hidden'; }
+    function close(){ panel.classList.remove('open'); if(overlay) overlay.classList.remove('open'); btn.classList.remove('active'); document.body.style.overflow=''; }
+    btn.addEventListener('click', function(){ if(panel.classList.contains('open')) close(); else open(); });
+    if(closeBtn) closeBtn.addEventListener('click', close);
+    if(overlay) overlay.addEventListener('click', close);
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+  })();
+  </script>
+  <!-- Scripts: External JS Files -->
+  <script src="{% static 'js/base/theme.js' %}?v=1"></script>
   <script src="{% static 'js/base/loading.js' %}?v=7"></script>
   <script src="{% static 'js/base/main.js' %}?v=7"></script>
   <script src="{% static 'js/base/cart.js' %}?v=7"></script>
@@ -83,10 +120,11 @@
   <script src="{% static 'js/base/map.js' %}?v=7"></script>
   <script src="{% static 'js/base/map_enhance.js' %}?v=1"></script>
 
+  <!-- Scripts: Page-Level Extra JS -->
   {% block extra_js %}{% endblock %}
 
   {% if user.is_authenticated %}
-  <!-- Floating Message Bubble (Daraz-style) -->
+  <!-- Floating UI: Message Bubble -->
   <a href="{% url 'store:messages_list' %}" id="msg-bubble" aria-label="{{ 'Messages'|t }}" style="position:fixed;bottom:28px;right:28px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#d4af37,#e0b940);color:#0d0d0d;display:flex;align-items:center;justify-content:center;z-index:9997;box-shadow:0 8px 32px rgba(212,175,55,0.35);text-decoration:none;transition:all 0.25s cubic-bezier(.4,0,.2,1);">
     <i class="bi bi-chat-dots-fill" style="font-size:1.5rem;"></i>
     <span id="msg-bubble-badge" style="position:absolute;top:-3px;right:-3px;min-width:22px;height:22px;border-radius:11px;background:#ef4444;color:#fff;font-size:0.65rem;font-weight:800;display:none;align-items:center;justify-content:center;padding:0 6px;box-shadow:0 2px 8px rgba(239,68,68,0.4);"></span>
@@ -121,7 +159,7 @@
   </script>
   {% endif %}
 
-  <!-- Floating Quick Nav -->
+  <!-- Floating UI: Quick Navigation -->
   <div id="floating-nav" role="navigation" aria-label="{{ 'Quick Navigation'|t }}">
     <div id="fn-backdrop"></div>
     <div id="fn-panel">

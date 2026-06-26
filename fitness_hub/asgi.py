@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: fitness_hub.asgi
+# Description: ASGI application entry point
+# ==============================================================================
+
 """
 ASGI config for fitness_hub project.
 

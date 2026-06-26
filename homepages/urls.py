@@ -1,5 +1,14 @@
+# ==============================================================================
+# Module: homepages.urls
+# Description: URL routing for homepages app
+# ==============================================================================
+
 from django.urls import path
 from . import views
+
+# ==============================================================================
+# SECTION: URL Patterns
+# ==============================================================================
 
 urlpatterns = [
     # 💡 The root path MUST name the view 'home' so {% url 'home' %} works!

@@ -1,78 +1,303 @@
-#btt-btn {
+/* ==============================================================================
+   File: base/back_to_top.css
+   Description: Floating quick navigation panel and back-to-top button
+   ============================================================================== */
+
+/* ══════════════════════════════════════════
+   FLOATING QUICK NAV — Always visible left
+   ══════════════════════════════════════════ */
+
+/* ==============================================================================
+   SECTION: Container
+   ============================================================================== */
+
+
+
+
+#floating-nav {
   position: fixed;
   bottom: 32px;
-  right: 28px;
-  z-index: 9999;
+  left: 28px;
+  z-index: 999999;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(13,13,13,0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(232,201,126,0.25);
-  border-radius: 50px;
-  padding: 8px 14px 8px 8px;
-  color: #e8c97e;
-  font-family: var(--font-body);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
-  cursor: pointer;
-  overflow: visible;
-  opacity: 0;
-  transform: translateY(20px) scale(0.92);
-  pointer-events: none;
-  transition: opacity 0.4s cubic-bezier(0.16,1,0.3,1),
-              transform 0.4s cubic-bezier(0.16,1,0.3,1),
-              border-color 0.3s,
-              box-shadow 0.3s;
+  flex-direction: column;
+  align-items: flex-start;
 }
-#btt-btn.btt-visible {
+
+
+/* ==============================================================================
+   SECTION: Backdrop
+   ============================================================================== */
+
+
+
+
+/* ─── Backdrop ─── */
+#fn-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 999998;
+}
+.fn-open #fn-backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+/* ==============================================================================
+   SECTION: Panel
+   ============================================================================== */
+
+
+
+
+/* ─── Panel ─── */
+#fn-panel {
+  position: absolute;
+  bottom: 64px;
+  left: -8px;
+  width: 280px;
+  background: rgba(18,18,18,0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(232,201,126,0.12);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(12px) scale(0.93);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.16,1,0.3,1);
+  transform-origin: bottom left;
+  z-index: 999999;
+}
+.fn-open #fn-panel {
   opacity: 1;
   transform: translateY(0) scale(1);
   pointer-events: auto;
 }
-#btt-btn:hover {
-  border-color: rgba(232,201,126,0.65);
-  box-shadow: 0 0 28px rgba(232,201,126,0.2), 0 8px 32px rgba(0,0,0,0.5);
-  transform: translateY(-3px) scale(1.04);
+
+
+/* ==============================================================================
+   SECTION: Panel Header
+   ============================================================================== */
+
+
+
+
+/* ─── Panel Header ─── */
+.fn-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
-#btt-btn:active { transform: translateY(0) scale(0.97); }
-#btt-btn .btt-icon-wrap {
+.fn-head-icon {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, #e8c97e, #c4783a);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: #0d0d0d;
+  flex-shrink: 0;
+}
+.fn-head-label {
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #f0ece4;
+  letter-spacing: 0.3px;
+}
+#fn-close-btn {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  border: none;
+  color: #888;
+  font-size: 0.7rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+#fn-close-btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+
+/* ==============================================================================
+   SECTION: Panel Body
+   ============================================================================== */
+
+
+
+
+/* ─── Panel Body ─── */
+.fn-body {
+  padding: 8px 0;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.fn-group { padding: 4px 0; }
+.fn-group + .fn-group { border-top: 1px solid rgba(255,255,255,0.05); }
+
+.fn-group-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(232,201,126,0.5);
+  padding: 10px 18px 6px;
+}
+
+.fn-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 18px;
+  text-decoration: none;
+  transition: background 0.15s;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.fn-item:hover { background: rgba(232,201,126,0.05); }
+
+.fn-item-icon {
   width: 30px; height: 30px;
+  border-radius: 8px;
+  background: rgba(232,201,126,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: var(--clr-accent);
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.fn-item:hover .fn-item-icon { background: rgba(232,201,126,0.15); }
+
+.fn-item-text {
+  flex: 1;
+  font-size: 0.83rem;
+  color: #d0ccc4;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.fn-item:hover .fn-item-text { color: #f0ece4; }
+
+
+/* ==============================================================================
+   SECTION: Go To Top Button
+   ============================================================================== */
+
+
+
+
+/* ─── Go to Top Button ─── */
+#fn-top-btn {
+  width: 100%;
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  background: transparent;
+  padding: 13px 18px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--clr-accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.15s;
+}
+#fn-top-btn:hover { background: rgba(232,201,126,0.06); }
+#fn-top-btn i { font-size: 1rem; }
+
+
+/* ==============================================================================
+   SECTION: Toggle Button
+   ============================================================================== */
+
+
+
+
+/* ─── Toggle Button (always visible) ─── */
+#fn-toggle {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #121212, #1a1a1a);
+  border: 1.5px solid rgba(232,201,126,0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+  flex-shrink: 0;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  z-index: 999999;
+}
+#fn-toggle:hover {
+  border-color: rgba(232,201,126,0.6);
+  box-shadow: 0 0 30px rgba(232,201,126,0.12), 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.fn-toggle-icon {
+  width: 32px; height: 32px;
   background: linear-gradient(135deg, #e8c97e, #c4783a);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.9rem; color: #0d0d0d;
-  flex-shrink: 0;
-  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
-  box-shadow: 0 0 14px rgba(232,201,126,0.35);
+  font-size: 0.95rem; color: #0d0d0d;
+  box-shadow: 0 0 14px rgba(232,201,126,0.3);
+  transition: transform 0.3s;
 }
-#btt-btn:hover .btt-icon-wrap { transform: translateY(-3px) rotate(-15deg); }
-#btt-btn .btt-ring {
+#fn-toggle:hover .fn-toggle-icon { transform: scale(1.08); }
+
+.fn-open #fn-toggle {
+  border-color: rgba(232,201,126,0.5);
+}
+.fn-open .fn-toggle-icon {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 0 14px rgba(239,68,68,0.3);
+}
+.fn-open .fn-toggle-icon i::before { content: '\F659'; } /* bi-x-lg */
+
+.fn-ring {
   position: absolute;
-  left: 8px; top: 50%;
-  transform: translateY(-50%);
-  width: 30px; height: 30px;
+  width: 32px; height: 32px;
   border-radius: 50%;
-  border: 2px solid rgba(232,201,126,0.35);
-  animation: bttRing 2.2s ease-out infinite;
+  border: 2px solid rgba(232,201,126,0.3);
+  animation: fnRing 2.2s ease-out infinite;
   pointer-events: none;
 }
-@keyframes bttRing {
-  0%   { transform: translateY(-50%) scale(1); opacity: 0.5; }
-  100% { transform: translateY(-50%) scale(2.0); opacity: 0; }
+.fn-open 
+/* ==============================================================================
+   SECTION: Ring Animation
+   ============================================================================== */
+
+
+
+
+.fn-ring {
+  border-color: rgba(239,68,68,0.3);
 }
-#btt-btn .btt-arc {
-  position: absolute;
-  width: 40px; height: 40px;
-  left: 4px; top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
+@keyframes fnRing {
+  0%   { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(1.8); opacity: 0; }
 }
-@keyframes floatHeart {
-  0%   { opacity:1; transform:translateY(0) scale(1); }
-  100% { opacity:0; transform:translateY(-40px) scale(0.5); }
-}
-.heart-particle { position:absolute; pointer-events:none; }

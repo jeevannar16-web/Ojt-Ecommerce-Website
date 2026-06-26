@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: users.allauth_adapter
+# Description: Custom allauth adapters
+# ==============================================================================
+
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.exceptions import ImmediateHttpResponse
@@ -5,6 +10,10 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 
+
+# ==============================================================================
+# SECTION: Account Adapter
+# ==============================================================================
 
 class CustomAccountAdapter(DefaultAccountAdapter):
     def get_login_redirect_url(self, request):
@@ -14,6 +23,10 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         from django.urls import reverse
         return reverse('verification_setup')
 
+
+# ==============================================================================
+# SECTION: Social Account Adapter
+# ==============================================================================
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     def _log_social_login(self, user, request):

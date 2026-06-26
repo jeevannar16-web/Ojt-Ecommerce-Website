@@ -1,3 +1,12 @@
+// ==============================================================================
+// File: search.js
+// Description: Search suggestions, history management, keyboard navigation
+// ==============================================================================
+
+// ==============================================================================
+// SECTION: DOM References & State
+// ==============================================================================
+
 (function() {
   const input = document.getElementById('search-input');
   const dropdown = document.getElementById('search-dropdown');
@@ -10,6 +19,14 @@
   let debounceTimer = null;
   let selectedIdx = -1;
   let currentItems = [];
+
+
+
+
+
+  // ==============================================================================
+  // SECTION: Search History Management
+  // ==============================================================================
 
   function getHistory() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
@@ -42,6 +59,14 @@
     input.focus();
     input.style.borderColor = '#333';
   };
+
+
+
+
+
+  // ==============================================================================
+  // SECTION: Search UI Functions
+  // ==============================================================================
 
   function renderHistory() {
     const history = getHistory();
@@ -122,6 +147,14 @@
     }
   }
 
+
+
+
+
+  // ==============================================================================
+  // SECTION: Input Event Handlers
+  // ==============================================================================
+
   input.addEventListener('focus', () => {
     input.style.borderColor = '#d4af37';
     if (getHistory().length > 0) {
@@ -162,6 +195,14 @@
       dropdown.style.display = 'none';
     }
   });
+
+
+
+
+
+  // ==============================================================================
+  // SECTION: Initialization
+  // ==============================================================================
 
   if (input.value.trim()) {
     clearBtn.style.display = 'block';

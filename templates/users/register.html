@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Users: Create Account (Gradient Border, Seller Checkbox)                 -->
+<!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
 
@@ -5,6 +8,8 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/register.css' %}">
+<link rel="preconnect" href="https://accounts.google.com">
+<link rel="preconnect" href="https://lh3.googleusercontent.com">
 {% endblock %}
 
 {% block content %}
@@ -123,7 +128,7 @@ const bar = document.getElementById('pwd-strength-bar');
 const text = document.getElementById('pwd-strength-text');
 const matchEl = document.getElementById('pwd-match');
 
-const strengthLabels = ['', '{{ 'Weak'|t }}', '{{ 'Fair'|t }}', '{{ 'Good'|t }}', '{{ 'Strong'|t }}', '{{ 'Very Strong'|t }}'];
+const strengthLabels = ['', '{{ 'Too Short'|t }}', '{{ 'Basic'|t }}', '{{ 'Decent'|t }}', '{{ 'Solid'|t }}', '{{ 'Excellent'|t }}'];
 const strengthColors = ['', '#ef4444', '#f59e0b', '#3b82f6', '#2ecc71', '#10b981'];
 
 pwdInput.addEventListener('input', function() {

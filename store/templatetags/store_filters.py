@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: store.templatetags.store_filters
+# Description: Template filters for store app
+# ==============================================================================
+
 import json
 from django import template
 

@@ -1,3 +1,16 @@
+/* ==============================================================================
+   File: pages/product_list.css
+   Description: Product listing page with sidebar filters, sort bar, and grid
+   ============================================================================== */
+
+
+/* ==============================================================================
+   SECTION: Animations
+   ============================================================================== */
+
+
+
+
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -30,6 +43,14 @@
    └──────────┴───────────────────────────┘
    ═══════════════════════════════════════════ */
 
+
+/* ==============================================================================
+   SECTION: Page Layout
+   ============================================================================== */
+
+
+
+
 .pl-page {
     display: grid;
     grid-template-columns: 260px 1fr;
@@ -42,11 +63,27 @@
     align-content: start;
 }
 
+
+/* ==============================================================================
+   SECTION: Top Row
+   ============================================================================== */
+
+
+
+
 .pl-top-row {
     grid-column: 1 / -1;
 }
 
 /* ── Sidebar — permanently locked ── */
+
+/* ==============================================================================
+   SECTION: Sidebar
+   ============================================================================== */
+
+
+
+
 .pl-sidebar-wrap {
     position: sticky;
     top: 90px;
@@ -74,6 +111,14 @@
     display: flex; align-items: center; gap: 8px;
 }
 .filter-sidebar-title i { color: #d4af37; font-size: 0.9rem; }
+
+/* ==============================================================================
+   SECTION: Filter Section Titles
+   ============================================================================== */
+
+
+
+
 .fsec-title {
     font-size: 0.65rem; font-weight: 700;
     text-transform: uppercase; letter-spacing: 1.5px;
@@ -81,6 +126,14 @@
 }
 .fsec-title:first-child { margin-top: 0; }
 .f-divider { border: none; border-top: 1px solid rgba(255,255,255,0.05); margin: 0.85rem 0; }
+
+
+/* ==============================================================================
+   SECTION: Price Inputs
+   ============================================================================== */
+
+
+
 
 .pl-price-row {
     display: flex;
@@ -97,6 +150,14 @@
     transition: border-color 0.2s;
 }
 .price-input:focus { border-color: rgba(212,175,55,0.4); }
+
+
+/* ==============================================================================
+   SECTION: Checkbox Filters
+   ============================================================================== */
+
+
+
 
 .fcheck {
     display: flex; align-items: center;
@@ -124,6 +185,14 @@
 .fcheck-lbl { font-size: 0.82rem; color: #aaa; transition: color 0.15s; }
 .fcheck:hover .fcheck-lbl { color: #fff; }
 
+
+/* ==============================================================================
+   SECTION: Toggle Switch
+   ============================================================================== */
+
+
+
+
 .toggle-wrap { display: flex; align-items: center; justify-content: space-between; }
 .pl-toggle-lbl { font-size: 0.8rem; color: #aaa; }
 .toggle-sw { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
@@ -143,6 +212,14 @@
 .toggle-sw input:checked + .toggle-sl::before {
     transform: translateX(16px); background: #d4af37;
 }
+
+
+/* ==============================================================================
+   SECTION: Apply/Clear Buttons
+   ============================================================================== */
+
+
+
 
 .btn-apply {
     width: 100%; padding: 10px 0; margin-top: 1rem;
@@ -164,6 +241,14 @@
 .btn-clear:hover { color: #fff; border-color: rgba(255,255,255,0.2); }
 
 /* ── Result header ── */
+
+/* ==============================================================================
+   SECTION: Result Header
+   ============================================================================== */
+
+
+
+
 .result-header {
     background: #111;
     border: 1px solid rgba(255,255,255,0.06);
@@ -179,6 +264,14 @@
 }
 
 /* ── Goal tabs ── */
+
+/* ==============================================================================
+   SECTION: Goal Tabs
+   ============================================================================== */
+
+
+
+
 .goal-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
 .goal-tab {
     padding: 5px 14px; border-radius: 6px;
@@ -194,6 +287,14 @@
 }
 
 /* ── Main (scrolls) ── */
+
+/* ==============================================================================
+   SECTION: Main Content
+   ============================================================================== */
+
+
+
+
 .pl-main {
     min-width: 0;
     display: flex;
@@ -201,6 +302,14 @@
 }
 
 /* ── Sort bar ── */
+
+/* ==============================================================================
+   SECTION: Sort Bar
+   ============================================================================== */
+
+
+
+
 .sort-bar {
     display: flex; align-items: center;
     background: #111; border: 1px solid rgba(255,255,255,0.06);
@@ -229,6 +338,14 @@
 }
 
 /* ── Product Grid ── */
+
+/* ==============================================================================
+   SECTION: Product Grid
+   ============================================================================== */
+
+
+
+
 .pl-grid-wrap {
     flex: 1;
     min-height: 400px;
@@ -241,6 +358,14 @@
 }
 
 /* ── Product Card ── */
+
+/* ==============================================================================
+   SECTION: Product Card
+   ============================================================================== */
+
+
+
+
 .pcard {
     background: #121212;
     border: 1px solid rgba(255,255,255,0.04);
@@ -402,6 +527,14 @@
 }
 
 /* ── Empty state ── */
+
+/* ==============================================================================
+   SECTION: Empty State
+   ============================================================================== */
+
+
+
+
 .empty-state {
     grid-column: 1 / -1;
     text-align: center;
@@ -427,9 +560,25 @@
 }
 
 /* ── Scroll sentinel ── */
+
+/* ==============================================================================
+   SECTION: Scroll Sentinel
+   ============================================================================== */
+
+
+
+
 #scroll-sentinel { width: 100%; height: 1px; }
 
 /* ── Loading more ── */
+
+/* ==============================================================================
+   SECTION: Loading More
+   ============================================================================== */
+
+
+
+
 .loading-more {
     display: none;
     text-align: center; padding: 2rem 0;
@@ -452,6 +601,14 @@
 .loading-text { color: #888; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.3px; }
 
 /* ── Skeleton ── */
+
+/* ==============================================================================
+   SECTION: Skeleton
+   ============================================================================== */
+
+
+
+
 .pl-skeleton-container { display: none; }
 .skeleton-grid {
     display: grid;
@@ -474,6 +631,14 @@
 .skeleton-line-lg { width: 90%; }
 
 /* ── Recommendations (full width) ── */
+
+/* ==============================================================================
+   SECTION: Recommendations
+   ============================================================================== */
+
+
+
+
 .pl-recs {
     grid-column: 1 / -1;
     margin-top: 3rem;
@@ -556,4 +721,12 @@
 /* ── Scrollbar for sidebar ── */
 .pl-sidebar-wrap::-webkit-scrollbar { width: 4px; }
 .pl-sidebar-wrap::-webkit-scrollbar-track { background: transparent; }
+
+/* ==============================================================================
+   SECTION: Sidebar Scrollbar
+   ============================================================================== */
+
+
+
+
 .pl-sidebar-wrap::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }

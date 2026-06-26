@@ -1,3 +1,12 @@
+// ==============================================================================
+// File: cart.js
+// Description: Add to cart, stock display updates, cart badge management
+// ==============================================================================
+
+// ==============================================================================
+// SECTION: Add to Cart
+// ==============================================================================
+
 function addToCart(event, productId, btnEl, quantity, size) {
   if (event) event.stopPropagation();
   const btn = btnEl || (event && event.currentTarget) || null;
@@ -50,6 +59,14 @@ function addToCart(event, productId, btnEl, quantity, size) {
   })
   .catch(function(error) { showToast('Network error: ' + error.message, true); if (btn) btn.disabled = false; });
 }
+
+
+
+
+
+// ==============================================================================
+// SECTION: Stock Display Update
+// ==============================================================================
 
 function updateStockDisplay(productId, data, btnEl) {
   var stockStatus = document.getElementById('stock-status-display');

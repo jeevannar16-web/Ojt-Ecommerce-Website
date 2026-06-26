@@ -1,3 +1,12 @@
+// ==============================================================================
+// File: main.js
+// Description: Search validation, CSRF cookie, toast notifications, back-to-top
+// ==============================================================================
+
+// ==============================================================================
+// SECTION: Search Validation
+// ==============================================================================
+
 function validateSearch() {
   const input = document.getElementById('search-input');
   if (!input.value.trim()) {
@@ -11,6 +20,14 @@ function validateSearch() {
   }
   return true;
 }
+
+
+
+
+
+// ==============================================================================
+// SECTION: Cookie Utility
+// ==============================================================================
 
 function getCookie(name) {
   let cookieValue = null;
@@ -27,6 +44,14 @@ function getCookie(name) {
   return cookieValue;
 }
 
+
+
+
+
+// ==============================================================================
+// SECTION: Toast Notification
+// ==============================================================================
+
 function showToast(message, isError = false) {
   const container = document.getElementById('single-toast-container');
   if (!container) { alert(message); return; }
@@ -41,6 +66,14 @@ function showToast(message, isError = false) {
     setTimeout(() => toast.remove(), 400);
   }, 2600);
 }
+
+
+
+
+
+// ==============================================================================
+// SECTION: Back to Top Button
+// ==============================================================================
 
 (function () {
   const btn = document.getElementById('btt-btn');

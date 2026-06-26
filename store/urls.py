@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: store.urls
+# Description: URL routing for store app
+# ==============================================================================
+
 from django.urls import path
 from . import views
 from . import seller_views
@@ -5,6 +10,10 @@ from . import admin_dashboard_views
 from .views import messaging_views
 
 app_name = 'store'
+
+# ==============================================================================
+# SECTION: URL Patterns
+# ==============================================================================
 
 urlpatterns = [
     path('admin-dashboard/', admin_dashboard_views.admin_dashboard, name='admin_dashboard'),
@@ -28,23 +37,30 @@ urlpatterns = [
     path('api/product-stock/<int:product_id>/', views.product_stock_api, name='product_stock_api'),
     path('api/cart-mini/', views.cart_mini_api, name='cart_mini_api'),
 
+    # Newsletter & Orders
     path('newsletter/subscribe/', views.newsletter_subscribe, name='newsletter_subscribe'),
     path('orders/', views.order_history_view, name='order_history'),
     path('orders/cancel/<int:order_id>/', views.cancel_order, name='cancel_order'),
     path('products/<int:product_id>/review/', views.submit_review, name='submit_review'),
 
-    # Product Curation
+    # ==============================================================================
+# SECTION: Product Curation
+# ==============================================================================
     path('curation/', views.curation_workspace, name='curation_workspace'),
     path('curation/update-asset/', views.update_curation_asset, name='update_curation_asset'),
     path('curation/category/', views.category_curation_workspace, name='category_curation_workspace'),
     path('curation/category/update-asset/', views.update_category_asset, name='update_category_asset'),
 
-    # Seller Center (public)
+    # ==============================================================================
+# SECTION: Seller Center
+# ==============================================================================
     path('seller-center/', seller_views.seller_center, name='seller_center'),
     path('seller/apply/', seller_views.seller_apply, name='seller_apply'),
     path('seller/store/<slug:slug>/', seller_views.seller_storefront, name='seller_storefront'),
 
-    # Seller Dashboard
+    # ==============================================================================
+# SECTION: Seller Dashboard
+# ==============================================================================
     path('seller/', seller_views.seller_dashboard, name='seller_dashboard'),
     path('seller/products/', seller_views.seller_product_list, name='seller_product_list'),
     path('seller/products/add/', seller_views.seller_product_add, name='seller_product_add'),
@@ -52,7 +68,9 @@ urlpatterns = [
     path('seller/products/<int:product_id>/delete/', seller_views.seller_product_delete, name='seller_product_delete'),
     path('seller/orders/', seller_views.seller_orders, name='seller_orders'),
 
-    # Messaging
+    # ==============================================================================
+# SECTION: Messaging
+# ==============================================================================
     path('messages/', messaging_views.conversation_list, name='messages_list'),
     path('messages/<int:conversation_id>/', messaging_views.conversation_detail, name='conversation_detail'),
     path('messages/start/<int:product_id>/', messaging_views.start_conversation, name='start_conversation'),
@@ -76,4 +94,11 @@ urlpatterns = [
     path('api/messages/mark-read/', messaging_views.api_mark_read, name='api_mark_read'),
     path('api/messages/delete-conversation/', messaging_views.api_delete_conversation, name='api_delete_conversation'),
     path('messages/<int:conversation_id>/block/', messaging_views.block_user, name='block_user'),
+
+    # ==============================================================================
+    # SECTION: Newsletter — Unsubscribe, Broadcast, Manage
+    # ==============================================================================
+    path('newsletter/unsubscribe/<str:token>/', views.newsletter_unsubscribe, name='newsletter_unsubscribe'),
+    path('admin-dashboard/newsletter/broadcast/', admin_dashboard_views.admin_newsletter_broadcast, name='admin_newsletter_broadcast'),
+    path('admin-dashboard/newsletter/subscribers/', admin_dashboard_views.admin_manage_subscribers, name='admin_manage_subscribers'),
 ]

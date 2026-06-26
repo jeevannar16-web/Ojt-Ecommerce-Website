@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Store: Shopping Cart (Items, Filters, Map, Checkout)                    -->
+<!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
 
@@ -9,6 +12,7 @@
 
 {% block content %}
 <div data-cart-container class="cart-page">
+    <!-- Cart Header -->
     <div class="cart-header">
         <h2>{{ 'Your Shopping'|t }} <span class="highlight">{{ 'Cart'|t }}</span></h2>
         <button id="filter-toggle" type="button" class="filter-toggle-btn">
@@ -18,6 +22,7 @@
 
     {% if cart_items %}
 
+    <!-- Cart Filter Panel -->
     <div id="filter-panel" class="filter-panel" style="display:none;"{% if filters.current_category or filters.current_seller or filters.current_price_min or filters.current_price_max or filters.current_date_from or filters.current_date_to %} data-filter-active="1"{% endif %}>
         <form method="GET" action="" id="cart-filter-form">
           <div class="filter-row">
@@ -81,6 +86,7 @@
         </form>
     </div>
         
+        <!-- Cart Items -->
         <div class="cart-items-card">
 
             <div class="cart-toolbar">
@@ -145,6 +151,7 @@
             </div>
         </div>
 
+        <!-- Delivery Location / Map -->
         <div class="cart-delivery-card">
             <h3 class="cart-delivery-title"><i class="bi bi-geo-alt"></i> {{ 'Delivery Location'|t }}</h3>
             <div class="cart-delivery-search-row">
@@ -166,6 +173,7 @@
             <p class="map-status">{{ 'Search for a location or click on the map to set your delivery area.'|t }}</p>
         </div>
 
+        <!-- Footer + Checkout -->
         <div class="cart-footer-actions">
             <a href="{% url 'store:product_list' %}" class="cart-continue-link">
                 <i class="bi bi-arrow-left"></i> {{ 'Continue Shopping'|t }}
@@ -192,6 +200,7 @@
         </div>
 
     {% else %}
+    <!-- Empty Cart -->
         <div class="cart-empty">
             <div class="cart-empty-icon"><i class="bi bi-bag-x"></i></div>
             <p>{{ 'Your cart is empty'|t }}</p>

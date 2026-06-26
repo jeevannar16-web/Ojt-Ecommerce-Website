@@ -1,0 +1,94 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% block title %}{{ 'Manage Subscribers'|t }} — Admin{% endblock %}
+{% block extra_css %}
+<style>
+*{box-sizing:border-box}
+.ms-wrap{padding:40px 20px;background:#08080c;min-height:100vh}
+.ms-card{max-width:860px;margin:0 auto;background:rgba(18,18,24,0.92);border:1px solid rgba(232,201,126,0.1);border-radius:24px;padding:40px;box-shadow:0 32px 96px rgba(0,0,0,0.6)}
+.ms-card h1{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#f0ece4;margin:0 0 4px}
+.ms-card .sub{color:rgba(255,255,255,0.35);font-size:0.85rem;margin:0 0 20px}
+.filter-bar{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
+.filter-bar input,.filter-bar select{padding:10px 14px;background:var(--bg-input,rgba(255,255,255,0.02));border:1px solid var(--border-input,rgba(255,255,255,0.06));border-radius:10px;color:var(--text-primary,#e0e0e0);font-size:0.85rem;outline:0}
+.filter-bar input:focus,.filter-bar select:focus{border-color:rgba(232,201,126,0.2)}
+.filter-bar input{flex:1;min-width:200px}
+.filter-btn{padding:10px 20px;border:none;border-radius:10px;background:linear-gradient(135deg,#e8c97e,#d4af37 40%,#c4783a);color:#08080c;font-weight:600;font-size:0.82rem;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:0.82rem}
+th{color:rgba(255,255,255,0.4);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;text-align:left;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.04)}
+td{padding:10px 8px;color:rgba(255,255,255,0.7);border-bottom:1px solid rgba(255,255,255,0.02)}
+td.email-cell{color:#d4af37;word-break:break-all}
+.badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:0.7rem;font-weight:600}
+.badge-active{background:rgba(34,197,94,0.1);color:#22c55e;border:1px solid rgba(34,197,94,0.15)}
+.badge-inactive{background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.15)}
+.action-form{display:inline}
+.action-btn{padding:5px 12px;border:none;border-radius:6px;font-size:0.7rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.btn-toggle{background:rgba(59,130,246,0.1);color:#3b82f6;border:1px solid rgba(59,130,246,0.15)}
+.btn-toggle:hover{background:rgba(59,130,246,0.2)}
+.btn-delete{background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.15)}
+.btn-delete:hover{background:rgba(239,68,68,0.2)}
+.pagination{display:flex;gap:6px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+.pagination a,.pagination span{padding:6px 12px;border:1px solid rgba(255,255,255,0.06);border-radius:6px;color:rgba(255,255,255,0.5);font-size:0.8rem;text-decoration:none}
+.pagination .current{background:rgba(232,201,126,0.1);color:#d4af37;border-color:rgba(232,201,126,0.15)}
+.back-link{display:block;text-align:center;margin-top:20px;color:rgba(255,255,255,0.25);font-size:0.8rem;text-decoration:none}
+.back-link:hover{color:#d4af37}
+</style>
+{% endblock %}
+{% block content %}
+<div class="ms-wrap">
+<div class="ms-card">
+  <h1>{{ 'Manage Subscribers'|t }}</h1>
+  <div class="sub">{{ total_count }} {{ 'total subscribers'|t }}</div>
+
+  <form class="filter-bar" method="get" id="subscriber-filter-form">
+    <input type="text" name="q" placeholder="{{ 'Search by email...'|t }}" value="{{ current_search }}">
+    <select name="status" onchange="this.form.submit()">
+      <option value="">{{ 'All'|t }}</option>
+      <option value="active" {% if current_status == 'active' %}selected{% endif %}>{{ 'Active'|t }}</option>
+      <option value="inactive" {% if current_status == 'inactive' %}selected{% endif %}>{{ 'Inactive'|t }}</option>
+    </select>
+    <button type="submit" class="filter-btn">{{ 'Filter'|t }}</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr><th>{{ 'Email'|t }}</th><th>{{ 'Status'|t }}</th><th>{{ 'Subscribed'|t }}</th><th>{{ 'Actions'|t }}</th></tr>
+    </thead>
+    <tbody>
+      {% for sub in subscribers %}
+      <tr>
+        <td class="email-cell">{{ sub.email }}</td>
+        <td><span class="badge {% if sub.active %}badge-active{% else %}badge-inactive{% endif %}">{% if sub.active %}{{ 'Active'|t }}{% else %}{{ 'Inactive'|t }}{% endif %}</span></td>
+        <td>{{ sub.subscribed_at|date:"M d, Y" }}</td>
+        <td>
+          <form class="action-form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="subscriber_id" value="{{ sub.id }}">
+            <input type="hidden" name="action" value="toggle">
+            <button type="submit" class="action-btn btn-toggle">{% if sub.active %}{{ 'Deactivate'|t }}{% else %}{{ 'Activate'|t }}{% endif %}</button>
+          </form>
+          <form class="action-form" method="post" onsubmit="return confirm('{{ 'Delete this subscriber?'|t }}')">
+            {% csrf_token %}
+            <input type="hidden" name="subscriber_id" value="{{ sub.id }}">
+            <input type="hidden" name="action" value="delete">
+            <button type="submit" class="action-btn btn-delete">{{ 'Delete'|t }}</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" style="text-align:center;color:rgba(255,255,255,0.2);padding:30px">{{ 'No subscribers found'|t }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if subscribers.has_other_pages %}
+  <div class="pagination">
+    {% if subscribers.has_previous %}<a href="?page={{ subscribers.previous_page_number }}{% if current_search %}&q={{ current_search }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}">&laquo;</a>{% endif %}
+    <span class="current">{{ subscribers.number }} / {{ subscribers.paginator.num_pages }}</span>
+    {% if subscribers.has_next %}<a href="?page={{ subscribers.next_page_number }}{% if current_search %}&q={{ current_search }}{% endif %}{% if current_status %}&status={{ current_status }}{% endif %}">&raquo;</a>{% endif %}
+  </div>
+  {% endif %}
+
+  <a href="{% url 'store:admin_dashboard' %}" class="back-link">&larr; {{ 'Back to Dashboard'|t }}</a>
+</div>
+</div>
+{% endblock %}

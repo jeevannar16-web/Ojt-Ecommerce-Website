@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Store: Product List (Search + Filter + Sort + Grid)                      -->
+<!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
 
@@ -8,6 +11,7 @@
 {% block content %}
 <div class="pl-page">
 
+  <!-- Search Result Header -->
   {% if is_search %}
   <div class="pl-top-row">
     <div class="result-header catalog-fade-in">
@@ -17,6 +21,7 @@
   </div>
   {% endif %}
 
+  <!-- Goal Tabs -->
   {% if not is_search and active_goals %}
   <div class="pl-top-row">
     <div class="goal-tabs catalog-fade-in" style="margin:0;">
@@ -28,6 +33,7 @@
   </div>
   {% endif %}
 
+  <!-- Filter Sidebar -->
   <form method="GET" action="" id="filter-form" class="pl-sidebar-wrap">
     <input type="hidden" name="search" value="{{ request.GET.search|default:'' }}">
     <input type="hidden" name="goal" value="{{ active_goal|default:'' }}">
@@ -72,7 +78,9 @@
     </div>
   </form>
 
+  <!-- Main Content: Sort + Grid -->
   <div class="pl-main">
+    <!-- Sort Bar -->
     <div class="sort-bar catalog-fade-in">
       <span class="sort-label">{{ 'Sort by'|t }}</span>
       <div class="sort-pills">
@@ -94,6 +102,11 @@
       <span class="pl-count" id="product-count">{{ total_count }} {{ 'item'|t }}{{ total_count|pluralize }}</span>
     </div>
 
+    <!-- Mobile Filter Toggle -->
+    <button class="pl-mobile-filter-toggle" id="pl-filter-toggle" onclick="document.querySelector('.pl-sidebar-wrap').classList.toggle('mobile-open')">
+      <i class="bi bi-funnel"></i> {{ 'Filters'|t }}
+    </button>
+    <!-- Product Grid -->
     <div class="pl-grid-wrap" id="pl-grid-wrap">
       <div id="product-grid" class="product-grid">
         {% for product in products %}
@@ -114,6 +127,7 @@
       </div>
       <div id="scroll-sentinel"></div>
 
+      <!-- Loading Indicator -->
       <div class="loading-more" id="loading-indicator">
         <div class="loading-more-inner">
           <div class="loading-spinner"></div>
@@ -121,6 +135,7 @@
         </div>
       </div>
 
+      <!-- Skeleton Cards -->
       <div id="skeleton-container" class="pl-skeleton-container">
         <div class="skeleton-grid" id="skeleton-grid">
           {% for i in "1234" %}
@@ -138,6 +153,7 @@
     </div>
   </div>
 
+  <!-- Recommendations -->
   {% if recommendations %}
   <div class="pl-recs catalog-fade-in">
     <div class="pl-recs-header">

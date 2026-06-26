@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: fitness_hub.wsgi
+# Description: WSGI application entry point
+# ==============================================================================
+
 """
 WSGI config for fitness_hub project.
 

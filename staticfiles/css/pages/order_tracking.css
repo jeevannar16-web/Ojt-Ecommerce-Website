@@ -1,3 +1,16 @@
+/* ==============================================================================
+   File: pages/order_tracking.css
+   Description: Premium order tracking page with timeline and items list
+   ============================================================================== */
+
+
+/* ==============================================================================
+   SECTION: Page Wrapper
+   ============================================================================== */
+
+
+
+
 .premium-tracking-wrapper {
     position: relative;
     min-height: 90vh;
@@ -8,6 +21,14 @@
     padding: 60px 20px;
     overflow: hidden;
 }
+
+/* ==============================================================================
+   SECTION: Background Effects
+   ============================================================================== */
+
+
+
+
 .bg-glow-orb {
     position: absolute;
     width: 600px;
@@ -19,6 +40,14 @@
     filter: blur(80px);
     z-index: 1;
 }
+
+/* ==============================================================================
+   SECTION: Grid Pattern
+   ============================================================================== */
+
+
+
+
 .luxury-grid-matrix {
     position: absolute;
     inset: 0;
@@ -28,12 +57,28 @@
     z-index: 2;
     mask-image: radial-gradient(circle at center, black, transparent 90%);
 }
+
+/* ==============================================================================
+   SECTION: Tracking Container
+   ============================================================================== */
+
+
+
+
 .tracking-container {
     position: relative;
     z-index: 5;
     width: 100%;
     max-width: 900px;
 }
+
+/* ==============================================================================
+   SECTION: Dashboard Header
+   ============================================================================== */
+
+
+
+
 .dashboard-header { margin-bottom: 25px; }
 .tracking-badge {
     display: inline-block;
@@ -63,12 +108,28 @@
     font-size: 0.9rem;
     margin: 6px 0 0 0;
 }
+
+/* ==============================================================================
+   SECTION: Dividers
+   ============================================================================== */
+
+
+
+
 .premium-divider {
     border: 0;
     height: 1px;
     background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.06) 75%, rgba(255,255,255,0) 100%);
     margin: 30px 0 40px 0;
 }
+
+/* ==============================================================================
+   SECTION: Section Titles
+   ============================================================================== */
+
+
+
+
 .section-title-label {
     font-size: 0.95rem;
     text-transform: uppercase;
@@ -77,6 +138,14 @@
     margin-bottom: 20px;
     padding-left: 5px;
 }
+
+/* ==============================================================================
+   SECTION: Order Cards
+   ============================================================================== */
+
+
+
+
 .order-master-card {
     background: rgba(18, 18, 18, 0.6);
     backdrop-filter: blur(20px);
@@ -91,6 +160,14 @@
     background: rgba(13, 13, 14, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.02);
 }
+
+/* ==============================================================================
+   SECTION: Order Summary
+   ============================================================================== */
+
+
+
+
 .order-summary-header {
     display: flex;
     flex-wrap: wrap;
@@ -114,6 +191,14 @@
     font-weight: 600;
 }
 .gold-text { color: #d4af37; }
+
+/* ==============================================================================
+   SECTION: Status Pills
+   ============================================================================== */
+
+
+
+
 .status-pill {
     font-size: 0.72rem;
     font-weight: 700;
@@ -126,6 +211,14 @@
 .status-shipped { background: rgba(155, 89, 182, 0.1); color: #9b59b6; }
 .status-delivered { background: rgba(46, 204, 113, 0.1); color: #2ecc71; }
 .status-cancelled { background: rgba(231, 76, 60, 0.1); color: #e74c3c; }
+
+/* ==============================================================================
+   SECTION: Items Section
+   ============================================================================== */
+
+
+
+
 .items-ordered-section { margin: 25px 0 10px 0; }
 .items-ordered-section h4 {
     font-size: 0.8rem;
@@ -134,6 +227,14 @@
     letter-spacing: 1px;
     margin: 0 0 15px 0;
 }
+
+/* ==============================================================================
+   SECTION: Items Grid
+   ============================================================================== */
+
+
+
+
 .items-grid-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -161,6 +262,14 @@
 .item-details { display: flex; flex-direction: column; }
 .item-name { color: #ffffff; font-size: 0.9rem; font-weight: 600; }
 .item-meta { color: #666666; font-size: 0.78rem; margin-top: 2px; }
+
+/* ==============================================================================
+   SECTION: Timeline
+   ============================================================================== */
+
+
+
+
 .timeline-tracking-track {
     display: flex;
     justify-content: space-between;
@@ -207,6 +316,14 @@
     box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
 }
 .active-step .step-title { color: #ffffff; }
+
+/* ==============================================================================
+   SECTION: Empty State
+   ============================================================================== */
+
+
+
+
 .empty-tracking-card {
     text-align: center;
     padding: 50px 30px;

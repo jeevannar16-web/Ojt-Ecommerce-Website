@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Store: Order Tracking / History (Timeline + Maps)                       -->
+<!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
 
@@ -11,6 +14,7 @@
     <div class="luxury-grid-matrix"></div>
 
     <div class="tracking-container">
+        <!-- Dashboard Header -->
         <div class="dashboard-header">
             <span class="tracking-badge">📦 {{ 'LIVE LOGISTICS'|t }}</span>
             <h2>{{ 'Your'|t }} <span class="gold-gradient-text">{{ 'Order Journeys'|t }}</span></h2>
@@ -19,6 +23,7 @@
 
         <hr class="premium-divider">
 
+        <!-- Active Orders -->
         <div class="tracking-section-group">
             <h3 class="section-title-label text-warning">⏳ {{ 'Active Logistics Pipeline'|t }}</h3>
             
@@ -105,6 +110,7 @@
             {% endif %}
         </div>
 
+        <!-- Completed Orders -->
         <div class="tracking-section-group mt-5">
             <h3 class="section-title-label text-muted">✅ {{ 'Completed Archive Logs'|t }}</h3>
             

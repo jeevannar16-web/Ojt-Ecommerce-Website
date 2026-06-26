@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: localization.management.commands.seed_translations
+# Description: Seed translation data
+# ==============================================================================
+
 import os, re, ast, time
 from django.core.management.base import BaseCommand
 from django.conf import settings

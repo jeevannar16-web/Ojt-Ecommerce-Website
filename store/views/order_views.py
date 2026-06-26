@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: store.views.order_views
+# Description: Order history views
+# ==============================================================================
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -5,6 +10,9 @@ from ..models import Order
 from ..activity_logger import log_action
 
 
+# ════════════════════════════════════════════════════════════════
+# ORDER HISTORY & MANAGEMENT
+# ════════════════════════════════════════════════════════════════
 @login_required
 def order_history_view(request):
     user_orders = Order.objects.filter(user=request.user).order_by('-created_at')
@@ -16,6 +24,10 @@ def order_history_view(request):
     }
     return render(request, 'store/order_tracking.html', context)
 
+
+# ==============================================================================
+# SECTION: Cancel Order
+# ==============================================================================
 
 @login_required
 def cancel_order(request, order_id):

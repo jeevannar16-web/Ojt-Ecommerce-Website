@@ -1,7 +1,16 @@
+# ==============================================================================
+# Module: localization.admin
+# Description: Admin configuration for localization
+# ==============================================================================
+
 from django.contrib import admin
 
 from .models import Language, Translation
 
+
+# ==============================================================================
+# SECTION: Language Admin
+# ==============================================================================
 
 @admin.register(Language)
 class LanguageAdmin(admin.ModelAdmin):
@@ -9,6 +18,10 @@ class LanguageAdmin(admin.ModelAdmin):
     list_editable = ['is_active']
     prepopulated_fields = {'code': ['name']}
 
+
+# ==============================================================================
+# SECTION: Translation Admin
+# ==============================================================================
 
 @admin.register(Translation)
 class TranslationAdmin(admin.ModelAdmin):

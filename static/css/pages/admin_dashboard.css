@@ -1,3 +1,8 @@
+/* ==============================================================================
+   File: pages/admin_dashboard.css
+   Description: Admin dashboard with sidebar, stats, orders, and tables
+   ============================================================================== */
+
 .admin-layout {
   display: flex;
   min-height: calc(100vh - 60px);
@@ -70,6 +75,14 @@
   margin: 0 0 24px;
 }
 
+
+/* ==============================================================================
+   SECTION: Stats Row
+   ============================================================================== */
+
+
+
+
 .stats-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -110,12 +123,28 @@
   box-shadow: 0 8px 24px rgba(212,175,55,0.08);
 }
 
+
+/* ==============================================================================
+   SECTION: Order Links
+   ============================================================================== */
+
+
+
+
 .admin-order-link {
   font-weight: 600;
   color: #f0ece4;
   text-decoration: none;
 }
 .admin-order-link:hover { color: #d4af37; text-decoration: underline; }
+
+
+/* ==============================================================================
+   SECTION: Order Status Row
+   ============================================================================== */
+
+
+
 
 .admin-order-status-row {
   display: flex;
@@ -199,6 +228,14 @@
 }
 .admin-card .card-bd { padding: 4px 0; }
 
+
+/* ==============================================================================
+   SECTION: Table Styles
+   ============================================================================== */
+
+
+
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
@@ -222,6 +259,14 @@
 .admin-table tr:last-child td { border-bottom: none; }
 .admin-table tr:hover td { background: #181818; }
 
+
+/* ==============================================================================
+   SECTION: Status Badges
+   ============================================================================== */
+
+
+
+
 .status-badge {
   display: inline-block;
   padding: 2px 9px;
@@ -234,6 +279,14 @@
 .status-Shipped { background: rgba(139,92,246,0.12); color: #8b5cf6; }
 .status-Delivered { background: rgba(46,196,182,0.12); color: #2ec4b6; }
 .status-Cancelled { background: rgba(239,68,68,0.12); color: #ef4444; }
+
+
+/* ==============================================================================
+   SECTION: Status Form
+   ============================================================================== */
+
+
+
 
 .status-form { display: flex; gap: 4px; align-items: center; }
 .status-form select {
@@ -254,6 +307,14 @@
 .status-select.status-Delivered { background: rgba(46,204,113,0.12); color: #2ecc71; border-color: rgba(46,204,113,0.3); }
 .status-select.status-Cancelled { background: rgba(239,68,68,0.12); color: #ef4444; border-color: rgba(239,68,68,0.3); }
 
+
+/* ==============================================================================
+   SECTION: Empty State
+   ============================================================================== */
+
+
+
+
 .empty-state {
   text-align: center;
   padding: 28px;
@@ -262,6 +323,14 @@
 }
 .stock-low { color: #f57224; font-weight: 700; }
 .stock-out { color: #ef4444; font-weight: 700; }
+
+
+/* ==============================================================================
+   SECTION: Buttons
+   ============================================================================== */
+
+
+
 
 .admin-btn-sm {
   padding: 5px 12px;
@@ -277,6 +346,14 @@
 .admin-btn-approve { background: #2ec4b6; color: #fff; }
 .admin-btn-decline { background: #ef4444; color: #fff; }
 .admin-btn-revoke { background: #555; color: #fff; }
+
+
+/* ==============================================================================
+   SECTION: Badge
+   ============================================================================== */
+
+
+
 
 .badge {
   display: inline-flex;
@@ -296,6 +373,14 @@
 .clickable-hd:hover { background: rgba(212,175,55,0.03); }
 
 /* Scroll tracker styles */
+
+/* ==============================================================================
+   SECTION: Scroll Tracker
+   ============================================================================== */
+
+
+
+
 .scroll-progress-bar {
   position: fixed;
   top: 0;
@@ -339,15 +424,55 @@
   transform: scale(1.3);
 }
 
+
+/* ==============================================================================
+   SECTION: Responsive
+   ============================================================================== */
+
+
+
+
 @media (max-width: 768px) {
-  .admin-layout { flex-direction: column; }
-  .admin-sidebar { width: 100%; height: auto; position: static; padding: 12px 0; }
+  
+/* ==============================================================================
+   SECTION: Layout
+   ============================================================================== */
+
+
+
+
+.admin-layout { flex-direction: column; }
+  
+/* ==============================================================================
+   SECTION: Sidebar
+   ============================================================================== */
+
+
+
+
+.admin-sidebar { width: 100%; height: auto; position: static; padding: 12px 0; }
   .admin-sidebar .brand { display: none; }
   .admin-nav { display: flex; overflow-x: auto; padding: 0 8px; }
   .admin-nav li { flex-shrink: 0; }
   .admin-nav .nav-label { display: none; }
-  .admin-main { padding: 20px; }
-  .admin-grid { grid-template-columns: 1fr; }
+  
+/* ==============================================================================
+   SECTION: Main Content
+   ============================================================================== */
+
+
+
+
+.admin-main { padding: 20px; }
+  
+/* ==============================================================================
+   SECTION: Admin Grid
+   ============================================================================== */
+
+
+
+
+.admin-grid { grid-template-columns: 1fr; }
   .scroll-section-nav { right: 8px; padding: 8px 6px; }
   .scroll-section-nav a { width: 6px; height: 6px; }
 }

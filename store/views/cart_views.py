@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: store.views.cart_views
+# Description: Shopping cart views
+# ==============================================================================
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -7,6 +12,10 @@ from datetime import datetime, timedelta
 from ..models import CartItem, Product, ProductSize, Category
 from ..activity_logger import log_action
 
+
+# ==============================================================================
+# SECTION: Add to Cart
+# ==============================================================================
 
 def add_to_cart(request, product_id):
     if not request.user.is_authenticated:
@@ -94,6 +103,10 @@ def add_to_cart(request, product_id):
 
     return JsonResponse(response_data)
 
+
+# ==============================================================================
+# SECTION: Cart View
+# ==============================================================================
 
 def cart_view(request):
     cart_items = []
@@ -223,6 +236,10 @@ def cart_view(request):
     return render(request, 'store/cart.html', context)
 
 
+# ==============================================================================
+# SECTION: Update Cart Quantity
+# ==============================================================================
+
 def update_cart_quantity(request, product_id, action):
     is_ajax = request.GET.get('_ajax') == '1'
     if request.user.is_authenticated:
@@ -316,6 +333,10 @@ def update_cart_quantity(request, product_id, action):
     return redirect('store:cart')
 
 
+# ==============================================================================
+# SECTION: Batch Delete
+# ==============================================================================
+
 @login_required
 def cart_batch_delete(request):
     if request.method != 'POST':
@@ -368,6 +389,10 @@ def cart_batch_delete(request):
         'cart_count': total_cart_qty,
     })
 
+
+# ==============================================================================
+# SECTION: Cart Mini API
+# ==============================================================================
 
 @login_required
 def cart_mini_api(request):

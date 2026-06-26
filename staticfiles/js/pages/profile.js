@@ -1,3 +1,12 @@
+// ==============================================================================
+// File: profile.js
+// Description: Profile tab switching with URL hash state management
+// ==============================================================================
+
+// ==============================================================================
+// SECTION: Tab Activation
+// ==============================================================================
+
 (function(){
   var tabs = document.querySelectorAll('.profile-tab');
   var panels = document.querySelectorAll('.tab-panel');

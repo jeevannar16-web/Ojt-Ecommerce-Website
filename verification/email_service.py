@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: verification.email_service
+# Description: Email verification service
+# ==============================================================================
+
 import logging
 from datetime import timedelta
 
@@ -10,6 +15,10 @@ from .models import EmailVerification
 
 logger = logging.getLogger(__name__)
 
+
+# ==============================================================================
+# SECTION: EmailVerificationService
+# ==============================================================================
 
 class EmailVerificationService:
     @staticmethod

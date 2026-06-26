@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Seller: Dashboard (Hero, Stats, Revenue, Orders, Products)               -->
+<!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
 
@@ -226,7 +229,7 @@
           <div class="mw-header-actions">
             <div class="mw-search-wrap">
               <i class="bi bi-search"></i>
-              <input type="text" id="sd-msg-search" class="mw-search-input" placeholder="{{ 'Search conversations...'|t }}" style="width:220px;" oninput="sdFilterConversations(this.value)">
+              <input type="text" id="sd-msg-search" class="mw-search-input" placeholder="{{ 'Search conversations...'|t }}" style="width:220px;max-width:100%;" oninput="sdFilterConversations(this.value)">
             </div>
             <a href="{% url 'store:messages_list' %}" class="seller-card-link">{{ 'View All'|t }} →</a>
           </div>

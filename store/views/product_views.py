@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: store.views.product_views
+# Description: Product listing and detail views
+# ==============================================================================
+
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.db.models import Q
@@ -7,6 +12,9 @@ from ..models import Category, Product, FavoriteItem, Review, OrderItem
 from django.db.models import Count, Avg
 
 
+# ════════════════════════════════════════════════════════════════
+# SEARCH & PRODUCT LISTING
+# ════════════════════════════════════════════════════════════════
 GOAL_MAP = {
     'muscle': ['Muscle & Strength', 'Dumbbell Training', 'Kettlebell Workouts', 'Gym Machines'],
     'home':   ['Resistance Bands', 'Yoga & Pilates', 'Bodyweight Calisthenics'],
@@ -28,6 +36,11 @@ SORT_MAP = {
     'name_asc':    'name',
     'newest':      '-id',
 }
+
+
+# ==============================================================================
+# SECTION: Helper Functions
+# ==============================================================================
 
 def _filter_and_sort_products(request):
     products = Product.objects.all()
@@ -88,6 +101,10 @@ def _filter_and_sort_products(request):
 
     return products, title, is_search, category_id, goal, sort, price_min, price_max, selected_types, only_available, search_query
 
+
+# ==============================================================================
+# SECTION: Product Views
+# ==============================================================================
 
 def product_list(request):
     products, title, is_search, category_id, goal, sort, price_min, price_max, selected_types, only_available, search_query = _filter_and_sort_products(request)

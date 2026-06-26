@@ -1,0 +1,50 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+{% block title %}{{ 'Newsletter Broadcast'|t }} — Admin{% endblock %}
+{% block extra_css %}
+<style>
+*{box-sizing:border-box}
+.bc-wrap{padding:40px 20px;background:#08080c;min-height:100vh}
+.bc-card{max-width:640px;margin:0 auto;background:rgba(18,18,24,0.92);border:1px solid rgba(232,201,126,0.1);border-radius:24px;padding:40px;box-shadow:0 32px 96px rgba(0,0,0,0.6)}
+.bc-card h1{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#f0ece4;margin:0 0 4px}
+.bc-card .sub{color:rgba(255,255,255,0.35);font-size:0.85rem;margin:0 0 24px}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;color:rgba(255,255,255,0.5);font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.form-group input,.form-group textarea{width:100%;padding:12px 14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;color:#e0e0e0;font-size:0.9rem;transition:border-color 0.3s;outline:0;font-family:inherit}
+.form-group input:focus,.form-group textarea:focus{border-color:rgba(232,201,126,0.2)}
+.form-group textarea{min-height:160px;resize:vertical}
+.submit-btn{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#e8c97e,#d4af37 40%,#c4783a);color:#08080c;font-size:0.88rem;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;box-shadow:0 4px 20px rgba(232,201,126,0.2);transition:all 0.3s}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(232,201,126,0.3)}
+.back-link{display:block;text-align:center;margin-top:16px;color:rgba(255,255,255,0.25);font-size:0.8rem;text-decoration:none}
+.back-link:hover{color:#d4af37}
+</style>
+{% endblock %}
+{% block content %}
+<div class="bc-wrap">
+<div class="bc-card">
+  <h1>{{ 'Newsletter Broadcast'|t }}</h1>
+  <div class="sub">{{ 'Compose and send an email to all active subscribers'|t }}</div>
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label>{{ 'Subject'|t }}</label>
+      <input type="text" name="subject" maxlength="200" required placeholder="e.g. Spring Sale — Up to 50% Off">
+    </div>
+    <div class="form-group">
+      <label>{{ 'Body'|t }}</label>
+      <textarea name="body" required placeholder="Write your message here..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>{{ 'CTA Text (optional)'|t }}</label>
+      <input type="text" name="cta_text" placeholder="e.g. Shop Now">
+    </div>
+    <div class="form-group">
+      <label>{{ 'CTA URL (optional)'|t }}</label>
+      <input type="url" name="cta_url" placeholder="e.g. https://fitnesshub.com/sale/">
+    </div>
+    <button type="submit" class="submit-btn">{{ 'Send Broadcast'|t }}</button>
+  </form>
+  <a href="{% url 'store:admin_dashboard' %}" class="back-link">&larr; {{ 'Back to Dashboard'|t }}</a>
+</div>
+</div>
+{% endblock %}

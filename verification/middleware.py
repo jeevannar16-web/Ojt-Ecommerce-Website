@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: verification.middleware
+# Description: Email verification middleware
+# ==============================================================================
+
 from django.conf import settings
 from django.shortcuts import redirect
 

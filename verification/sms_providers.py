@@ -1,3 +1,8 @@
+# ==============================================================================
+# Module: verification.sms_providers
+# Description: SMS provider abstraction
+# ==============================================================================
+
 import logging
 from abc import ABC, abstractmethod
 
@@ -5,6 +10,10 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
+
+# ==============================================================================
+# SECTION: Abstract Base Provider
+# ==============================================================================
 
 class SMSProvider(ABC):
     @abstractmethod
@@ -65,6 +74,10 @@ class TwilioSMSProvider(SMSProvider):
         return 'twilio'
 
 
+# ==============================================================================
+# SECTION: Console Provider (Dev)
+# ==============================================================================
+
 class ConsoleSMSProvider(SMSProvider):
     """Development-only provider that logs SMS to console."""
 
@@ -84,6 +97,10 @@ class ConsoleSMSProvider(SMSProvider):
     def get_provider_name(self) -> str:
         return 'console'
 
+
+# ==============================================================================
+# SECTION: Provider Factory
+# ==============================================================================
 
 def get_sms_provider() -> SMSProvider:
     provider_name = getattr(settings, 'SMS_PROVIDER', 'console').lower()

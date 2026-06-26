@@ -1,3 +1,6 @@
+<!-- ========================================================================= -->
+<!-- Store: Admin All Sellers (List, Status, Products, Actions)               -->
+<!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
 
@@ -73,13 +76,13 @@
       <label>{{ 'Search'|t }}</label>
       <input type="text" name="search" placeholder="{{ 'Username, store or email...'|t }}" value="{{ current_search }}">
       <label>{{ 'Verified'|t }}</label>
-      <select name="verified">
+      <select name="verified" onchange="this.form.submit()">
         <option value="">{{ 'All'|t }}</option>
         <option value="yes" {% if current_verified == 'yes' %}selected{% endif %}>{{ 'Verified'|t }}</option>
         <option value="no" {% if current_verified == 'no' %}selected{% endif %}>{{ 'Unverified'|t }}</option>
       </select>
       <label>{{ 'Sort'|t }}</label>
-      <select name="sort">
+      <select name="sort" onchange="this.form.submit()">
         <option value="name" {% if current_sort == 'name' %}selected{% endif %}>{{ 'Name'|t }}</option>
         <option value="revenue" {% if current_sort == 'revenue' %}selected{% endif %}>{{ 'Revenue'|t }}</option>
         <option value="orders" {% if current_sort == 'orders' %}selected{% endif %}>{{ 'Orders'|t }}</option>

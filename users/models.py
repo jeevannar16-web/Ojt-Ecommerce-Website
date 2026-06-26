@@ -1,8 +1,17 @@
+# ==============================================================================
+# Module: users.models
+# Description: User profile and credential history models
+# ==============================================================================
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+
+# ==============================================================================
+# SECTION: Profile Model
+# ==============================================================================
 
 class Profile(models.Model):
     STORE_TYPE_CHOICES = [
@@ -47,6 +56,10 @@ class Profile(models.Model):
         return self.user.username
 
 
+# ==============================================================================
+# SECTION: CredentialHistory Model
+# ==============================================================================
+
 class CredentialHistory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='credential_history')
     store_name = models.CharField(max_length=200, blank=True)
@@ -64,6 +77,11 @@ class CredentialHistory(models.Model):
 
     def __str__(self):
         return f"{self.user.username} — {self.store_name or 'no name'} ({self.created_at:%Y-%m-%d})"
+
+
+# ==============================================================================
+# SECTION: Signal Handlers
+# ==============================================================================
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

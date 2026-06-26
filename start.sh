@@ -3,7 +3,6 @@
 # Usage: ./start.sh          (port 8000)
 #        ./start.sh 8080     (custom port)
 
-set -e
 PORT=${1:-8000}
 
 # Auto-create venv if missing
@@ -12,7 +11,7 @@ if [ ! -d venv ]; then
   python3 -m venv venv
 fi
 
-source venv/bin/activate
+source venv/bin/activate 2>/dev/null || . venv/bin/activate
 
 # Auto-install if missing
 if [ ! -f venv/installed ]; then
@@ -27,5 +26,7 @@ if command -v lsof &>/dev/null; then
   [ -n "$PID" ] && kill -9 $PID 2>/dev/null
 fi
 
-echo "Starting on http://0.0.0.0:$PORT ..."
+echo ""
+echo "  Open http://127.0.0.1:$PORT or http://localhost:$PORT in your browser"
+echo ""
 python manage.py runserver 0.0.0.0:$PORT

@@ -513,10 +513,6 @@
   }
   scrollToBottom();
   window.addEventListener('load', scrollToBottom);
-  if(body && window.MutationObserver){
-    var obs = new MutationObserver(scrollToBottom);
-    obs.observe(body, {childList:true, subtree:true, attributes:false});
-  }
 
   // Auto-resize textarea
   if(input){
@@ -788,7 +784,7 @@
           addMessageToBody(m);
           lastId = m.id;
         });
-        body.scrollTop = body.scrollHeight;
+        if(body.scrollTop + body.clientHeight >= body.scrollHeight - 150) body.scrollTop = body.scrollHeight;
         // Browser notification
         if(document.hidden && Notification && Notification.permission === 'granted'){
           var lastMsg = data.messages[data.messages.length - 1];
@@ -801,7 +797,69 @@
     xhr.send();
   }, 2500);
 
-  // === NOTIFICATION PERMISSION ===
+  // === REACTION POLLING ===
+  setInterval(function(){
+    if(isBlocked) return;
+    var wraps = body.querySelectorAll('.md-msg-wrap');
+    if(!wraps.length) return;
+    var ids = [];
+    wraps.forEach(function(w){ ids.push(w.dataset.msgId); });
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '{% url "store:api_reaction_updates" conversation.id %}?ids=' + ids.join(','), true);
+    xhr.onload = function(){
+      if(xhr.status !== 200) return;
+      try {
+        var data = JSON.parse(xhr.responseText);
+        /* ── Sync pinned bar ── */
+        if(data.hasOwnProperty('pinned_id')){
+          var bar = document.getElementById('pinned-bar');
+          if(data.pinned_id){
+            if(!bar){
+              bar = document.createElement('div');
+              bar.className = 'md-pinned-bar open';
+              bar.id = 'pinned-bar';
+              var header = document.querySelector('.md-chat-header');
+              if(header) header.after(bar);
+            }
+            bar.classList.add('open');
+            bar.innerHTML = '<i class="bi bi-pin-angle-fill"></i><span>' + (data.pinned_content || '') + '</span><button class="unpin-btn" onclick="togglePin(' + data.pinned_id + ')"><i class="bi bi-x"></i></button>';
+            document.querySelectorAll('.md-msg-action').forEach(function(b){
+              var id = b.getAttribute('onclick');
+              if(id && id.indexOf('togglePin(' + data.pinned_id + ')') !== -1) b.className = 'md-msg-action pinned';
+            });
+          } else {
+            if(bar) bar.classList.remove('open');
+            document.querySelectorAll('.md-msg-action.pinned').forEach(function(b){ b.classList.remove('pinned'); });
+          }
+        }
+        /* ── Sync reactions ── */
+        if(data.reactions){
+          Object.keys(data.reactions).forEach(function(id){
+          var wrap = body.querySelector('[data-msg-id="' + id + '"]');
+          if(!wrap) return;
+          var content = wrap.querySelector('.md-msg-content');
+          var existing = wrap.querySelector('.md-msg-reactions');
+          if(existing) existing.remove();
+          var reactions = data.reactions[id];
+          if(!reactions || !Object.keys(reactions).length) return;
+          var rDiv = document.createElement('div');
+          rDiv.className = 'md-msg-reactions';
+          var myUsername = '{{ request.user.username }}';
+          Object.keys(reactions).forEach(function(emoji){
+            var users = reactions[emoji];
+            var badge = document.createElement('span');
+            badge.className = 'md-reaction-badge' + (users.indexOf(myUsername) !== -1 ? ' mine' : '');
+            badge.innerHTML = emoji + ' <span class="r-count">' + users.length + '</span>';
+            badge.onclick = function(){ reactToMessage(parseInt(id), emoji); };
+            rDiv.appendChild(badge);
+          });
+          if(content) content.appendChild(rDiv);
+        });
+      }
+    } catch(e){}
+    };
+    xhr.send();
+  }, 3000);
   if('Notification' in window && Notification.permission === 'default'){
     Notification.requestPermission();
   }
@@ -857,6 +915,17 @@
 
   pollOnlineStatus();
   setInterval(pollOnlineStatus, 30000);
+
+  // === HEARTBEAT (stay online) ===
+  function sendHeartbeat(){
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '{% url "store:api_heartbeat" %}', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+    xhr.send(JSON.stringify({}));
+  }
+  sendHeartbeat();
+  setInterval(sendHeartbeat, 60000);
 
 })();
 
@@ -1246,13 +1315,42 @@ function showQuickReactions(btn, msgId){
 
 // === PIN ===
 function togglePin(msgId){
+  var chatBody = document.getElementById('msg-body');
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '{% url "store:api_pin_message" %}', true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
   xhr.onload = function(){
     if(xhr.status === 200){
-      location.reload();
+      try {
+        var d = JSON.parse(xhr.responseText);
+        if(chatBody){
+          var wrap = chatBody.querySelector('[data-msg-id="' + msgId + '"]');
+          if(wrap){
+            var btn = wrap.querySelector('[onclick*="togglePin(' + msgId + ')"]');
+            if(btn) btn.className = 'md-msg-action' + (d.is_pinned ? ' pinned' : '');
+            var icon = btn ? btn.querySelector('i') : null;
+            if(icon) icon.className = 'bi bi-pin' + (d.is_pinned ? '-fill' : '');
+          }
+        }
+        var bar = document.getElementById('pinned-bar');
+        if(d.is_pinned){
+          if(!bar){
+            var msgWrap = chatBody ? chatBody.querySelector('[data-msg-id="' + msgId + '"]') : null;
+            var msgText = msgWrap ? msgWrap.querySelector('.msg-text') : null;
+            var text = msgText ? msgText.textContent.trim().substring(0,80) : '';
+            bar = document.createElement('div');
+            bar.className = 'md-pinned-bar open';
+            bar.id = 'pinned-bar';
+            bar.innerHTML = '<i class="bi bi-pin-angle-fill"></i><span>' + text + '</span><button class="unpin-btn" onclick="togglePin(' + msgId + ')"><i class="bi bi-x"></i></button>';
+            document.querySelector('.md-chat-header').after(bar);
+          } else {
+            bar.classList.add('open');
+          }
+        } else {
+          if(bar) bar.classList.remove('open');
+        }
+      } catch(e){}
     }
   };
   xhr.send(JSON.stringify({message_id: msgId}));
@@ -1324,11 +1422,12 @@ function editMsg(btn){
     };
     xhr.send(JSON.stringify({message_id: parseInt(wrap.dataset.msgId), content: newText}));
   };
-  cancelBtn.onclick = function cancelEdit(){
+  function cancelEdit(){
     textSpan.style.display = '';
     if(input.parentNode) input.remove();
     if(actions.parentNode) actions.remove();
-  };
+  }
+  cancelBtn.onclick = cancelEdit;
   actions.appendChild(saveBtn);
   actions.appendChild(cancelBtn);
   msgDiv.appendChild(actions);

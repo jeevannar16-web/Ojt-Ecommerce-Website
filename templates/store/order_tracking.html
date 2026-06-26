@@ -174,8 +174,57 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/pages/order_maps.js' %}"></script>
+<style>
+.map-modal-overlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999;
+  align-items:center; justify-content:center;
+}
+.map-modal-overlay.open { display:flex; }
+.map-modal-box {
+  width:90vw; height:85vh; max-width:1200px; border-radius:12px; overflow:hidden;
+  background:#111; border:1px solid rgba(212,175,55,0.15); position:relative;
+}
+.map-modal-close {
+  position:absolute; top:12px; right:12px; z-index:1000;
+  width:36px; height:36px; border-radius:50%; border:none;
+  background:rgba(0,0,0,0.6); color:#fff; font-size:1.3rem;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+.map-modal-close:hover { background:rgba(212,175,55,0.8); }
+#fullscreen-map { width:100%; height:100%; }
+</style>
+
+<div class="map-modal-overlay" id="map-modal">
+  <div class="map-modal-box">
+    <button class="map-modal-close" onclick="closeFullMap()"><i class="bi bi-x"></i></button>
+    <div id="fullscreen-map"></div>
+  </div>
+</div>
+
 <script>
+var fullMapInstance = null;
+
+function openFullMap(lat, lng, title){
+  var modal = document.getElementById('map-modal');
+  modal.classList.add('open');
+  setTimeout(function(){
+    var container = document.getElementById('fullscreen-map');
+    if(fullMapInstance){
+      fullMapInstance.setView([lat, lng], 15);
+      fullMapInstance.invalidateSize();
+    } else {
+      fullMapInstance = L.map(container, { center: [lat, lng], zoom: 15, zoomControl: true, scrollWheelZoom: true, attributionControl: true });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(fullMapInstance);
+      L.marker([lat, lng]).addTo(fullMapInstance).bindPopup(title || 'Delivery Location').openPopup();
+    }
+  }, 100);
+}
+
+function closeFullMap(){
+  document.getElementById('map-modal').classList.remove('open');
+}
+
+// Toggle mini-map + full-map button
 document.querySelectorAll('[data-toggle-map]').forEach(function(btn) {
   btn.addEventListener('click', function() {
     var orderId = this.getAttribute('data-toggle-map');
@@ -184,10 +233,10 @@ document.querySelectorAll('[data-toggle-map]').forEach(function(btn) {
     var isOpen = mapEl.style.height !== '0px' && mapEl.style.height !== '';
     if (isOpen) {
       mapEl.style.height = '0px';
-      this.innerHTML = 'View Delivery Location <i class="bi bi-chevron-down"></i>';
+      this.innerHTML = '{{ 'View Delivery Location'|t }} <i class="bi bi-chevron-down"></i>';
     } else {
       mapEl.style.height = '180px';
-      this.innerHTML = 'Hide Map <i class="bi bi-chevron-up"></i>';
+      this.innerHTML = '{{ 'Hide Map'|t }} <i class="bi bi-chevron-up"></i>';
       if (mapEl._leaflet_id) {
         mapEl._leaflet_map.invalidateSize();
       } else {
@@ -196,12 +245,30 @@ document.querySelectorAll('[data-toggle-map]').forEach(function(btn) {
         if (!isNaN(lat) && !isNaN(lng)) {
           var map = L.map(mapEl, { center: [lat, lng], zoom: 15, zoomControl: false, dragging: false, scrollWheelZoom: false, attributionControl: false });
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
-          L.marker([lat, lng]).addTo(map).bindPopup('Delivery Location');
+          var marker = L.marker([lat, lng]).addTo(map).bindPopup('Delivery Location');
+          // Add a full-map button in the corner
+          var fullBtn = L.control({position: 'topright'});
+          fullBtn.onAdd = function(){
+            var div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+            div.innerHTML = '<a href="#" role="button" title="Full Map" style="font-size:14px;line-height:30px;width:30px;height:30px;text-align:center;background:#fff;color:#333;border-radius:2px;"><i class="bi bi-arrows-angle-expand"></i></a>';
+            div.onclick = function(e){
+              L.DomEvent.stopPropagation(e);
+              L.DomEvent.preventDefault(e);
+              openFullMap(lat, lng, 'Delivery Location');
+            };
+            return div;
+          };
+          fullBtn.addTo(map);
           mapEl._leaflet_map = map;
         }
       }
     }
   });
+});
+
+// Close modal on overlay click
+document.getElementById('map-modal').addEventListener('click', function(e){
+  if(e.target === this) closeFullMap();
 });
 </script>
 {% endblock %}

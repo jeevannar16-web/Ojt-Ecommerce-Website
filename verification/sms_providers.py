@@ -76,19 +76,14 @@ class TwilioSMSProvider(SMSProvider):
 # ==============================================================================
 
 class ConsoleSMSProvider(SMSProvider):
-    """Development-only provider that logs SMS to console."""
+    """Displays the OTP directly on the user's screen — no SMS needed."""
 
     def send_otp(self, phone: str, otp: str) -> dict:
-        print(f'\n=== SMS VERIFICATION ===')
-        print(f'  To: {phone}')
-        print(f'  OTP: {otp}')
-        print(f'  Valid for: 15 minutes')
-        print(f'=======================\n')
-        logger.info(f'[DEV SMS] Sent OTP {otp} to {phone}')
-        return {'success': True, 'sid': 'dev-mode'}
+        logger.info(f'[SCREEN OTP] {otp} for {phone}')
+        return {'success': True, 'sid': 'dev-mode', 'otp': otp}
 
     def verify_otp(self, phone: str, otp: str) -> bool:
-        logger.info(f'[DEV SMS] Verifying {otp} for {phone}')
+        logger.info(f'[SCREEN OTP] Verifying {otp} for {phone}')
         return True
 
     def get_provider_name(self) -> str:

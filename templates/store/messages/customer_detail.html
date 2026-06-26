@@ -407,9 +407,6 @@
   }
   scrollToBottom();
   window.addEventListener('load', scrollToBottom);
-  if(body && window.MutationObserver){
-    new MutationObserver(scrollToBottom).observe(body, {childList:true, subtree:true});
-  }
 
   /* ── Auto-resize textarea ── */
   if(input){
@@ -638,6 +635,58 @@
   pollOnlineStatus();
   statusTimer = setInterval(pollOnlineStatus, 30000);
 
+  /* ── Heartbeat (stay online) ── */
+  function sendHeartbeat(){
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '{% url "store:api_heartbeat" %}', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRFToken', csrf);
+    xhr.send(JSON.stringify({}));
+  }
+  sendHeartbeat();
+  setInterval(sendHeartbeat, 60000);
+
+  /* ── Reaction polling ── */
+  function pollReactions(){
+    var wraps = body.querySelectorAll('[data-msg-id]');
+    if(!wraps.length) return;
+    var ids = [];
+    wraps.forEach(function(w){ ids.push(w.dataset.msgId); });
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '{% url "store:api_reaction_updates" conversation.id %}?ids=' + ids.join(','), true);
+    xhr.onload = function(){
+      if(xhr.status !== 200) return;
+      try {
+        var data = JSON.parse(xhr.responseText);
+        /* ── Sync pinned bar ── */
+        if(data.hasOwnProperty('pinned_id')){
+          var bar = document.getElementById('pinned-bar');
+          if(data.pinned_id){
+            if(!bar){
+              bar = document.createElement('div');
+              bar.className = 'cd-pinned-bar open';
+              bar.id = 'pinned-bar';
+              var header = document.querySelector('.cd-chat-header');
+              if(header) header.after(bar);
+            }
+            bar.classList.add('open');
+            bar.innerHTML = '<i class="bi bi-pin-angle-fill"></i><span>' + (data.pinned_content || '') + '</span><button onclick="togglePin(' + data.pinned_id + ')" style="background:none;border:none;color:#d4af37;cursor:pointer;font-size:0.9rem;padding:2px 6px;"><i class="bi bi-x"></i></button>';
+          } else {
+            if(bar) bar.classList.remove('open');
+          }
+        }
+        /* ── Sync reactions ── */
+        if(data.reactions){
+          Object.keys(data.reactions).forEach(function(id){
+            updateReactionsDisplay(parseInt(id), data.reactions[id]);
+          });
+        }
+      } catch(e){}
+    };
+    xhr.send();
+  }
+  setInterval(pollReactions, 3000);
+
   if('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
 
   /* ── Search ── */
@@ -858,7 +907,38 @@
     xhr.open('POST', '{% url "store:api_pin_message" %}', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('X-CSRFToken', csrf);
-    xhr.onload = function(){ if(xhr.status === 200){ try{ var d = JSON.parse(xhr.responseText); if(d.ok) window.location.reload(); }catch(e){} } };
+    xhr.onload = function(){
+      if(xhr.status === 200){
+        try {
+          var d = JSON.parse(xhr.responseText);
+          var wrap = body.querySelector('[data-msg-id="' + msgId + '"]');
+          if(wrap){
+            var btn = wrap.querySelector('.cd-msg-actions') ? wrap.querySelector('.cd-msg-actions').querySelector('[onclick*="togglePin(' + msgId + ')"]') : null;
+            if(btn) btn.className = 'cd-msg-action' + (d.is_pinned ? ' pinned' : '');
+            var icon = btn ? btn.querySelector('i') : null;
+            if(icon) icon.className = 'bi bi-pin' + (d.is_pinned ? '-fill' : '');
+          }
+          var bar = document.getElementById('pinned-bar');
+          if(d.is_pinned){
+            if(!bar){
+              var msgWrap = body.querySelector('[data-msg-id="' + msgId + '"]');
+              var msgContent = msgWrap ? msgWrap.querySelector('.cd-msg') : null;
+              var text = msgContent ? msgContent.textContent.trim().substring(0,80) : '';
+              bar = document.createElement('div');
+              bar.className = 'cd-pinned-bar open';
+              bar.id = 'pinned-bar';
+              bar.innerHTML = '<i class="bi bi-pin-angle-fill"></i><span>' + text + '</span><button onclick="togglePin(' + msgId + ')" style="background:none;border:none;color:#d4af37;cursor:pointer;font-size:0.9rem;padding:2px 6px;"><i class="bi bi-x"></i></button>';
+              var header = document.querySelector('.cd-chat-header');
+              if(header) header.after(bar);
+            } else {
+              bar.classList.add('open');
+            }
+          } else {
+            if(bar) bar.classList.remove('open');
+          }
+        } catch(e){}
+      }
+    };
     xhr.send(JSON.stringify({message_id: msgId}));
   };
 

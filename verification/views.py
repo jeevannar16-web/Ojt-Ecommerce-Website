@@ -3,6 +3,7 @@
 import json
 
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -167,6 +168,8 @@ def send_phone_verification(request):
         if success:
             messages.success(request, msg)
             request.session['verify_phone'] = phone
+            if verification and getattr(settings, 'SMS_PROVIDER', 'console') != 'twilio':
+                request.session['verify_otp_code'] = verification.otp
             return redirect('verify_phone_otp')
         messages.error(request, msg)
     return render(request, 'verification/send_phone.html')
@@ -179,12 +182,13 @@ def verify_phone_otp(request):
         success, msg = PhoneVerificationService.verify_otp(request.user, otp)
         if success:
             messages.success(request, msg)
-            if 'verify_phone' in request.session:
-                del request.session['verify_phone']
+            request.session.pop('verify_phone', None)
+            request.session.pop('verify_otp_code', None)
             return redirect('profile')
         messages.error(request, msg)
     phone = request.session.get('verify_phone', '')
-    return render(request, 'verification/verify_phone_otp.html', {'phone': phone})
+    otp_code = request.session.get('verify_otp_code', '')
+    return render(request, 'verification/verify_phone_otp.html', {'phone': phone, 'otp_code': otp_code})
 
 
 @login_required
@@ -197,6 +201,8 @@ def resend_phone_verification(request):
     success, msg, verification = PhoneVerificationService.resend(request.user, phone)
     if success:
         messages.success(request, 'OTP resent.')
+        if verification and getattr(settings, 'SMS_PROVIDER', 'console') != 'twilio':
+            request.session['verify_otp_code'] = verification.otp
     else:
         messages.error(request, msg)
     return redirect('verify_phone_otp')

@@ -427,6 +427,41 @@ def api_react_message(request):
     return JsonResponse({'ok': True, 'reactions': reactions})
 
 
+@login_required
+def api_heartbeat(request):
+    status, _ = UserOnline.objects.get_or_create(user=request.user)
+    status.is_online = True
+    status.last_seen = timezone.now()
+    status.save(update_fields=['is_online', 'last_seen'])
+    return JsonResponse({'ok': True})
+
+
+@login_required
+def api_reaction_updates(request, conversation_id):
+    conv = get_object_or_404(Conversation, id=conversation_id)
+    user = request.user
+    if user != conv.customer and user != conv.seller and not user.is_staff:
+        return JsonResponse({'error': 'forbidden'}, status=403)
+    ids = request.GET.get('ids', '')
+    if not ids:
+        return JsonResponse({'reactions': {}})
+    try:
+        msg_ids = [int(x) for x in ids.split(',') if x.strip().isdigit()]
+    except (ValueError, TypeError):
+        return JsonResponse({'reactions': {}})
+    msgs = Message.objects.filter(id__in=msg_ids, conversation=conv).only('id', 'reactions')
+    result = {}
+    for m in msgs:
+        if m.reactions:
+            result[str(m.id)] = m.reactions
+    pinned = conv.messages.filter(is_pinned=True).only('id', 'content').first()
+    return JsonResponse({
+        'reactions': result,
+        'pinned_id': pinned.id if pinned else None,
+        'pinned_content': pinned.content[:80] if pinned else None,
+    })
+
+
 # ==============================================================================
 # SECTION: API - Upload Image
 # ==============================================================================
@@ -833,6 +868,10 @@ def api_update_status(request):
     profile.status_emoji = emoji
     profile.status_text = text
     profile.save(update_fields=['status_emoji', 'status_text'])
+    status, _ = UserOnline.objects.get_or_create(user=request.user)
+    status.is_online = True
+    status.last_seen = timezone.now()
+    status.save(update_fields=['is_online', 'last_seen'])
     return JsonResponse({'ok': True, 'emoji': emoji, 'text': text})
 
 

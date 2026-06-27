@@ -69,6 +69,8 @@ def verification_setup(request):
                 success, msg, verification = PhoneVerificationService.send_otp(request.user, phone)
                 if success:
                     request.session['verify_phone'] = phone
+                    if verification and getattr(settings, 'SMS_PROVIDER', 'console') != 'twilio':
+                        request.session['verify_otp_code'] = verification.otp
                     messages.success(request, msg)
                 else:
                     messages.error(request, msg)
@@ -86,6 +88,8 @@ def verification_setup(request):
                 messages.success(request, msg)
                 if 'verify_phone' in request.session:
                     del request.session['verify_phone']
+                if 'verify_otp_code' in request.session:
+                    del request.session['verify_otp_code']
             else:
                 messages.error(request, msg)
             return redirect('verification_setup')
@@ -103,6 +107,7 @@ def verification_setup(request):
         'phone_verified': phone_verified,
         'pending_email_exists': pending_email is not None,
         'phone': request.session.get('verify_phone', ''),
+        'otp_code': request.session.get('verify_otp_code', ''),
     }
 
     return render(request, 'verification/setup.html', context)

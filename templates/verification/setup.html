@@ -72,10 +72,17 @@
   </div>
   {% endif %}
 
-  {% if email_verified and not phone_verified %}
+    {% if email_verified and not phone_verified %}
   <div style="background:#141414;border:1px solid #1f1f1f;border-radius:12px;padding:28px;">
     <h3 style="color:#f0ece4;margin:0 0 4px;font-size:1.05rem;">📱 {{ 'Verify Phone'|t }}</h3>
     <p style="color:#777;font-size:0.82rem;margin:0 0 16px;">{{ 'Enter your phone number to receive a verification code.'|t }}</p>
+
+    {% if otp_code %}
+    <div style="background:#1a2e1a;border:1px solid #2ecc71;border-radius:10px;padding:16px;text-align:center;margin-bottom:16px;">
+      <div style="color:#2ecc71;font-size:0.72rem;margin-bottom:4px;">{{ 'Your verification code'|t }}</div>
+      <div style="font-size:2rem;font-weight:700;color:#f0ece4;letter-spacing:8px;">{{ otp_code }}</div>
+    </div>
+    {% endif %}
 
     {% if not phone %}
     <form method="post">

@@ -1,5 +1,7 @@
 """Database models for the store — products, categories, orders, cart items, reviews, and everything in between."""
 
+import mimetypes
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -370,6 +372,13 @@ class Message(models.Model):
 
     class Meta:
         ordering = ['created_at']
+
+    @property
+    def mime_type(self):
+        if not self.file:
+            return None
+        mt, _ = mimetypes.guess_type(self.file.name)
+        return mt or 'application/octet-stream'
 
     def __str__(self):
         return f"[{self.created_at:%H:%M}] {self.sender.username}: {self.content[:50]}"

@@ -176,12 +176,12 @@
           {% endif %}
           {% if msg.file_type == 'video' and msg.file %}
           <video class="cd-video-player" controls preload="metadata">
-            <source src="{{ msg.file.url }}" type="{{ msg.file_mime_type|default:'video/mp4' }}">
+            <source src="{{ msg.file.url }}" type="{{ msg.mime_type|default:'video/mp4' }}">
           </video>
           {% endif %}
           {% if msg.file_type == 'audio' and msg.file %}
           <audio class="cd-audio-player" controls preload="metadata">
-            <source src="{{ msg.file.url }}" type="{{ msg.file_mime_type|default:'audio/mpeg' }}">
+            <source src="{{ msg.file.url }}" type="{{ msg.mime_type|default:'audio/mpeg' }}">
           </audio>
           {% endif %}
           {% if msg.file_type == 'document' and msg.file %}

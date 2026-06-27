@@ -369,7 +369,7 @@ def api_new_messages(request, conversation_id):
                 file_size = m.file.size
             except (OSError, NotImplementedError):
                 file_size = None
-            file_mime_type = m.file_type or 'application/octet-stream'
+            file_mime_type = m.mime_type
         data.append({
             'id': m.id,
             'sender': m.sender.username,
@@ -657,6 +657,7 @@ def api_upload_file(request):
         'file_type': ftype,
         'file_name': uploaded.name,
         'file_size': uploaded.size,
+        'file_mime_type': msg.mime_type,
         'created_at': msg.created_at.strftime('%H:%M'),
     })
 

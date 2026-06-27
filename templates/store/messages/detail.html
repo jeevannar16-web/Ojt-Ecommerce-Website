@@ -9,8 +9,18 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/messages.css' %}?v=10">
 <style>
-/* Default theme — CSS variables used by structural selectors */
-.md-page { --chat-bg:#0d0d0d; --chat-surface:#121212; --chat-border:rgba(255,255,255,0.05); --chat-text:#f0ece4; --chat-text-sec:#888; --chat-text-muted:#555; --sender-bubble:linear-gradient(135deg,rgba(212,175,55,0.14),rgba(212,175,55,0.04)); --sender-text:#f0ece4; --receiver-bubble:rgba(255,255,255,0.04); --receiver-text:#f0ece4; --accent:#d4af37; --chat-wallpaper:none; position:relative; z-index:1; }
+/* ── Default theme (dark) variables ── */
+.md-page {
+  --chat-bg:#0d0d0d; --chat-surface:#121212; --chat-border:rgba(255,255,255,0.05);
+  --chat-text:#f0ece4; --chat-text-sec:#888; --chat-text-muted:#555;
+  --sender-bubble:linear-gradient(135deg,rgba(212,175,55,0.14),rgba(212,175,55,0.04));
+  --sender-text:#f0ece4; --receiver-bubble:rgba(255,255,255,0.04); --receiver-text:#f0ece4;
+  --accent:#d4af37; --chat-wallpaper:none;
+  --bg:var(--chat-bg); --card-bg:var(--chat-surface); --border:var(--chat-border);
+  --text:var(--chat-text); --text-sec:var(--chat-text-sec); --text-muted:var(--chat-text-muted);
+  --msg-theirs:var(--receiver-bubble);
+  position:relative; z-index:1;
+}
 .md-page .md-top-bar,
 .md-page .md-footer,
 .md-page .md-store-row,
@@ -18,55 +28,95 @@
 .md-page .md-blocked-banner,
 .md-page .md-body { position:relative; z-index:2; }
 .md-page .md-body { background: transparent; }
-/* Wallpaper layer sits between page bg and content */
+
+/* ── Wallpaper layer ── */
 .md-page[data-theme]::before {
   content: ''; position: fixed; inset: 0; z-index: 1; pointer-events: none;
   background: var(--chat-wallpaper);
   transition: opacity 0.6s ease;
 }
-.md-page[data-theme] {
-  background: var(--chat-bg);
-  color: var(--chat-text);
-  transition: background 0.4s ease, color 0.3s ease;
-}
+
+/* ── All themed elements ── */
+.md-page[data-theme] { background: var(--chat-bg); color: var(--chat-text); }
 .md-page[data-theme],
 .md-page[data-theme] * { transition: background 0.35s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
+
 .md-page[data-theme] .md-top-bar,
 .md-page[data-theme] .md-footer,
 .md-page[data-theme] .md-store-row,
 .md-page[data-theme] .md-search-bar,
 .md-page[data-theme] .md-pinned-bar,
 .md-page[data-theme] .md-profile-sidebar,
-.md-page[data-theme] .md-modal { background: var(--chat-surface); }
+.md-page[data-theme] .md-modal,
+.md-page[data-theme] .md-form .md-form-input-wrap textarea,
+.md-page[data-theme] #more-menu,
+.md-page[data-theme] .md-search-bar input,
+.md-page[data-theme] .md-status-picker { background: var(--chat-surface); }
+
 .md-page[data-theme] .md-top-name,
-.md-page[data-theme] .s-name { color: var(--chat-text); }
-.md-page[data-theme] .md-other-status,
-.md-page[data-theme] .md-icon-btn,
-.md-page[data-theme] .md-btn-ghost { color: var(--chat-text-sec); }
-.md-page[data-theme] .md-empty,
-.md-page[data-theme] .md-msg-time,
-.md-page[data-theme] .p-status { color: var(--chat-text-muted); }
+.md-page[data-theme] .s-name,
+.md-page[data-theme] .md-msg-wrap.mine .md-msg,
+.md-page[data-theme] .md-msg-wrap.theirs .md-msg,
+.md-page[data-theme] .md-form .md-form-input-wrap textarea,
+.md-page[data-theme] #more-menu button,
+.md-page[data-theme] .md-search-bar input,
+.md-page[data-theme] .md-status-picker,
+.md-page[data-theme] .md-status-option { color: var(--chat-text); }
+
 .md-page[data-theme] .md-msg-wrap.mine .md-msg { background: var(--sender-bubble); color: var(--sender-text); }
 .md-page[data-theme] .md-msg-wrap.theirs .md-msg { background: var(--receiver-bubble); color: var(--receiver-text); }
-.md-page[data-theme] .md-send-btn { background: var(--accent); }
+
+.md-page[data-theme] .md-other-status,
+.md-page[data-theme] .md-icon-btn,
+.md-page[data-theme] .md-btn-ghost,
+.md-page[data-theme] .md-back,
+.md-page[data-theme] .md-home-btn { color: var(--chat-text-sec); }
+
+.md-page[data-theme] .md-empty,
+.md-page[data-theme] .md-msg-time,
+.md-page[data-theme] .p-status,
+.md-page[data-theme] .md-receipt.sent { color: var(--chat-text-muted); }
+.md-page[data-theme] .md-empty i { color: var(--chat-text-muted); }
+
+.md-page[data-theme] .md-send-btn { background: var(--accent); color: #0d0d0d; }
 .md-page[data-theme] .md-receipt.read { color: var(--accent); }
+.md-page[data-theme] .md-icon-btn.active { color: var(--accent); }
+.md-page[data-theme] .md-msg-action.pinned { color: var(--accent); }
+.md-page[data-theme] .md-store-row .store-link { color: var(--accent); }
+
 .md-page[data-theme] .md-date-divider span { background: var(--chat-bg); }
 .md-page[data-theme] .md-icon-btn:hover { background: var(--receiver-bubble); color: var(--chat-text); }
-/* Message bubble tail corners */
-.md-page[data-theme] .md-msg-wrap.mine .md-msg { border-bottom-right-radius: 4px; }
-.md-page[data-theme] .md-msg-wrap.theirs .md-msg { border-bottom-left-radius: 4px; }
-/* Accent-aware helpers */
-.md-page[data-theme] .md-icon-btn.active { color: var(--accent); }
-.md-page[data-theme] .md-store-row .store-badge .s-name { color: var(--chat-text); }
-.md-page[data-theme] .md-msg-action.pinned { color: var(--accent); }
-.md-page[data-theme] .md-msg-action:hover { color: var(--chat-text); background: var(--receiver-bubble); }
-.md-page[data-theme] .md-msg-time { color: var(--chat-text-muted); }
-.md-page[data-theme] .md-receipt.sent { color: var(--chat-text-muted); }
-.md-page[data-theme] .md-receipt.delivered { color: var(--chat-text-sec); }
-.md-page[data-theme] .md-empty i { color: var(--chat-text-muted); }
-.md-page[data-theme] .md-back { color: var(--chat-text-sec); }
 .md-page[data-theme] .md-back:hover { color: var(--chat-text); }
-.md-page[data-theme] .md-store-row .store-link { color: var(--accent); }
+.md-page[data-theme] .md-msg-action:hover { color: var(--chat-text); background: var(--receiver-bubble); }
+.md-page[data-theme] .md-store-row .store-badge .s-name { color: var(--chat-text); }
+
+.md-page[data-theme] .md-form .md-form-input-wrap textarea {
+  border-color: var(--chat-border);
+}
+.md-page[data-theme] .md-form .md-form-input-wrap textarea:focus {
+  border-color: var(--accent);
+}
+
+.md-page[data-theme] .md-receipt.delivered { color: var(--chat-text-sec); }
+
+.md-page[data-theme] .md-store-link,
+.md-page[data-theme] .store-link { color: var(--accent); }
+
+.md-page[data-theme] .md-pinned-bar {
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+}
+.md-page[data-theme] .md-blocked-banner {
+  color: var(--chat-text-sec);
+  background: color-mix(in srgb, #e74c3c 4%, transparent);
+}
+
+/* ── More menu ── */
+.md-page[data-theme] #more-menu {
+  border-color: var(--chat-border);
+}
+.md-page[data-theme] #more-menu button:hover { background: var(--receiver-bubble); }
 
 /* ── Glassmorphic receiver bubbles for wallpaper themes ── */
 .md-page[data-theme]:not([data-theme="dark"]):not([data-theme="light"]) .md-msg-wrap.theirs .md-msg {
@@ -75,55 +125,37 @@
   border: 1px solid var(--chat-border);
 }
 
-/* === THEME PICKER === */
-.md-emoji-picker { display:none; position:absolute; bottom:100%; right:0; background:var(--card-bg); border:1px solid var(--border); border-radius:12px; padding:8px; box-shadow:0 -8px 32px rgba(0,0,0,0.4); z-index:30; }
-.md-emoji-picker.open { display:flex; gap:4px; flex-wrap:wrap; width:220px; }
-.md-emoji-picker .ep-btn { width:36px; height:36px; border-radius:8px; border:none; background:transparent; font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.1s; }
-.md-emoji-picker .ep-btn:hover { background:var(--msg-theirs); transform:scale(1.15); }
-.md-attach-preview { display:none; align-items:center; gap:10px; padding:8px 12px; background:var(--bg); border:1px solid var(--border); border-radius:8px; margin-bottom:6px; }
-.md-attach-preview.open { display:flex; }
-.md-lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:1000; align-items:center; justify-content:center; cursor:zoom-out; }
-.md-lightbox.open { display:flex; }
-.md-lightbox img { max-width:90vw; max-height:90vh; border-radius:8px; }
-.md-empty { text-align:center; padding:50px 20px; color:var(--text-muted); font-size:0.85rem; }
-.md-profile-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:500; }
-.md-profile-overlay.open { display:block; }
-.md-profile-sidebar { position:fixed; top:0; right:-340px; width:320px; height:100%; background:var(--card-bg); border-left:1px solid var(--border); z-index:501; transition:right 0.3s cubic-bezier(0.4,0,0.2,1); overflow-y:auto; display:flex; flex-direction:column; }
-.md-profile-sidebar.open { right:0; }
-.md-profile-sidebar .md-profile-header { display:flex; align-items:center; gap:10px; padding:16px; border-bottom:1px solid var(--border); flex-shrink:0; }
-.md-profile-sidebar .md-profile-header button { width:32px; height:32px; border-radius:8px; border:none; background:transparent; color:var(--text-sec); font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-.md-profile-sidebar .md-profile-header button:hover { background:var(--msg-theirs); color:var(--text); }
-.md-profile-sidebar .md-profile-header h3 { margin:0; font-size:0.9rem; color:var(--text); font-weight:700; }
-.md-profile-sidebar .md-profile-body { padding:20px 16px; flex:1; }
-.md-profile-sidebar .p-avatar { width:72px; height:72px; border-radius:50%; background:rgba(212,175,55,0.08); display:flex; align-items:center; justify-content:center; font-size:1.5rem; color:var(--accent); font-weight:700; margin:0 auto 12px; border:2px solid var(--border); }
-.md-profile-sidebar .p-name { text-align:center; font-size:1rem; color:var(--text); font-weight:700; margin-bottom:4px; }
-.md-profile-sidebar .p-status { text-align:center; font-size:0.72rem; color:var(--text-muted); margin-bottom:16px; }
-.md-profile-sidebar .p-info-item { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); }
-.md-profile-sidebar .p-info-item:last-child { border-bottom:none; }
-.md-profile-sidebar .p-info-item .pii-icon { width:28px; height:28px; border-radius:6px; background:var(--msg-theirs); display:flex; align-items:center; justify-content:center; color:var(--text-sec); font-size:0.75rem; flex-shrink:0; }
-.md-profile-sidebar .p-info-item .pii-label { font-size:0.65rem; color:var(--text-muted); display:block; }
-.md-profile-sidebar .p-info-item .pii-value { font-size:0.82rem; color:var(--text); font-weight:500; }
-.md-profile-sidebar .p-info-item .pii-value.online { color:#2ecc71; }
-.md-sidebar-status-line { display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:16px; }
-.md-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:600; align-items:center; justify-content:center; }
-.md-modal-overlay.open { display:flex; }
-.md-modal { background:var(--card-bg); border:1px solid var(--border); border-radius:16px; padding:24px; max-width:400px; width:90%; }
-.md-modal h3 { margin:0 0 12px; color:var(--text); font-size:1rem; }
-.md-modal p { color:var(--text-sec); font-size:0.85rem; margin:0 0 16px; line-height:1.5; }
-.md-modal-actions { display:flex; gap:8px; justify-content:flex-end; }
-.md-modal select { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px; color:var(--text); font-size:0.85rem; margin-bottom:12px; outline:none; }
-.md-modal textarea { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px; color:var(--text); font-size:0.82rem; margin-bottom:12px; outline:none; resize:vertical; min-height:60px; font-family:inherit; }
-.md-btn-primary { padding:8px 20px; border-radius:8px; border:none; background:var(--accent); color:#0d0d0d; font-size:0.82rem; font-weight:600; cursor:pointer; }
-.md-btn-ghost { padding:8px 20px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--text-sec); font-size:0.82rem; cursor:pointer; }
-.md-pinned-bar { display:none; padding:6px 20px; background:rgba(212,175,55,0.04); border-bottom:1px solid rgba(212,175,55,0.1); align-items:center; gap:8px; font-size:0.75rem; color:var(--accent); flex-shrink:0; }
-.md-pinned-bar.open { display:flex; }
-.md-blocked-banner { padding:12px 20px; text-align:center; font-size:0.82rem; color:#888; background:rgba(231,76,60,0.04); border-top:1px solid rgba(231,76,60,0.08); }
-.md-footer-tools { display:flex; gap:4px; margin-bottom:6px; align-items:center; }
-.md-footer-tools .ft-btn { width:30px; height:30px; border-radius:6px; border:none; background:transparent; color:var(--text-sec); font-size:0.8rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.12s; }
-.md-footer-tools .ft-btn:hover { background:var(--msg-theirs); color:var(--text); }
-.md-footer-tools .ft-btn.active { color:var(--accent); }
-.seen-tooltip { display:none; position:absolute; bottom:calc(100% + 6px); right:0; background:var(--card-bg); border:1px solid var(--border); border-radius:6px; padding:4px 8px; font-size:0.6rem; color:var(--text-sec); white-space:nowrap; box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:10; }
-.md-receipt:hover .seen-tooltip { display:block; }
+/* ── Legacy variable aliases ── */
+.md-page[data-theme] .md-emoji-picker,
+.md-page[data-theme] .md-attach-preview,
+.md-page[data-theme] .md-profile-sidebar,
+.md-page[data-theme] .md-modal,
+.md-page[data-theme] .seen-tooltip { background: var(--chat-surface); border-color: var(--chat-border); }
+.md-page[data-theme] .md-emoji-picker .ep-btn:hover { background: var(--receiver-bubble); }
+.md-page[data-theme] .md-footer-tools .ft-btn { color: var(--chat-text-sec); }
+.md-page[data-theme] .md-footer-tools .ft-btn:hover { background: var(--receiver-bubble); color: var(--chat-text); }
+.md-page[data-theme] .md-footer-tools .ft-btn.active { color: var(--accent); }
+.md-page[data-theme] .md-modal select,
+.md-page[data-theme] .md-modal textarea { background: var(--chat-bg); border-color: var(--chat-border); color: var(--chat-text); }
+.md-page[data-theme] .md-btn-primary { background: var(--accent); color: #0d0d0d; }
+.md-page[data-theme] .md-btn-ghost { border-color: var(--chat-border); color: var(--chat-text-sec); }
+.md-page[data-theme] .md-profile-sidebar .p-avatar { border-color: var(--chat-border); color: var(--accent); }
+.md-page[data-theme] .md-profile-sidebar .p-name { color: var(--chat-text); }
+.md-page[data-theme] .md-profile-sidebar .p-status { color: var(--chat-text-muted); }
+.md-page[data-theme] .md-profile-sidebar .p-info-item { border-color: var(--chat-border); }
+.md-page[data-theme] .md-profile-sidebar .pii-icon { background: var(--receiver-bubble); color: var(--chat-text-sec); }
+.md-page[data-theme] .md-profile-sidebar .pii-label { color: var(--chat-text-muted); }
+.md-page[data-theme] .md-profile-sidebar .pii-value { color: var(--chat-text); }
+.md-page[data-theme] .md-profile-header h3 { color: var(--chat-text); }
+.md-page[data-theme] .md-profile-header button { color: var(--chat-text-sec); }
+.md-page[data-theme] .md-profile-header button:hover { background: var(--receiver-bubble); color: var(--chat-text); }
+.md-page[data-theme] .md-modal h3 { color: var(--chat-text); }
+.md-page[data-theme] .md-modal p { color: var(--chat-text-sec); }
+
+.theme-icon { display:inline-block; }
+[data-theme="dark"] .theme-icon { content:'🌙'; }
+[data-theme="light"] .theme-icon { content:'☀️'; }
+[data-theme="neon"] .theme-icon { content:'⚡'; }
 
 
 /* ── Theme: Light Mode ── */
@@ -140,6 +172,9 @@
   --receiver-text: #1a1a1a;
   --accent: #c9a032;
   --chat-wallpaper: none;
+  --bg:var(--chat-bg); --card-bg:var(--chat-surface); --border:var(--chat-border);
+  --text:var(--chat-text); --text-sec:var(--chat-text-sec); --text-muted:var(--chat-text-muted);
+  --msg-theirs:var(--receiver-bubble);
 }
 
 /* ── Theme: Neon / Cyberpunk ── */
@@ -156,6 +191,9 @@
   --receiver-text: #c0e0ff;
   --accent: #00ffff;
   --chat-wallpaper: radial-gradient(ellipse at 20% 80%, rgba(0,255,255,0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,0,255,0.04) 0%, transparent 60%);
+  --bg:var(--chat-bg); --card-bg:var(--chat-surface); --border:var(--chat-border);
+  --text:var(--chat-text); --text-sec:var(--chat-text-sec); --text-muted:var(--chat-text-muted);
+  --msg-theirs:var(--receiver-bubble);
 }
 
 /* ── Theme popup ── */
@@ -264,7 +302,7 @@
       {% endif %}
       <button class="md-icon-btn" id="search-toggle" title="{{ 'Search'|t }}"><i class="bi bi-search"></i></button>
       <div style="position:relative;">
-        <button class="md-icon-btn" id="theme-toggle" title="{{ 'Theme'|t }}"><i class="bi bi-palette2"></i></button>
+        <button class="md-icon-btn" id="theme-toggle" title="{{ 'Theme'|t }}"><i class="bi bi-moon-stars" id="theme-icon"></i></button>
         <div id="theme-menu" class="md-theme-menu">
           <button onclick="switchTheme('dark')" data-theme-opt="dark"><i class="bi bi-moon-stars"></i> Dark</button>
           <button onclick="switchTheme('light')" data-theme-opt="light"><i class="bi bi-sun"></i> Light</button>
@@ -1583,21 +1621,24 @@ document.addEventListener('click', function(e){
   var page = document.getElementById('md-page');
   var toggle = document.getElementById('theme-toggle');
   var menu = document.getElementById('theme-menu');
+  var icon = document.getElementById('theme-icon');
+  var iconMap = { dark:'bi-moon-stars', light:'bi-sun', neon:'bi-lightning' };
   if(!page || !toggle || !menu) return;
-  var saved = localStorage.getItem('chat-theme') || 'dark';
-  page.setAttribute('data-theme', saved);
-  menu.querySelector('[data-theme-opt="' + saved + '"]')?.classList.add('active');
-  toggle.addEventListener('click', function(e){
-    e.stopPropagation();
-    menu.classList.toggle('open');
-  });
-  window.switchTheme = function(theme){
+  function applyTheme(theme){
     page.setAttribute('data-theme', theme);
     localStorage.setItem('chat-theme', theme);
     menu.querySelectorAll('[data-theme-opt]').forEach(function(b){ b.classList.remove('active'); });
     menu.querySelector('[data-theme-opt="' + theme + '"]')?.classList.add('active');
+    if(icon){ icon.className = 'bi ' + (iconMap[theme] || 'bi-moon-stars'); }
     menu.classList.remove('open');
-  };
+  }
+  var saved = localStorage.getItem('chat-theme') || 'dark';
+  applyTheme(saved);
+  toggle.addEventListener('click', function(e){
+    e.stopPropagation();
+    menu.classList.toggle('open');
+  });
+  window.switchTheme = applyTheme;
   document.addEventListener('click', function(e){
     if(!toggle.contains(e.target) && !menu.contains(e.target)) menu.classList.remove('open');
   });

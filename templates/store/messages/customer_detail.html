@@ -9,7 +9,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/customer_messages.css' %}?v=2">
 <style>
-/* Default theme (dark) — CSS variables used by structural selectors */
+/* ── Default theme (dark) variables ── */
 .cd-page {
   --cd-bg:#0d0d0d; --cd-surface:#121212; --cd-border:rgba(255,255,255,0.05);
   --cd-text:#f0ece4; --cd-sec:#888; --cd-muted:#555;
@@ -20,15 +20,30 @@
 }
 .cd-page[data-theme] { background: var(--cd-bg); }
 .cd-page[data-theme] * { transition: background 0.35s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
-.cd-top-bar, .cd-store-row, .cd-search-bar, .cd-pinned-bar, .cd-blocked-banner, .cd-footer { background: var(--cd-surface); }
+
+.cd-page[data-theme] .cd-top-bar,
+.cd-page[data-theme] .cd-store-row,
+.cd-page[data-theme] .cd-search-bar,
+.cd-page[data-theme] .cd-pinned-bar,
+.cd-page[data-theme] .cd-blocked-banner,
+.cd-page[data-theme] .cd-footer,
+.cd-page[data-theme] .cd-more-menu,
+.cd-page[data-theme] .cd-form textarea,
+.cd-page[data-theme] .cd-search-bar input { background: var(--cd-surface); }
+
 .cd-body { background: transparent; }
-.cd-msg-wrap.mine .cd-msg { background: var(--cd-mine); color: var(--cd-text); }
-.cd-msg-wrap.theirs .cd-msg { background: var(--cd-theirs); color: var(--cd-text); }
-.cd-receipt.read { color: var(--cd-acc); }
-.cd-date-divider span { background: var(--cd-bg); }
-.cd-send-btn { background: var(--cd-acc); }
-.cd-icon-btn { color: var(--cd-sec); }
-.cd-icon-btn:hover { background: var(--cd-theirs); color: var(--cd-text); }
+.cd-page[data-theme] .cd-msg-wrap.mine .cd-msg { background: var(--cd-mine); color: var(--cd-text); }
+.cd-page[data-theme] .cd-msg-wrap.theirs .cd-msg { background: var(--cd-theirs); color: var(--cd-text); }
+.cd-page[data-theme] .cd-receipt.read { color: var(--cd-acc); }
+.cd-page[data-theme] .cd-date-divider span { background: var(--cd-bg); }
+.cd-page[data-theme] .cd-send-btn { background: var(--cd-acc); color: #0d0d0d; }
+.cd-page[data-theme] .cd-icon-btn { color: var(--cd-sec); }
+.cd-page[data-theme] .cd-icon-btn:hover { background: var(--cd-theirs); color: var(--cd-text); }
+.cd-page[data-theme] .cd-form textarea { border-color: var(--cd-border); color: var(--cd-text); }
+.cd-page[data-theme] .cd-form textarea:focus { border-color: var(--cd-acc); }
+.cd-page[data-theme] .cd-more-menu button { color: var(--cd-text); }
+.cd-page[data-theme] .cd-more-menu button:hover { background: var(--cd-theirs); }
+.cd-page[data-theme] .cd-search-bar input { border-color: var(--cd-border); color: var(--cd-text); }
 
 /* Wallpaper layer */
 .cd-page[data-theme]::before {
@@ -163,7 +178,7 @@
       </a>
       <button class="cd-icon-btn" id="search-toggle" title="{{ 'Search'|t }}"><i class="bi bi-search"></i></button>
       <div style="position:relative;">
-        <button class="cd-icon-btn" id="theme-toggle" title="{{ 'Theme'|t }}"><i class="bi bi-palette2"></i></button>
+        <button class="cd-icon-btn" id="theme-toggle" title="{{ 'Theme'|t }}"><i class="bi bi-moon-stars" id="theme-icon"></i></button>
         <div id="theme-menu" class="cd-theme-menu">
           <button onclick="switchTheme('dark')" data-theme-opt="dark"><i class="bi bi-moon-stars"></i> Dark</button>
           <button onclick="switchTheme('light')" data-theme-opt="light"><i class="bi bi-sun"></i> Light</button>
@@ -1163,21 +1178,24 @@
   var page = document.getElementById('cd-page');
   var toggle = document.getElementById('theme-toggle');
   var menu = document.getElementById('theme-menu');
+  var icon = document.getElementById('theme-icon');
+  var iconMap = { dark:'bi-moon-stars', light:'bi-sun', neon:'bi-lightning' };
   if(page && toggle && menu){
-    var saved = localStorage.getItem('chat-theme') || 'dark';
-    page.setAttribute('data-theme', saved);
-    menu.querySelector('[data-theme-opt="' + saved + '"]')?.classList.add('active');
-    toggle.addEventListener('click', function(e){
-      e.stopPropagation();
-      menu.classList.toggle('open');
-    });
-    window.switchTheme = function(theme){
+    function applyTheme(theme){
       page.setAttribute('data-theme', theme);
       localStorage.setItem('chat-theme', theme);
       menu.querySelectorAll('[data-theme-opt]').forEach(function(b){ b.classList.remove('active'); });
       menu.querySelector('[data-theme-opt="' + theme + '"]')?.classList.add('active');
+      if(icon){ icon.className = 'bi ' + (iconMap[theme] || 'bi-moon-stars'); }
       menu.classList.remove('open');
-    };
+    }
+    var saved = localStorage.getItem('chat-theme') || 'dark';
+    applyTheme(saved);
+    toggle.addEventListener('click', function(e){
+      e.stopPropagation();
+      menu.classList.toggle('open');
+    });
+    window.switchTheme = applyTheme;
     document.addEventListener('click', function(e){
       if(!toggle.contains(e.target) && !menu.contains(e.target)) menu.classList.remove('open');
     });

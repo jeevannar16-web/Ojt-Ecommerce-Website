@@ -3,3 +3,10 @@ Django==5.0.6
 pillow==10.3.0
 python-dotenv==1.0.1
 sqlparse==0.5.5
+django-allauth==65.18.0
+requests==2.34.2
+twilio==9.10.9
+phonenumbers==9.0.32
+deep-translator==1.11.4
+dnspython==2.8.0
+PyJWT==2.13.0

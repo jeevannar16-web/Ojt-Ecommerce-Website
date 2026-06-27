@@ -1428,21 +1428,18 @@ main:has(.cm-page) {
 
 /* ── Actions ── */
 .cd-msg-actions {
-  display: flex;
+  display: none;
   gap: 2px;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
   position: absolute;
   top: -28px;
   right: 0;
   z-index: 5;
-  transform: translateY(0);
 }
 .cd-msg-wrap.theirs .cd-msg-actions {
   right: auto;
   left: 0;
 }
-.cd-msg-actions.open { opacity: 1; pointer-events: auto; }
+.cd-msg-actions.open { display: flex; }
 
 .cd-msg-more-btn {
   position: absolute; top: -28px; right: 0; z-index: 6;

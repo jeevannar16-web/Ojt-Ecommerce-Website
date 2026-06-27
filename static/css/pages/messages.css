@@ -441,18 +441,17 @@
 
 /* === HOVER ACTIONS === */
 .md-msg-actions {
-  display: flex; gap: 3px; opacity: 0; pointer-events: none;
-  transition: opacity 0.12s;
+  display: none; gap: 3px;
   position: absolute; top: -30px; right: 0; z-index: 5;
 }
 .md-msg-wrap.theirs .md-msg-actions { right: auto; left: 0; }
-.md-msg-actions.open { opacity: 1; pointer-events: auto; }
+.md-msg-actions.open { display: flex; }
 
 /* Three-dot trigger always visible */
 .md-msg-more-btn {
   position: absolute; top: -30px; right: 0; z-index: 6;
   width: 28px; height: 28px; border-radius: 50%;
-  border: none; background: transparent;
+  border: none; outline: none !important; background: transparent;
   color: #888; font-size: 0.9rem; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: all 0.12s; opacity: 1;

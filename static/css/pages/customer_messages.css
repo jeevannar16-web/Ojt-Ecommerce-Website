@@ -1430,7 +1430,7 @@ main:has(.cm-page) {
 .cd-msg-actions {
   display: flex;
   gap: 2px;
-  opacity: 1;
+  opacity: 0; pointer-events: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
   position: absolute;
   top: -28px;
@@ -1442,6 +1442,19 @@ main:has(.cm-page) {
   right: auto;
   left: 0;
 }
+.cd-msg-actions.open { opacity: 1; pointer-events: auto; }
+
+.cd-msg-more-btn {
+  position: absolute; top: -28px; right: 0; z-index: 6;
+  width: 26px; height: 26px; border-radius: 50%;
+  border: none; background: rgba(255,255,255,0.04);
+  color: #888; font-size: 0.85rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.12s; opacity: 1;
+}
+.cd-msg-wrap.theirs .cd-msg-more-btn { right: auto; left: 0; }
+.cd-msg-more-btn:hover { background: rgba(255,255,255,0.1); color: #f0ece4; }
+.cd-msg-more-btn.open { opacity: 0; pointer-events: none; }
 .cd-msg-action {
   width: 36px;
   height: 36px;

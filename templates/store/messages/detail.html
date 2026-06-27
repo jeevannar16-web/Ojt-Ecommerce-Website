@@ -158,6 +158,39 @@
   --chat-wallpaper: radial-gradient(ellipse at 20% 80%, rgba(0,255,255,0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,0,255,0.04) 0%, transparent 60%);
 }
 
+/* ── Theme popup ── */
+.md-theme-menu {
+  display:none; position:absolute; top:100%; right:0; z-index:50;
+  background:var(--chat-surface); border:1px solid var(--chat-border);
+  border-radius:12px; padding:5px; min-width:150px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+}
+.md-theme-menu.open { display:block; }
+.md-theme-menu button {
+  display:flex; align-items:center; gap:10px; width:100%;
+  padding:9px 14px; border:none; background:none;
+  color:var(--chat-text); font-size:0.82rem; cursor:pointer;
+  border-radius:8px; transition:all 0.12s;
+}
+.md-theme-menu button:hover { background:var(--receiver-bubble); }
+.md-theme-menu button.active { background:var(--sender-bubble); color:var(--accent); }
+.md-theme-menu button i { font-size:1rem; width:20px; text-align:center; }
+
+/* ── Pin badge on message bubbles ── */
+.md-pin-badge {
+  position:absolute; top:-6px; right:-6px; z-index:3;
+  width:22px; height:22px; border-radius:50%;
+  background:#e74c3c; color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.6rem; box-shadow:0 2px 6px rgba(231,76,60,0.4);
+  opacity:0; transform:scale(0.5);
+  transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events:none;
+}
+.md-msg-wrap.pinned .md-pin-badge {
+  opacity:1; transform:scale(1);
+}
+
 /* ── Message slide-up animation for new bubbles ── */
 @keyframes msgSlideUp {
   from { opacity: 0; transform: translateY(12px) scale(0.97); }
@@ -230,6 +263,14 @@
       <button class="md-icon-btn call-btn-disabled" title="{{ 'Coming soon'|t }}"><i class="bi bi-camera-video-fill"></i></button>
       {% endif %}
       <button class="md-icon-btn" id="search-toggle" title="{{ 'Search'|t }}"><i class="bi bi-search"></i></button>
+      <div style="position:relative;">
+        <button class="md-icon-btn" id="theme-toggle" title="{{ 'Theme'|t }}"><i class="bi bi-palette2"></i></button>
+        <div id="theme-menu" class="md-theme-menu">
+          <button onclick="switchTheme('dark')" data-theme-opt="dark"><i class="bi bi-moon-stars"></i> Dark</button>
+          <button onclick="switchTheme('light')" data-theme-opt="light"><i class="bi bi-sun"></i> Light</button>
+          <button onclick="switchTheme('neon')" data-theme-opt="neon"><i class="bi bi-lightning"></i> Neon</button>
+        </div>
+      </div>
       <button class="md-icon-btn" id="more-toggle" title="{{ 'More'|t }}"><i class="bi bi-three-dots-vertical"></i></button>
     </div>
   </div>
@@ -249,13 +290,6 @@
       <i class="bi bi-bell{% if conversation.is_muted %}-slash{% endif %}"></i>
       {% if conversation.is_muted %}{{ 'Unmute'|t }}{% else %}{{ 'Mute'|t }}{% endif %}
     </button>
-    <div style="padding:6px 0;border-top:1px solid var(--border);margin-top:4px;">
-      <select id="theme-select" onchange="switchTheme(this.value)" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:0.72rem;outline:none;cursor:pointer;">
-        <option value="dark">Dark Mode</option>
-        <option value="light">Light Mode</option>
-        <option value="neon">Neon / Cyberpunk</option>
-      </select>
-    </div>
   </div>
 
   <!-- SEARCH BAR -->
@@ -315,7 +349,8 @@
       {% else %}{{ msg.created_at|date:"M d, Y" }}{% endif %}
     </div>
     {% endifchanged %}
-    <div class="md-msg-wrap {% if msg.sender == request.user %}mine{% else %}theirs{% endif %}" data-msg-id="{{ msg.id }}">
+    <div class="md-msg-wrap {% if msg.sender == request.user %}mine{% else %}theirs{% endif %}{% if msg.is_pinned %} pinned{% endif %}" data-msg-id="{{ msg.id }}">
+      <div class="md-pin-badge"><i class="bi bi-pin-fill"></i></div>
       <div class="md-msg-content">
         {% if msg.is_deleted %}
         <div class="md-msg-deleted"><i class="bi bi-trash3"></i> {{ 'Message deleted'|t }}</div>
@@ -1155,6 +1190,12 @@ function addMessageToBody(m){
   wrap.className = 'md-msg-wrap ' + (m.is_mine ? 'mine' : 'theirs');
   wrap.classList.add('animate-in');
   wrap.dataset.msgId = m.id;
+  if(m.is_pinned) wrap.classList.add('pinned');
+
+  var pinBadge = document.createElement('div');
+  pinBadge.className = 'md-pin-badge';
+  pinBadge.innerHTML = '<i class="bi bi-pin-fill"></i>';
+  wrap.appendChild(pinBadge);
 
   var content = document.createElement('div');
   content.className = 'md-msg-content';
@@ -1381,6 +1422,8 @@ function togglePin(msgId){
             if(btn) btn.className = 'md-msg-action' + (d.is_pinned ? ' pinned' : '');
             var icon = btn ? btn.querySelector('i') : null;
             if(icon) icon.className = 'bi bi-pin' + (d.is_pinned ? '-fill' : '');
+            if(d.is_pinned){ wrap.classList.add('pinned'); }
+            else { wrap.classList.remove('pinned'); }
           }
         }
         var bar = document.getElementById('pinned-bar');
@@ -1538,15 +1581,26 @@ document.addEventListener('click', function(e){
 // === THEME SWITCHER ===
 (function(){
   var page = document.getElementById('md-page');
-  var sel = document.getElementById('theme-select');
-  if(!page || !sel) return;
+  var toggle = document.getElementById('theme-toggle');
+  var menu = document.getElementById('theme-menu');
+  if(!page || !toggle || !menu) return;
   var saved = localStorage.getItem('chat-theme') || 'dark';
   page.setAttribute('data-theme', saved);
-  sel.value = saved;
+  menu.querySelector('[data-theme-opt="' + saved + '"]')?.classList.add('active');
+  toggle.addEventListener('click', function(e){
+    e.stopPropagation();
+    menu.classList.toggle('open');
+  });
   window.switchTheme = function(theme){
     page.setAttribute('data-theme', theme);
     localStorage.setItem('chat-theme', theme);
+    menu.querySelectorAll('[data-theme-opt]').forEach(function(b){ b.classList.remove('active'); });
+    menu.querySelector('[data-theme-opt="' + theme + '"]')?.classList.add('active');
+    menu.classList.remove('open');
   };
+  document.addEventListener('click', function(e){
+    if(!toggle.contains(e.target) && !menu.contains(e.target)) menu.classList.remove('open');
+  });
 })();
 </script>
 {% endblock %}

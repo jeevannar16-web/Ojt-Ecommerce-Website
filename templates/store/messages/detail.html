@@ -73,7 +73,7 @@
 
 .md-page[data-theme] .md-send-btn { background: var(--accent) !important; }
 .md-page[data-theme] .md-receipt.read,
-.md-page[data-theme] .md-msg-action.pinned,
+.md-page[data-theme] .pop-pin.pinned,
 .md-page[data-theme] .md-store-row .store-link,
 .md-page[data-theme] .md-icon-btn.active { color: var(--accent) !important; }
 
@@ -95,7 +95,7 @@
 
 .md-page[data-theme] .md-date-divider span { background: var(--bg) !important; }
 .md-page[data-theme] .md-icon-btn:hover { background: var(--theirs-bubble) !important; color: var(--text) !important; }
-.md-page[data-theme] .md-msg-action:hover { color: var(--text) !important; background: var(--theirs-bubble) !important; }
+.md-page[data-theme] .md-msg-popup button:hover { color: var(--text) !important; background: var(--theirs-bubble) !important; }
 
 .md-page[data-theme] .md-pinned-bar { background: color-mix(in srgb, var(--accent) 6%, transparent) !important; border-color: color-mix(in srgb, var(--accent) 12%, transparent) !important; color: var(--accent) !important; }
 .md-page[data-theme] .md-blocked-banner { color: var(--sec) !important; background: color-mix(in srgb, #e74c3c 4%, transparent) !important; }
@@ -390,24 +390,9 @@
         {% endif %}
       </div>
       {% if not msg.is_deleted %}
-      <div class="md-msg-actions">
-        <button class="md-msg-action" onclick="copyMsg(this)" title="{{ 'Copy'|t }}"><i class="bi bi-clipboard"></i></button>
-        {% if msg.sender == request.user and not msg.image and not msg.file %}
-        <button class="md-msg-action" onclick="editMsg(this)" title="{{ 'Edit'|t }}"><i class="bi bi-pencil"></i></button>
-        {% endif %}
-        <button class="md-msg-action" onclick="showQuickReactions(this, {{ msg.id }})" title="{{ 'React'|t }}"><i class="bi bi-emoji-smile"></i></button>
-        {% if msg.sender == request.user %}
-        <button class="md-msg-action {% if msg.is_pinned %}pinned{% endif %}" onclick="togglePin({{ msg.id }})" title="{{ 'Pin'|t }}"><i class="bi bi-pin{% if msg.is_pinned %}-fill{% endif %}"></i></button>
-        {% endif %}
-        {% if msg.sender == request.user %}
-        <button class="md-msg-action" onclick="confirmDeleteMsg(this, {{ msg.id }})" title="{{ 'Delete'|t }}"><i class="bi bi-trash3"></i></button>
-        {% endif %}
-        <button class="md-msg-action" onclick="reportMessage({{ msg.id }})" title="{{ 'Report'|t }}"><i class="bi bi-flag"></i></button>
-      </div>
-      {% endif %}
       <div class="md-msg-meta">
         <span class="md-msg-time">{{ msg.created_at|date:"H:i" }}</span>
-        {% if msg.sender == request.user and not msg.is_deleted %}
+        {% if msg.sender == request.user %}
         <span class="md-receipt {% if msg.is_read %}read{% elif msg.is_delivered %}delivered{% else %}sent{% endif %}" {% if msg.is_read %}title="{{ 'Seen'|t }} {{ msg.read_at|date:'H:i' }}"{% endif %}>
           {% if msg.is_read %}<i class="bi bi-check2-all"></i>{% else %}<i class="bi bi-check2"></i>{% endif %}
           {% if msg.read_at %}
@@ -415,7 +400,31 @@
           {% endif %}
         </span>
         {% endif %}
+        <div class="md-meta-right">
+          <button class="md-meta-btn md-meta-react" onclick="showQuickReactions(this, {{ msg.id }})" title="{{ 'React'|t }}"><i class="bi bi-emoji-smile"></i></button>
+          <div class="md-more-wrap">
+            <button class="md-meta-btn md-meta-more" onclick="toggleMsgPopup(this)" title="{{ 'More'|t }}"><i class="bi bi-three-dots-vertical"></i></button>
+            <div class="md-msg-popup">
+              <button onclick="copyMsg(this)" title="{{ 'Copy'|t }}"><i class="bi bi-clipboard"></i> {{ 'Copy'|t }}</button>
+              {% if msg.sender == request.user and not msg.image and not msg.file %}
+              <button onclick="editMsg(this)" title="{{ 'Edit'|t }}"><i class="bi bi-pencil"></i> {{ 'Edit'|t }}</button>
+              {% endif %}
+              {% if msg.sender == request.user %}
+              <button class="pop-pin {% if msg.is_pinned %}pinned{% endif %}" onclick="togglePin({{ msg.id }})" title="{{ 'Pin'|t }}"><i class="bi bi-pin{% if msg.is_pinned %}-fill{% endif %}"></i> {% if msg.is_pinned %}{{ 'Unpin'|t }}{% else %}{{ 'Pin'|t }}{% endif %}</button>
+              {% endif %}
+              {% if msg.sender == request.user %}
+              <button onclick="confirmDeleteMsg(this, {{ msg.id }})" title="{{ 'Delete'|t }}"><i class="bi bi-trash3"></i> {{ 'Delete'|t }}</button>
+              {% endif %}
+              <button onclick="reportMessage({{ msg.id }})" title="{{ 'Report'|t }}"><i class="bi bi-flag"></i> {{ 'Report'|t }}</button>
+            </div>
+          </div>
+        </div>
       </div>
+      {% else %}
+      <div class="md-msg-meta">
+        <span class="md-msg-time">{{ msg.created_at|date:"H:i" }}</span>
+      </div>
+      {% endif %}
     </div>
     {% empty %}
     <div class="md-empty">
@@ -905,16 +914,22 @@
             }
             bar.classList.add('open');
             bar.innerHTML = '<i class="bi bi-pin-angle-fill"></i><span>' + (data.pinned_content || '') + '</span><button class="unpin-btn" onclick="togglePin(' + data.pinned_id + ')"><i class="bi bi-x"></i></button>';
-            document.querySelectorAll('.md-msg-action').forEach(function(b){
-              var id = b.getAttribute('onclick');
-              if(id && id.indexOf('togglePin(' + data.pinned_id + ')') !== -1) b.className = 'md-msg-action pinned';
+            document.querySelectorAll('.pop-pin').forEach(function(b){
+              var wrap = b.closest('.md-msg-wrap');
+              if(wrap && wrap.dataset.msgId == data.pinned_id){
+                b.className = 'pop-pin pinned';
+                b.innerHTML = '<i class="bi bi-pin-fill"></i> {{ 'Unpin'|t }}';
+              }
             });
             body.querySelectorAll('.md-msg-wrap.pinned').forEach(function(w){ w.classList.remove('pinned'); });
             var pw = body.querySelector('[data-msg-id="' + data.pinned_id + '"]');
             if(pw) pw.classList.add('pinned');
           } else {
             if(bar) bar.classList.remove('open');
-            document.querySelectorAll('.md-msg-action.pinned').forEach(function(b){ b.classList.remove('pinned'); });
+            document.querySelectorAll('.pop-pin.pinned').forEach(function(b){
+              b.classList.remove('pinned');
+              b.innerHTML = '<i class="bi bi-pin"></i> {{ 'Pin'|t }}';
+            });
             body.querySelectorAll('.md-msg-wrap.pinned').forEach(function(w){ w.classList.remove('pinned'); });
           }
         }
@@ -1117,9 +1132,9 @@ function deleteMessage(msgId, scope){
           wrap.style.transform = 'scale(0.8)';
           setTimeout(function(){
             var content = wrap.querySelector('.md-msg-content');
-            var actions = wrap.querySelector('.md-msg-actions');
             var meta = wrap.querySelector('.md-msg-meta');
-            if(actions) actions.remove();
+            var metaRight = wrap.querySelector('.md-meta-right');
+            if(metaRight) metaRight.remove();
             if(content){
               content.innerHTML = '<div class="md-msg-deleted"><i class="bi bi-trash3"></i> {{ 'Message deleted'|t }}</div>';
             }
@@ -1277,50 +1292,7 @@ function addMessageToBody(m){
 
   wrap.appendChild(content);
 
-  if(!m.is_deleted){
-    // Actions
-    var actions = document.createElement('div');
-    actions.className = 'md-msg-actions';
-    var copyBtn = document.createElement('button');
-    copyBtn.className = 'md-msg-action';
-    copyBtn.innerHTML = '<i class="bi bi-clipboard"></i>';
-    copyBtn.onclick = function(){ copyMsg(this); };
-    actions.appendChild(copyBtn);
-    if(m.is_mine && !m.file_url){
-      var editBtn = document.createElement('button');
-      editBtn.className = 'md-msg-action';
-      editBtn.innerHTML = '<i class="bi bi-pencil"></i>';
-      editBtn.onclick = function(){ editMsg(this); };
-      actions.appendChild(editBtn);
-    }
-    var reactBtn = document.createElement('button');
-    reactBtn.className = 'md-msg-action';
-    reactBtn.innerHTML = '<i class="bi bi-emoji-smile"></i>';
-    reactBtn.onclick = function(){ showQuickReactions(this, m.id); };
-    actions.appendChild(reactBtn);
-    if(m.is_mine){
-      var pinBtn = document.createElement('button');
-      pinBtn.className = 'md-msg-action' + (m.is_pinned ? ' pinned' : '');
-      pinBtn.innerHTML = '<i class="bi bi-pin' + (m.is_pinned ? '-fill' : '') + '"></i>';
-      pinBtn.onclick = function(){ togglePin(m.id); };
-      actions.appendChild(pinBtn);
-    }
-    if(m.is_mine){
-      var delBtn = document.createElement('button');
-      delBtn.className = 'md-msg-action';
-      delBtn.innerHTML = '<i class="bi bi-trash3"></i>';
-      delBtn.onclick = function(){ confirmDeleteMsg(this, m.id); };
-      actions.appendChild(delBtn);
-    }
-    var reportBtn = document.createElement('button');
-    reportBtn.className = 'md-msg-action';
-    reportBtn.innerHTML = '<i class="bi bi-flag"></i>';
-    reportBtn.onclick = function(){ reportMessage(m.id); };
-    actions.appendChild(reportBtn);
-    wrap.appendChild(actions);
-  }
-
-  // Meta
+  // Meta row (time + receipt + three-dot + emoji)
   var meta = document.createElement('div');
   meta.className = 'md-msg-meta';
   var time = document.createElement('span');
@@ -1339,6 +1311,82 @@ function addMessageToBody(m){
       receipt.appendChild(tooltip);
     }
     meta.appendChild(receipt);
+  }
+  if(!m.is_deleted){
+    var metaRight = document.createElement('div');
+    metaRight.className = 'md-meta-right';
+    // React button
+    var reactBtn = document.createElement('button');
+    reactBtn.className = 'md-meta-btn md-meta-react';
+    reactBtn.innerHTML = '<i class="bi bi-emoji-smile"></i>';
+    reactBtn.onclick = function(e){ e.stopPropagation(); showQuickReactions(reactBtn, m.id); };
+    reactBtn.title = '{{ 'React'|t }}';
+    metaRight.appendChild(reactBtn);
+    // Three-dot popup wrap
+    var moreWrap = document.createElement('div');
+    moreWrap.className = 'md-more-wrap';
+    var moreBtn = document.createElement('button');
+    moreBtn.className = 'md-meta-btn md-meta-more';
+    moreBtn.innerHTML = '<i class="bi bi-three-dots-vertical"></i>';
+    moreBtn.title = '{{ 'More'|t }}';
+    var popup = document.createElement('div');
+    popup.className = 'md-msg-popup';
+    // Copy
+    var copyItem = document.createElement('button');
+    copyItem.innerHTML = '<i class="bi bi-clipboard"></i> {{ 'Copy'|t }}';
+    copyItem.onclick = function(){ copyMsg(this); popup.classList.remove('open'); moreBtn.classList.remove('open'); };
+    popup.appendChild(copyItem);
+    // Edit (sender only, no media) -- actually always show edit option for text msgs
+    if(m.is_mine && !m.file_url){
+      var editItem = document.createElement('button');
+      editItem.innerHTML = '<i class="bi bi-pencil"></i> {{ 'Edit'|t }}';
+      editItem.onclick = function(){ editMsg(this); popup.classList.remove('open'); moreBtn.classList.remove('open'); };
+      popup.appendChild(editItem);
+    }
+    // Pin (sender only)
+    if(m.is_mine){
+      var pinItem = document.createElement('button');
+      pinItem.className = 'pop-pin' + (m.is_pinned ? ' pinned' : '');
+      pinItem.innerHTML = '<i class="bi bi-pin' + (m.is_pinned ? '-fill' : '') + '"></i> ' + (m.is_pinned ? '{{ 'Unpin'|t }}' : '{{ 'Pin'|t }}');
+      pinItem.onclick = function(){ togglePin(m.id); popup.classList.remove('open'); moreBtn.classList.remove('open'); };
+      popup.appendChild(pinItem);
+    }
+    // Delete (sender only)
+    if(m.is_mine){
+      var delItem = document.createElement('button');
+      delItem.innerHTML = '<i class="bi bi-trash3"></i> {{ 'Delete'|t }}';
+      delItem.onclick = function(){ confirmDeleteMsg(this, m.id); popup.classList.remove('open'); moreBtn.classList.remove('open'); };
+      popup.appendChild(delItem);
+    }
+    // Report
+    var reportItem = document.createElement('button');
+    reportItem.innerHTML = '<i class="bi bi-flag"></i> {{ 'Report'|t }}';
+    reportItem.onclick = function(){ reportMessage(m.id); popup.classList.remove('open'); moreBtn.classList.remove('open'); };
+    popup.appendChild(reportItem);
+    // Assemble
+    moreWrap.appendChild(moreBtn);
+    moreWrap.appendChild(popup);
+    metaRight.appendChild(moreWrap);
+    meta.appendChild(metaRight);
+    // Toggle
+    moreBtn.onclick = function(e){
+      e.stopPropagation();
+      popup.classList.toggle('open');
+      moreBtn.classList.toggle('open');
+    };
+    // Close popup on outside click
+    popup._closeHandler = function(e){
+      if(!moreWrap.contains(e.target)){
+        popup.classList.remove('open');
+        moreBtn.classList.remove('open');
+        document.removeEventListener('click', popup._closeHandler);
+      }
+    };
+    moreBtn.addEventListener('click', function(){
+      setTimeout(function(){
+        document.addEventListener('click', popup._closeHandler);
+      }, 10);
+    });
   }
   wrap.appendChild(meta);
 
@@ -1421,8 +1469,11 @@ function togglePin(msgId){
         if(chatBody){
           var wrap = chatBody.querySelector('[data-msg-id="' + msgId + '"]');
           if(wrap){
-            var btn = wrap.querySelector('[onclick*="togglePin(' + msgId + ')"]');
-            if(btn) btn.className = 'md-msg-action' + (d.is_pinned ? ' pinned' : '');
+            var btn = wrap.querySelector('.pop-pin');
+            if(btn){
+              btn.className = 'pop-pin' + (d.is_pinned ? ' pinned' : '');
+              btn.innerHTML = d.is_pinned ? '<i class="bi bi-pin-fill"></i> {{ 'Unpin'|t }}' : '<i class="bi bi-pin"></i> {{ 'Pin'|t }}';
+            }
             var icon = btn ? btn.querySelector('i') : null;
             if(icon) icon.className = 'bi bi-pin' + (d.is_pinned ? '-fill' : '');
             if(d.is_pinned){ wrap.classList.add('pinned'); }
@@ -1531,6 +1582,28 @@ function editMsg(btn){
     if(e.key === 'Enter') saveBtn.click();
     if(e.key === 'Escape') cancelBtn.click();
   });
+}
+
+// === MESSAGE POPUP (three-dot menu) ===
+function toggleMsgPopup(btn){
+  var wrap = btn.closest('.md-more-wrap');
+  if(!wrap) return;
+  var popup = wrap.querySelector('.md-msg-popup');
+  if(!popup) return;
+  popup.classList.toggle('open');
+  btn.classList.toggle('open');
+  if(popup.classList.contains('open')){
+    setTimeout(function(){
+      function closeHandler(e){
+        if(!wrap.contains(e.target)){
+          popup.classList.remove('open');
+          btn.classList.remove('open');
+          document.removeEventListener('click', closeHandler);
+        }
+      }
+      document.addEventListener('click', closeHandler);
+    }, 10);
+  }
 }
 
 // === LIGHTBOX ===

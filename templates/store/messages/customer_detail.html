@@ -321,29 +321,38 @@
         {% endif %}
       </div>
       {% if not msg.is_deleted %}
-      <div class="cd-msg-actions">
-        <button class="cd-msg-action" onclick="copyMsg(this)" title="{{ 'Copy'|t }}"><i class="bi bi-clipboard"></i></button>
-        {% if msg.sender == request.user and not msg.image and not msg.file %}
-        <button class="cd-msg-action" onclick="editMsg(this)" title="{{ 'Edit'|t }}"><i class="bi bi-pencil"></i></button>
-        {% endif %}
-        <button class="cd-msg-action" onclick="showQuickReactions(this, {{ msg.id }})" title="{{ 'React'|t }}"><i class="bi bi-emoji-smile"></i></button>
-        {% if msg.sender == request.user %}
-        <button class="cd-msg-action {% if msg.is_pinned %}pinned{% endif %}" onclick="togglePin({{ msg.id }})" title="{{ 'Pin'|t }}"><i class="bi bi-pin{% if msg.is_pinned %}-fill{% endif %}"></i></button>
-        {% endif %}
-        {% if msg.sender == request.user %}
-        <button class="cd-msg-action" onclick="confirmDeleteMsg(this, {{ msg.id }})" title="{{ 'Delete'|t }}"><i class="bi bi-trash3"></i></button>
-        {% endif %}
-        <button class="cd-msg-action" onclick="reportMessage({{ msg.id }})" title="{{ 'Report'|t }}"><i class="bi bi-flag"></i></button>
-      </div>
-      {% endif %}
       <div class="cd-msg-meta">
         <span class="cd-msg-time">{{ msg.created_at|date:"H:i" }}</span>
-        {% if msg.sender == request.user and not msg.is_deleted %}
+        {% if msg.sender == request.user %}
         <span class="cd-receipt {% if msg.is_read %}read{% elif msg.is_delivered %}delivered{% else %}sent{% endif %}">
           {% if msg.is_read %}<i class="bi bi-check2-all"></i>{% else %}<i class="bi bi-check2"></i>{% endif %}
         </span>
         {% endif %}
+        <div class="cd-meta-right">
+          <button class="cd-meta-btn cd-meta-react" onclick="showQuickReactions(this, {{ msg.id }})" title="{{ 'React'|t }}"><i class="bi bi-emoji-smile"></i></button>
+          <div class="cd-more-wrap">
+            <button class="cd-meta-btn cd-meta-more" onclick="toggleMsgPopup(this)" title="{{ 'More'|t }}"><i class="bi bi-three-dots-vertical"></i></button>
+            <div class="cd-msg-popup">
+              <button onclick="copyMsg(this)" title="{{ 'Copy'|t }}"><i class="bi bi-clipboard"></i> {{ 'Copy'|t }}</button>
+              {% if msg.sender == request.user and not msg.image and not msg.file %}
+              <button onclick="editMsg(this)" title="{{ 'Edit'|t }}"><i class="bi bi-pencil"></i> {{ 'Edit'|t }}</button>
+              {% endif %}
+              {% if msg.sender == request.user %}
+              <button class="pop-pin {% if msg.is_pinned %}pinned{% endif %}" onclick="togglePin({{ msg.id }})" title="{{ 'Pin'|t }}"><i class="bi bi-pin{% if msg.is_pinned %}-fill{% endif %}"></i> {% if msg.is_pinned %}{{ 'Unpin'|t }}{% else %}{{ 'Pin'|t }}{% endif %}</button>
+              {% endif %}
+              {% if msg.sender == request.user %}
+              <button onclick="confirmDeleteMsg(this, {{ msg.id }})" title="{{ 'Delete'|t }}"><i class="bi bi-trash3"></i> {{ 'Delete'|t }}</button>
+              {% endif %}
+              <button onclick="reportMessage({{ msg.id }})" title="{{ 'Report'|t }}"><i class="bi bi-flag"></i> {{ 'Report'|t }}</button>
+            </div>
+          </div>
+        </div>
       </div>
+      {% else %}
+      <div class="cd-msg-meta">
+        <span class="cd-msg-time">{{ msg.created_at|date:"H:i" }}</span>
+      </div>
+      {% endif %}
     </div>
     {% empty %}
     <div class="cd-empty">
@@ -647,7 +656,7 @@
     wrap.dataset.msgId = d.id;
     wrap.innerHTML =
       '<div class="cd-msg-content"><div class="cd-msg"><span class="msg-text">' + escapeHtml(d.content) + '</span></div></div>' +
-      '<div class="cd-msg-meta"><span class="cd-msg-time">' + d.created_at + '</span><span class="cd-receipt sent"><i class="bi bi-check2"></i></span></div>';
+      '<div class="cd-msg-meta"><span class="cd-msg-time">' + d.created_at + '</span><span class="cd-receipt sent"><i class="bi bi-check2"></i></span><div class="cd-meta-right"><button class="cd-meta-btn cd-meta-react" onclick="showQuickReactions(this,' + d.id + ')" title="{{ 'React'|t }}"><i class="bi bi-emoji-smile"></i></button><div class="cd-more-wrap"><button class="cd-meta-btn cd-meta-more" onclick="toggleMsgPopup(this)" title="{{ 'More'|t }}"><i class="bi bi-three-dots-vertical"></i></button><div class="cd-msg-popup"><button onclick="copyMsg(this)" title="{{ 'Copy'|t }}"><i class="bi bi-clipboard"></i> {{ 'Copy'|t }}</button><button class="pop-pin" onclick="togglePin(' + d.id + ')" title="{{ 'Pin'|t }}"><i class="bi bi-pin"></i> {{ 'Pin'|t }}</button><button onclick="confirmDeleteMsg(this,' + d.id + ')" title="{{ 'Delete'|t }}"><i class="bi bi-trash3"></i> {{ 'Delete'|t }}</button><button onclick="reportMessage(' + d.id + ')" title="{{ 'Report'|t }}"><i class="bi bi-flag"></i> {{ 'Report'|t }}</button></div></div></div></div>';
     body.appendChild(wrap);
     scrollToBottom();
   }
@@ -710,7 +719,11 @@
         content += '</div>';
       }
     }
-    wrap.innerHTML = '<div class="cd-msg-content">' + content + '</div><div class="cd-msg-meta"><span class="cd-msg-time">' + m.created_at + '</span></div>';
+    if(m.is_deleted){
+      wrap.innerHTML = '<div class="cd-msg-content">' + content + '</div><div class="cd-msg-meta"><span class="cd-msg-time">' + m.created_at + '</span></div>';
+    } else {
+      wrap.innerHTML = '<div class="cd-msg-content">' + content + '</div><div class="cd-msg-meta"><span class="cd-msg-time">' + m.created_at + '</span><div class="cd-meta-right"><button class="cd-meta-btn cd-meta-react" onclick="showQuickReactions(this,' + m.id + ')" title="{{ 'React'|t }}"><i class="bi bi-emoji-smile"></i></button><div class="cd-more-wrap"><button class="cd-meta-btn cd-meta-more" onclick="toggleMsgPopup(this)" title="{{ 'More'|t }}"><i class="bi bi-three-dots-vertical"></i></button><div class="cd-msg-popup"><button onclick="copyMsg(this)" title="{{ 'Copy'|t }}"><i class="bi bi-clipboard"></i> {{ 'Copy'|t }}</button><button onclick="reportMessage(' + m.id + ')" title="{{ 'Report'|t }}"><i class="bi bi-flag"></i> {{ 'Report'|t }}</button></div></div></div></div>';
+    }
     body.appendChild(wrap);
     scrollToBottom();
     /* Browser notification */
@@ -1028,10 +1041,11 @@
           var d = JSON.parse(xhr.responseText);
           var wrap = body.querySelector('[data-msg-id="' + msgId + '"]');
           if(wrap){
-            var btn = wrap.querySelector('.cd-msg-actions') ? wrap.querySelector('.cd-msg-actions').querySelector('[onclick*="togglePin(' + msgId + ')"]') : null;
-            if(btn) btn.className = 'cd-msg-action' + (d.is_pinned ? ' pinned' : '');
-            var icon = btn ? btn.querySelector('i') : null;
-            if(icon) icon.className = 'bi bi-pin' + (d.is_pinned ? '-fill' : '');
+            var btn = wrap.querySelector('.pop-pin');
+            if(btn){
+              btn.className = 'pop-pin' + (d.is_pinned ? ' pinned' : '');
+              btn.innerHTML = d.is_pinned ? '<i class="bi bi-pin-fill"></i> {{ 'Unpin'|t }}' : '<i class="bi bi-pin"></i> {{ 'Pin'|t }}';
+            }
             if(d.is_pinned) wrap.classList.add('pinned');
             else wrap.classList.remove('pinned');
           }
@@ -1150,6 +1164,28 @@
     };
     xhr.send(JSON.stringify({user_id: otherUserId}));
   }
+
+  /* ── Message popup toggle ── */
+  window.toggleMsgPopup = function(btn){
+    var wrap = btn.closest('.cd-more-wrap');
+    if(!wrap) return;
+    var popup = wrap.querySelector('.cd-msg-popup');
+    if(!popup) return;
+    popup.classList.toggle('open');
+    btn.classList.toggle('open');
+    if(popup.classList.contains('open')){
+      setTimeout(function(){
+        function closeHandler(e){
+          if(!wrap.contains(e.target)){
+            popup.classList.remove('open');
+            btn.classList.remove('open');
+            document.removeEventListener('click', closeHandler);
+          }
+        }
+        document.addEventListener('click', closeHandler);
+      }, 10);
+    }
+  };
 
   /* ── Status ── */
   window.toggleStatusPicker = function(e){

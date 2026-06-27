@@ -432,41 +432,9 @@
 .md-reaction-badge.mine { background: rgba(212,175,55,0.08); border-color: rgba(212,175,55,0.15); }
 
 
-/* ==============================================================================
-   SECTION: Hover Actions
-   ============================================================================== */
-
-
-
-
-/* === HOVER ACTIONS === */
-.md-msg-actions {
-  display: flex; gap: 3px;
-  position: absolute; top: -30px; right: 0; z-index: 5;
-}
-.md-msg-wrap.theirs .md-msg-actions { right: auto; left: 0; }
-
-
-.md-msg-action {
-  width: 42px; height: 42px; border-radius: 12px; border: none;
-  background: #1a1a1a; color: #888; font-size: 1rem;
-  cursor: pointer; display: flex; align-items: center;
-  justify-content: center; transition: all 0.12s;
-}
-.md-msg-action:hover { background: #2a2a2a; color: #f0ece4; }
-.md-msg-action.pinned { color: #d4af37; }
-
-
-/* ==============================================================================
-   SECTION: Meta Line
-   ============================================================================== */
-
-
-
-
 /* === META LINE === */
 .md-msg-meta {
-  display: flex; align-items: center; gap: 6px; margin-top: 4px;
+  display: flex; align-items: center; gap: 4px; margin-top: 2px;
   padding: 0 6px;
 }
 .md-msg-wrap.mine .md-msg-meta { justify-content: flex-end; }
@@ -486,6 +454,39 @@
 }
 .md-receipt:hover .seen-tooltip { display: block; }
 
+/* Meta right area: emoji + three-dot */
+.md-meta-right {
+  display: inline-flex; align-items: center; gap: 1px;
+  margin-left: 2px; opacity: 0.4; transition: opacity 0.15s;
+}
+.md-msg-wrap:hover .md-meta-right { opacity: 1; }
+.md-meta-btn {
+  width: 20px; height: 20px; border-radius: 4px; border: none;
+  background: transparent; color: #777; font-size: 0.7rem;
+  cursor: pointer; display: flex; align-items: center;
+  justify-content: center; padding: 0; line-height: 1;
+  transition: all 0.1s;
+}
+.md-meta-btn:hover { background: rgba(255,255,255,0.08); color: #f0ece4; }
+
+/* Three-dot popup menu */
+.md-more-wrap { position: relative; display: inline-flex; }
+.md-msg-popup {
+  display: none; position: absolute; bottom: calc(100% + 4px); right: 0;
+  background: #1a1a1a; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; padding: 4px; z-index: 20;
+  min-width: 130px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.md-msg-wrap.theirs .md-msg-popup { right: auto; left: 0; }
+.md-msg-popup.open { display: block; }
+.md-msg-popup button {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 8px 12px; border: none; background: transparent;
+  color: #ccc; font-size: 0.78rem; cursor: pointer;
+  border-radius: 6px; transition: all 0.1s;
+}
+.md-msg-popup button:hover { background: rgba(255,255,255,0.06); color: #f0ece4; }
+.md-msg-popup button.pinned { color: #d4af37; }
 
 /* ==============================================================================
    SECTION: Footer
@@ -791,7 +792,6 @@
   .md-icon-btn { width: 46px; height: 46px; font-size: 1.2rem; }
   .md-send-btn { width: 52px; height: 52px; }
   .md-back { width: 46px; height: 46px; }
-  .md-msg-action { width: 36px; height: 36px; font-size: 0.85rem; }
   .md-footer-tools .ft-btn { width: 42px; height: 42px; font-size: 1.15rem; }
   .md-search-bar { padding: 8px 16px; }
   .md-store-row { padding: 0 16px; height: 52px; }

@@ -124,6 +124,49 @@
 .md-footer-tools .ft-btn.active { color:var(--accent); }
 .seen-tooltip { display:none; position:absolute; bottom:calc(100% + 6px); right:0; background:var(--card-bg); border:1px solid var(--border); border-radius:6px; padding:4px 8px; font-size:0.6rem; color:var(--text-sec); white-space:nowrap; box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:10; }
 .md-receipt:hover .seen-tooltip { display:block; }
+
+
+/* ── Theme: Light Mode ── */
+.md-page[data-theme="light"] {
+  --chat-bg: #f5f0eb;
+  --chat-surface: #ffffff;
+  --chat-border: rgba(0,0,0,0.06);
+  --chat-text: #1a1a1a;
+  --chat-text-sec: #666;
+  --chat-text-muted: #999;
+  --sender-bubble: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.08));
+  --sender-text: #1a1a1a;
+  --receiver-bubble: rgba(0,0,0,0.04);
+  --receiver-text: #1a1a1a;
+  --accent: #c9a032;
+  --chat-wallpaper: none;
+}
+
+/* ── Theme: Neon / Cyberpunk ── */
+.md-page[data-theme="neon"] {
+  --chat-bg: #0a0a1a;
+  --chat-surface: #111128;
+  --chat-border: rgba(0,255,255,0.15);
+  --chat-text: #e0f0ff;
+  --chat-text-sec: #7ec8e3;
+  --chat-text-muted: #4a6a8a;
+  --sender-bubble: linear-gradient(135deg, rgba(0,255,255,0.18), rgba(255,0,255,0.10));
+  --sender-text: #e0f0ff;
+  --receiver-bubble: rgba(0,255,255,0.05);
+  --receiver-text: #c0e0ff;
+  --accent: #00ffff;
+  --chat-wallpaper: radial-gradient(ellipse at 20% 80%, rgba(0,255,255,0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,0,255,0.04) 0%, transparent 60%);
+}
+
+/* ── Message slide-up animation for new bubbles ── */
+@keyframes msgSlideUp {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.md-msg-wrap.animate-in {
+  animation: msgSlideUp 0.35s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
 </style>
 {% endblock %}
 
@@ -206,6 +249,13 @@
       <i class="bi bi-bell{% if conversation.is_muted %}-slash{% endif %}"></i>
       {% if conversation.is_muted %}{{ 'Unmute'|t }}{% else %}{{ 'Mute'|t }}{% endif %}
     </button>
+    <div style="padding:6px 0;border-top:1px solid var(--border);margin-top:4px;">
+      <select id="theme-select" onchange="switchTheme(this.value)" style="width:100%;padding:6px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:0.72rem;outline:none;cursor:pointer;">
+        <option value="dark">Dark Mode</option>
+        <option value="light">Light Mode</option>
+        <option value="neon">Neon / Cyberpunk</option>
+      </select>
+    </div>
   </div>
 
   <!-- SEARCH BAR -->
@@ -1484,5 +1534,19 @@ document.addEventListener('click', function(e){
     picker.classList.remove('open');
   }
 });
+
+// === THEME SWITCHER ===
+(function(){
+  var page = document.getElementById('md-page');
+  var sel = document.getElementById('theme-select');
+  if(!page || !sel) return;
+  var saved = localStorage.getItem('chat-theme') || 'dark';
+  page.setAttribute('data-theme', saved);
+  sel.value = saved;
+  window.switchTheme = function(theme){
+    page.setAttribute('data-theme', theme);
+    localStorage.setItem('chat-theme', theme);
+  };
+})();
 </script>
 {% endblock %}

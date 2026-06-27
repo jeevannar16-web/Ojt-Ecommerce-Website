@@ -9,10 +9,17 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/customer_messages.css' %}?v=2">
 <style>
-/* Default theme — CSS variables used by structural selectors */
-.cd-page { --cd-bg:#0d0d0d; --cd-surface:#121212; --cd-border:rgba(255,255,255,0.05); --cd-text:#f0ece4; --cd-sec:#888; --cd-muted:#555; --cd-mine:linear-gradient(135deg,rgba(212,175,55,0.14),rgba(212,175,55,0.04)); --cd-theirs:rgba(255,255,255,0.04); --cd-acc:#d4af37; --cd-wallpaper:none; position:relative; }
-.cd-page[data-theme] { background: var(--cd-bg); transition: background 0.4s ease; }
-.cd-page[data-theme] * { transition: background 0.35s ease, color 0.25s ease, border-color 0.25s ease; }
+/* Default theme (dark) — CSS variables used by structural selectors */
+.cd-page {
+  --cd-bg:#0d0d0d; --cd-surface:#121212; --cd-border:rgba(255,255,255,0.05);
+  --cd-text:#f0ece4; --cd-sec:#888; --cd-muted:#555;
+  --cd-mine:linear-gradient(135deg,rgba(212,175,55,0.14),rgba(212,175,55,0.04));
+  --cd-theirs:rgba(255,255,255,0.04); --cd-acc:#d4af37;
+  --cd-wallpaper:none;
+  position:relative;
+}
+.cd-page[data-theme] { background: var(--cd-bg); }
+.cd-page[data-theme] * { transition: background 0.35s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
 .cd-top-bar, .cd-store-row, .cd-search-bar, .cd-pinned-bar, .cd-blocked-banner, .cd-footer { background: var(--cd-surface); }
 .cd-body { background: transparent; }
 .cd-msg-wrap.mine .cd-msg { background: var(--cd-mine); color: var(--cd-text); }
@@ -20,6 +27,9 @@
 .cd-receipt.read { color: var(--cd-acc); }
 .cd-date-divider span { background: var(--cd-bg); }
 .cd-send-btn { background: var(--cd-acc); }
+.cd-icon-btn { color: var(--cd-sec); }
+.cd-icon-btn:hover { background: var(--cd-theirs); color: var(--cd-text); }
+
 /* Wallpaper layer */
 .cd-page[data-theme]::before {
   content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
@@ -29,6 +39,43 @@
 .cd-page .cd-top-bar,
 .cd-page .cd-footer,
 .cd-page .cd-body { position:relative; z-index:1; }
+
+/* ── Theme: Light Mode ── */
+.cd-page[data-theme="light"] {
+  --cd-bg: #f5f0eb;
+  --cd-surface: #ffffff;
+  --cd-border: rgba(0,0,0,0.06);
+  --cd-text: #1a1a1a;
+  --cd-sec: #666;
+  --cd-muted: #999;
+  --cd-mine: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.08));
+  --cd-theirs: rgba(0,0,0,0.04);
+  --cd-acc: #c9a032;
+  --cd-wallpaper: none;
+}
+
+/* ── Theme: Neon / Cyberpunk ── */
+.cd-page[data-theme="neon"] {
+  --cd-bg: #0a0a1a;
+  --cd-surface: #111128;
+  --cd-border: rgba(0,255,255,0.15);
+  --cd-text: #e0f0ff;
+  --cd-sec: #7ec8e3;
+  --cd-muted: #4a6a8a;
+  --cd-mine: linear-gradient(135deg, rgba(0,255,255,0.18), rgba(255,0,255,0.10));
+  --cd-theirs: rgba(0,255,255,0.05);
+  --cd-acc: #00ffff;
+  --cd-wallpaper: radial-gradient(ellipse at 20% 80%, rgba(0,255,255,0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,0,255,0.04) 0%, transparent 60%);
+}
+
+/* ── Message slide-up animation for new bubbles ── */
+@keyframes cdMsgSlideUp {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.cd-msg-wrap.animate-in {
+  animation: cdMsgSlideUp 0.35s cubic-bezier(0.16,1,0.3,1) forwards;
+}
 </style>
 {% endblock %}
 
@@ -104,6 +151,13 @@
     <button onclick="deleteConversation()" class="danger">
       <i class="bi bi-trash3"></i> {{ 'Delete Conversation'|t }}
     </button>
+    <div style="padding:6px 0;border-top:1px solid var(--cd-border);margin-top:4px;">
+      <select id="theme-select" onchange="switchTheme(this.value)" style="width:100%;padding:6px 8px;background:var(--cd-bg);border:1px solid var(--cd-border);border-radius:6px;color:var(--cd-text);font-size:0.72rem;outline:none;cursor:pointer;">
+        <option value="dark">Dark Mode</option>
+        <option value="light">Light Mode</option>
+        <option value="neon">Neon / Cyberpunk</option>
+      </select>
+    </div>
   </div>
 
   <!-- ─── SEARCH BAR ─── -->
@@ -1067,6 +1121,19 @@
     if(pollTimer) clearInterval(pollTimer);
     if(statusTimer) clearInterval(statusTimer);
   });
+
+  /* ── Theme Switcher ── */
+  var page = document.getElementById('cd-page');
+  var sel = document.getElementById('theme-select');
+  if(page && sel){
+    var saved = localStorage.getItem('chat-theme') || 'dark';
+    page.setAttribute('data-theme', saved);
+    sel.value = saved;
+    window.switchTheme = function(theme){
+      page.setAttribute('data-theme', theme);
+      localStorage.setItem('chat-theme', theme);
+    };
+  }
 
 })();
 </script>

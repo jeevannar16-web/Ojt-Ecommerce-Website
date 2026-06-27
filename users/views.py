@@ -232,6 +232,7 @@ def profile(request):
     else:
         form = UserProfileForm(instance=user_profile)
 
+    user_profile.refresh_from_db()
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     favorites = FavoriteItem.objects.filter(user=request.user).select_related('product')
 

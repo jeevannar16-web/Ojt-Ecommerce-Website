@@ -456,18 +456,18 @@
 
 /* Meta right area: emoji + three-dot */
 .md-meta-right {
-  display: inline-flex; align-items: center; gap: 1px;
-  margin-left: 2px; opacity: 0.4; transition: opacity 0.15s;
+  display: inline-flex; align-items: center; gap: 2px;
+  margin-left: 4px; opacity: 0.5; transition: opacity 0.15s;
 }
 .md-msg-wrap:hover .md-meta-right { opacity: 1; }
 .md-meta-btn {
-  width: 20px; height: 20px; border-radius: 4px; border: none;
-  background: transparent; color: #777; font-size: 0.7rem;
+  width: 28px; height: 28px; border-radius: 6px; border: none;
+  background: transparent; color: #888; font-size: 0.85rem;
   cursor: pointer; display: flex; align-items: center;
   justify-content: center; padding: 0; line-height: 1;
-  transition: all 0.1s;
+  transition: all 0.12s;
 }
-.md-meta-btn:hover { background: rgba(255,255,255,0.08); color: #f0ece4; }
+.md-meta-btn:hover { background: rgba(255,255,255,0.1); color: #f0ece4; }
 
 /* Three-dot popup menu */
 .md-more-wrap { position: relative; display: inline-flex; }

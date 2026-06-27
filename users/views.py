@@ -23,7 +23,6 @@ from verification.email_validator import validate_email_deliverability
 # ════════════════════════════════════════════════════════════════
 # AUTHENTICANTION
 # ════════════════════════════════════════════════════════════════
-_sent_recently = {}
 
 class CustomPasswordResetForm(PasswordResetForm):
     def clean_email(self):
@@ -41,13 +40,6 @@ class CustomPasswordResetForm(PasswordResetForm):
 
     def send_mail(self, subject_template_name, email_template_name, context,
                   from_email, to_email, html_email_template_name=None):
-        global _sent_recently
-        key = to_email
-        now = timezone.now().timestamp()
-        last = _sent_recently.get(key, 0)
-        if now - last < 60:
-            return
-        _sent_recently[key] = now
         context['current_year'] = timezone.now().year
         super().send_mail(subject_template_name, email_template_name, context,
                           from_email, to_email, html_email_template_name=html_email_template_name)

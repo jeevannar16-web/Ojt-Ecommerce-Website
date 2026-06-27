@@ -225,8 +225,9 @@ def profile(request):
             user_profile.save()
             new_username = request.POST.get('username', '').strip()
             if new_username and new_username != request.user.username:
-                request.user.username = new_username
-                request.user.save()
+                if not User.objects.filter(username=new_username).exclude(pk=request.user.pk).exists():
+                    request.user.username = new_username
+                    request.user.save()
             messages.success(request, "Profile updated successfully!")
             return redirect('profile')
     else:

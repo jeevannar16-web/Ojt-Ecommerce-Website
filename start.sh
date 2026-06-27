@@ -35,7 +35,8 @@ sleep 2
 
 echo ""
 echo "  ✅ Server is ready!"
-echo "     Open http://localhost:$PORT in your browser"
+echo ""
+echo "  Open http://127.0.0.1:$PORT or http://localhost:$PORT in your browser"
 echo ""
 echo "  To stop: ./stop.sh"
 echo ""

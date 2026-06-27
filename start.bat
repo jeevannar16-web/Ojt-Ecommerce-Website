@@ -26,7 +26,7 @@ start /B python manage.py runserver 0.0.0.0:%PORT% > nul 2>&1
 timeout /t 2 /nobreak > nul
 echo.
 echo   Server is ready!
-echo   Open http://localhost:%PORT% in your browser
+echo   Open http://127.0.0.1:%PORT% or http://localhost:%PORT% in your browser
 echo.
 echo   To stop: taskkill /F /IM python.exe 2^>nul
 echo.

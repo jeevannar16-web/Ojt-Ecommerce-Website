@@ -21,5 +21,12 @@ if not exist venv\installed (
     echo installed > venv\installed
 )
 
-echo Starting on http://0.0.0.0:%PORT% ...
-python manage.py runserver 0.0.0.0:%PORT%
+echo Starting server...
+start /B python manage.py runserver 0.0.0.0:%PORT% > nul 2>&1
+timeout /t 2 /nobreak > nul
+echo.
+echo   Server is ready!
+echo   Open http://localhost:%PORT% in your browser
+echo.
+echo   To stop: taskkill /F /IM python.exe 2^>nul
+echo.

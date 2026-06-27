@@ -32,6 +32,13 @@ class CustomPasswordResetForm(PasswordResetForm):
             raise forms.ValidationError('No account found with this email address.')
         return email
 
+    def get_users(self, email):
+        """Include social-auth users (no usable password) so they can set one."""
+        active_users = User.objects.filter(
+            email__iexact=email, is_active=True
+        )
+        return (u for u in active_users)
+
     def send_mail(self, subject_template_name, email_template_name, context,
                   from_email, to_email, html_email_template_name=None):
         global _sent_recently

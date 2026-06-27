@@ -1164,7 +1164,7 @@
     xhr.open('POST', '{% url "store:api_update_status" %}', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('X-CSRFToken', csrf);
-    xhr.send(JSON.stringify({emoji: el.dataset.emoji, text: el.dataset.text}));
+    xhr.send(JSON.stringify({emoji: el.dataset.emoji, text: el.dataset.text, is_online: el.dataset.text !== 'Offline'}));
   };
 
   document.addEventListener('click', function(e){
@@ -1219,5 +1219,18 @@
   }
 
 })();
+
+// Set offline on page/tab close (best-effort)
+window.addEventListener('beforeunload', function(){
+  try {
+    var x = new XMLHttpRequest();
+    x.open('POST', '{% url "store:api_heartbeat" %}', false);
+    x.setRequestHeader('Content-Type', 'application/json');
+    x.setRequestHeader('X-CSRFToken', csrf);
+    x.send(JSON.stringify({offline: true}));
+  } catch(e){}
+});
+
+
 </script>
 {% endblock %}

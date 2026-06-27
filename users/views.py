@@ -15,7 +15,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from .forms import UserRegistrationForm, UserProfileForm
 from .models import Profile
-from store.models import Order, FavoriteItem
+from store.models import Order, FavoriteItem, UserOnline
 from store.activity_logger import log_action
 from verification.email_validator import validate_email_deliverability
 
@@ -321,5 +321,11 @@ class CustomPasswordChangeView(auth_views.PasswordChangeView):
 # ==============================================================================
 
 def user_logout(request):
+    try:
+        status = UserOnline.objects.get(user=request.user)
+        status.is_online = False
+        status.save(update_fields=['is_online'])
+    except Exception:
+        pass
     logout(request)
     return redirect('home')

@@ -249,6 +249,7 @@
           <button class="md-status-option" data-emoji="📞" data-text="On Call" onclick="setStatus(this)"><span class="so-emoji">📞</span><span class="so-text">{{ 'On Call'|t }}</span></button>
           <button class="md-status-option" data-emoji="🏠" data-text="At Home" onclick="setStatus(this)"><span class="so-emoji">🏠</span><span class="so-text">{{ 'At Home'|t }}</span></button>
           <button class="md-status-option" data-emoji="⚡" data-text="Online" onclick="setStatus(this)"><span class="so-emoji">⚡</span><span class="so-text">{{ 'Online'|t }}</span></button>
+          <button class="md-status-option" data-emoji="⛔" data-text="Offline" onclick="setStatus(this)"><span class="so-emoji">⛔</span><span class="so-text">{{ 'Offline'|t }}</span></button>
         </div>
       </div>
     </div>
@@ -1568,7 +1569,7 @@ function setStatus(btn){
       btn.classList.add('active');
     }
   };
-  xhr.send(JSON.stringify({emoji: emoji, text: text}));
+  xhr.send(JSON.stringify({emoji: emoji, text: text, is_online: text !== 'Offline'}));
 }
 
 // Close status picker on outside click
@@ -1612,5 +1613,16 @@ document.addEventListener('click', function(e){
     if(!toggle.contains(e.target) && !menu.contains(e.target)) menu.classList.remove('open');
   });
 })();
+
+// Set offline on page/tab close (best-effort)
+window.addEventListener('beforeunload', function(){
+  try {
+    var x = new XMLHttpRequest();
+    x.open('POST', '{% url "store:api_heartbeat" %}', false);
+    x.setRequestHeader('Content-Type', 'application/json');
+    x.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+    x.send(JSON.stringify({offline: true}));
+  } catch(e){}
+});
 </script>
 {% endblock %}

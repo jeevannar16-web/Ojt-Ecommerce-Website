@@ -203,7 +203,7 @@ def conversation_detail(request, conversation_id):
     status_options = [
         ('🟢', 'Available'), ('🟠', 'Busy'), ('🔴', 'DND'),
         ('🌙', 'Away'), ('💼', 'At Work'), ('📞', 'On Call'),
-        ('🏠', 'At Home'), ('⚡', 'Online'),
+        ('🏠', 'At Home'), ('⚡', 'Online'), ('⛔', 'Offline'),
     ]
 
     context = {
@@ -428,9 +428,17 @@ def api_react_message(request):
 
 
 @login_required
+@require_POST
 def api_heartbeat(request):
+    try:
+        data = json.loads(request.body)
+    except (ValueError, TypeError):
+        data = {}
     status, _ = UserOnline.objects.get_or_create(user=request.user)
-    status.is_online = True
+    if data.get('offline'):
+        status.is_online = False
+    elif not (hasattr(request.user, 'profile') and request.user.profile.status_text == 'Offline'):
+        status.is_online = True
     status.last_seen = timezone.now()
     status.save(update_fields=['is_online', 'last_seen'])
     return JsonResponse({'ok': True})
@@ -729,15 +737,16 @@ def api_online_status(request):
     if not user_id:
         return JsonResponse({'error': 'user_id required'}, status=400)
     target = get_object_or_404(User, id=user_id)
+    now = timezone.now()
     try:
         status = UserOnline.objects.get(user=target)
-        is_online = status.is_online
+        # If last_seen is more than 120s ago, treat as offline regardless of flag
+        is_online = status.is_online and (now - status.last_seen).total_seconds() < 120
         last_seen = status.last_seen
     except UserOnline.DoesNotExist:
         is_online = False
         last_seen = None
 
-    now = timezone.now()
     if is_online:
         last_seen_label = 'Online'
         last_seen_ago = ''
@@ -872,10 +881,10 @@ def api_update_status(request):
     profile.status_text = text
     profile.save(update_fields=['status_emoji', 'status_text'])
     status, _ = UserOnline.objects.get_or_create(user=request.user)
-    status.is_online = True
+    status.is_online = data.get('is_online', text != 'Offline')
     status.last_seen = timezone.now()
     status.save(update_fields=['is_online', 'last_seen'])
-    return JsonResponse({'ok': True, 'emoji': emoji, 'text': text})
+    return JsonResponse({'ok': True, 'emoji': emoji, 'text': text, 'is_online': status.is_online})
 
 
 # ==============================================================================

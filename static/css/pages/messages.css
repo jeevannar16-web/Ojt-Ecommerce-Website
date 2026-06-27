@@ -441,24 +441,12 @@
 
 /* === HOVER ACTIONS === */
 .md-msg-actions {
-  display: none; gap: 3px;
+  display: flex; gap: 3px;
   position: absolute; top: -30px; right: 0; z-index: 5;
 }
 .md-msg-wrap.theirs .md-msg-actions { right: auto; left: 0; }
-.md-msg-actions.open { display: flex; }
 
-/* Three-dot trigger always visible */
-.md-msg-more-btn {
-  position: absolute; top: -30px; right: 0; z-index: 6;
-  width: 28px; height: 28px; border-radius: 50%;
-  border: none; outline: none !important; background: transparent;
-  color: #888; font-size: 0.9rem; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.12s; opacity: 1;
-}
-.md-msg-wrap.theirs .md-msg-more-btn { right: auto; left: 0; }
-.md-msg-more-btn:hover { background: rgba(128,128,128,0.15); color: #f0ece4; }
-.md-msg-more-btn.open { opacity: 0; pointer-events: none; }
+
 .md-msg-action {
   width: 42px; height: 42px; border-radius: 12px; border: none;
   background: #1a1a1a; color: #888; font-size: 1rem;

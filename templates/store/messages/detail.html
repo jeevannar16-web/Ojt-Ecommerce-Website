@@ -389,7 +389,6 @@
         {% endif %}
       </div>
       {% if not msg.is_deleted %}
-      <button class="md-msg-more-btn" onclick="toggleMsgActions(this)" title="{{ 'More'|t }}"><i class="bi bi-three-dots-vertical"></i></button>
       <div class="md-msg-actions">
         <button class="md-msg-action" onclick="copyMsg(this)" title="{{ 'Copy'|t }}"><i class="bi bi-clipboard"></i></button>
         {% if msg.sender == request.user and not msg.image and not msg.file %}
@@ -1278,12 +1277,6 @@ function addMessageToBody(m){
   wrap.appendChild(content);
 
   if(!m.is_deleted){
-    // More button (always visible)
-    var moreBtn = document.createElement('button');
-    moreBtn.className = 'md-msg-more-btn';
-    moreBtn.innerHTML = '<i class="bi bi-three-dots-vertical"></i>';
-    moreBtn.onclick = function(){ toggleMsgActions(this); };
-    wrap.appendChild(moreBtn);
     // Actions
     var actions = document.createElement('div');
     actions.className = 'md-msg-actions';
@@ -1537,16 +1530,6 @@ function editMsg(btn){
     if(e.key === 'Enter') saveBtn.click();
     if(e.key === 'Escape') cancelBtn.click();
   });
-}
-
-// === TOGGLE MESSAGE ACTIONS ===
-function toggleMsgActions(btn){
-  var wrap = btn.closest('.md-msg-wrap');
-  if(!wrap) return;
-  var actions = wrap.querySelector('.md-msg-actions');
-  if(!actions) return;
-  actions.classList.toggle('open');
-  btn.classList.toggle('open');
 }
 
 // === LIGHTBOX ===

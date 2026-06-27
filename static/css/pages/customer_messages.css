@@ -1428,7 +1428,7 @@ main:has(.cm-page) {
 
 /* ── Actions ── */
 .cd-msg-actions {
-  display: none;
+  display: flex;
   gap: 2px;
   position: absolute;
   top: -28px;
@@ -1439,19 +1439,6 @@ main:has(.cm-page) {
   right: auto;
   left: 0;
 }
-.cd-msg-actions.open { display: flex; }
-
-.cd-msg-more-btn {
-  position: absolute; top: -28px; right: 0; z-index: 6;
-  width: 26px; height: 26px; border-radius: 50%;
-  border: none; background: transparent;
-  color: #888; font-size: 0.85rem; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.12s; opacity: 1;
-}
-.cd-msg-wrap.theirs .cd-msg-more-btn { right: auto; left: 0; }
-.cd-msg-more-btn:hover { background: rgba(128,128,128,0.15); color: #f0ece4; }
-.cd-msg-more-btn.open { opacity: 0; pointer-events: none; }
 .cd-msg-action {
   width: 36px;
   height: 36px;

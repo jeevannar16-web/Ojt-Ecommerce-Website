@@ -321,7 +321,6 @@
         {% endif %}
       </div>
       {% if not msg.is_deleted %}
-      <button class="cd-msg-more-btn" onclick="toggleMsgActions(this)" title="{{ 'More'|t }}"><i class="bi bi-three-dots-vertical"></i></button>
       <div class="cd-msg-actions">
         <button class="cd-msg-action" onclick="copyMsg(this)" title="{{ 'Copy'|t }}"><i class="bi bi-clipboard"></i></button>
         {% if msg.sender == request.user and not msg.image and not msg.file %}
@@ -1109,14 +1108,7 @@
   /* ── Lightbox ── */
   window.openLightbox = function(url){ var lb = document.getElementById('lightbox'); document.getElementById('lightbox-img').src = url; lb.classList.add('open'); };
   window.closeLightbox = function(){ document.getElementById('lightbox').classList.remove('open'); };
-  window.toggleMsgActions = function(btn){
-    var wrap = btn.closest('.cd-msg-wrap');
-    if(!wrap) return;
-    var actions = wrap.querySelector('.cd-msg-actions');
-    if(!actions) return;
-    actions.classList.toggle('open');
-    btn.classList.toggle('open');
-  };
+
 
   /* ── Profile Sidebar ── */
   window.openProfileSidebar = function(){

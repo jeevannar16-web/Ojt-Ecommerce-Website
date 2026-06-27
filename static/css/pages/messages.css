@@ -452,13 +452,13 @@
 .md-msg-more-btn {
   position: absolute; top: -30px; right: 0; z-index: 6;
   width: 28px; height: 28px; border-radius: 50%;
-  border: none; background: rgba(255,255,255,0.04);
+  border: none; background: transparent;
   color: #888; font-size: 0.9rem; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: all 0.12s; opacity: 1;
 }
 .md-msg-wrap.theirs .md-msg-more-btn { right: auto; left: 0; }
-.md-msg-more-btn:hover { background: rgba(255,255,255,0.1); color: #f0ece4; }
+.md-msg-more-btn:hover { background: rgba(128,128,128,0.15); color: #f0ece4; }
 .md-msg-more-btn.open { opacity: 0; pointer-events: none; }
 .md-msg-action {
   width: 42px; height: 42px; border-radius: 12px; border: none;

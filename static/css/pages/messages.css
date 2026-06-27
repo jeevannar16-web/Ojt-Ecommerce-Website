@@ -441,12 +441,11 @@
 
 /* === HOVER ACTIONS === */
 .md-msg-actions {
-  display: flex; gap: 3px; opacity: 0;
+  display: flex; gap: 3px; opacity: 1;
   transition: opacity 0.12s;
   position: absolute; top: -30px; right: 0; z-index: 5;
 }
 .md-msg-wrap.theirs .md-msg-actions { right: auto; left: 0; }
-.md-msg-wrap:hover .md-msg-actions { opacity: 1; }
 .md-msg-action {
   width: 42px; height: 42px; border-radius: 12px; border: none;
   background: #1a1a1a; color: #888; font-size: 1rem;

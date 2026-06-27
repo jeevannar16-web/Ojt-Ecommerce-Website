@@ -1,6 +1,7 @@
 """Views for sending and verifying email/phone OTP codes."""
 
 import json
+import re
 
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
@@ -60,6 +61,9 @@ def verification_setup(request):
             phone = request.POST.get('phone', '').strip()
             if not phone:
                 messages.error(request, 'Phone number is required.')
+                return redirect('verification_setup')
+            if not re.match(r'^\+?[\d\s\-\(\)]{7,20}$', phone) or len(re.sub(r'[\s\-\(\)\+]', '', phone)) < 7:
+                messages.error(request, 'Please enter a valid phone number (e.g. +92 300 1234567).')
                 return redirect('verification_setup')
             try:
                 success, msg, verification = PhoneVerificationService.send_otp(request.user, phone)

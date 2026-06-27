@@ -510,6 +510,8 @@ def api_pin_message(request):
     user = request.user
     if user != conv.customer and user != conv.seller and not user.is_staff:
         return JsonResponse({'error': 'forbidden'}, status=403)
+    if msg.sender != user:
+        return JsonResponse({'error': 'Only the sender can pin this message'}, status=403)
     msg.is_pinned = not msg.is_pinned
     msg.save(update_fields=['is_pinned'])
     return JsonResponse({'ok': True, 'is_pinned': msg.is_pinned})

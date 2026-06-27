@@ -9,84 +9,93 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/customer_messages.css' %}?v=2">
 <style>
-/* ── Default theme (dark) variables ── */
+/* ── Theme variables (default = dark) ── */
 .cd-page {
-  --cd-bg:#0d0d0d; --cd-surface:#121212; --cd-border:rgba(255,255,255,0.05);
-  --cd-text:#f0ece4; --cd-sec:#888; --cd-muted:#555;
-  --cd-mine:linear-gradient(135deg,rgba(212,175,55,0.14),rgba(212,175,55,0.04));
-  --cd-theirs:rgba(255,255,255,0.04); --cd-acc:#d4af37;
-  --cd-wallpaper:none;
-  position:relative;
+  --bg: #0d0d0d;
+  --surface: #121212;
+  --border: rgba(255,255,255,0.05);
+  --text: #f0ece4;
+  --sec: #888;
+  --muted: #555;
+  --mine-bubble: linear-gradient(135deg, rgba(212,175,55,0.14), rgba(212,175,55,0.04));
+  --theirs-bubble: rgba(255,255,255,0.04);
+  --accent: #d4af37;
+  --wallpaper: none;
+  position: relative;
 }
-.cd-page[data-theme] { background: var(--cd-bg); }
-.cd-page[data-theme] * { transition: background 0.35s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
 
+/* ── Light theme ── */
+.cd-page[data-theme="light"] {
+  --bg: #f5f0eb;
+  --surface: #ffffff;
+  --border: rgba(0,0,0,0.06);
+  --text: #1a1a1a;
+  --sec: #666;
+  --muted: #999;
+  --mine-bubble: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.08));
+  --theirs-bubble: rgba(0,0,0,0.04);
+  --accent: #c9a032;
+  --wallpaper: none;
+}
+
+/* ── Neon theme ── */
+.cd-page[data-theme="neon"] {
+  --bg: #0a0a1a;
+  --surface: #111128;
+  --border: rgba(0,255,255,0.15);
+  --text: #e0f0ff;
+  --sec: #7ec8e3;
+  --muted: #4a6a8a;
+  --mine-bubble: linear-gradient(135deg, rgba(0,255,255,0.18), rgba(255,0,255,0.10));
+  --theirs-bubble: rgba(0,255,255,0.05);
+  --accent: #00ffff;
+  --wallpaper: radial-gradient(ellipse at 20% 80%, rgba(0,255,255,0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,0,255,0.04) 0%, transparent 60%);
+}
+
+/* ── Apply theme ── */
+.cd-page[data-theme] { background: var(--bg) !important; }
 .cd-page[data-theme] .cd-top-bar,
+.cd-page[data-theme] .cd-footer,
 .cd-page[data-theme] .cd-store-row,
 .cd-page[data-theme] .cd-search-bar,
 .cd-page[data-theme] .cd-pinned-bar,
 .cd-page[data-theme] .cd-blocked-banner,
-.cd-page[data-theme] .cd-footer,
 .cd-page[data-theme] .cd-more-menu,
 .cd-page[data-theme] .cd-form textarea,
-.cd-page[data-theme] .cd-search-bar input { background: var(--cd-surface); }
-
+.cd-page[data-theme] .cd-search-bar input { background: var(--surface) !important; }
 .cd-body { background: transparent; }
-.cd-page[data-theme] .cd-msg-wrap.mine .cd-msg { background: var(--cd-mine); color: var(--cd-text); }
-.cd-page[data-theme] .cd-msg-wrap.theirs .cd-msg { background: var(--cd-theirs); color: var(--cd-text); }
-.cd-page[data-theme] .cd-receipt.read { color: var(--cd-acc); }
-.cd-page[data-theme] .cd-date-divider span { background: var(--cd-bg); }
-.cd-page[data-theme] .cd-send-btn { background: var(--cd-acc); color: #0d0d0d; }
-.cd-page[data-theme] .cd-icon-btn { color: var(--cd-sec); }
-.cd-page[data-theme] .cd-icon-btn:hover { background: var(--cd-theirs); color: var(--cd-text); }
-.cd-page[data-theme] .cd-form textarea { border-color: var(--cd-border); color: var(--cd-text); }
-.cd-page[data-theme] .cd-form textarea:focus { border-color: var(--cd-acc); }
-.cd-page[data-theme] .cd-more-menu button { color: var(--cd-text); }
-.cd-page[data-theme] .cd-more-menu button:hover { background: var(--cd-theirs); }
-.cd-page[data-theme] .cd-search-bar input { border-color: var(--cd-border); color: var(--cd-text); }
 
-/* Wallpaper layer */
+.cd-page[data-theme] .cd-msg-wrap.mine .cd-msg { background: var(--mine-bubble) !important; color: var(--text) !important; }
+.cd-page[data-theme] .cd-msg-wrap.theirs .cd-msg { background: var(--theirs-bubble) !important; color: var(--text) !important; }
+.cd-page[data-theme] .cd-receipt.read { color: var(--accent) !important; }
+.cd-page[data-theme] .cd-date-divider span { background: var(--bg) !important; }
+.cd-page[data-theme] .cd-send-btn { background: var(--accent) !important; color: #0d0d0d !important; }
+.cd-page[data-theme] .cd-icon-btn { color: var(--sec) !important; }
+.cd-page[data-theme] .cd-icon-btn:hover { background: var(--theirs-bubble) !important; color: var(--text) !important; }
+.cd-page[data-theme] .cd-form textarea { border-color: var(--border) !important; color: var(--text) !important; }
+.cd-page[data-theme] .cd-form textarea:focus { border-color: var(--accent) !important; }
+.cd-page[data-theme] .cd-more-menu button { color: var(--text) !important; }
+.cd-page[data-theme] .cd-more-menu button:hover { background: var(--theirs-bubble) !important; }
+.cd-page[data-theme] .cd-search-bar input { border-color: var(--border) !important; color: var(--text) !important; }
+.cd-page[data-theme] .cd-form textarea::placeholder { color: var(--muted) !important; }
+
+.cd-page[data-theme],
+.cd-page[data-theme] * { transition: background 0.35s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important; }
+
+/* ── Wallpaper ── */
 .cd-page[data-theme]::before {
   content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background: var(--cd-wallpaper);
+  background: var(--wallpaper);
   transition: opacity 0.6s ease;
 }
 .cd-page .cd-top-bar,
 .cd-page .cd-footer,
 .cd-page .cd-body { position:relative; z-index:1; }
 
-/* ── Theme: Light Mode ── */
-.cd-page[data-theme="light"] {
-  --cd-bg: #f5f0eb;
-  --cd-surface: #ffffff;
-  --cd-border: rgba(0,0,0,0.06);
-  --cd-text: #1a1a1a;
-  --cd-sec: #666;
-  --cd-muted: #999;
-  --cd-mine: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.08));
-  --cd-theirs: rgba(0,0,0,0.04);
-  --cd-acc: #c9a032;
-  --cd-wallpaper: none;
-}
-
-/* ── Theme: Neon / Cyberpunk ── */
-.cd-page[data-theme="neon"] {
-  --cd-bg: #0a0a1a;
-  --cd-surface: #111128;
-  --cd-border: rgba(0,255,255,0.15);
-  --cd-text: #e0f0ff;
-  --cd-sec: #7ec8e3;
-  --cd-muted: #4a6a8a;
-  --cd-mine: linear-gradient(135deg, rgba(0,255,255,0.18), rgba(255,0,255,0.10));
-  --cd-theirs: rgba(0,255,255,0.05);
-  --cd-acc: #00ffff;
-  --cd-wallpaper: radial-gradient(ellipse at 20% 80%, rgba(0,255,255,0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,0,255,0.04) 0%, transparent 60%);
-}
-
 /* ── Theme popup ── */
 .cd-theme-menu {
   display:none; position:absolute; top:100%; right:0; z-index:50;
-  background:var(--cd-surface); border:1px solid var(--cd-border);
+  background:var(--surface); border:1px solid var(--border);
   border-radius:12px; padding:5px; min-width:150px;
   box-shadow:0 8px 32px rgba(0,0,0,0.5);
 }
@@ -94,11 +103,11 @@
 .cd-theme-menu button {
   display:flex; align-items:center; gap:10px; width:100%;
   padding:9px 14px; border:none; background:none;
-  color:var(--cd-text); font-size:0.82rem; cursor:pointer;
+  color:var(--text); font-size:0.82rem; cursor:pointer;
   border-radius:8px; transition:all 0.12s;
 }
-.cd-theme-menu button:hover { background:var(--cd-theirs); }
-.cd-theme-menu button.active { background:var(--cd-mine); color:var(--cd-acc); }
+.cd-theme-menu button:hover { background:var(--theirs-bubble); }
+.cd-theme-menu button.active { background:var(--mine-bubble); color:var(--accent); }
 .cd-theme-menu button i { font-size:1rem; width:20px; text-align:center; }
 
 /* ── Pin badge on message bubbles ── */
@@ -318,7 +327,9 @@
         <button class="cd-msg-action" onclick="editMsg(this)" title="{{ 'Edit'|t }}"><i class="bi bi-pencil"></i></button>
         {% endif %}
         <button class="cd-msg-action" onclick="showQuickReactions(this, {{ msg.id }})" title="{{ 'React'|t }}"><i class="bi bi-emoji-smile"></i></button>
+        {% if msg.sender == request.user %}
         <button class="cd-msg-action {% if msg.is_pinned %}pinned{% endif %}" onclick="togglePin({{ msg.id }})" title="{{ 'Pin'|t }}"><i class="bi bi-pin{% if msg.is_pinned %}-fill{% endif %}"></i></button>
+        {% endif %}
         {% if msg.sender == request.user %}
         <button class="cd-msg-action" onclick="confirmDeleteMsg(this, {{ msg.id }})" title="{{ 'Delete'|t }}"><i class="bi bi-trash3"></i></button>
         {% endif %}
@@ -1179,7 +1190,10 @@
   var toggle = document.getElementById('theme-toggle');
   var menu = document.getElementById('theme-menu');
   var icon = document.getElementById('theme-icon');
+  var meta = document.getElementById('color-scheme-meta');
+  var html = document.getElementById('msg-html');
   var iconMap = { dark:'bi-moon-stars', light:'bi-sun', neon:'bi-lightning' };
+  var schemeMap = { dark:'dark', light:'light', neon:'dark' };
   if(page && toggle && menu){
     function applyTheme(theme){
       page.setAttribute('data-theme', theme);
@@ -1187,6 +1201,8 @@
       menu.querySelectorAll('[data-theme-opt]').forEach(function(b){ b.classList.remove('active'); });
       menu.querySelector('[data-theme-opt="' + theme + '"]')?.classList.add('active');
       if(icon){ icon.className = 'bi ' + (iconMap[theme] || 'bi-moon-stars'); }
+      if(meta) meta.content = schemeMap[theme] || 'dark';
+      if(html) html.style.colorScheme = schemeMap[theme] || 'dark';
       menu.classList.remove('open');
     }
     var saved = localStorage.getItem('chat-theme') || 'dark';

@@ -9,192 +9,148 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/messages.css' %}?v=10">
 <style>
-/* ── Default theme (dark) variables ── */
+/* ── Theme variables (default = dark) ── */
 .md-page {
-  --chat-bg:#0d0d0d; --chat-surface:#121212; --chat-border:rgba(255,255,255,0.05);
-  --chat-text:#f0ece4; --chat-text-sec:#888; --chat-text-muted:#555;
-  --sender-bubble:linear-gradient(135deg,rgba(212,175,55,0.14),rgba(212,175,55,0.04));
-  --sender-text:#f0ece4; --receiver-bubble:rgba(255,255,255,0.04); --receiver-text:#f0ece4;
-  --accent:#d4af37; --chat-wallpaper:none;
-  --bg:var(--chat-bg); --card-bg:var(--chat-surface); --border:var(--chat-border);
-  --text:var(--chat-text); --text-sec:var(--chat-text-sec); --text-muted:var(--chat-text-muted);
-  --msg-theirs:var(--receiver-bubble);
-  position:relative; z-index:1;
-}
-.md-page .md-top-bar,
-.md-page .md-footer,
-.md-page .md-store-row,
-.md-page .md-pinned-bar,
-.md-page .md-blocked-banner,
-.md-page .md-body { position:relative; z-index:2; }
-.md-page .md-body { background: transparent; }
-
-/* ── Wallpaper layer ── */
-.md-page[data-theme]::before {
-  content: ''; position: fixed; inset: 0; z-index: 1; pointer-events: none;
-  background: var(--chat-wallpaper);
-  transition: opacity 0.6s ease;
+  --bg: #0d0d0d;
+  --surface: #121212;
+  --border: rgba(255,255,255,0.05);
+  --text: #f0ece4;
+  --sec: #888;
+  --muted: #555;
+  --mine-bubble: linear-gradient(135deg, rgba(212,175,55,0.14), rgba(212,175,55,0.04));
+  --theirs-bubble: rgba(255,255,255,0.04);
+  --accent: #d4af37;
+  --wallpaper: none;
+  position: relative; z-index: 1;
 }
 
-/* ── All themed elements ── */
-.md-page[data-theme] { background: var(--chat-bg); color: var(--chat-text); }
-.md-page[data-theme],
-.md-page[data-theme] * { transition: background 0.35s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
+/* ── Light theme ── */
+.md-page[data-theme="light"] {
+  --bg: #f5f0eb;
+  --surface: #ffffff;
+  --border: rgba(0,0,0,0.06);
+  --text: #1a1a1a;
+  --sec: #666;
+  --muted: #999;
+  --mine-bubble: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.08));
+  --theirs-bubble: rgba(0,0,0,0.04);
+  --accent: #c9a032;
+  --wallpaper: none;
+}
 
+/* ── Neon theme ── */
+.md-page[data-theme="neon"] {
+  --bg: #0a0a1a;
+  --surface: #111128;
+  --border: rgba(0,255,255,0.15);
+  --text: #e0f0ff;
+  --sec: #7ec8e3;
+  --muted: #4a6a8a;
+  --mine-bubble: linear-gradient(135deg, rgba(0,255,255,0.18), rgba(255,0,255,0.10));
+  --theirs-bubble: rgba(0,255,255,0.05);
+  --accent: #00ffff;
+  --wallpaper: radial-gradient(ellipse at 20% 80%, rgba(0,255,255,0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,0,255,0.04) 0%, transparent 60%);
+}
+
+/* ── Apply theme via !important to beat messages.css ── */
+.md-page[data-theme] { background: var(--bg) !important; }
 .md-page[data-theme] .md-top-bar,
 .md-page[data-theme] .md-footer,
 .md-page[data-theme] .md-store-row,
 .md-page[data-theme] .md-search-bar,
 .md-page[data-theme] .md-pinned-bar,
+.md-page[data-theme] #more-menu,
 .md-page[data-theme] .md-profile-sidebar,
 .md-page[data-theme] .md-modal,
+.md-page[data-theme] .md-status-picker,
 .md-page[data-theme] .md-form .md-form-input-wrap textarea,
-.md-page[data-theme] #more-menu,
-.md-page[data-theme] .md-search-bar input,
-.md-page[data-theme] .md-status-picker { background: var(--chat-surface); }
+.md-page[data-theme] .md-search-bar input { background: var(--surface) !important; }
 
-.md-page[data-theme] .md-top-name,
-.md-page[data-theme] .s-name,
-.md-page[data-theme] .md-msg-wrap.mine .md-msg,
-.md-page[data-theme] .md-msg-wrap.theirs .md-msg,
 .md-page[data-theme] .md-form .md-form-input-wrap textarea,
 .md-page[data-theme] #more-menu button,
-.md-page[data-theme] .md-search-bar input,
-.md-page[data-theme] .md-status-picker,
-.md-page[data-theme] .md-status-option { color: var(--chat-text); }
+.md-page[data-theme] .md-search-bar input { border-color: var(--border) !important; color: var(--text) !important; }
+.md-page[data-theme] .md-form .md-form-input-wrap textarea:focus { border-color: var(--accent) !important; }
 
-.md-page[data-theme] .md-msg-wrap.mine .md-msg { background: var(--sender-bubble); color: var(--sender-text); }
-.md-page[data-theme] .md-msg-wrap.theirs .md-msg { background: var(--receiver-bubble); color: var(--receiver-text); }
+.md-page[data-theme] .md-send-btn { background: var(--accent) !important; }
+.md-page[data-theme] .md-receipt.read,
+.md-page[data-theme] .md-msg-action.pinned,
+.md-page[data-theme] .md-store-row .store-link,
+.md-page[data-theme] .md-icon-btn.active { color: var(--accent) !important; }
 
+.md-page[data-theme] .md-msg-wrap.mine .md-msg { background: var(--mine-bubble) !important; color: var(--text) !important; }
+.md-page[data-theme] .md-msg-wrap.theirs .md-msg { background: var(--theirs-bubble) !important; color: var(--text) !important; }
+
+.md-page[data-theme] .md-top-name,
+.md-page[data-theme] .s-name { color: var(--text) !important; }
 .md-page[data-theme] .md-other-status,
 .md-page[data-theme] .md-icon-btn,
 .md-page[data-theme] .md-btn-ghost,
 .md-page[data-theme] .md-back,
-.md-page[data-theme] .md-home-btn { color: var(--chat-text-sec); }
-
+.md-page[data-theme] .md-home-btn,
+.md-page[data-theme] .md-receipt.delivered { color: var(--sec) !important; }
 .md-page[data-theme] .md-empty,
 .md-page[data-theme] .md-msg-time,
-.md-page[data-theme] .p-status,
-.md-page[data-theme] .md-receipt.sent { color: var(--chat-text-muted); }
-.md-page[data-theme] .md-empty i { color: var(--chat-text-muted); }
+.md-page[data-theme] .md-receipt.sent { color: var(--muted) !important; }
+.md-page[data-theme] .md-empty i { color: var(--muted) !important; }
 
-.md-page[data-theme] .md-send-btn { background: var(--accent); color: #0d0d0d; }
-.md-page[data-theme] .md-receipt.read { color: var(--accent); }
-.md-page[data-theme] .md-icon-btn.active { color: var(--accent); }
-.md-page[data-theme] .md-msg-action.pinned { color: var(--accent); }
-.md-page[data-theme] .md-store-row .store-link { color: var(--accent); }
+.md-page[data-theme] .md-date-divider span { background: var(--bg) !important; }
+.md-page[data-theme] .md-icon-btn:hover { background: var(--theirs-bubble) !important; color: var(--text) !important; }
+.md-page[data-theme] .md-msg-action:hover { color: var(--text) !important; background: var(--theirs-bubble) !important; }
 
-.md-page[data-theme] .md-date-divider span { background: var(--chat-bg); }
-.md-page[data-theme] .md-icon-btn:hover { background: var(--receiver-bubble); color: var(--chat-text); }
-.md-page[data-theme] .md-back:hover { color: var(--chat-text); }
-.md-page[data-theme] .md-msg-action:hover { color: var(--chat-text); background: var(--receiver-bubble); }
-.md-page[data-theme] .md-store-row .store-badge .s-name { color: var(--chat-text); }
+.md-page[data-theme] .md-pinned-bar { background: color-mix(in srgb, var(--accent) 6%, transparent) !important; border-color: color-mix(in srgb, var(--accent) 12%, transparent) !important; color: var(--accent) !important; }
+.md-page[data-theme] .md-blocked-banner { color: var(--sec) !important; background: color-mix(in srgb, #e74c3c 4%, transparent) !important; }
 
-.md-page[data-theme] .md-form .md-form-input-wrap textarea {
-  border-color: var(--chat-border);
-}
-.md-page[data-theme] .md-form .md-form-input-wrap textarea:focus {
-  border-color: var(--accent);
-}
+.md-page[data-theme] #more-menu { border-color: var(--border) !important; }
+.md-page[data-theme] #more-menu button:hover { background: var(--theirs-bubble) !important; }
 
-.md-page[data-theme] .md-receipt.delivered { color: var(--chat-text-sec); }
+.md-page[data-theme] .md-form .md-form-input-wrap textarea::-webkit-input-placeholder { color: var(--muted) !important; }
+.md-page[data-theme] .md-form .md-form-input-wrap textarea::placeholder { color: var(--muted) !important; }
 
-.md-page[data-theme] .md-store-link,
-.md-page[data-theme] .store-link { color: var(--accent); }
-
-.md-page[data-theme] .md-pinned-bar {
-  background: color-mix(in srgb, var(--accent) 6%, transparent);
-  border-color: color-mix(in srgb, var(--accent) 12%, transparent);
-  color: var(--accent);
-}
-.md-page[data-theme] .md-blocked-banner {
-  color: var(--chat-text-sec);
-  background: color-mix(in srgb, #e74c3c 4%, transparent);
-}
-
-/* ── More menu ── */
-.md-page[data-theme] #more-menu {
-  border-color: var(--chat-border);
-}
-.md-page[data-theme] #more-menu button:hover { background: var(--receiver-bubble); }
-
-/* ── Glassmorphic receiver bubbles for wallpaper themes ── */
-.md-page[data-theme]:not([data-theme="dark"]):not([data-theme="light"]) .md-msg-wrap.theirs .md-msg {
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1px solid var(--chat-border);
-}
-
-/* ── Legacy variable aliases ── */
+/* ── Legacy alias elements ── */
 .md-page[data-theme] .md-emoji-picker,
 .md-page[data-theme] .md-attach-preview,
-.md-page[data-theme] .md-profile-sidebar,
 .md-page[data-theme] .md-modal,
-.md-page[data-theme] .seen-tooltip { background: var(--chat-surface); border-color: var(--chat-border); }
-.md-page[data-theme] .md-emoji-picker .ep-btn:hover { background: var(--receiver-bubble); }
-.md-page[data-theme] .md-footer-tools .ft-btn { color: var(--chat-text-sec); }
-.md-page[data-theme] .md-footer-tools .ft-btn:hover { background: var(--receiver-bubble); color: var(--chat-text); }
-.md-page[data-theme] .md-footer-tools .ft-btn.active { color: var(--accent); }
+.md-page[data-theme] .seen-tooltip { background: var(--surface) !important; border-color: var(--border) !important; }
+.md-page[data-theme] .md-footer-tools .ft-btn { color: var(--sec) !important; }
+.md-page[data-theme] .md-footer-tools .ft-btn:hover { background: var(--theirs-bubble) !important; color: var(--text) !important; }
+.md-page[data-theme] .md-footer-tools .ft-btn.active { color: var(--accent) !important; }
 .md-page[data-theme] .md-modal select,
-.md-page[data-theme] .md-modal textarea { background: var(--chat-bg); border-color: var(--chat-border); color: var(--chat-text); }
-.md-page[data-theme] .md-btn-primary { background: var(--accent); color: #0d0d0d; }
-.md-page[data-theme] .md-btn-ghost { border-color: var(--chat-border); color: var(--chat-text-sec); }
-.md-page[data-theme] .md-profile-sidebar .p-avatar { border-color: var(--chat-border); color: var(--accent); }
-.md-page[data-theme] .md-profile-sidebar .p-name { color: var(--chat-text); }
-.md-page[data-theme] .md-profile-sidebar .p-status { color: var(--chat-text-muted); }
-.md-page[data-theme] .md-profile-sidebar .p-info-item { border-color: var(--chat-border); }
-.md-page[data-theme] .md-profile-sidebar .pii-icon { background: var(--receiver-bubble); color: var(--chat-text-sec); }
-.md-page[data-theme] .md-profile-sidebar .pii-label { color: var(--chat-text-muted); }
-.md-page[data-theme] .md-profile-sidebar .pii-value { color: var(--chat-text); }
-.md-page[data-theme] .md-profile-header h3 { color: var(--chat-text); }
-.md-page[data-theme] .md-profile-header button { color: var(--chat-text-sec); }
-.md-page[data-theme] .md-profile-header button:hover { background: var(--receiver-bubble); color: var(--chat-text); }
-.md-page[data-theme] .md-modal h3 { color: var(--chat-text); }
-.md-page[data-theme] .md-modal p { color: var(--chat-text-sec); }
+.md-page[data-theme] .md-modal textarea { background: var(--bg) !important; border-color: var(--border) !important; color: var(--text) !important; }
+.md-page[data-theme] .md-btn-primary { background: var(--accent) !important; }
+.md-page[data-theme] .md-btn-ghost { border-color: var(--border) !important; color: var(--sec) !important; }
 
-.theme-icon { display:inline-block; }
-[data-theme="dark"] .theme-icon { content:'🌙'; }
-[data-theme="light"] .theme-icon { content:'☀️'; }
-[data-theme="neon"] .theme-icon { content:'⚡'; }
+.md-page[data-theme],
+.md-page[data-theme] * { transition: background 0.35s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important; }
 
-
-/* ── Theme: Light Mode ── */
-.md-page[data-theme="light"] {
-  --chat-bg: #f5f0eb;
-  --chat-surface: #ffffff;
-  --chat-border: rgba(0,0,0,0.06);
-  --chat-text: #1a1a1a;
-  --chat-text-sec: #666;
-  --chat-text-muted: #999;
-  --sender-bubble: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.08));
-  --sender-text: #1a1a1a;
-  --receiver-bubble: rgba(0,0,0,0.04);
-  --receiver-text: #1a1a1a;
-  --accent: #c9a032;
-  --chat-wallpaper: none;
-  --bg:var(--chat-bg); --card-bg:var(--chat-surface); --border:var(--chat-border);
-  --text:var(--chat-text); --text-sec:var(--chat-text-sec); --text-muted:var(--chat-text-muted);
-  --msg-theirs:var(--receiver-bubble);
+/* ── Glassmorphic for neon + future themes ── */
+.md-page[data-theme]:not([data-theme="dark"]):not([data-theme="light"]) .md-msg-wrap.theirs .md-msg {
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  border: 1px solid var(--border) !important;
 }
 
-/* ── Theme: Neon / Cyberpunk ── */
-.md-page[data-theme="neon"] {
-  --chat-bg: #0a0a1a;
-  --chat-surface: #111128;
-  --chat-border: rgba(0,255,255,0.15);
-  --chat-text: #e0f0ff;
-  --chat-text-sec: #7ec8e3;
-  --chat-text-muted: #4a6a8a;
-  --sender-bubble: linear-gradient(135deg, rgba(0,255,255,0.18), rgba(255,0,255,0.10));
-  --sender-text: #e0f0ff;
-  --receiver-bubble: rgba(0,255,255,0.05);
-  --receiver-text: #c0e0ff;
-  --accent: #00ffff;
-  --chat-wallpaper: radial-gradient(ellipse at 20% 80%, rgba(0,255,255,0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,0,255,0.04) 0%, transparent 60%);
-  --bg:var(--chat-bg); --card-bg:var(--chat-surface); --border:var(--chat-border);
-  --text:var(--chat-text); --text-sec:var(--chat-text-sec); --text-muted:var(--chat-text-muted);
-  --msg-theirs:var(--receiver-bubble);
+/* ── Wallpaper ── */
+.md-page[data-theme]::before {
+  content: ''; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: var(--wallpaper);
+  transition: opacity 0.6s ease;
 }
+
+/* ── Profile sidebar + modal children (no !important needed) ── */
+.md-page[data-theme] .md-profile-sidebar .p-avatar { border-color: var(--border); color: var(--accent); }
+.md-page[data-theme] .md-profile-sidebar .p-name { color: var(--text); }
+.md-page[data-theme] .md-profile-sidebar .p-status { color: var(--muted); }
+.md-page[data-theme] .md-profile-sidebar .p-info-item { border-color: var(--border); }
+.md-page[data-theme] .md-profile-sidebar .pii-icon { background: var(--theirs-bubble); color: var(--sec); }
+.md-page[data-theme] .md-profile-sidebar .pii-label { color: var(--muted); }
+.md-page[data-theme] .md-profile-sidebar .pii-value { color: var(--text); }
+.md-page[data-theme] .md-profile-header h3 { color: var(--text); }
+.md-page[data-theme] .md-profile-header button { color: var(--sec); }
+.md-page[data-theme] .md-profile-header button:hover { background: var(--theirs-bubble); color: var(--text); }
+.md-page[data-theme] .md-modal h3 { color: var(--text); }
+.md-page[data-theme] .md-modal p { color: var(--sec); }
+.md-page[data-theme] .md-store-row .store-badge .s-name { color: var(--text); }
+.md-page[data-theme] .md-back:hover { color: var(--text); }
 
 /* ── Theme popup ── */
 .md-theme-menu {
@@ -439,7 +395,9 @@
         <button class="md-msg-action" onclick="editMsg(this)" title="{{ 'Edit'|t }}"><i class="bi bi-pencil"></i></button>
         {% endif %}
         <button class="md-msg-action" onclick="showQuickReactions(this, {{ msg.id }})" title="{{ 'React'|t }}"><i class="bi bi-emoji-smile"></i></button>
+        {% if msg.sender == request.user %}
         <button class="md-msg-action {% if msg.is_pinned %}pinned{% endif %}" onclick="togglePin({{ msg.id }})" title="{{ 'Pin'|t }}"><i class="bi bi-pin{% if msg.is_pinned %}-fill{% endif %}"></i></button>
+        {% endif %}
         {% if msg.sender == request.user %}
         <button class="md-msg-action" onclick="confirmDeleteMsg(this, {{ msg.id }})" title="{{ 'Delete'|t }}"><i class="bi bi-trash3"></i></button>
         {% endif %}
@@ -950,9 +908,13 @@
               var id = b.getAttribute('onclick');
               if(id && id.indexOf('togglePin(' + data.pinned_id + ')') !== -1) b.className = 'md-msg-action pinned';
             });
+            body.querySelectorAll('.md-msg-wrap.pinned').forEach(function(w){ w.classList.remove('pinned'); });
+            var pw = body.querySelector('[data-msg-id="' + data.pinned_id + '"]');
+            if(pw) pw.classList.add('pinned');
           } else {
             if(bar) bar.classList.remove('open');
             document.querySelectorAll('.md-msg-action.pinned').forEach(function(b){ b.classList.remove('pinned'); });
+            body.querySelectorAll('.md-msg-wrap.pinned').forEach(function(w){ w.classList.remove('pinned'); });
           }
         }
         /* ── Sync reactions ── */
@@ -1335,11 +1297,13 @@ function addMessageToBody(m){
     reactBtn.innerHTML = '<i class="bi bi-emoji-smile"></i>';
     reactBtn.onclick = function(){ showQuickReactions(this, m.id); };
     actions.appendChild(reactBtn);
-    var pinBtn = document.createElement('button');
-    pinBtn.className = 'md-msg-action' + (m.is_pinned ? ' pinned' : '');
-    pinBtn.innerHTML = '<i class="bi bi-pin' + (m.is_pinned ? '-fill' : '') + '"></i>';
-    pinBtn.onclick = function(){ togglePin(m.id); };
-    actions.appendChild(pinBtn);
+    if(m.is_mine){
+      var pinBtn = document.createElement('button');
+      pinBtn.className = 'md-msg-action' + (m.is_pinned ? ' pinned' : '');
+      pinBtn.innerHTML = '<i class="bi bi-pin' + (m.is_pinned ? '-fill' : '') + '"></i>';
+      pinBtn.onclick = function(){ togglePin(m.id); };
+      actions.appendChild(pinBtn);
+    }
     if(m.is_mine){
       var delBtn = document.createElement('button');
       delBtn.className = 'md-msg-action';
@@ -1622,7 +1586,10 @@ document.addEventListener('click', function(e){
   var toggle = document.getElementById('theme-toggle');
   var menu = document.getElementById('theme-menu');
   var icon = document.getElementById('theme-icon');
+  var meta = document.getElementById('color-scheme-meta');
+  var html = document.getElementById('msg-html');
   var iconMap = { dark:'bi-moon-stars', light:'bi-sun', neon:'bi-lightning' };
+  var schemeMap = { dark:'dark', light:'light', neon:'dark' };
   if(!page || !toggle || !menu) return;
   function applyTheme(theme){
     page.setAttribute('data-theme', theme);
@@ -1630,6 +1597,8 @@ document.addEventListener('click', function(e){
     menu.querySelectorAll('[data-theme-opt]').forEach(function(b){ b.classList.remove('active'); });
     menu.querySelector('[data-theme-opt="' + theme + '"]')?.classList.add('active');
     if(icon){ icon.className = 'bi ' + (iconMap[theme] || 'bi-moon-stars'); }
+    if(meta) meta.content = schemeMap[theme] || 'dark';
+    if(html) html.style.colorScheme = schemeMap[theme] || 'dark';
     menu.classList.remove('open');
   }
   var saved = localStorage.getItem('chat-theme') || 'dark';

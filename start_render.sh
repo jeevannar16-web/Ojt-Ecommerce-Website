@@ -45,6 +45,36 @@ else:
     print('Skipping fixture load — products already exist')
 " 2>&1
 
+# --- Restore product/category images from fixture if they were cleared ---
+python -c "
+import django, os, json
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fitness_hub.settings')
+django.setup()
+from django.conf import settings
+from store.models import Product, Category
+
+fixture_path = os.path.join(settings.BASE_DIR, 'fixtures/seed_data.json')
+with open(fixture_path) as f:
+    data = json.load(f)
+
+product_images = {e['pk']: e['fields'].get('image') for e in data if e['model'] == 'store.product'}
+cat_images = {e['pk']: e['fields'].get('image') for e in data if e['model'] == 'store.category'}
+
+fixed = 0
+for p in Product.objects.all():
+    if not p.image and p.pk in product_images and product_images[p.pk]:
+        p.image = product_images[p.pk]
+        p.save(update_fields=['image'])
+        fixed += 1
+for c in Category.objects.all():
+    if not c.image and c.pk in cat_images and cat_images[c.pk]:
+        c.image = cat_images[c.pk]
+        c.save(update_fields=['image'])
+        fixed += 1
+if fixed:
+    print(f'Restored images for {fixed} products/categories from fixture')
+" 2>&1
+
 # Auto-setup script (ensures superuser, Site, and SocialApp exist)
 python -c "
 import django, os

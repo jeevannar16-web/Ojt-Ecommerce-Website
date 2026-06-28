@@ -1,6 +1,8 @@
 """All the Django config — apps, middleware, database, templates, static files, and third-party integrations."""
 
 import os
+import warnings
+warnings.filterwarnings('ignore', message="allauth.exceptions is deprecated")
 from dotenv import load_dotenv
 import dj_database_url
 

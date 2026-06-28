@@ -230,13 +230,6 @@ EMAIL_VERIFICATION_REQUIRED = os.environ.get('EMAIL_VERIFICATION_REQUIRED', 'Tru
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 if os.environ.get('CLOUD_NAME') and os.environ.get('CLOUD_API_KEY') and os.environ.get('CLOUD_API_SECRET'):
-    import cloudinary
-    cloudinary.config(
-        cloud_name=os.environ['CLOUD_NAME'],
-        api_key=os.environ['CLOUD_API_KEY'],
-        api_secret=os.environ['CLOUD_API_SECRET'],
-        secure=True,
-    )
     CLOUDINARY_STORAGE = {
         'CLOUD_NAME': os.environ['CLOUD_NAME'],
         'API_KEY': os.environ['CLOUD_API_KEY'],

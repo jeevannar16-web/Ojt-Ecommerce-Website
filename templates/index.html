@@ -1,6 +1,6 @@
 <!-- Homepage — hero, categories, flash sale, featured products, newsletter signup -->
 {% extends 'layout/base.html' %}
-{% load static %}
+{% load static cache %}
 
 {% block title %}FITNESS HUB — {{ 'home.hero_title'|t }}{% endblock %}
 
@@ -10,6 +10,7 @@
 
 {% block content %}
 
+{% cache 600 megabanner banner_products|length %}
 <!-- ═══ MEGA BANNER — Auto-rotating ═══ -->
 {% if banner_products %}
 <div class="mega-banner-wrap">
@@ -47,6 +48,7 @@
   </div>
 </div>
 {% endif %}
+{% endcache %}
 
 <!-- ═══ HERO ═══ -->
 <section class="hero">
@@ -64,6 +66,7 @@
   </div>
 </section>
 
+{% cache 600 categories %}
 <!-- ═══ CATEGORIES ═══ -->
 <section class="cat-section-wrap">
   <div class="cat-hd">
@@ -80,13 +83,15 @@
       {% endif %}
       <div class="cat-card-body">
         <h4>{{ category.name|t }}</h4>
-        <p>{{ category.products.count }} {{ 'Items'|t }}</p>
+        <p>{{ category.pcount }} {{ 'Items'|t }}</p>
       </div>
     </a>
     {% endfor %}
   </div>
 </section>
+{% endcache %}
 
+{% cache 600 flash_sale %}
 <!-- ═══ FLASH SALE ═══ -->
 {% if on_sale %}
 <div class="home-section" id="flash-sale">
@@ -125,6 +130,8 @@
 </div>
 {% endif %}
 
+{% endcache %}
+{% cache 600 best_deals %}
 <!-- ═══ BEST DEALS ═══ -->
 {% if best_deals %}
 <div class="home-section" id="best-deals">
@@ -155,7 +162,9 @@
   </div>
 </div>
 {% endif %}
+{% endcache %}
 
+{% cache 600 trending %}
 <!-- ═══ TRENDING NOW ═══ -->
 {% if trending %}
 <div class="home-section" id="trending">
@@ -184,9 +193,11 @@
   </div>
 </div>
 {% endif %}
+{% endcache %}
 
 <!-- ═══ CATEGORY PRODUCT SECTIONS ═══ -->
 {% for section in category_sections %}
+{% cache 600 cat_section section.category.id %}
 <div class="home-section cat-section">
   <div class="section-hd">
     <h2><i class="bi bi-grid"></i> {{ section.category.name|t }}</h2>
@@ -212,8 +223,10 @@
     {% endfor %}
   </div>
 </div>
+{% endcache %}
 {% endfor %}
 
+{% cache 600 top_rated %}
 <!-- ═══ TOP RATED ═══ -->
 {% if top_rated %}
 <div class="home-section" id="top-rated">
@@ -243,7 +256,9 @@
   </div>
 </div>
 {% endif %}
+{% endcache %}
 
+{% cache 600 new_arrivals %}
 <!-- ═══ NEW ARRIVALS ═══ -->
 {% if new_arrivals %}
 <div class="home-section" id="new-arrivals">
@@ -272,7 +287,9 @@
   </div>
 </div>
 {% endif %}
+{% endcache %}
 
+{% cache 600 value_deals %}
 <!-- ═══ VALUE DEALS ═══ -->
 {% if low_price %}
 <div class="home-section" id="value-deals">
@@ -298,7 +315,9 @@
   </div>
 </div>
 {% endif %}
+{% endcache %}
 
+{% cache 600 almost_gone %}
 <!-- ═══ ALMOST GONE ═══ -->
 {% if low_stock_items %}
 <div class="home-section" id="almost-gone">
@@ -329,7 +348,9 @@
   </div>
 </div>
 {% endif %}
+{% endcache %}
 
+{% cache 600 seller_inspire %}
 <!-- ═══ SELLER INSPIRATION — "YOU CAN DO THIS TOO" ═══ -->
 {% if top_selling %}
 <div class="home-section seller-inspire-section" id="seller-inspire">
@@ -399,6 +420,7 @@
   </div>
 </div>
 {% endif %}
+{% endcache %}
 
 <!-- ═══ RECOMMENDED FOR YOU ═══ -->
 {% if recommendations and user.is_authenticated %}
@@ -429,6 +451,7 @@
 </div>
 {% endif %}
 
+{% cache 600 featured_grid %}
 <!-- ═══ FEATURED PRODUCTS GRID (with Load More) ═══ -->
 <section class="feat-section">
   <div class="section-hd">
@@ -471,6 +494,7 @@
   </div>
   {% endif %}
 </section>
+{% endcache %}
 
 {% endblock %}
 

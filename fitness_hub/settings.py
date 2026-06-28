@@ -107,6 +107,14 @@ DATABASES = {
     'default': dj_database_url.config(default='sqlite:///db.sqlite3')
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'fitness-hub-cache',
+        'TIMEOUT': 600,
+    }
+}
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', 'OPTIONS': {'min_length': 6}},
 ]

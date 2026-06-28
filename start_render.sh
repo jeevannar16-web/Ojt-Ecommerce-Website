@@ -96,4 +96,7 @@ else:
     print('Google OAuth placeholder created (set GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET env vars)')
 " 2>&1
 
-exec gunicorn fitness_hub.wsgi:application --workers=4 --threads=2 --worker-class=gthread
+# Reduce workers for free tier (Render caps at 1 CPU)
+exec gunicorn fitness_hub.wsgi:application \
+  --workers=2 --threads=2 --worker-class=gthread \
+  --timeout 120 --keep-alive 60

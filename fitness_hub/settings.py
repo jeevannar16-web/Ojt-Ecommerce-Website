@@ -15,17 +15,13 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'REPLACED_PLACEHOLDER_KEY'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'REPLACED_PLACEHOLDER_KEY')
 
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 SITE_ID = 1
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    '.onrender.com',
-]
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,.onrender.com').split(',')
 
 # ==============================================================================
 # SECTION: Installed Apps
@@ -181,15 +177,11 @@ SOCIALACCOUNT_PROVIDERS = {
 # SECTION: CSRF & Sessions
 # ==============================================================================
 
-CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_HTTPONLY = False
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'https://*.onrender.com',
-]
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000,https://*.onrender.com').split(',')
 
-SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_HTTPONLY = True
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
@@ -235,9 +227,12 @@ EMAIL_VERIFICATION_REQUIRED = os.environ.get('EMAIL_VERIFICATION_REQUIRED', 'Tru
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUD_NAME'),
-    'API_KEY': os.environ.get('CLOUD_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUD_API_SECRET'),
-}
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+if os.environ.get('CLOUD_NAME') and os.environ.get('CLOUD_API_KEY') and os.environ.get('CLOUD_API_SECRET'):
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.environ['CLOUD_NAME'],
+        'API_KEY': os.environ['CLOUD_API_KEY'],
+        'API_SECRET': os.environ['CLOUD_API_SECRET'],
+    }
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+else:
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'

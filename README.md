@@ -16,6 +16,38 @@ Stop: `./stop.sh`
 
 ---
 
+## Deployment (Render)
+
+1. Push this repo to GitHub
+2. On [Render](https://dashboard.render.com), create a **Blueprint** from your repo (`render.yaml` auto-configures the service + PostgreSQL)
+3. Or create a **Web Service** manually:
+   - **Build Command**: `pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate`
+   - **Start Command**: `gunicorn fitness_hub.wsgi:application --workers=4 --threads=2`
+   - Add a **PostgreSQL database** from the Render Dashboard and link it (sets `DATABASE_URL` automatically)
+4. Set these environment variables in Render dashboard:
+
+| Variable | Value |
+|----------|-------|
+| `DJANGO_SECRET_KEY` | Auto-generated (or use a long random string) |
+| `DEBUG` | `False` |
+| `ALLOWED_HOSTS` | `localhost,127.0.0.1,.onrender.com` |
+| `BASE_URL` | `https://your-app.onrender.com` |
+| `EMAIL_VERIFICATION_REQUIRED` | `False` |
+| `EMAIL_BACKEND` | `django.core.mail.backends.smtp.EmailBackend` (if using SMTP) |
+| `CLOUD_NAME` | Your Cloudinary cloud name (for media uploads) |
+| `CLOUD_API_KEY` | Your Cloudinary API key |
+| `CLOUD_API_SECRET` | Your Cloudinary API secret |
+
+On first deploy, create a superuser via Render's shell:
+
+```bash
+python manage.py createsuperuser --username=jeevan --email=you@example.com
+```
+
+**Note:** Render's filesystem is ephemeral — uploaded media files (avatars, product images) are lost on restart unless you configure Cloudinary. The app falls back to local filesystem storage if Cloudinary env vars aren't set, but files won't persist across deploys.
+
+---
+
 
 
 

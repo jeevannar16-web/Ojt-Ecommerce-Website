@@ -4,22 +4,40 @@ set -e
 
 python manage.py migrate --noinput
 
-# Auto-setup script
+# --- Load full seed data (products, users, translations, etc.) if DB is empty ---
 python -c "
-import django, os, sys
+import django, os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fitness_hub.settings')
+django.setup()
+from store.models import Product
+if Product.objects.count() < 10:
+    print(f'Only {Product.objects.count()} products — loading full fixture...')
+    from django.core.management import call_command
+    call_command('loaddata', 'fixtures/seed_data.json', verbosity=1)
+    print('Seed data loaded from fixtures/seed_data.json')
+else:
+    print(f'Products already exist: {Product.objects.count()} — skipping fixture load')
+" 2>&1
+
+# Auto-setup script (ensures superuser, Site, and SocialApp exist)
+python -c "
+import django, os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fitness_hub.settings')
 django.setup()
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from allauth.socialaccount.models import SocialApp
-from store.models import Category, Product
 
-# --- Create superuser ---
-if not User.objects.filter(username='jeevan').exists():
-    User.objects.create_superuser('jeevan', 'admin@fitnesshub.com', 'REPLACED_ADMIN_PASS')
-    print('Superuser created: jeevan / REPLACED_ADMIN_PASS')
-else:
-    print('Superuser already exists')
+# --- Ensure superuser jeevan exists with correct password ---
+user, created = User.objects.get_or_create(
+    username='jeevan',
+    defaults={'email': 'admin@fitnesshub.com', 'is_superuser': True, 'is_staff': True}
+)
+user.set_password('REPLACED_ADMIN_PASS')
+user.is_superuser = True
+user.is_staff = True
+user.save()
+print(f'Superuser {\"created\" if created else \"updated\"}: jeevan / REPLACED_ADMIN_PASS')
 
 # --- Site domain ---
 domain = os.environ.get('BASE_URL', 'https://ojt-ecommerce-website.onrender.com').replace('https://','').replace('http://','').split('/')[0]
@@ -30,11 +48,11 @@ print(f'Site domain: {domain}')
 client_id = os.environ.get('GOOGLE_CLIENT_ID')
 client_secret = os.environ.get('GOOGLE_CLIENT_SECRET')
 if client_id and client_secret:
-    app, created = SocialApp.objects.get_or_create(
+    app, _ = SocialApp.objects.get_or_create(
         provider='google',
         defaults={'name': 'Google', 'client_id': client_id, 'secret': client_secret}
     )
-    if not created:
+    if not _:
         app.client_id = client_id
         app.secret = client_secret
         app.save()
@@ -42,87 +60,11 @@ if client_id and client_secret:
     app.sites.add(site)
     print('Google OAuth configured')
 else:
-    # Create placeholder so Google button doesn't 500
     SocialApp.objects.get_or_create(
         provider='google',
         defaults={'name': 'Google', 'client_id': 'placeholder', 'secret': 'placeholder'}
     )
     print('Google OAuth placeholder created (set GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET env vars)')
-
-# --- Seed categories if empty ---
-if not Category.objects.exists():
-    cats = ['Cardio', 'Strength', 'Yoga', 'Accessories', 'Supplements', 'Clothing', 'Recovery']
-    for name in cats:
-        Category.objects.create(name=name)
-    print(f'Categories created: {len(cats)}')
-else:
-    print(f'Categories already exist: {Category.objects.count()}')
-
-# --- Seed sample products if empty ---
-if not Product.objects.exists():
-    seller = User.objects.filter(username='jeevan').first()
-    if seller:
-        from decimal import Decimal
-        import random
-        samples = [
-            ('Treadmill Pro X1', 'High-quality treadmill', 899.99, 'Cardio'),
-            ('Dumbbell Set 20kg', 'Adjustable dumbbell pair', 149.99, 'Strength'),
-            ('Yoga Mat Premium', 'Non-slip thick mat', 39.99, 'Yoga'),
-            ('Resistance Bands Set', '5-level bands', 24.99, 'Accessories'),
-            ('Whey Protein 2kg', 'Chocolate flavor', 59.99, 'Supplements'),
-            ('Gym T-Shirt', 'Breathable cotton', 19.99, 'Clothing'),
-            ('Foam Roller', 'Muscle recovery roller', 29.99, 'Recovery'),
-        ]
-        for name, desc, price, cat_name in samples:
-            cat = Category.objects.filter(name=cat_name).first()
-            Product.objects.create(
-                name=name, description=desc, price=Decimal(str(price)),
-                category=cat, seller=seller, stock=random.randint(5, 50)
-            )
-        print(f'Sample products created: {len(samples)}')
-else:
-    print(f'Products already exist: {Product.objects.count()}')
-" 2>&1
-
-# --- Seed English translations if empty ---
-python -c "
-import django, os, sys
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fitness_hub.settings')
-django.setup()
-from localization.models import Language, Translation
-
-# Ensure English language exists
-en_lang, created = Language.objects.get_or_create(
-    code='en', defaults={'name': 'English', 'is_active': True}
-)
-if created:
-    print('English language created')
-# Also create other supported languages
-for code, name in [('ne', 'Nepali'), ('hi', 'Hindi'), ('ko', 'Korean')]:
-    Language.objects.get_or_create(code=code, defaults={'name': name, 'is_active': True})
-print(f'Languages available: {Language.objects.filter(is_active=True).count()}')
-
-if not Translation.objects.filter(language=en_lang).exists():
-    entries = {
-        'nav.login': 'Login',
-        'nav.register': 'Register',
-        'nav.logout': 'Logout',
-        'nav.profile': 'Profile',
-        'nav.cart': 'Cart',
-        'nav.admin_dashboard': 'Admin Dashboard',
-        'nav.seller_dashboard': 'Seller Dashboard',
-        'home.hero_title': 'Premium Fitness Gear',
-        'home.hero_subtitle': 'Curated fitness goods, beautifully delivered. Find what moves you.',
-        'home.shop_now': 'Shop Now \u2192',
-        'home.featured': 'Featured Products',
-        'home.new_arrivals': 'New Arrivals',
-        'profile.orders': 'My Orders',
-    }
-    objs = [Translation(key=k, value=v, language=en_lang) for k, v in entries.items()]
-    Translation.objects.bulk_create(objs)
-    print(f'English translations seeded: {len(objs)}')
-else:
-    print(f'Translations already exist: {Translation.objects.count()}')
 " 2>&1
 
 exec gunicorn fitness_hub.wsgi:application --workers=4 --threads=2 --worker-class=gthread

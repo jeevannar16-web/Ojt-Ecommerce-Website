@@ -30,13 +30,13 @@ def translate(context, key, default=None, **params):
 def translate_str(text, lang_code='en'):
     t = Translator(lang_code)
     text = str(text) if not isinstance(text, str) else text
-    return t.get(text, default=text)
+    return t.get(text)
 
 @register.filter
 def ttrans(key, lang_code):
     t = Translator(lang_code)
     key = str(key) if not isinstance(key, str) else key
-    return t.get(key, default=key)
+    return t.get(key)
 
 _cur_lang = None
 
@@ -45,7 +45,7 @@ def t(key):
     lang_code = get_current_language()
     tr = Translator(lang_code)
     key = str(key) if not isinstance(key, str) else key
-    return tr.get(key, default=key)
+    return tr.get(key)
 
 
 @register.simple_tag(takes_context=True)

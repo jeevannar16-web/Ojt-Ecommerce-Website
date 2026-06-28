@@ -1,11 +1,11 @@
-from django.core.management.base import BaseCommand
+import os, json
 from django.conf import settings
+from django.core.management.base import BaseCommand
 from store.models import Product, Category
-import json, os
 
 
 class Command(BaseCommand):
-    help = 'Restore product/category images from fixture if they are missing'
+    help = 'Sync product/category image paths from fixture (fixes extensions & sanitizes)'
 
     def handle(self, *args, **options):
         fixture_path = os.path.join(settings.BASE_DIR, 'fixtures/seed_data.json')
@@ -26,14 +26,15 @@ class Command(BaseCommand):
 
         fixed = 0
         for pk, path in product_images.items():
-            if path and Product.objects.filter(pk=pk, image__isnull=True).update(image=path):
-                fixed += 1
+            if path:
+                fixed += Product.objects.filter(pk=pk).exclude(image=path).update(image=path)
         for pk, path in cat_images.items():
-            if path and Category.objects.filter(pk=pk, image__isnull=True).update(image=path):
-                fixed += 1
+            if path:
+                fixed += Category.objects.filter(pk=pk).exclude(image=path).update(image=path)
 
         if fixed:
-            self.stdout.write(self.style.SUCCESS(f'Restored images for {fixed} products/categories'))
+            self.stdout.write(self.style.SUCCESS(
+                f'Fixed image paths for {fixed} products/categories (extensions stripped, chars sanitized)'
+            ))
         else:
-            count_null = Product.objects.filter(image__isnull=True).count() + Category.objects.filter(image__isnull=True).count()
-            self.stdout.write(f'No images to restore ({count_null} still null)')
+            self.stdout.write('All image paths already match fixture')

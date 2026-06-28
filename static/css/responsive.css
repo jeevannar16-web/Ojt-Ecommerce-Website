@@ -15,11 +15,11 @@
 
 
 @media (max-width: 1024px) {
-  /* ── Nav ── */
+  
   .main-nav { padding: 0 1.25rem; }
   .search-wrap { max-width: 380px; }
 
-  /* ── Product List ── */
+  
   .pl-page {
     grid-template-columns: 220px 1fr;
     gap: 1.25rem;
@@ -30,31 +30,31 @@
   .pl-sidebar-wrap { width: 220px; }
   .product-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1rem; }
 
-  /* ── Product Detail ── */
+  
   .review-summary { gap: 1.5rem; padding: 1.5rem; }
   .review-avg-score { font-size: 3.5rem; }
 
-  /* ── Profile ── */
+  
   .profile-wrap { padding: 30px 1.5rem 60px; }
 
-  /* ── Favorites ── */
+  
   .wishlist-container { padding: 30px 1.5rem 60px; }
   .wishlist-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 18px; }
 
-  /* ── Footer ── */
+  
   .footer-body { grid-template-columns: 1fr 1fr; gap: 36px; }
 
-  /* ── Homepage general ── */
+  
   .welcome-section { padding: 0 1.25rem; }
   .h-scroll .h-card { width: 165px; }
   .cat-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
   .feat-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
 
-  /* ── Seller Center ── */
+  
   .sc-hero-content h1 { font-size: 2.6rem; }
   .sc-hero-stats { gap: 32px; }
 
-  /* ── Admin & Seller dashboards ── */
+  
   .admin-main { padding: 24px; }
   .seller-main { padding: 24px; }
   .stats-row { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
@@ -62,17 +62,17 @@
   .sd-grid-2 { gap: 14px; }
   .sd-stats-row-2 { gap: 12px; }
 
-  /* ── Checkout ── */
+  
   .checkout-steps { padding: 12px 16px; }
   .step-line { width: 30px; margin: 0 6px; }
 
-  /* ── Cart ── */
+  
   .cart-page { padding: 0 1.5rem; }
 
-  /* ── Order Tracking ── */
+  
   .tracking-container { padding: 0 10px; }
 
-  /* ── Storefront ── */
+  
   .sf-products { grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 12px; }
 }
 
@@ -222,7 +222,7 @@
   .empty-state p { font-size: 0.78rem; }
   .skeleton-grid { grid-template-columns: repeat(2, 1fr); gap: 0.65rem; }
 
-  /* ── Product recommendations ── */
+  
   .pl-recs { margin-top: 2rem; padding-top: 1.5rem; }
   .pl-recs-header h3 { font-size: 1rem; }
   .pl-recs-grid { gap: 0.75rem; }

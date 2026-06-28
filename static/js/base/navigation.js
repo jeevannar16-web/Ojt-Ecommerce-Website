@@ -5,7 +5,7 @@
 // ==============================================================================
 
 (function () {
-  /* ── Click-toggle dropdowns (lang + user) — delegated ── */
+  
   function toggleDropdown(btn) {
     var container = btn.closest('.nav-lang, .user-dropdown');
     if (!container) return;

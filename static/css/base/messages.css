@@ -116,7 +116,7 @@
 
 
 
-/* ── Success ── */
+
 .msg-toast.success {
   background: rgba(22, 30, 20, 0.96);
   border: 1px solid rgba(212, 175, 55, 0.15);
@@ -146,7 +146,7 @@
 
 
 
-/* ── Error ── */
+
 .msg-toast.error {
   background: rgba(30, 18, 18, 0.96);
   border: 1px solid rgba(255, 71, 87, 0.15);
@@ -176,7 +176,7 @@
 
 
 
-/* ── Warning ── */
+
 .msg-toast.warning {
   background: rgba(30, 26, 16, 0.96);
   border: 1px solid rgba(243, 156, 18, 0.15);
@@ -206,7 +206,7 @@
 
 
 
-/* ── Info ── */
+
 .msg-toast.info {
   background: rgba(18, 22, 30, 0.96);
   border: 1px solid rgba(54, 162, 235, 0.15);
@@ -236,7 +236,7 @@
 
 
 
-/* ── Debug (rare) ── */
+
 .msg-toast.debug {
   background: rgba(28, 18, 30, 0.96);
   border: 1px solid rgba(155, 89, 182, 0.15);
@@ -266,7 +266,7 @@
 
 
 
-/* ── Responsive ── */
+
 @media (max-width: 600px) {
   
    SECTION: Container

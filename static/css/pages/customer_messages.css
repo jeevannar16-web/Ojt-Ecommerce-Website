@@ -4,7 +4,7 @@
 
    CUSTOMER MESSAGES — Premium Animated Edition
 
-/* ── CUSTOM PROPERTIES ── */
+
 
    SECTION: Custom Properties
    ============================================================================== */
@@ -27,7 +27,7 @@
   --cm-online-glow: rgba(46, 204, 113, 0.3);
 }
 
-/* ── GLOBAL ANIMATIONS ── */
+
 
    SECTION: Global Animations
    ============================================================================== */
@@ -133,7 +133,7 @@
   100% { opacity: 1; transform: translateX(0); }
 }
 
-/* ── LAYOUT ── */
+
 
    SECTION: Page Layout
    ============================================================================== */
@@ -254,7 +254,7 @@ main:has(.cm-page) {
   animation: badgePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ── SEARCH ── */
+
 .cm-search {
   padding: 10px 28px;
   flex-shrink: 0;
@@ -298,7 +298,7 @@ main:has(.cm-page) {
 .cm-search input::placeholder { color: var(--cm-text-muted); transition: color 0.3s; }
 .cm-search input:focus::placeholder { color: var(--cm-text-muted); }
 
-/* ── TABS ── */
+
 .cm-tabs {
   display: flex;
   gap: 2px;
@@ -355,7 +355,7 @@ main:has(.cm-page) {
   transform: translateX(-50%) scaleX(1);
 }
 
-/* ── LIST ── */
+
 
    SECTION: Conversation List
    ============================================================================== */
@@ -1005,7 +1005,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Store Info Banner ── */
+
 .cd-store-row {
   display: flex;
   align-items: center;
@@ -1090,7 +1090,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Search bar ── */
+
 .cd-search-bar {
   display: none;
   padding: 10px 20px;
@@ -1145,7 +1145,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Pinned bar ── */
+
 .cd-pinned-bar {
   display: none;
   align-items: center;
@@ -1169,7 +1169,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Blocked Banner ── */
+
 .cd-blocked-banner {
   padding: 10px 20px;
   text-align: center;
@@ -1181,7 +1181,7 @@ main:has(.cm-page) {
   animation: slideDown 0.3s ease-out;
 }
 
-/* ── Body ── */
+
 .cd-body {
   flex: 1;
   overflow-y: auto;
@@ -1364,7 +1364,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Reactions ── */
+
 .cd-msg-reactions {
   display: flex;
   gap: 3px;
@@ -1403,7 +1403,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Meta line ── */
+
 .cd-msg-meta {
   display: flex;
   align-items: center;
@@ -1468,7 +1468,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Footer ── */
+
 .cd-footer {
   flex-shrink: 0;
   padding: 14px 20px 18px;
@@ -1594,7 +1594,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Emoji picker ── */
+
 .cd-emoji-picker {
   display: none;
   position: absolute;
@@ -1652,7 +1652,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Attach preview ── */
+
 .cd-attach-preview {
   display: none;
   align-items: center;
@@ -1675,7 +1675,7 @@ main:has(.cm-page) {
 
 
 
-/* ── More menu ── */
+
 .cd-more-menu {
   display: none;
   position: absolute;
@@ -1731,7 +1731,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Theme picker ── */
+
 
 
 
@@ -1741,7 +1741,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Lightbox ── */
+
 .cd-lightbox {
   display: none;
   position: fixed;
@@ -1771,7 +1771,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Profile Sidebar ── */
+
 .cd-profile-overlay {
   display: none;
   position: fixed;
@@ -1809,7 +1809,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Modals ── */
+
 .cd-modal-overlay {
   display: none;
   position: fixed;
@@ -1938,7 +1938,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Status picker ── */
+
 .cd-status-picker {
   display: none;
   position: absolute;
@@ -2048,7 +2048,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Quick reactions ── */
+
 .cd-quick-reactions {
   display: none;
   position: absolute;
@@ -2091,7 +2091,7 @@ main:has(.cm-page) {
 
 
 
-/* ── Responsive ── */
+
 @media (max-width: 768px) {
   
    SECTION: Header

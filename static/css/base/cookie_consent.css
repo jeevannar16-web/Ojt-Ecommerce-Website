@@ -228,7 +228,7 @@
 
 
 
-/* ── Customize Modal ── */
+
 .cc-modal-overlay {
   display: none;
   position: fixed;
@@ -407,7 +407,7 @@
 
 
 
-/* ── Delayed Reminder Bar ── */
+
 .cc-reminder {
   position: fixed;
   bottom: 20px;
@@ -478,7 +478,7 @@
 
 
 
-/* ── Toast Notification ── */
+
 .cc-toast {
   position: fixed;
   bottom: 70px;
@@ -512,7 +512,7 @@
 
 
 
-/* ── Responsive ── */
+
 @media (max-width: 600px) {
   
    SECTION: Overlay

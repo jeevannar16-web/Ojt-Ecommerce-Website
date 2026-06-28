@@ -46,34 +46,7 @@ else:
 " 2>&1
 
 # --- Restore product/category images from fixture if they were cleared ---
-python -c "
-import django, os, json, traceback
-try:
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fitness_hub.settings')
-    django.setup()
-    from django.conf import settings
-    from store.models import Product, Category
-
-    fixture_path = os.path.join(settings.BASE_DIR, 'fixtures/seed_data.json')
-    with open(fixture_path) as f:
-        data = json.load(f)
-
-    product_images = {e['pk']: e['fields'].get('image') for e in data if e['model'] == 'store.product'}
-    cat_images = {e['pk']: e['fields'].get('image') for e in data if e['model'] == 'store.category'}
-
-    fixed = 0
-    for pk, path in product_images.items():
-        if path and Product.objects.filter(pk=pk, image__isnull=True).update(image=path):
-            fixed += 1
-    for pk, path in cat_images.items():
-        if path and Category.objects.filter(pk=pk, image__isnull=True).update(image=path):
-            fixed += 1
-    if fixed:
-        print('Restored images for %d products/categories from fixture' % fixed)
-except Exception as e:
-    print('Image restoration error (non-fatal): %s' % e)
-    traceback.print_exc()
-" 2>&1
+python manage.py fix_product_images 2>&1 || echo "Image restoration skipped (non-fatal)"
 
 # Auto-setup script (ensures superuser, Site, and SocialApp exist)
 python -c "

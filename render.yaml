@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: fitness-hub
+    name: ojt-ecommerce-website
     runtime: python
     buildCommand: |
       pip install --upgrade pip
@@ -22,7 +22,9 @@ services:
       - key: EMAIL_VERIFICATION_REQUIRED
         value: "False"
       - key: BASE_URL
-        value: "https://fitness-hub.onrender.com"
+        value: "https://ojt-ecommerce-website.onrender.com"
+      - key: SMS_PROVIDER
+        value: "console"
 
 databases:
   - name: fitness-hub-db

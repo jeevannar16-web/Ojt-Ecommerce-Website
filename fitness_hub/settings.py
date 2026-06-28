@@ -225,7 +225,7 @@ VERIFICATION_COOLDOWN_MINUTES = int(os.environ.get('VERIFICATION_COOLDOWN_MINUTE
 
 EMAIL_VERIFICATION_REQUIRED = os.environ.get('EMAIL_VERIFICATION_REQUIRED', 'True').lower() == 'true'
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 if os.environ.get('CLOUD_NAME') and os.environ.get('CLOUD_API_KEY') and os.environ.get('CLOUD_API_SECRET'):
     CLOUDINARY_STORAGE = {

@@ -57,16 +57,26 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from allauth.socialaccount.models import SocialApp
 
+# --- List all existing admin/staff accounts ---
+staff = User.objects.filter(is_staff=True)
+if staff.exists():
+    print('Staff/superuser accounts in DB:')
+    for u in staff:
+        print(f'  - {u.username} (email: {u.email}, superuser: {u.is_superuser}, staff: {u.is_staff})')
+else:
+    print('No staff accounts found')
+
 # --- Ensure superuser jeevan exists with correct password ---
+admin_email = os.environ.get('ADMIN_EMAIL', 'jeevanadmin@outlook.com')
 user, created = User.objects.get_or_create(
     username='jeevan',
-    defaults={'email': 'admin@fitnesshub.com', 'is_superuser': True, 'is_staff': True}
+    defaults={'email': admin_email, 'is_superuser': True, 'is_staff': True}
 )
 user.set_password('REPLACED_ADMIN_PASS')
 user.is_superuser = True
 user.is_staff = True
 user.save()
-print(f'Superuser {\"created\" if created else \"updated\"}: jeevan / REPLACED_ADMIN_PASS')
+print(f'Superuser {"created" if created else "updated"}: jeevan / REPLACED_ADMIN_PASS (email: {user.email})')
 
 # --- Site domain ---
 domain = os.environ.get('BASE_URL', 'https://ojt-ecommerce-website.onrender.com').replace('https://','').replace('http://','').split('/')[0]

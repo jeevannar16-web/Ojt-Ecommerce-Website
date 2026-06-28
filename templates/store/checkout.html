@@ -1,4 +1,6 @@
+<!-- ========================================================================= -->
 <!-- Store: Checkout (Map, Shipping, Payment, Order Summary)                 -->
+<!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
 
@@ -30,7 +32,7 @@
 
         <div class="row g-4">
             <div class="col-lg-8">
-                <form action="{% url 'store:checkout' %}{% if request.GET.items %}?items={{ request.GET.items }}{% endif %}" method="POST" id="checkout-form" novalidate data-no-loader="true">
+                <form action="{% url 'store:checkout' %}{% if request.GET.items %}?items={{ request.GET.items }}{% endif %}" method="POST" id="checkout-form" novalidate>
                     {% csrf_token %}
 
                     <div class="card-dz">
@@ -177,7 +179,7 @@
                         <div class="summary-item">
                             <div class="summary-img">
                                 {% if item.product.image %}
-                                <img src="{{ item.product.image.url }}"
+                                <img src="{% if 'http' in item.product.image.name or 'http' in item.product.image %}{% if item.product.image.name %}{{ item.product.image.name }}{% else %}{{ item.product.image }}{% endif %}{% else %}{{ item.product.image.url }}{% endif %}"
                                      alt="{{ item.product.name|t }}">
                                 {% else %}
                                 <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#333;font-size:1.2rem;">📦</div>
@@ -264,4 +266,10 @@
 {% block extra_js %}
 <script src="{% static 'js/pages/checkout.js' %}"></script>
 <script src="{% static 'js/pages/checkout_map.js' %}?v=3"></script>
+<script>
+document.getElementById('checkout-form')?.addEventListener('submit', function () {
+  const btn = document.getElementById('place-order-btn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="loader-ring-sm"></span> {{ 'Processing...'|t }}'; }
+});
+</script>
 {% endblock %}

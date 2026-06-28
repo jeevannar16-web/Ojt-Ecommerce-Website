@@ -1,4 +1,6 @@
-<!-- Profile page — account, orders, wishlist, and seller management tabs -->
+<!-- ========================================================================= -->
+<!-- Users: Profile (Account, Orders, Wishlist, Seller Tabs)                  -->
+<!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
 
@@ -51,18 +53,6 @@
         {% csrf_token %}
         <input type="file" name="avatar" id="avatar-input" accept="image/*" style="display:none;">
         <input type="hidden" name="username" id="username-input" value="{{ request.user.username }}">
-        {% if form.errors %}
-        <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:12px 16px;margin-bottom:16px;">
-          <strong style="color:#ef4444;font-size:0.82rem;">{{ 'Please fix the following errors:'|t }}</strong>
-          <ul style="margin:6px 0 0;padding:0 0 0 16px;font-size:0.78rem;color:#ef4444;">
-            {% for field, errors in form.errors.items %}
-            {% for error in errors %}
-            <li>{{ field|title }}: {{ error }}</li>
-            {% endfor %}
-            {% endfor %}
-          </ul>
-        </div>
-        {% endif %}
         <div class="profile-form-grid">
           <div class="form-field">
             <label>{{ 'Phone'|t }}</label>

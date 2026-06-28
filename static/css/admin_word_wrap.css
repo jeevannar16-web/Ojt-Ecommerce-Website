@@ -1,0 +1,48 @@
+/* ==============================================================================
+   File: admin_word_wrap.css
+   Description: Django admin word-wrap and text overflow fixes
+   ============================================================================== */
+
+
+/* ==============================================================================
+   SECTION: Result List Cells
+   ============================================================================== */
+
+
+
+
+#result_list td {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#result_list td.field-description {
+    max-width: 300px;
+    white-space: normal;
+    word-wrap: break-word;
+}
+.field-colored_name {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.field-name a {
+    max-width: 200px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ==============================================================================
+   SECTION: Form Rows
+   ============================================================================== */
+
+
+
+
+.form-row {
+    word-wrap: break-word;
+}

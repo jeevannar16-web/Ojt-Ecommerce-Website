@@ -1,4 +1,7 @@
-// search.js — live search suggestions, search history management, keyboard nav through results
+// ==============================================================================
+// File: search.js
+// Description: Search suggestions, history management, keyboard navigation
+// ==============================================================================
 
 // ==============================================================================
 // SECTION: DOM References & State

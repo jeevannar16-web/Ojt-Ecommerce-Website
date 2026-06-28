@@ -1,11 +1,14 @@
-// navigation.js — dropdown menus, category scroll with drag, mobile nav toggles
+// ==============================================================================
+// File: navigation.js
+// Description: Dropdown toggles, category navigation scroll with drag support
+// ==============================================================================
 
 // ==============================================================================
 // SECTION: Dropdown Toggle
 // ==============================================================================
 
 (function () {
-  
+  /* ── Click-toggle dropdowns (lang + user) — delegated ── */
   function toggleDropdown(btn) {
     var container = btn.closest('.nav-lang, .user-dropdown');
     if (!container) return;

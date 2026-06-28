@@ -1,4 +1,7 @@
-// map_enhance.js — fullscreen toggle, pan arrows, and a "go to my location" button for the footer map
+// ==============================================================================
+// File: map_enhance.js
+// Description: Map enhancements - fullscreen toggle, pan arrows, location button
+// ==============================================================================
 
 // ==============================================================================
 // SECTION: Full-Screen Toggle
@@ -13,6 +16,7 @@
   w.enhanceMap = function(map, opts) {
     opts = opts || {};
 
+    /* ─── Full-screen toggle ─── */
     if (opts.fullscreen !== false) {
       var fsControl = L.control({ position: opts.fullscreenPosition || 'topright' });
       fsControl.onAdd = function(map) {
@@ -56,6 +60,7 @@
     // SECTION: Pan Arrows
     // ==============================================================================
 
+    /* ─── Pan arrows (N, S, E, W) ─── */
     if (opts.panArrows !== false) {
       var panControl = L.control({ position: opts.panPosition || 'topright' });
       panControl.onAdd = function(map) {
@@ -116,6 +121,7 @@
     // SECTION: Current Location Button
     // ==============================================================================
 
+    /* ─── Show current location button ─── */
     if (opts.myLocation !== false) {
       var locControl = L.control({ position: opts.locPosition || 'topright' });
       locControl.onAdd = function(map) {

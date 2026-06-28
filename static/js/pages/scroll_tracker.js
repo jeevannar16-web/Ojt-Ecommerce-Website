@@ -1,4 +1,7 @@
-// scroll_tracker.js — progress bar, dot nav, and section tracking as you scroll through the page
+// ==============================================================================
+// File: scroll_tracker.js
+// Description: Scroll progress bar, dot navigation, section tracker
+// ==============================================================================
 
 // ==============================================================================
 // SECTION: Section Discovery

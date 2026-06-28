@@ -1,4 +1,6 @@
-<!-- Base layout — HTML skeleton, head, header, content block, footer, scripts -->
+<!-- ========================================================================= -->
+<!-- Layout: Base HTML Template                                               -->
+<!-- ========================================================================= -->
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE|slice:':2' }}" style="color-scheme:only dark;">
 <head>
@@ -203,6 +205,7 @@
     if (closeBtn) closeBtn.addEventListener('click', function(){ nav.classList.remove('fn-open'); });
     if (topBtn) topBtn.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); nav.classList.remove('fn-open'); });
 
+    /* ─── Only show section links that exist on this page ─── */
     var groups = nav.querySelectorAll('.fn-group');
     groups.forEach(function(group){
       var links = group.querySelectorAll('.fn-item[data-target]');
@@ -216,6 +219,7 @@
       else { group.style.display = ''; }
     });
 
+    /* ─── Smooth scroll with header offset ─── */
     var headerEl = document.querySelector('.main-nav') || document.querySelector('header');
     var headerH = headerEl ? headerEl.offsetHeight : 0;
 
@@ -235,16 +239,6 @@
       if (!nav.contains(e.target)) nav.classList.remove('fn-open');
     });
   })();
-
-  document.addEventListener('error', function(e) {
-    var img = e.target;
-    if (img.tagName !== 'IMG') return;
-    if (img.dataset.fallback) return;
-    img.dataset.fallback = '1';
-    img.src = img.closest('[class*="cat-card"], [class*="category"]')
-      ? 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600'
-      : 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600';
-  }, true);
   </script>
 
 </body>

@@ -1,4 +1,7 @@
-// cookie_consent.js — premium cookie consent with overlay, modal preferences, and reminder banner
+// ==============================================================================
+// File: cookie_consent.js
+// Description: Premium cookie consent manager with overlay, modal, and reminder
+// ==============================================================================
 
 // ==============================================================================
 // SECTION: Configuration & State

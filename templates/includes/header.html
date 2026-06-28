@@ -1,4 +1,6 @@
-<!-- Main header — logo, search bar, nav links, user dropdown, cart badge -->
+<!-- ========================================================================= -->
+<!-- Include: Main Header / Navigation                                        -->
+<!-- ========================================================================= -->
 {% load static %}
 <nav class="main-nav">
     <!-- Left: Logo, Language Switcher, Mobile Menu Toggle -->
@@ -117,6 +119,14 @@
           </div>
         </div>
       </div>
+
+      <!-- Delivery Location Badge -->
+      {% if user.is_authenticated and user.profile.city %}
+      <a href="{% url 'profile' %}#tab-info" class="nav-icon-btn" title="{{ 'Delivery Location'|t }}" style="text-decoration:none;position:relative;display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0 12px;color:#888;font-size:0.72rem;font-weight:500;height:40px;transition:all 0.2s;" onmouseover="this.style.borderColor='#2ec4b6'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
+        <i class="bi bi-geo-alt-fill" style="color:#2ec4b6;font-size:0.85rem;"></i>
+        <span style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ user.profile.city }}</span>
+      </a>
+      {% endif %}
 
       <!-- User Dropdown / Auth Buttons -->
       {% if user.is_authenticated %}

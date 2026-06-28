@@ -1,4 +1,7 @@
-// product_list.js — filtering, sorting, infinite scroll, and pagination for the catalog page
+// ==============================================================================
+// File: product_list.js
+// Description: Product listing with filters, infinite scroll, sort, and pagination
+// ==============================================================================
 
 // ==============================================================================
 // SECTION: DOM References & State

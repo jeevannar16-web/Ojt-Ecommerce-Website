@@ -1,4 +1,3 @@
-<!-- robots.txt — search engine crawling rules for the site -->
 User-agent: *
 Disallow: /admin/
 Disallow: /store/admin/

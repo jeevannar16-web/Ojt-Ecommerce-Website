@@ -1,4 +1,7 @@
-// profile.js — tab switching with URL hash so the active tab survives page reload
+// ==============================================================================
+// File: profile.js
+// Description: Profile tab switching with URL hash state management
+// ==============================================================================
 
 // ==============================================================================
 // SECTION: Tab Activation

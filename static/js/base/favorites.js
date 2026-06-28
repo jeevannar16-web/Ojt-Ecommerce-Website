@@ -1,4 +1,7 @@
-// favorites.js — toggle favorites via AJAX so the heart animates without a page reload
+// ==============================================================================
+// File: favorites.js
+// Description: Toggle product favorites with CSRF AJAX and heart animation
+// ==============================================================================
 
 // ==============================================================================
 // SECTION: Toggle Favorite

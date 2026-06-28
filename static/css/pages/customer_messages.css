@@ -1,11 +1,15 @@
+/* ==============================================================================
    File: pages/customer_messages.css
    Description: Customer messages list and chat detail with premium animations
    ============================================================================== */
 
+/* ═══════════════════════════════════════════════════════════
    CUSTOMER MESSAGES — Premium Animated Edition
+   ═══════════════════════════════════════════════════════════ */
 
+/* ── CUSTOM PROPERTIES ── */
 
-
+/* ==============================================================================
    SECTION: Custom Properties
    ============================================================================== */
 
@@ -27,8 +31,9 @@
   --cm-online-glow: rgba(46, 204, 113, 0.3);
 }
 
+/* ── GLOBAL ANIMATIONS ── */
 
-
+/* ==============================================================================
    SECTION: Global Animations
    ============================================================================== */
 
@@ -133,8 +138,9 @@
   100% { opacity: 1; transform: translateX(0); }
 }
 
+/* ── LAYOUT ── */
 
-
+/* ==============================================================================
    SECTION: Page Layout
    ============================================================================== */
 
@@ -254,7 +260,7 @@ main:has(.cm-page) {
   animation: badgePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-
+/* ── SEARCH ── */
 .cm-search {
   padding: 10px 28px;
   flex-shrink: 0;
@@ -298,7 +304,7 @@ main:has(.cm-page) {
 .cm-search input::placeholder { color: var(--cm-text-muted); transition: color 0.3s; }
 .cm-search input:focus::placeholder { color: var(--cm-text-muted); }
 
-
+/* ── TABS ── */
 .cm-tabs {
   display: flex;
   gap: 2px;
@@ -355,8 +361,9 @@ main:has(.cm-page) {
   transform: translateX(-50%) scaleX(1);
 }
 
+/* ── LIST ── */
 
-
+/* ==============================================================================
    SECTION: Conversation List
    ============================================================================== */
 
@@ -462,6 +469,7 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Status Dot
    ============================================================================== */
 
@@ -488,6 +496,7 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Message Body
    ============================================================================== */
 
@@ -540,6 +549,7 @@ main:has(.cm-page) {
   transition: all 0.25s ease;
 }
 .cm-row:hover 
+/* ==============================================================================
    SECTION: Store Badge
    ============================================================================== */
 
@@ -551,6 +561,7 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Top Right
    ============================================================================== */
 
@@ -575,6 +586,7 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Bottom Row
    ============================================================================== */
 
@@ -633,6 +645,7 @@ main:has(.cm-page) {
   transition: all 0.25s ease;
 }
 .cm-row:hover 
+/* ==============================================================================
    SECTION: Unread Badge
    ============================================================================== */
 
@@ -779,13 +792,16 @@ main:has(.cm-page) {
 
 
 
+/* ==============================================================================
    SECTION: Chat Detail Page
    ============================================================================== */
 
 
 
 
+/* ═══════════════════════════════════════════════════════════
    CUSTOMER CHAT DETAIL — Premium Animated Edition
+   ═══════════════════════════════════════════════════════════ */
 
 .cd-page {
   max-width: 100%;
@@ -999,13 +1015,14 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Store Info Banner
    ============================================================================== */
 
 
 
 
-
+/* ── Store Info Banner ── */
 .cd-store-row {
   display: flex;
   align-items: center;
@@ -1084,13 +1101,14 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Search Bar
    ============================================================================== */
 
 
 
 
-
+/* ── Search bar ── */
 .cd-search-bar {
   display: none;
   padding: 10px 20px;
@@ -1139,13 +1157,14 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Pinned Bar
    ============================================================================== */
 
 
 
 
-
+/* ── Pinned bar ── */
 .cd-pinned-bar {
   display: none;
   align-items: center;
@@ -1163,13 +1182,14 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Blocked Banner
    ============================================================================== */
 
 
 
 
-
+/* ── Blocked Banner ── */
 .cd-blocked-banner {
   padding: 10px 20px;
   text-align: center;
@@ -1181,7 +1201,7 @@ main:has(.cm-page) {
   animation: slideDown 0.3s ease-out;
 }
 
-
+/* ── Body ── */
 .cd-body {
   flex: 1;
   overflow-y: auto;
@@ -1204,6 +1224,7 @@ main:has(.cm-page) {
 .cd-body::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.12); }
 
 
+/* ==============================================================================
    SECTION: Date Dividers
    ============================================================================== */
 
@@ -1251,10 +1272,10 @@ main:has(.cm-page) {
 }
 
 .cd-msg {
-  padding: 14px 24px;
-  border-radius: 20px;
-  font-size: 1.05rem;
-  line-height: 1.6;
+  padding: 12px 20px;
+  border-radius: 18px;
+  font-size: 0.95rem;
+  line-height: 1.55;
   word-wrap: break-word;
   position: relative;
   animation: fadeIn 0.3s ease-out;
@@ -1358,13 +1379,14 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Reactions
    ============================================================================== */
 
 
 
 
-
+/* ── Reactions ── */
 .cd-msg-reactions {
   display: flex;
   gap: 3px;
@@ -1397,18 +1419,74 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
+   SECTION: Hover Actions
+   ============================================================================== */
+
+
+
+
+/* ── Actions ── */
+.cd-msg-actions {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  position: absolute;
+  top: -28px;
+  right: 0;
+  z-index: 5;
+  transform: translateY(4px);
+}
+.cd-msg-wrap.theirs .cd-msg-actions {
+  right: auto;
+  left: 0;
+}
+.cd-msg-wrap:hover .cd-msg-actions {
+  opacity: 1;
+  transform: translateY(0);
+}
+.cd-msg-action {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: var(--cm-surface);
+  color: var(--cm-text-sec);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  backdrop-filter: blur(8px);
+}
+.cd-msg-action:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--cm-text);
+  transform: scale(1.12);
+}
+.cd-msg-action:active {
+  transform: scale(0.9);
+}
+.cd-msg-action.pinned {
+  color: var(--cm-accent);
+}
+
+
+/* ==============================================================================
    SECTION: Meta Line
    ============================================================================== */
 
 
 
 
-
+/* ── Meta line ── */
 .cd-msg-meta {
   display: flex;
   align-items: center;
-  gap: 4px;
-  margin-top: 2px;
+  gap: 5px;
+  margin-top: 3px;
   padding: 0 4px;
 }
 .cd-msg-wrap.mine .cd-msg-meta { justify-content: flex-end; }
@@ -1428,47 +1506,15 @@ main:has(.cm-page) {
 .cd-receipt.delivered { color: #777; }
 .cd-receipt.read { color: var(--cm-accent); }
 
-/* Meta right area: emoji + three-dot */
-.cd-meta-right {
-  display: inline-flex; align-items: center; gap: 2px;
-  margin-left: 4px; opacity: 0.5; transition: opacity 0.15s;
-}
-.cd-msg-wrap:hover .cd-meta-right { opacity: 1; }
-.cd-meta-btn {
-  width: 28px; height: 28px; border-radius: 6px; border: none;
-  background: transparent; color: var(--cm-text-muted); font-size: 0.85rem;
-  cursor: pointer; display: flex; align-items: center;
-  justify-content: center; padding: 0; line-height: 1;
-  transition: all 0.12s;
-}
-.cd-meta-btn:hover { background: rgba(255,255,255,0.1); color: var(--cm-text); }
 
-/* Three-dot popup menu */
-.cd-more-wrap { position: relative; display: inline-flex; }
-.cd-msg-popup {
-  display: none; position: absolute; bottom: calc(100% + 4px); right: 0;
-  background: var(--cm-surface); border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 10px; padding: 4px; z-index: 20;
-  min-width: 130px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-}
-.cd-msg-wrap.theirs .cd-msg-popup { right: auto; left: 0; }
-.cd-msg-popup.open { display: block; }
-.cd-msg-popup button {
-  display: flex; align-items: center; gap: 8px; width: 100%;
-  padding: 8px 12px; border: none; background: transparent;
-  color: var(--cm-text-sec); font-size: 0.78rem; cursor: pointer;
-  border-radius: 6px; transition: all 0.1s;
-}
-.cd-msg-popup button:hover { background: rgba(255,255,255,0.06); color: var(--cm-text); }
-.cd-msg-popup button.pinned { color: var(--cm-accent); }
-
+/* ==============================================================================
    SECTION: Footer
    ============================================================================== */
 
 
 
 
-
+/* ── Footer ── */
 .cd-footer {
   flex-shrink: 0;
   padding: 14px 20px 18px;
@@ -1588,13 +1634,14 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Emoji Picker
    ============================================================================== */
 
 
 
 
-
+/* ── Emoji picker ── */
 .cd-emoji-picker {
   display: none;
   position: absolute;
@@ -1646,13 +1693,14 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Attach Preview
    ============================================================================== */
 
 
 
 
-
+/* ── Attach preview ── */
 .cd-attach-preview {
   display: none;
   align-items: center;
@@ -1669,13 +1717,14 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: More Menu
    ============================================================================== */
 
 
 
 
-
+/* ── More menu ── */
 .cd-more-menu {
   display: none;
   position: absolute;
@@ -1725,23 +1774,25 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Theme Picker
    ============================================================================== */
 
 
 
 
+/* ── Theme picker ── */
 
 
 
-
+/* ==============================================================================
    SECTION: Lightbox
    ============================================================================== */
 
 
 
 
-
+/* ── Lightbox ── */
 .cd-lightbox {
   display: none;
   position: fixed;
@@ -1765,13 +1816,14 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Profile Sidebar
    ============================================================================== */
 
 
 
 
-
+/* ── Profile Sidebar ── */
 .cd-profile-overlay {
   display: none;
   position: fixed;
@@ -1803,13 +1855,14 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Modals
    ============================================================================== */
 
 
 
 
-
+/* ── Modals ── */
 .cd-modal-overlay {
   display: none;
   position: fixed;
@@ -1932,13 +1985,14 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Status Picker
    ============================================================================== */
 
 
 
 
-
+/* ── Status picker ── */
 .cd-status-picker {
   display: none;
   position: absolute;
@@ -2042,13 +2096,14 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Quick Reactions
    ============================================================================== */
 
 
 
 
-
+/* ── Quick reactions ── */
 .cd-quick-reactions {
   display: none;
   position: absolute;
@@ -2085,15 +2140,17 @@ main:has(.cm-page) {
 }
 
 
+/* ==============================================================================
    SECTION: Responsive
    ============================================================================== */
 
 
 
 
-
+/* ── Responsive ── */
 @media (max-width: 768px) {
   
+/* ==============================================================================
    SECTION: Header
    ============================================================================== */
 
@@ -2107,6 +2164,7 @@ main:has(.cm-page) {
     font-size: 1.05rem;
   }
   
+/* ==============================================================================
    SECTION: Search
    ============================================================================== */
 
@@ -2117,6 +2175,7 @@ main:has(.cm-page) {
     padding: 8px 16px;
   }
   
+/* ==============================================================================
    SECTION: Tabs
    ============================================================================== */
 
@@ -2131,6 +2190,7 @@ main:has(.cm-page) {
     font-size: 0.74rem;
   }
   
+/* ==============================================================================
    SECTION: Conversation Row
    ============================================================================== */
 
@@ -2142,6 +2202,7 @@ main:has(.cm-page) {
     gap: 11px;
   }
   
+/* ==============================================================================
    SECTION: Avatar
    ============================================================================== */
 
@@ -2157,6 +2218,7 @@ main:has(.cm-page) {
     font-size: 0.84rem;
   }
   
+/* ==============================================================================
    SECTION: Preview Text
    ============================================================================== */
 
@@ -2167,6 +2229,7 @@ main:has(.cm-page) {
     font-size: 0.76rem;
   }
   
+/* ==============================================================================
    SECTION: Empty State
    ============================================================================== */
 
@@ -2177,6 +2240,7 @@ main:has(.cm-page) {
     padding: 40px 16px;
   }
   
+/* ==============================================================================
    SECTION: Top Bar
    ============================================================================== */
 
@@ -2188,6 +2252,7 @@ main:has(.cm-page) {
     gap: 10px;
   }
   
+/* ==============================================================================
    SECTION: Avatar Wrap
    ============================================================================== */
 
@@ -2200,6 +2265,7 @@ main:has(.cm-page) {
     font-size: 0.9rem;
   }
   
+/* ==============================================================================
    SECTION: Chat Body
    ============================================================================== */
 
@@ -2210,6 +2276,7 @@ main:has(.cm-page) {
     padding: 14px 14px;
   }
   
+/* ==============================================================================
    SECTION: Message Wrap
    ============================================================================== */
 
@@ -2220,6 +2287,7 @@ main:has(.cm-page) {
     max-width: 88%;
   }
   
+/* ==============================================================================
    SECTION: Message Bubble
    ============================================================================== */
 
@@ -2227,8 +2295,8 @@ main:has(.cm-page) {
 
 
 .cd-msg {
-    padding: 12px 18px;
-    font-size: 0.95rem;
+    padding: 10px 16px;
+    font-size: 0.88rem;
   }
   .cd-footer {
     padding: 10px 14px 14px;

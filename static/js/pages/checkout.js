@@ -1,4 +1,7 @@
-// checkout.js — payment/delivery radio toggles, phone validation, and form submission
+// ==============================================================================
+// File: checkout.js
+// Description: Payment/delivery selection, phone validation, form submission
+// ==============================================================================
 
 // ==============================================================================
 // SECTION: Payment Method Selection

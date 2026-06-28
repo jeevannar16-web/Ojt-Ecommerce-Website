@@ -1,4 +1,6 @@
+<!-- ========================================================================= -->
 <!-- Messages: Customer Conversation Detail (Chat Log, Reply Form)           -->
+<!-- ========================================================================= -->
 {% extends 'layout/messages_base.html' %}
 {% load static %}
 
@@ -7,130 +9,26 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/customer_messages.css' %}?v=2">
 <style>
-/* ── Theme variables (default = dark) ── */
-.cd-page {
-  --bg: #0d0d0d;
-  --surface: #121212;
-  --border: rgba(255,255,255,0.05);
-  --text: #f0ece4;
-  --sec: #888;
-  --muted: #555;
-  --mine-bubble: linear-gradient(135deg, rgba(212,175,55,0.14), rgba(212,175,55,0.04));
-  --theirs-bubble: rgba(255,255,255,0.04);
-  --accent: #d4af37;
-  --wallpaper: none;
-  position: relative;
-}
-
-/* ── Light theme ── */
-.cd-page[data-theme="light"] {
-  --bg: #f5f0eb;
-  --surface: #ffffff;
-  --border: rgba(0,0,0,0.06);
-  --text: #1a1a1a;
-  --sec: #666;
-  --muted: #999;
-  --mine-bubble: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.08));
-  --theirs-bubble: rgba(0,0,0,0.04);
-  --accent: #c9a032;
-  --wallpaper: none;
-}
-
-/* ── Neon theme ── */
-.cd-page[data-theme="neon"] {
-  --bg: #0a0a1a;
-  --surface: #111128;
-  --border: rgba(0,255,255,0.15);
-  --text: #e0f0ff;
-  --sec: #7ec8e3;
-  --muted: #4a6a8a;
-  --mine-bubble: linear-gradient(135deg, rgba(0,255,255,0.18), rgba(255,0,255,0.10));
-  --theirs-bubble: rgba(0,255,255,0.05);
-  --accent: #00ffff;
-  --wallpaper: radial-gradient(ellipse at 20% 80%, rgba(0,255,255,0.04) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255,0,255,0.04) 0%, transparent 60%);
-}
-
-/* ── Apply theme ── */
-.cd-page[data-theme] { background: var(--bg) !important; }
-.cd-page[data-theme] .cd-top-bar,
-.cd-page[data-theme] .cd-footer,
-.cd-page[data-theme] .cd-store-row,
-.cd-page[data-theme] .cd-search-bar,
-.cd-page[data-theme] .cd-pinned-bar,
-.cd-page[data-theme] .cd-blocked-banner,
-.cd-page[data-theme] .cd-more-menu,
-.cd-page[data-theme] .cd-form textarea,
-.cd-page[data-theme] .cd-search-bar input { background: var(--surface) !important; }
+/* Default theme — CSS variables used by structural selectors */
+.cd-page { --cd-bg:#0d0d0d; --cd-surface:#121212; --cd-border:rgba(255,255,255,0.05); --cd-text:#f0ece4; --cd-sec:#888; --cd-muted:#555; --cd-mine:linear-gradient(135deg,rgba(212,175,55,0.14),rgba(212,175,55,0.04)); --cd-theirs:rgba(255,255,255,0.04); --cd-acc:#d4af37; --cd-wallpaper:none; position:relative; }
+.cd-page[data-theme] { background: var(--cd-bg); transition: background 0.4s ease; }
+.cd-page[data-theme] * { transition: background 0.35s ease, color 0.25s ease, border-color 0.25s ease; }
+.cd-top-bar, .cd-store-row, .cd-search-bar, .cd-pinned-bar, .cd-blocked-banner, .cd-footer { background: var(--cd-surface); }
 .cd-body { background: transparent; }
-
-.cd-page[data-theme] .cd-msg-wrap.mine .cd-msg { background: var(--mine-bubble) !important; color: var(--text) !important; }
-.cd-page[data-theme] .cd-msg-wrap.theirs .cd-msg { background: var(--theirs-bubble) !important; color: var(--text) !important; }
-.cd-page[data-theme] .cd-receipt.read { color: var(--accent) !important; }
-.cd-page[data-theme] .cd-date-divider span { background: var(--bg) !important; }
-.cd-page[data-theme] .cd-send-btn { background: var(--accent) !important; color: #0d0d0d !important; }
-.cd-page[data-theme] .cd-icon-btn { color: var(--sec) !important; }
-.cd-page[data-theme] .cd-icon-btn:hover { background: var(--theirs-bubble) !important; color: var(--text) !important; }
-.cd-page[data-theme] .cd-form textarea { border-color: var(--border) !important; color: var(--text) !important; }
-.cd-page[data-theme] .cd-form textarea:focus { border-color: var(--accent) !important; }
-.cd-page[data-theme] .cd-more-menu button { color: var(--text) !important; }
-.cd-page[data-theme] .cd-more-menu button:hover { background: var(--theirs-bubble) !important; }
-.cd-page[data-theme] .cd-search-bar input { border-color: var(--border) !important; color: var(--text) !important; }
-.cd-page[data-theme] .cd-form textarea::placeholder { color: var(--muted) !important; }
-
-.cd-page[data-theme],
-.cd-page[data-theme] * { transition: background 0.35s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important; }
-
-/* ── Wallpaper ── */
+.cd-msg-wrap.mine .cd-msg { background: var(--cd-mine); color: var(--cd-text); }
+.cd-msg-wrap.theirs .cd-msg { background: var(--cd-theirs); color: var(--cd-text); }
+.cd-receipt.read { color: var(--cd-acc); }
+.cd-date-divider span { background: var(--cd-bg); }
+.cd-send-btn { background: var(--cd-acc); }
+/* Wallpaper layer */
 .cd-page[data-theme]::before {
   content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background: var(--wallpaper);
+  background: var(--cd-wallpaper);
   transition: opacity 0.6s ease;
 }
 .cd-page .cd-top-bar,
 .cd-page .cd-footer,
 .cd-page .cd-body { position:relative; z-index:1; }
-
-/* ── Theme popup ── */
-.cd-theme-menu {
-  display:none; position:absolute; top:100%; right:0; z-index:50;
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:12px; padding:5px; min-width:150px;
-  box-shadow:0 8px 32px rgba(0,0,0,0.5);
-}
-.cd-theme-menu.open { display:block; }
-.cd-theme-menu button {
-  display:flex; align-items:center; gap:10px; width:100%;
-  padding:9px 14px; border:none; background:none;
-  color:var(--text); font-size:0.82rem; cursor:pointer;
-  border-radius:8px; transition:all 0.12s;
-}
-.cd-theme-menu button:hover { background:var(--theirs-bubble); }
-.cd-theme-menu button.active { background:var(--mine-bubble); color:var(--accent); }
-.cd-theme-menu button i { font-size:1rem; width:20px; text-align:center; }
-
-/* ── Pin badge on message bubbles ── */
-.cd-pin-badge {
-  position:absolute; top:-6px; right:-6px; z-index:3;
-  width:22px; height:22px; border-radius:50%;
-  background:#e74c3c; color:#fff;
-  display:flex; align-items:center; justify-content:center;
-  font-size:0.6rem; box-shadow:0 2px 6px rgba(231,76,60,0.4);
-  opacity:0; transform:scale(0.5);
-  transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);
-  pointer-events:none;
-}
-.cd-msg-wrap.pinned .cd-pin-badge {
-  opacity:1; transform:scale(1);
-}
-
-/* ── Message slide-up animation for new bubbles ── */
-@keyframes cdMsgSlideUp {
-  from { opacity: 0; transform: translateY(12px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-.cd-msg-wrap.animate-in {
-  animation: cdMsgSlideUp 0.35s cubic-bezier(0.16,1,0.3,1) forwards;
-}
 </style>
 {% endblock %}
 
@@ -138,6 +36,7 @@
 {% with user_blocked=is_blocked %}
 <div class="cd-page" id="cd-page">
 
+  <!-- ─── TOP BAR ─── -->
   <div class="cd-top-bar">
     <a href="{% url 'store:messages_list' %}" class="cd-back"><i class="bi bi-arrow-left"></i></a>
     <a href="{% url 'home' %}" class="cd-home-btn" title="{{ 'Home'|t }}"><i class="bi bi-house-door"></i></a>
@@ -184,18 +83,11 @@
       </a>
       <button class="cd-icon-btn" id="search-toggle" title="{{ 'Search'|t }}"><i class="bi bi-search"></i></button>
       <div style="position:relative;">
-        <button class="cd-icon-btn" id="theme-toggle" title="{{ 'Theme'|t }}"><i class="bi bi-moon-stars" id="theme-icon"></i></button>
-        <div id="theme-menu" class="cd-theme-menu">
-          <button onclick="switchTheme('dark')" data-theme-opt="dark"><i class="bi bi-moon-stars"></i> Dark</button>
-          <button onclick="switchTheme('light')" data-theme-opt="light"><i class="bi bi-sun"></i> Light</button>
-          <button onclick="switchTheme('neon')" data-theme-opt="neon"><i class="bi bi-lightning"></i> Neon</button>
-        </div>
-      </div>
-      <div style="position:relative;">
       <button class="cd-icon-btn" id="more-toggle" title="{{ 'More'|t }}"><i class="bi bi-three-dots-vertical"></i></button>
     </div>
   </div>
 
+  <!-- ─── MORE MENU ─── -->
   <div class="cd-more-menu" id="more-menu">
     <form method="POST" action="{% url 'store:block_user' conversation.id %}" style="margin:0;">
       {% csrf_token %}
@@ -214,12 +106,14 @@
     </button>
   </div>
 
+  <!-- ─── SEARCH BAR ─── -->
   <div class="cd-search-bar" id="search-bar">
     <input type="text" id="search-input" placeholder="{{ 'Search messages...'|t }}" autocomplete="off">
     <button class="cd-icon-btn" id="search-close" style="width:28px;height:28px;font-size:0.9rem;"><i class="bi bi-x"></i></button>
     <div class="cd-search-results" id="search-results"></div>
   </div>
 
+  <!-- ─── PINNED BAR ─── -->
   {% if pinned_message %}
   <div class="cd-pinned-bar open" id="pinned-bar">
     <i class="bi bi-pin-angle-fill"></i>
@@ -228,6 +122,7 @@
   </div>
   {% endif %}
 
+  <!-- ─── STORE INFO ─── -->
   {% if not conversation.is_admin_conversation and seller_profile and seller_profile.store_slug %}
   <div class="cd-store-row">
     <a href="{% url 'store:seller_storefront' seller_profile.store_slug %}" class="store-badge">
@@ -245,6 +140,7 @@
   </div>
   {% endif %}
 
+  <!-- ─── BLOCKED BANNER ─── -->
   {% if user_blocked %}
   <div class="cd-blocked-banner">
     <i class="bi bi-shield-exclamation"></i>
@@ -257,6 +153,7 @@
   </div>
   {% endif %}
 
+  <!-- ─── MESSAGE BODY ─── -->
   <div class="cd-body" id="msg-body">
     {% for msg in messages %}
     {% ifchanged msg.created_at|date:"Y-m-d" %}
@@ -266,8 +163,7 @@
       {% else %}{{ msg.created_at|date:"M d, Y" }}{% endif %}
     </div>
     {% endifchanged %}
-    <div class="cd-msg-wrap {% if msg.sender == request.user %}mine{% else %}theirs{% endif %}{% if msg.is_pinned %} pinned{% endif %}" data-msg-id="{{ msg.id }}">
-      <div class="cd-pin-badge"><i class="bi bi-pin-fill"></i></div>
+    <div class="cd-msg-wrap {% if msg.sender == request.user %}mine{% else %}theirs{% endif %}" data-msg-id="{{ msg.id }}">
       <div class="cd-msg-content">
         {% if msg.is_deleted %}
         <div class="cd-msg-deleted"><i class="bi bi-trash3"></i> {{ 'Message deleted'|t }}</div>
@@ -280,12 +176,12 @@
           {% endif %}
           {% if msg.file_type == 'video' and msg.file %}
           <video class="cd-video-player" controls preload="metadata">
-            <source src="{{ msg.file.url }}" type="{{ msg.mime_type|default:'video/mp4' }}">
+            <source src="{{ msg.file.url }}" type="{{ msg.file_mime_type|default:'video/mp4' }}">
           </video>
           {% endif %}
           {% if msg.file_type == 'audio' and msg.file %}
           <audio class="cd-audio-player" controls preload="metadata">
-            <source src="{{ msg.file.url }}" type="{{ msg.mime_type|default:'audio/mpeg' }}">
+            <source src="{{ msg.file.url }}" type="{{ msg.file_mime_type|default:'audio/mpeg' }}">
           </audio>
           {% endif %}
           {% if msg.file_type == 'document' and msg.file %}
@@ -312,38 +208,27 @@
         {% endif %}
       </div>
       {% if not msg.is_deleted %}
+      <div class="cd-msg-actions">
+        <button class="cd-msg-action" onclick="copyMsg(this)" title="{{ 'Copy'|t }}"><i class="bi bi-clipboard"></i></button>
+        {% if msg.sender == request.user and not msg.image and not msg.file %}
+        <button class="cd-msg-action" onclick="editMsg(this)" title="{{ 'Edit'|t }}"><i class="bi bi-pencil"></i></button>
+        {% endif %}
+        <button class="cd-msg-action" onclick="showQuickReactions(this, {{ msg.id }})" title="{{ 'React'|t }}"><i class="bi bi-emoji-smile"></i></button>
+        <button class="cd-msg-action {% if msg.is_pinned %}pinned{% endif %}" onclick="togglePin({{ msg.id }})" title="{{ 'Pin'|t }}"><i class="bi bi-pin{% if msg.is_pinned %}-fill{% endif %}"></i></button>
+        {% if msg.sender == request.user %}
+        <button class="cd-msg-action" onclick="confirmDeleteMsg(this, {{ msg.id }})" title="{{ 'Delete'|t }}"><i class="bi bi-trash3"></i></button>
+        {% endif %}
+        <button class="cd-msg-action" onclick="reportMessage({{ msg.id }})" title="{{ 'Report'|t }}"><i class="bi bi-flag"></i></button>
+      </div>
+      {% endif %}
       <div class="cd-msg-meta">
         <span class="cd-msg-time">{{ msg.created_at|date:"H:i" }}</span>
-        {% if msg.sender == request.user %}
+        {% if msg.sender == request.user and not msg.is_deleted %}
         <span class="cd-receipt {% if msg.is_read %}read{% elif msg.is_delivered %}delivered{% else %}sent{% endif %}">
           {% if msg.is_read %}<i class="bi bi-check2-all"></i>{% else %}<i class="bi bi-check2"></i>{% endif %}
         </span>
         {% endif %}
-        <div class="cd-meta-right">
-          <button class="cd-meta-btn cd-meta-react" onclick="showQuickReactions(this, {{ msg.id }})" title="{{ 'React'|t }}"><i class="bi bi-emoji-smile"></i></button>
-          <div class="cd-more-wrap">
-            <button class="cd-meta-btn cd-meta-more" onclick="toggleMsgPopup(this)" title="{{ 'More'|t }}"><i class="bi bi-three-dots-vertical"></i></button>
-            <div class="cd-msg-popup">
-              <button onclick="copyMsg(this)" title="{{ 'Copy'|t }}"><i class="bi bi-clipboard"></i> {{ 'Copy'|t }}</button>
-              {% if msg.sender == request.user and not msg.image and not msg.file %}
-              <button onclick="editMsg(this)" title="{{ 'Edit'|t }}"><i class="bi bi-pencil"></i> {{ 'Edit'|t }}</button>
-              {% endif %}
-              {% if msg.sender == request.user %}
-              <button class="pop-pin {% if msg.is_pinned %}pinned{% endif %}" onclick="togglePin({{ msg.id }})" title="{{ 'Pin'|t }}"><i class="bi bi-pin{% if msg.is_pinned %}-fill{% endif %}"></i> {% if msg.is_pinned %}{{ 'Unpin'|t }}{% else %}{{ 'Pin'|t }}{% endif %}</button>
-              {% endif %}
-              {% if msg.sender == request.user %}
-              <button onclick="confirmDeleteMsg(this, {{ msg.id }})" title="{{ 'Delete'|t }}"><i class="bi bi-trash3"></i> {{ 'Delete'|t }}</button>
-              {% endif %}
-              <button onclick="reportMessage({{ msg.id }})" title="{{ 'Report'|t }}"><i class="bi bi-flag"></i> {{ 'Report'|t }}</button>
-            </div>
-          </div>
-        </div>
       </div>
-      {% else %}
-      <div class="cd-msg-meta">
-        <span class="cd-msg-time">{{ msg.created_at|date:"H:i" }}</span>
-      </div>
-      {% endif %}
     </div>
     {% empty %}
     <div class="cd-empty">
@@ -353,6 +238,7 @@
     {% endfor %}
   </div>
 
+  <!-- ─── ATTACHMENT PREVIEW ─── -->
   <div class="cd-attach-preview" id="attach-preview">
     <div style="font-size:1.5rem;" id="attach-icon"><i class="bi bi-file-earmark"></i></div>
     <div style="flex:1;min-width:0;">
@@ -363,6 +249,7 @@
   </div>
   <input type="file" id="file-input" accept="*/*" style="display:none;">
 
+  <!-- ─── FOOTER ─── -->
   {% if not user_blocked %}
   <div class="cd-footer">
     <div class="cd-footer-tools">
@@ -400,10 +287,12 @@
   {% endif %}
 </div>
 
+<!-- ─── LIGHTBOX ─── -->
 <div class="cd-lightbox" id="lightbox" onclick="closeLightbox()">
   <img id="lightbox-img" src="" alt="">
 </div>
 
+<!-- ─── PROFILE SIDEBAR ─── -->
 <div class="cd-profile-overlay" id="profile-overlay" onclick="closeProfileSidebar()"></div>
 <div class="cd-profile-sidebar" id="profile-sidebar">
   <div class="ps-header">
@@ -445,6 +334,7 @@
 .dot.online { background:#2ecc71 !important; }
 </style>
 
+<!-- ─── DELETE MODAL ─── -->
 <div class="cd-modal-overlay" id="delete-modal">
   <div class="cd-modal">
     <h3><i class="bi bi-exclamation-triangle" style="color:#e74c3c;"></i> {{ 'Delete Message?'|t }}</h3>
@@ -457,6 +347,7 @@
   </div>
 </div>
 
+<!-- ─── REPORT MODAL ─── -->
 <div class="cd-modal-overlay" id="report-modal">
   <div class="cd-modal">
     <h3><i class="bi bi-flag" style="color:#d4af37;"></i> {{ 'Report Message'|t }}</h3>
@@ -474,6 +365,7 @@
   </div>
 </div>
 
+<!-- ─── DELETE CONVERSATION CONFIRM ─── -->
 <div class="cd-modal-overlay" id="delete-conv-modal">
   <div class="cd-modal">
     <h3><i class="bi bi-exclamation-triangle" style="color:#e74c3c;"></i> {{ 'Delete Conversation?'|t }}</h3>
@@ -515,6 +407,9 @@
   }
   scrollToBottom();
   window.addEventListener('load', scrollToBottom);
+  if(body && window.MutationObserver){
+    new MutationObserver(scrollToBottom).observe(body, {childList:true, subtree:true});
+  }
 
   /* ── Auto-resize textarea ── */
   if(input){
@@ -640,7 +535,7 @@
     wrap.dataset.msgId = d.id;
     wrap.innerHTML =
       '<div class="cd-msg-content"><div class="cd-msg"><span class="msg-text">' + escapeHtml(d.content) + '</span></div></div>' +
-      '<div class="cd-msg-meta"><span class="cd-msg-time">' + d.created_at + '</span><span class="cd-receipt sent"><i class="bi bi-check2"></i></span><div class="cd-meta-right"><button class="cd-meta-btn cd-meta-react" onclick="showQuickReactions(this,' + d.id + ')" title="{{ 'React'|t }}"><i class="bi bi-emoji-smile"></i></button><div class="cd-more-wrap"><button class="cd-meta-btn cd-meta-more" onclick="toggleMsgPopup(this)" title="{{ 'More'|t }}"><i class="bi bi-three-dots-vertical"></i></button><div class="cd-msg-popup"><button onclick="copyMsg(this)" title="{{ 'Copy'|t }}"><i class="bi bi-clipboard"></i> {{ 'Copy'|t }}</button><button class="pop-pin" onclick="togglePin(' + d.id + ')" title="{{ 'Pin'|t }}"><i class="bi bi-pin"></i> {{ 'Pin'|t }}</button><button onclick="confirmDeleteMsg(this,' + d.id + ')" title="{{ 'Delete'|t }}"><i class="bi bi-trash3"></i> {{ 'Delete'|t }}</button><button onclick="reportMessage(' + d.id + ')" title="{{ 'Report'|t }}"><i class="bi bi-flag"></i> {{ 'Report'|t }}</button></div></div></div></div>';
+      '<div class="cd-msg-meta"><span class="cd-msg-time">' + d.created_at + '</span><span class="cd-receipt sent"><i class="bi bi-check2"></i></span></div>';
     body.appendChild(wrap);
     scrollToBottom();
   }
@@ -703,11 +598,7 @@
         content += '</div>';
       }
     }
-    if(m.is_deleted){
-      wrap.innerHTML = '<div class="cd-msg-content">' + content + '</div><div class="cd-msg-meta"><span class="cd-msg-time">' + m.created_at + '</span></div>';
-    } else {
-      wrap.innerHTML = '<div class="cd-msg-content">' + content + '</div><div class="cd-msg-meta"><span class="cd-msg-time">' + m.created_at + '</span><div class="cd-meta-right"><button class="cd-meta-btn cd-meta-react" onclick="showQuickReactions(this,' + m.id + ')" title="{{ 'React'|t }}"><i class="bi bi-emoji-smile"></i></button><div class="cd-more-wrap"><button class="cd-meta-btn cd-meta-more" onclick="toggleMsgPopup(this)" title="{{ 'More'|t }}"><i class="bi bi-three-dots-vertical"></i></button><div class="cd-msg-popup"><button onclick="copyMsg(this)" title="{{ 'Copy'|t }}"><i class="bi bi-clipboard"></i> {{ 'Copy'|t }}</button><button onclick="reportMessage(' + m.id + ')" title="{{ 'Report'|t }}"><i class="bi bi-flag"></i> {{ 'Report'|t }}</button></div></div></div></div>';
-    }
+    wrap.innerHTML = '<div class="cd-msg-content">' + content + '</div><div class="cd-msg-meta"><span class="cd-msg-time">' + m.created_at + '</span></div>';
     body.appendChild(wrap);
     scrollToBottom();
     /* Browser notification */
@@ -746,58 +637,6 @@
   pollTimer = setInterval(pollNewMessages, 2500);
   pollOnlineStatus();
   statusTimer = setInterval(pollOnlineStatus, 30000);
-
-  /* ── Heartbeat (stay online) ── */
-  function sendHeartbeat(){
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '{% url "store:api_heartbeat" %}', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('X-CSRFToken', csrf);
-    xhr.send(JSON.stringify({}));
-  }
-  sendHeartbeat();
-  setInterval(sendHeartbeat, 60000);
-
-  /* ── Reaction polling ── */
-  function pollReactions(){
-    var wraps = body.querySelectorAll('[data-msg-id]');
-    if(!wraps.length) return;
-    var ids = [];
-    wraps.forEach(function(w){ ids.push(w.dataset.msgId); });
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '{% url "store:api_reaction_updates" conversation.id %}?ids=' + ids.join(','), true);
-    xhr.onload = function(){
-      if(xhr.status !== 200) return;
-      try {
-        var data = JSON.parse(xhr.responseText);
-        /* ── Sync pinned bar ── */
-        if(data.hasOwnProperty('pinned_id')){
-          var bar = document.getElementById('pinned-bar');
-          if(data.pinned_id){
-            if(!bar){
-              bar = document.createElement('div');
-              bar.className = 'cd-pinned-bar open';
-              bar.id = 'pinned-bar';
-              var header = document.querySelector('.cd-chat-header');
-              if(header) header.after(bar);
-            }
-            bar.classList.add('open');
-            bar.innerHTML = '<i class="bi bi-pin-angle-fill"></i><span>' + (data.pinned_content || '') + '</span><button onclick="togglePin(' + data.pinned_id + ')" style="background:none;border:none;color:#d4af37;cursor:pointer;font-size:0.9rem;padding:2px 6px;"><i class="bi bi-x"></i></button>';
-          } else {
-            if(bar) bar.classList.remove('open');
-          }
-        }
-        /* ── Sync reactions ── */
-        if(data.reactions){
-          Object.keys(data.reactions).forEach(function(id){
-            updateReactionsDisplay(parseInt(id), data.reactions[id]);
-          });
-        }
-      } catch(e){}
-    };
-    xhr.send();
-  }
-  setInterval(pollReactions, 3000);
 
   if('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
 
@@ -1019,41 +858,7 @@
     xhr.open('POST', '{% url "store:api_pin_message" %}', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('X-CSRFToken', csrf);
-    xhr.onload = function(){
-      if(xhr.status === 200){
-        try {
-          var d = JSON.parse(xhr.responseText);
-          var wrap = body.querySelector('[data-msg-id="' + msgId + '"]');
-          if(wrap){
-            var btn = wrap.querySelector('.pop-pin');
-            if(btn){
-              btn.className = 'pop-pin' + (d.is_pinned ? ' pinned' : '');
-              btn.innerHTML = d.is_pinned ? '<i class="bi bi-pin-fill"></i> {{ 'Unpin'|t }}' : '<i class="bi bi-pin"></i> {{ 'Pin'|t }}';
-            }
-            if(d.is_pinned) wrap.classList.add('pinned');
-            else wrap.classList.remove('pinned');
-          }
-          var bar = document.getElementById('pinned-bar');
-          if(d.is_pinned){
-            if(!bar){
-              var msgWrap = body.querySelector('[data-msg-id="' + msgId + '"]');
-              var msgContent = msgWrap ? msgWrap.querySelector('.cd-msg') : null;
-              var text = msgContent ? msgContent.textContent.trim().substring(0,80) : '';
-              bar = document.createElement('div');
-              bar.className = 'cd-pinned-bar open';
-              bar.id = 'pinned-bar';
-              bar.innerHTML = '<i class="bi bi-pin-angle-fill"></i><span>' + text + '</span><button onclick="togglePin(' + msgId + ')" style="background:none;border:none;color:#d4af37;cursor:pointer;font-size:0.9rem;padding:2px 6px;"><i class="bi bi-x"></i></button>';
-              var header = document.querySelector('.cd-chat-header');
-              if(header) header.after(bar);
-            } else {
-              bar.classList.add('open');
-            }
-          } else {
-            if(bar) bar.classList.remove('open');
-          }
-        } catch(e){}
-      }
-    };
+    xhr.onload = function(){ if(xhr.status === 200){ try{ var d = JSON.parse(xhr.responseText); if(d.ok) window.location.reload(); }catch(e){} } };
     xhr.send(JSON.stringify({message_id: msgId}));
   };
 
@@ -1107,7 +912,6 @@
   window.openLightbox = function(url){ var lb = document.getElementById('lightbox'); document.getElementById('lightbox-img').src = url; lb.classList.add('open'); };
   window.closeLightbox = function(){ document.getElementById('lightbox').classList.remove('open'); };
 
-
   /* ── Profile Sidebar ── */
   window.openProfileSidebar = function(){
     document.getElementById('profile-overlay').classList.add('open');
@@ -1149,28 +953,6 @@
     xhr.send(JSON.stringify({user_id: otherUserId}));
   }
 
-  /* ── Message popup toggle ── */
-  window.toggleMsgPopup = function(btn){
-    var wrap = btn.closest('.cd-more-wrap');
-    if(!wrap) return;
-    var popup = wrap.querySelector('.cd-msg-popup');
-    if(!popup) return;
-    popup.classList.toggle('open');
-    btn.classList.toggle('open');
-    if(popup.classList.contains('open')){
-      setTimeout(function(){
-        function closeHandler(e){
-          if(!wrap.contains(e.target)){
-            popup.classList.remove('open');
-            btn.classList.remove('open');
-            document.removeEventListener('click', closeHandler);
-          }
-        }
-        document.addEventListener('click', closeHandler);
-      }, 10);
-    }
-  };
-
   /* ── Status ── */
   window.toggleStatusPicker = function(e){
     e.stopPropagation();
@@ -1184,7 +966,7 @@
     xhr.open('POST', '{% url "store:api_update_status" %}', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('X-CSRFToken', csrf);
-    xhr.send(JSON.stringify({emoji: el.dataset.emoji, text: el.dataset.text, is_online: el.dataset.text !== 'Offline'}));
+    xhr.send(JSON.stringify({emoji: el.dataset.emoji, text: el.dataset.text}));
   };
 
   document.addEventListener('click', function(e){
@@ -1206,51 +988,6 @@
     if(statusTimer) clearInterval(statusTimer);
   });
 
-  /* ── Theme Switcher ── */
-  var page = document.getElementById('cd-page');
-  var toggle = document.getElementById('theme-toggle');
-  var menu = document.getElementById('theme-menu');
-  var icon = document.getElementById('theme-icon');
-  var meta = document.getElementById('color-scheme-meta');
-  var html = document.getElementById('msg-html');
-  var iconMap = { dark:'bi-moon-stars', light:'bi-sun', neon:'bi-lightning' };
-  var schemeMap = { dark:'dark', light:'light', neon:'dark' };
-  if(page && toggle && menu){
-    function applyTheme(theme){
-      page.setAttribute('data-theme', theme);
-      localStorage.setItem('chat-theme', theme);
-      menu.querySelectorAll('[data-theme-opt]').forEach(function(b){ b.classList.remove('active'); });
-      menu.querySelector('[data-theme-opt="' + theme + '"]')?.classList.add('active');
-      if(icon){ icon.className = 'bi ' + (iconMap[theme] || 'bi-moon-stars'); }
-      if(meta) meta.content = schemeMap[theme] || 'dark';
-      if(html) html.style.colorScheme = schemeMap[theme] || 'dark';
-      menu.classList.remove('open');
-    }
-    var saved = localStorage.getItem('chat-theme') || 'dark';
-    applyTheme(saved);
-    toggle.addEventListener('click', function(e){
-      e.stopPropagation();
-      menu.classList.toggle('open');
-    });
-    window.switchTheme = applyTheme;
-    document.addEventListener('click', function(e){
-      if(!toggle.contains(e.target) && !menu.contains(e.target)) menu.classList.remove('open');
-    });
-  }
-
 })();
-
-// Set offline on page/tab close (best-effort)
-window.addEventListener('beforeunload', function(){
-  try {
-    var x = new XMLHttpRequest();
-    x.open('POST', '{% url "store:api_heartbeat" %}', false);
-    x.setRequestHeader('Content-Type', 'application/json');
-    x.setRequestHeader('X-CSRFToken', csrf);
-    x.send(JSON.stringify({offline: true}));
-  } catch(e){}
-});
-
-
 </script>
 {% endblock %}

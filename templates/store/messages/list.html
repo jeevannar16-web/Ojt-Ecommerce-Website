@@ -1,4 +1,6 @@
+<!-- ========================================================================= -->
 <!-- Messages: Conversation List (Tabs, Search, Inbox Rows)                  -->
+<!-- ========================================================================= -->
 {% extends 'layout/messages_base.html' %}
 {% load static %}
 
@@ -16,6 +18,7 @@
 {% block content %}
 <div class="cl-page">
 
+  {# ── Header ──────────────────────────────────────────── #}
   <div class="cl-header">
     <h1><i class="bi bi-chat-dots"></i> {{ 'Messages'|t }}</h1>
     <div class="cl-header-actions">
@@ -31,6 +34,7 @@
     </div>
   </div>
 
+  {# ── Search ──────────────────────────────────────────── #}
   <div class="cl-search">
     <div class="cl-search-wrap">
       <i class="bi bi-search"></i>
@@ -40,6 +44,7 @@
     </div>
   </div>
 
+  {# ── Tabs ────────────────────────────────────────────── #}
   <div class="cl-tabs">
     <button class="cl-tab active" data-filter="all">{{ 'All'|t }}</button>
     <button class="cl-tab" data-filter="unread">{{ 'Unread'|t }}</button>
@@ -47,6 +52,7 @@
   </div>
   <div class="cl-tabs-divider"></div>
 
+  {# ── Conversation List ───────────────────────────────── #}
   <div class="cl-list" id="cl-list">
     {% for item in conversations %}
     <a href="{% url 'store:conversation_detail' item.conv.id %}"

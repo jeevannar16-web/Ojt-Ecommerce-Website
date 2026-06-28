@@ -1,4 +1,8 @@
-// theme.js — 13-theme picker (8 solid dark + 5 animated premium), sets data-global-theme to keep it separate from the chat system
+// ==============================================================================
+// File: theme.js
+// Description: 13-theme picker — 8 solid dark + 5 animated premium.
+// Uses data-global-theme to avoid conflict with chat's data-theme system.
+// ==============================================================================
 
 (function() {
   var STORAGE_KEY = 'fitnesshub_theme';

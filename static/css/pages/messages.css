@@ -1,8 +1,11 @@
+/* ==============================================================================
    File: pages/messages.css
    Description: Message detail page with chat bubbles, reactions, and attachments
    ============================================================================== */
 
+/* ─── MESSAGING — PREMIUM REDESIGN ─── */
 
+/* === GLOBAL LAYOUT === */
 .md-page {
   max-width: 100%; margin: 0; padding: 0;
   display: flex; flex-direction: column;
@@ -10,6 +13,7 @@
   overflow: hidden;
 }
 
+/* === TOP BAR — ELEVATED === */
 .md-top-bar {
   display: flex; align-items: center; gap: 16px;
   padding: 0 32px; height: 80px;
@@ -134,12 +138,14 @@
 .call-btn-disabled { opacity:0.35; cursor:not-allowed; }
 
 
+/* ==============================================================================
    SECTION: Store Row
    ============================================================================== */
 
 
 
 
+/* === STORE ROW === */
 .md-store-row {
   display: flex; align-items: center; gap: 16px;
   padding: 0 32px; height: 62px;
@@ -183,12 +189,14 @@
 }
 
 
+/* ==============================================================================
    SECTION: Search Bar
    ============================================================================== */
 
 
 
 
+/* === SEARCH BAR === */
 .md-search-bar {
   display: none; padding: 10px 32px;
   background: rgba(18,18,18,0.95);
@@ -211,12 +219,14 @@
 .md-search-results.open { display: block; }
 
 
+/* ==============================================================================
    SECTION: Pinned Bar
    ============================================================================== */
 
 
 
 
+/* === PINNED BAR === */
 .md-pinned-bar {
   display: none; align-items: center; gap: 8px;
   padding: 7px 20px;
@@ -227,12 +237,14 @@
 .md-pinned-bar.open { display: flex; }
 
 
+/* ==============================================================================
    SECTION: Blocked Banner
    ============================================================================== */
 
 
 
 
+/* === BLOCKED BANNER === */
 .md-blocked-banner {
   padding: 10px 20px; text-align: center; font-size: 0.8rem;
   color: #888; background: rgba(231,76,60,0.04);
@@ -240,12 +252,14 @@
 }
 
 
+/* ==============================================================================
    SECTION: Message Body
    ============================================================================== */
 
 
 
 
+/* === MESSAGE BODY — CLEAN SCROLL === */
 .md-body {
   flex: 1; min-height: 0; overflow-y: auto; padding: 20px 48px;
   display: flex; flex-direction: column; gap: 3px;
@@ -259,12 +273,14 @@
 .md-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
 
 
+/* ==============================================================================
    SECTION: Date Divider
    ============================================================================== */
 
 
 
 
+/* === DATE DIVIDER — MINIMAL === */
 .md-date-divider {
   text-align: center; font-size: 0.68rem; color: #555;
   padding: 20px 0 12px; font-weight: 500;
@@ -279,12 +295,14 @@
 }
 
 
+/* ==============================================================================
    SECTION: Message Wrap
    ============================================================================== */
 
 
 
 
+/* === MESSAGE WRAP === */
 .md-msg-wrap {
   position: relative; display: flex; flex-direction: column;
   max-width: 65%;
@@ -302,15 +320,17 @@
 .md-msg-content { display: flex; flex-direction: column; }
 
 
+/* ==============================================================================
    SECTION: Message Bubble
    ============================================================================== */
 
 
 
 
+/* === MESSAGE BUBBLE === */
 .md-msg {
-  padding: 16px 24px; border-radius: 24px;
-  font-size: 1.05rem; line-height: 1.65;
+  padding: 14px 22px; border-radius: 22px;
+  font-size: 1rem; line-height: 1.6;
   word-wrap: break-word; position: relative;
 }
 .md-msg-wrap.mine .md-msg {
@@ -349,12 +369,14 @@
 }
 
 
+/* ==============================================================================
    SECTION: Deleted Message
    ============================================================================== */
 
 
 
 
+/* === DELETED MSG === */
 .md-msg-deleted {
   padding: 8px 16px; border-radius: 12px; font-size: 0.72rem;
   color: #555; background: rgba(255,255,255,0.02);
@@ -362,12 +384,14 @@
 }
 
 
+/* ==============================================================================
    SECTION: Media
    ============================================================================== */
 
 
 
 
+/* === MEDIA === */
 .md-msg .md-video-player {
   max-width: 300px; width: 100%; border-radius: 12px;
   display: block; margin: 4px 0 2px;
@@ -386,12 +410,14 @@
 .md-msg .md-doc-link:hover { border-color: rgba(212,175,55,0.2); }
 
 
+/* ==============================================================================
    SECTION: Reactions
    ============================================================================== */
 
 
 
 
+/* === REACTIONS === */
 .md-msg-reactions {
   display: flex; gap: 3px; flex-wrap: wrap; margin-top: 3px;
 }
@@ -406,8 +432,41 @@
 .md-reaction-badge.mine { background: rgba(212,175,55,0.08); border-color: rgba(212,175,55,0.15); }
 
 
+/* ==============================================================================
+   SECTION: Hover Actions
+   ============================================================================== */
+
+
+
+
+/* === HOVER ACTIONS === */
+.md-msg-actions {
+  display: flex; gap: 3px; opacity: 0;
+  transition: opacity 0.12s;
+  position: absolute; top: -30px; right: 0; z-index: 5;
+}
+.md-msg-wrap.theirs .md-msg-actions { right: auto; left: 0; }
+.md-msg-wrap:hover .md-msg-actions { opacity: 1; }
+.md-msg-action {
+  width: 42px; height: 42px; border-radius: 12px; border: none;
+  background: #1a1a1a; color: #888; font-size: 1rem;
+  cursor: pointer; display: flex; align-items: center;
+  justify-content: center; transition: all 0.12s;
+}
+.md-msg-action:hover { background: #2a2a2a; color: #f0ece4; }
+.md-msg-action.pinned { color: #d4af37; }
+
+
+/* ==============================================================================
+   SECTION: Meta Line
+   ============================================================================== */
+
+
+
+
+/* === META LINE === */
 .md-msg-meta {
-  display: flex; align-items: center; gap: 4px; margin-top: 2px;
+  display: flex; align-items: center; gap: 6px; margin-top: 4px;
   padding: 0 6px;
 }
 .md-msg-wrap.mine .md-msg-meta { justify-content: flex-end; }
@@ -427,46 +486,15 @@
 }
 .md-receipt:hover .seen-tooltip { display: block; }
 
-/* Meta right area: emoji + three-dot */
-.md-meta-right {
-  display: inline-flex; align-items: center; gap: 2px;
-  margin-left: 4px; opacity: 0.5; transition: opacity 0.15s;
-}
-.md-msg-wrap:hover .md-meta-right { opacity: 1; }
-.md-meta-btn {
-  width: 28px; height: 28px; border-radius: 6px; border: none;
-  background: transparent; color: #888; font-size: 0.85rem;
-  cursor: pointer; display: flex; align-items: center;
-  justify-content: center; padding: 0; line-height: 1;
-  transition: all 0.12s;
-}
-.md-meta-btn:hover { background: rgba(255,255,255,0.1); color: #f0ece4; }
 
-/* Three-dot popup menu */
-.md-more-wrap { position: relative; display: inline-flex; }
-.md-msg-popup {
-  display: none; position: absolute; bottom: calc(100% + 4px); right: 0;
-  background: #1a1a1a; border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 10px; padding: 4px; z-index: 20;
-  min-width: 130px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-}
-.md-msg-wrap.theirs .md-msg-popup { right: auto; left: 0; }
-.md-msg-popup.open { display: block; }
-.md-msg-popup button {
-  display: flex; align-items: center; gap: 8px; width: 100%;
-  padding: 8px 12px; border: none; background: transparent;
-  color: #ccc; font-size: 0.78rem; cursor: pointer;
-  border-radius: 6px; transition: all 0.1s;
-}
-.md-msg-popup button:hover { background: rgba(255,255,255,0.06); color: #f0ece4; }
-.md-msg-popup button.pinned { color: #d4af37; }
-
+/* ==============================================================================
    SECTION: Footer
    ============================================================================== */
 
 
 
 
+/* === FOOTER — ELEGANT === */
 .md-footer {
   flex-shrink: 0; padding: 16px 32px 20px;
   background: rgba(18,18,18,0.98);
@@ -474,12 +502,14 @@
   backdrop-filter: blur(16px);
 }
 
+/* ==============================================================================
    SECTION: Status Picker
    ============================================================================== */
 
 
 
 
+/* === STATUS PICKER === */
 .md-status-display {
   display: flex; align-items: center; gap: 6px; cursor: pointer;
   padding: 2px 10px 2px 6px; border-radius: 20px;
@@ -546,12 +576,14 @@
 .md-send-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
 
 
+/* ==============================================================================
    SECTION: Attachment Preview
    ============================================================================== */
 
 
 
 
+/* === ATTACHMENT PREVIEW === */
 .md-attach-preview {
   display: none; align-items: center; gap: 10px;
   padding: 8px 14px; background: rgba(255,255,255,0.02);
@@ -561,12 +593,14 @@
 .md-attach-preview.open { display: flex; }
 
 
+/* ==============================================================================
    SECTION: Emoji Picker
    ============================================================================== */
 
 
 
 
+/* === EMOJI PICKER — COLLECTION === */
 .md-emoji-picker {
   display: none; position: absolute; bottom: 100%; left: 0;
   background: #121212; border: 1px solid rgba(255,255,255,0.06);
@@ -586,12 +620,14 @@
 .md-emoji-picker .ep-btn:hover { background: rgba(255,255,255,0.06); transform: scale(1.15); }
 
 
+/* ==============================================================================
    SECTION: Theme Picker
    ============================================================================== */
 
 
 
 
+/* === THEME PICKER === */
 .md-theme-picker {
   display: none; position: absolute; top: 100%; right: 0;
   background: #121212; border: 1px solid rgba(255,255,255,0.06);
@@ -604,12 +640,14 @@
 }
 
 
+/* ==============================================================================
    SECTION: Lightbox
    ============================================================================== */
 
 
 
 
+/* === LIGHTBOX === */
 .md-lightbox {
   display: none; position: fixed; inset: 0;
   background: rgba(0,0,0,0.92); z-index: 1000;
@@ -619,12 +657,14 @@
 .md-lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 12px; }
 
 
+/* ==============================================================================
    SECTION: Empty State
    ============================================================================== */
 
 
 
 
+/* === EMPTY STATE === */
 .md-empty {
   text-align: center; padding: 60px 20px;
   color: #555; font-size: 0.85rem;
@@ -633,12 +673,14 @@
 .md-empty i { font-size: 2.5rem; color: #333; }
 
 
+/* ==============================================================================
    SECTION: Profile Sidebar
    ============================================================================== */
 
 
 
 
+/* === PROFILE SIDEBAR === */
 .md-profile-overlay {
   display: none; position: fixed; inset: 0;
   background: rgba(0,0,0,0.5); z-index: 500;
@@ -655,12 +697,14 @@
 .md-profile-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
 
 
+/* ==============================================================================
    SECTION: Modals
    ============================================================================== */
 
 
 
 
+/* === MODALS === */
 .md-modal-overlay {
   display: none; position: fixed; inset: 0;
   background: rgba(0,0,0,0.7); z-index: 600;
@@ -712,14 +756,17 @@
 .md-btn-ghost:hover { border-color:rgba(255,255,255,0.12); color:#f0ece4; }
 
 
+/* ==============================================================================
    SECTION: Responsive
    ============================================================================== */
 
 
 
 
+/* === RESPONSIVE === */
 @media(max-width:600px){
   
+/* ==============================================================================
    SECTION: Global Layout
    ============================================================================== */
 
@@ -728,6 +775,7 @@
 
 .md-page { height: calc(100vh - 48px); overflow: hidden; }
   
+/* ==============================================================================
    SECTION: Top Bar
    ============================================================================== */
 
@@ -739,10 +787,11 @@
   .md-body { padding: 14px 16px; }
   .md-footer { padding: 12px 16px 16px; }
   .md-msg-wrap { max-width: 88%; }
-  .md-msg { padding: 14px 20px; font-size: 0.95rem; }
+  .md-msg { padding: 12px 18px; font-size: 0.9rem; }
   .md-icon-btn { width: 46px; height: 46px; font-size: 1.2rem; }
   .md-send-btn { width: 52px; height: 52px; }
   .md-back { width: 46px; height: 46px; }
+  .md-msg-action { width: 36px; height: 36px; font-size: 0.85rem; }
   .md-footer-tools .ft-btn { width: 42px; height: 42px; font-size: 1.15rem; }
   .md-search-bar { padding: 8px 16px; }
   .md-store-row { padding: 0 16px; height: 52px; }

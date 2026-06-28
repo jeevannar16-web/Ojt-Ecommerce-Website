@@ -1,4 +1,7 @@
-// checkout_map.js — map picker on checkout with draggable marker, geocoding, and "Use My Location"
+// ==============================================================================
+// File: checkout_map.js
+// Description: Checkout map picker with marker, geocode, home button, search
+// ==============================================================================
 
 // ==============================================================================
 // SECTION: DOM Elements & State
@@ -298,7 +301,7 @@
     // SECTION: Find on Map Button
     // ==============================================================================
 
-    var findBtn = document.getElementById('find-on-map-btn');
+      var findBtn = document.getElementById('find-on-map-btn');
     if (findBtn) {
       findBtn.addEventListener('click', function() {
         var addr = document.getElementById('shipping_address');
@@ -309,12 +312,7 @@
         if (city && city.value.trim()) parts.push(city.value.trim());
         if (prov && prov.value.trim()) parts.push(prov.value.trim());
         var q = parts.join(', ');
-        if (!q) {
-          if (typeof showToast === 'function') {
-            showToast('Enter an address first, then click Find on Map', true);
-          }
-          return;
-        }
+        if (!q) return;
         findBtn.disabled = true;
         findBtn.innerHTML = '<span class="loader-ring-sm"></span> Locating...';
         var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(q) + '&limit=5';
@@ -323,21 +321,13 @@
           .then(function(data) {
             findBtn.disabled = false;
             findBtn.innerHTML = '<i class="bi bi-geo-alt"></i> Find on Map';
-            if (!data || data.length === 0) {
-              if (typeof showToast === 'function') {
-                showToast('No location found for that address. Try a different address.', true);
-              }
-              return;
-            }
+            if (!data || data.length === 0) return;
             var result = data[0];
             placeMarker(parseFloat(result.lat), parseFloat(result.lon));
           })
           .catch(function() {
             findBtn.disabled = false;
             findBtn.innerHTML = '<i class="bi bi-geo-alt"></i> Find on Map';
-            if (typeof showToast === 'function') {
-              showToast('Could not reach location service. Check your connection.', true);
-            }
           });
       });
     }

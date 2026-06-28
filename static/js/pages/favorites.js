@@ -1,4 +1,7 @@
-// favorites.js — remove wishlist items with AJAX and a slick fade-out animation
+// ==============================================================================
+// File: favorites.js
+// Description: Remove items from wishlist page with AJAX and DOM animation
+// ==============================================================================
 
 // ==============================================================================
 // SECTION: Remove Wishlist Item

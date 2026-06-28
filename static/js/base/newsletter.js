@@ -1,4 +1,7 @@
-// newsletter.js — AJAX newsletter signup with inline validation and success/error feedback
+// ==============================================================================
+// File: newsletter.js
+// Description: AJAX newsletter subscription with validation and feedback
+// ==============================================================================
 
 // ==============================================================================
 // SECTION: DOM References & Validation
@@ -50,13 +53,6 @@
     btn.disabled = true;
     btn.textContent = 'Sending...';
 
-    var resetBtn = function() {
-      btn.disabled = false;
-      btn.textContent = 'Subscribe';
-    };
-
-    var safetyTimer = setTimeout(resetBtn, 15000);
-
     fetch('/store/newsletter/subscribe/', {
       method: 'POST',
       headers: {
@@ -67,7 +63,7 @@
       body: JSON.stringify({ email: email })
     })
     .then(r => r.json())
-    .then(function(data) {
+    .then(data => {
       if (data.status === 'success') {
         input.value = '';
         showToast(data.message || '✓ Subscribed successfully!');
@@ -76,15 +72,14 @@
       } else {
         if (errEl) { errEl.textContent = data.message || 'Subscription failed'; errEl.style.display = 'block'; }
         input.style.borderColor = '#ef4444';
-        showToast(data.message || 'Subscription failed', true);
       }
     })
-    .catch(function() {
+    .catch(() => {
       showToast('Network error. Please try again.', true);
     })
-    .finally(function() {
-      clearTimeout(safetyTimer);
-      resetBtn();
+    .finally(() => {
+      btn.disabled = false;
+      btn.textContent = 'Subscribe';
     });
   });
 })();

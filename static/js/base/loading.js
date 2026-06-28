@@ -1,4 +1,7 @@
-// loading.js — page preloader spinner, offline connection banner, and nav transition feedback
+// ==============================================================================
+// File: loading.js
+// Description: Page loader, offline banner, and navigation spinner
+// ==============================================================================
 
 (function () {
   var bar = document.getElementById('page-loader');
@@ -67,13 +70,6 @@
   document.addEventListener('submit', function (e) {
     if (e.target.getAttribute('data-no-loader') === 'true') return;
     showDelayed(150);
-    var submitTimer = timer;
-    setTimeout(function () {
-      if (e.defaultPrevented) {
-        clearTimeout(submitTimer);
-        hide();
-      }
-    }, 0);
   });
 
 

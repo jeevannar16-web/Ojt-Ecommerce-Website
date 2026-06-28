@@ -1,4 +1,7 @@
-// product_detail.js — size picker, qty adjustment, add-to-cart, and review form submission
+// ==============================================================================
+// File: product_detail.js
+// Description: Size selection, quantity adjustment, add-to-cart, review submission
+// ==============================================================================
 
 // ==============================================================================
 // SECTION: Size Selection
@@ -113,7 +116,7 @@ function submitReview(productId) {
     .then(function(res) { return res.json(); })
     .then(function(data) {
         if (data.success) {
-            showToast(data.created ? '⭐ Review submitted!' : ' Review updated!');
+            showToast(data.created ? '⭐ Review submitted!' : '✅ Review updated!');
             var ratingVal = document.getElementById('product-rating-val');
             var reviewCount = document.getElementById('product-review-count');
             var starsDisplay = document.getElementById('product-stars-display');

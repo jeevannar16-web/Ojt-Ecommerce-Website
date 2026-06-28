@@ -1,4 +1,7 @@
-// mini_cart.js — hover-driven mini cart dropdown, falls back to badge-only on touch devices
+// ==============================================================================
+// File: mini_cart.js
+// Description: Mini cart dropdown with hover show/hide and badge-only fallback
+// ==============================================================================
 
 // ==============================================================================
 // SECTION: Mini Cart Data Fetch

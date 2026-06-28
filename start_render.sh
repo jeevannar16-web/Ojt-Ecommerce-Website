@@ -93,20 +93,4 @@ else:
     print('Google OAuth placeholder created (set GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET env vars)')
 " 2>&1
 
-# --- Clear broken local image references (Cloudinary handles new uploads) ---
-python -c "
-import django, os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fitness_hub.settings')
-django.setup()
-from store.models import Product
-fixed = 0
-for p in Product.objects.all():
-    if p.image and p.image.name and not str(p.image).startswith('http'):
-        p.image = None
-        p.save(update_fields=['image'])
-        fixed += 1
-if fixed:
-    print(f'Cleared {fixed} broken local image references')
-" 2>&1
-
 exec gunicorn fitness_hub.wsgi:application --workers=4 --threads=2 --worker-class=gthread

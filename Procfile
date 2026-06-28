@@ -1,1 +1,1 @@
-web: gunicorn fitness_hub.wsgi
+web: bash start_render.sh

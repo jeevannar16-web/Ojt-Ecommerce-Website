@@ -17,7 +17,7 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'REPLACED_PLACEHOLDER_KEY')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'REPLACED_SECRET_KEY')
 
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 

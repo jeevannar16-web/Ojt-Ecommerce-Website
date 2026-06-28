@@ -171,7 +171,7 @@ def user_login(request):
             log_action(user, 'login', f"User logged in: {username}",
                        {'username': username}, request)
             profile = getattr(user, 'profile', None)
-            if profile and not profile.is_email_verified:
+            if profile and not profile.is_email_verified and getattr(settings, 'EMAIL_VERIFICATION_REQUIRED', True):
                 return redirect('verification_setup')
             return redirect('home')
         else:

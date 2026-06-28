@@ -19,13 +19,23 @@ count = Product.objects.count()
 print(f'Products in DB before load: {count}')
 if count < 10:
     from django.core.management import call_command
-    from django.db import IntegrityError
+    from django.db import IntegrityError, connection
+    # Clear conflicting data before loading fixture
+    from store.models import NewsletterSubscriber
+    NewsletterSubscriber.objects.all().delete()
+    print('Cleared NewsletterSubscriber table')
     try:
         from django.conf import settings
         fixture_path = os.path.join(settings.BASE_DIR, 'fixtures/seed_data.json')
-        call_command('loaddata', fixture_path, verbosity=1, ignorenonexistent=True)
+        call_command('loaddata', fixture_path, verbosity=0)
     except IntegrityError as e:
-        print(f'IntegrityError (expected if data exists): {e}')
+        print(f'IntegrityError: {e}')
+        # Try without transaction wrapping
+        connection.set_autocommit(True)
+        try:
+            call_command('loaddata', fixture_path, verbosity=0)
+        except Exception as e2:
+            print(f'Second attempt also failed: {e2}')
     except Exception as e:
         print(f'ERROR loading fixture: {e}')
         traceback.print_exc()

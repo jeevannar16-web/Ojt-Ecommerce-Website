@@ -234,7 +234,7 @@ if os.environ.get('CLOUD_NAME') and os.environ.get('CLOUD_API_KEY') and os.envir
         'CLOUD_NAME': os.environ['CLOUD_NAME'],
         'API_KEY': os.environ['CLOUD_API_KEY'],
         'API_SECRET': os.environ['CLOUD_API_SECRET'],
-        'location': '',
+        'PREFIX': '',
     }
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 else:

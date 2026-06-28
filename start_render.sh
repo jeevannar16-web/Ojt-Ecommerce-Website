@@ -5,18 +5,14 @@ set -e
 python manage.py migrate --noinput
 
 # --- Load full seed data (products, users, translations, etc.) if DB is empty ---
+python manage.py loaddata fixtures/seed_data.json --ignorenonexistent 2>&1 || echo "loaddata skipped or already loaded"
 python -c "
 import django, os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fitness_hub.settings')
 django.setup()
 from store.models import Product
-if Product.objects.count() < 10:
-    print(f'Only {Product.objects.count()} products — loading full fixture...')
-    from django.core.management import call_command
-    call_command('loaddata', 'fixtures/seed_data.json', verbosity=1)
-    print('Seed data loaded from fixtures/seed_data.json')
-else:
-    print(f'Products already exist: {Product.objects.count()} — skipping fixture load')
+count = Product.objects.count()
+print(f'Products in DB: {count}')
 " 2>&1
 
 # Auto-setup script (ensures superuser, Site, and SocialApp exist)

@@ -61,18 +61,14 @@ product_images = {e['pk']: e['fields'].get('image') for e in data if e['model'] 
 cat_images = {e['pk']: e['fields'].get('image') for e in data if e['model'] == 'store.category'}
 
 fixed = 0
-for p in Product.objects.all():
-    if not p.image and p.pk in product_images and product_images[p.pk]:
-        p.image = product_images[p.pk]
-        p.save(update_fields=['image'])
+for pk, path in product_images.items():
+    if path and Product.objects.filter(pk=pk, image__isnull=True).update(image=path):
         fixed += 1
-for c in Category.objects.all():
-    if not c.image and c.pk in cat_images and cat_images[c.pk]:
-        c.image = cat_images[c.pk]
-        c.save(update_fields=['image'])
+for pk, path in cat_images.items():
+    if path and Category.objects.filter(pk=pk, image__isnull=True).update(image=path):
         fixed += 1
 if fixed:
-    print(f'Restored images for {fixed} products/categories from fixture')
+    print('Restored images for %d products/categories from fixture' % fixed)
 " 2>&1
 
 # Auto-setup script (ensures superuser, Site, and SocialApp exist)

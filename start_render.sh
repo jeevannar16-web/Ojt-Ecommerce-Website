@@ -2,6 +2,11 @@
 # start_render.sh — Render start command
 set -e
 
+echo "=== START_RENDER.SH STARTED ==="
+date
+pwd
+ls -la fixtures/ 2>&1 || echo "No fixtures dir"
+
 python manage.py migrate --noinput
 
 # --- Load full seed data (products, users, translations, etc.) if DB is empty ---
@@ -16,7 +21,9 @@ if count < 10:
     from django.core.management import call_command
     from django.db import IntegrityError
     try:
-        call_command('loaddata', 'fixtures/seed_data.json', verbosity=1, ignorenonexistent=True)
+        from django.conf import settings
+        fixture_path = os.path.join(settings.BASE_DIR, 'fixtures/seed_data.json')
+        call_command('loaddata', fixture_path, verbosity=1, ignorenonexistent=True)
     except IntegrityError as e:
         print(f'IntegrityError (expected if data exists): {e}')
     except Exception as e:

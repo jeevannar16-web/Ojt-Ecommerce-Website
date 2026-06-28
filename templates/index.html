@@ -11,7 +11,6 @@
 {% block content %}
 
 {% cache 600 megabanner banner_products|length %}
-<!-- ═══ MEGA BANNER — Auto-rotating ═══ -->
 {% if banner_products %}
 <div class="mega-banner-wrap">
   <div class="mega-banner" id="megaBanner">
@@ -50,7 +49,6 @@
 {% endif %}
 {% endcache %}
 
-<!-- ═══ HERO ═══ -->
 <section class="hero">
   <div class="hero-container">
     <div>
@@ -67,7 +65,6 @@
 </section>
 
 {% cache 600 categories %}
-<!-- ═══ CATEGORIES ═══ -->
 <section class="cat-section-wrap">
   <div class="cat-hd">
     <h2><i class="bi bi-grid-3x3-gap-fill"></i> {{ 'Shop by Category'|t }}</h2>
@@ -92,7 +89,6 @@
 {% endcache %}
 
 {% cache 600 flash_sale %}
-<!-- ═══ FLASH SALE ═══ -->
 {% if on_sale %}
 <div class="home-section" id="flash-sale">
   <div class="flash-sale-wrap">
@@ -132,7 +128,6 @@
 
 {% endcache %}
 {% cache 600 best_deals %}
-<!-- ═══ BEST DEALS ═══ -->
 {% if best_deals %}
 <div class="home-section" id="best-deals">
   <div class="best-deals-wrap">
@@ -165,7 +160,6 @@
 {% endcache %}
 
 {% cache 600 trending %}
-<!-- ═══ TRENDING NOW ═══ -->
 {% if trending %}
 <div class="home-section" id="trending">
   <div class="section-hd">
@@ -195,7 +189,6 @@
 {% endif %}
 {% endcache %}
 
-<!-- ═══ CATEGORY PRODUCT SECTIONS ═══ -->
 {% for section in category_sections %}
 {% cache 600 cat_section section.category.id %}
 <div class="home-section cat-section">
@@ -227,7 +220,6 @@
 {% endfor %}
 
 {% cache 600 top_rated %}
-<!-- ═══ TOP RATED ═══ -->
 {% if top_rated %}
 <div class="home-section" id="top-rated">
   <div class="section-hd">
@@ -259,7 +251,6 @@
 {% endcache %}
 
 {% cache 600 new_arrivals %}
-<!-- ═══ NEW ARRIVALS ═══ -->
 {% if new_arrivals %}
 <div class="home-section" id="new-arrivals">
   <div class="section-hd">
@@ -290,7 +281,6 @@
 {% endcache %}
 
 {% cache 600 value_deals %}
-<!-- ═══ VALUE DEALS ═══ -->
 {% if low_price %}
 <div class="home-section" id="value-deals">
   <div class="section-hd">
@@ -318,7 +308,6 @@
 {% endcache %}
 
 {% cache 600 almost_gone %}
-<!-- ═══ ALMOST GONE ═══ -->
 {% if low_stock_items %}
 <div class="home-section" id="almost-gone">
   <div class="section-hd">
@@ -351,7 +340,6 @@
 {% endcache %}
 
 {% cache 600 seller_inspire %}
-<!-- ═══ SELLER INSPIRATION — "YOU CAN DO THIS TOO" ═══ -->
 {% if top_selling %}
 <div class="home-section seller-inspire-section" id="seller-inspire">
   <div class="inspire-wrap">
@@ -422,7 +410,6 @@
 {% endif %}
 {% endcache %}
 
-<!-- ═══ RECOMMENDED FOR YOU ═══ -->
 {% if recommendations and user.is_authenticated %}
 <div class="home-section" id="recommended">
   <div class="section-hd">
@@ -452,7 +439,6 @@
 {% endif %}
 
 {% cache 600 featured_grid %}
-<!-- ═══ FEATURED PRODUCTS GRID (with Load More) ═══ -->
 <section class="feat-section">
   <div class="section-hd">
     <h2><i class="bi bi-collection"></i> {{ 'home.featured'|t }}</h2>
@@ -501,7 +487,6 @@
 {% block extra_js %}
 <script src="{% static 'js/pages/scroll_tracker.js' %}"></script>
 <script>
-/* ─── MEGA BANNER ─── */
 (function(){
   var slides = document.querySelectorAll('.mega-slide');
   var dots = document.querySelectorAll('.mega-dot');
@@ -517,7 +502,6 @@
   resetTimer();
 })();
 
-/* ─── FLASH SALE COUNTDOWN ─── */
 (function(){
   function p(n){ return n < 10 ? '0'+n : ''+n; }
   function u(){
@@ -531,7 +515,6 @@
   u(); setInterval(u, 1000);
 })();
 
-/* ─── LOAD MORE ─── */
 function loadMoreProducts(){
   var btn = document.getElementById('load-more-btn'), c = document.getElementById('products-container');
   if(!btn||!c) return;

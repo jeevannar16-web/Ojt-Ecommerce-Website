@@ -1,19 +1,13 @@
-/* ==============================================================================
    File: responsive.css
    Description: Daraz-style full responsiveness for mobile and tablet
    ============================================================================== */
 
-/* ═══════════════════════════════════════════════════════
    RESPONSIVE.CSS — Daraz-style full responsiveness
    Breakpoints: Mobile < 768px | Tablet 768–1024px | Desktop > 1024px
    Do NOT edit colors/fonts/shadows — only layout & sizing.
-   ═══════════════════════════════════════════════════════ */
 
-/* ─────────────────────────────────────────────
    TABLET (768px – 1024px)
-   ───────────────────────────────────────────── */
 
-/* ==============================================================================
    SECTION: Tablet Breakpoint
    ============================================================================== */
 
@@ -83,15 +77,11 @@
 }
 
 
-/* ─────────────────────────────────────────────
    MOBILE (< 768px)
-   ───────────────────────────────────────────── */
 @media (max-width: 767px) {
-  /* ═══ GLOBAL ═══ */
   body { overflow-x: hidden; }
   img { max-width: 100%; height: auto; }
 
-  /* ═══ NAV ═══ */
   .main-nav {
     padding: 0 0.75rem;
     gap: 8px;
@@ -144,7 +134,6 @@
   .elite-cat-item .ecat-icon { font-size: 1rem; }
   .elite-cat-all { font-size: 0.62rem; padding: 4px 12px; }
 
-  /* ═══ HOMEPAGE ═══ */
   .hero { padding: 40px 16px; }
   .hero-container { grid-template-columns: 1fr; text-align: center; }
   .hero-divider, .hero-visual { display: none; }
@@ -194,7 +183,6 @@
   .inspire-num { font-size: 1.1rem; }
   .inspire-cta { flex-direction: column; text-align: center; padding: 16px 18px; }
 
-  /* ═══ PRODUCT LIST ═══ */
   .pl-page {
     grid-template-columns: 1fr;
     padding: 0.75rem 0.75rem 2rem;
@@ -240,7 +228,6 @@
   .pl-recs-grid { gap: 0.75rem; }
   .rec-card { flex: 1 1 140px; max-width: 160px; }
 
-  /* ═══ PRODUCT DETAIL ═══ */
   /* Override inline flex-basis so image/info stack full width */
   .product-detail-inner > div { flex: 1 1 100% !important; max-width: 100% !important; }
   .product-detail-inner { gap: 1.5rem !important; }
@@ -260,7 +247,6 @@
   .review-card-header { flex-direction: column; align-items: flex-start; }
   .star-selector label { font-size: 1.8rem; }
 
-  /* ═══ CART ═══ */
   .cart-page { padding: 0 0.75rem; margin: 20px auto; }
   .cart-header h2 { font-size: 1.3rem; }
   .cart-header { margin-bottom: 16px; }
@@ -291,7 +277,6 @@
   .cart-empty p { font-size: 1rem; }
   .cart-empty-icon { font-size: 2.2rem; }
 
-  /* ═══ CHECKOUT ═══ */
   .checkout-page { padding: 20px 0; }
   .checkout-container { padding: 0 10px; }
   .checkout-steps { padding: 10px 12px; gap: 0; flex-wrap: nowrap; overflow-x: auto; }
@@ -308,7 +293,6 @@
   .btn-place-order { padding: 12px 0; font-size: 0.9rem; }
   .payment-option, .delivery-option { padding: 10px 12px; }
 
-  /* ═══ PROFILE ═══ */
   .profile-wrap { padding: 16px 0.75rem 30px; }
   .profile-header-card { flex-direction: column; text-align: center; padding: 20px; gap: 14px; }
   .profile-header-info h1 { font-size: 1.2rem; }
@@ -328,7 +312,6 @@
   .seller-btn { padding: 10px 22px; font-size: 0.85rem; }
   .status-badge { font-size: 0.65rem; padding: 1px 8px; }
 
-  /* ═══ FAVORITES ═══ */
   .wishlist-container { padding: 16px 0.75rem 30px; }
   .wishlist-header h1 { font-size: 1.3rem; }
   .wishlist-header { margin-bottom: 20px; padding-bottom: 10px; }
@@ -341,7 +324,6 @@
   .btn-remove-floating { width: 26px; height: 26px; top: 6px; right: 6px; }
   .btn-remove-floating i { font-size: 0.65rem; }
 
-  /* ═══ ORDER TRACKING ═══ */
   .premium-tracking-wrapper { padding: 30px 12px; }
   .tracking-container { max-width: 100%; }
   .dashboard-header h2 { font-size: 1.4rem; }
@@ -361,7 +343,6 @@
   .empty-tracking-card { padding: 30px 16px; }
   .empty-tracking-card h3 { font-size: 1rem; }
 
-  /* ═══ SELLER CENTER ═══ */
   .sc-hero { min-height: auto; padding: 60px 16px 50px; }
   .sc-hero-content h1 { font-size: 1.8rem; }
   .sc-hero-content p { font-size: 0.9rem; margin-bottom: 24px; }
@@ -396,7 +377,6 @@
   .sc-tip-card { padding: 14px; }
   .sc-recent-grid { grid-template-columns: 1fr; }
 
-  /* ═══ SELLER DASHBOARD ═══ */
   .seller-layout { flex-direction: column; }
   .seller-sidebar { width: 100%; height: auto; position: static; padding: 10px 0; }
   .seller-sidebar .brand { display: none; }
@@ -429,7 +409,6 @@
   .sd-order-filter-bar { padding: 8px 12px; }
   .pl-filter { font-size: 0.72rem; padding: 4px 10px; }
 
-  /* ═══ ADMIN DASHBOARD ═══ */
   .admin-layout { flex-direction: column; }
   .admin-sidebar { width: 100%; height: auto; position: static; padding: 10px 0; }
   .admin-sidebar .brand { display: none; }
@@ -453,7 +432,6 @@
   /* Collapse 2-col inline grids to single column on mobile */
   .card-bd div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns:1fr !important; }
 
-  /* ═══ SELLER APPLY ═══ */
   .sa-wrap { padding: 24px 12px; }
   .sa-card { padding: 20px 16px; }
   .sa-header h1 { font-size: 1.2rem; }
@@ -465,7 +443,6 @@
   .sa-form-actions { flex-direction: column; }
   .sa-btn { justify-content: center; }
 
-  /* ═══ SELLER STOREFRONT ═══ */
   .sf-wrap { padding: 12px; }
   .sf-header-content { flex-direction: column; text-align: center; padding: 20px; gap: 14px; }
   .sf-store-icon { width: 56px; height: 56px; }
@@ -486,7 +463,6 @@
   .sf-product-price { font-size: 0.85rem; }
   .sf-empty { padding: 40px 16px; }
 
-  /* ═══ MESSAGES LIST ═══ */
   .cl-header { padding: 12px 14px 8px; }
   .cl-header h1 { font-size: 1rem; }
   .cl-search { padding: 6px 14px; }
@@ -505,7 +481,6 @@
   .cl-empty h3 { font-size: 0.9rem; }
   .cl-empty-ctas a { padding: 6px 14px; font-size: 0.75rem; }
 
-  /* ═══ ADMIN ACTIVITY LOG ═══ */
   .al-table-wrap { overflow-x: auto; }
   .al-table { min-width: 600px; }
   .al-table th, .al-table td { padding: 8px 10px; font-size: 0.72rem; }
@@ -517,7 +492,6 @@
   .pagination { flex-wrap: wrap; padding: 14px; }
   .pagination .step { font-size: 0.75rem; padding: 5px 10px; }
 
-  /* ═══ LOGIN & REGISTER ═══ */
   .login-wrap { padding: 30px 16px; }
   .login-card { padding: 28px 20px; }
   .login-card .brand h2 { font-size: 1.3rem; }
@@ -527,14 +501,12 @@
   .reg-form .form-row input { padding: 11px 14px; font-size: 0.85rem; }
   .seller-check { padding: 12px 14px; }
 
-  /* ═══ SELLER PRODUCT FORM ═══ */
   .seller-product-form-wrap { padding: 16px; }
   .seller-product-form-card { padding: 20px 16px; }
   .seller-product-form-row { flex-direction: column; }
   .seller-product-form-actions { flex-direction: column; }
   .sc-dem-bar-name { width: 90px; font-size: 0.7rem; }
 
-  /* ═══ FOOTER ═══ */
   .footer-body { grid-template-columns: 1fr; gap: 24px; padding: 30px 0.75rem 0; }
   .footer-bottom-bar { flex-direction: column; text-align: center; padding: 14px 0.75rem 20px; gap: 10px; }
   .footer-legal { flex-wrap: wrap; justify-content: center; gap: 10px; }
@@ -546,7 +518,6 @@
   .footer-nl-input { border-radius: 8px; border-right: 1px solid #2a2a2a; }
   .footer-nl-btn { border-radius: 8px; padding: 10px; }
 
-  /* ═══ FLOATING ELEMENTS ═══ */
   #msg-bubble { width: 48px !important; height: 48px !important; bottom: 16px !important; right: 16px !important; }
   #msg-bubble i { font-size: 1.2rem !important; }
   #msg-bubble-badge { min-width: 18px !important; height: 18px !important; font-size: 0.55rem !important; }
@@ -556,18 +527,14 @@
   .fn-head { padding: 12px 14px; }
   .fn-body { padding: 4px 0; }
 
-  /* ═══ GENERAL ═══ */
   .welcome-section { padding: 0 0.75rem; }
   main { overflow-x: hidden; padding-top: 8px; }
 
-  /* ═══ TOAST / MESSAGES ═══ */
   .toast-container { width: calc(100vw - 24px); max-width: 360px; right: 12px !important; bottom: 80px !important; }
   .toast-message { padding: 12px 14px; font-size: 0.82rem; }
 }
 
-/* ═══ UTILITY: Mobile filter toggle ═══ */
 
-/* ==============================================================================
    SECTION: Mobile Filter Toggle
    ============================================================================== */
 
@@ -593,7 +560,6 @@
 .pl-mobile-filter-toggle:hover { border-color: rgba(212,175,55,0.3); color: #d4af37; }
 .pl-mobile-filter-toggle i { font-size: 0.85rem; }
 
-/* ═══ MOBILE NAV PANEL ═══ */
 .mobile-menu-btn {
   display: none;
   flex-direction: column;
@@ -721,7 +687,6 @@
 .mobile-cart-count { color: #666; font-size: 0.78rem; margin-left: auto; }
 
 
-/* ==============================================================================
    SECTION: Mobile Nav Responsive
    ============================================================================== */
 
@@ -729,7 +694,6 @@
 
 
 
-/* ==============================================================================
    SECTION: Mobile Breakpoint
    ============================================================================== */
 
@@ -738,7 +702,6 @@
 
 @media (max-width: 767px) {
   
-/* ==============================================================================
    SECTION: Mobile Nav Panel
    ============================================================================== */
 

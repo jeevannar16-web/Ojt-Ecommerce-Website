@@ -1,4 +1,4 @@
-"""Django admin config for user and profile models."""
+"""User admin configuration."""
 
 
 
@@ -9,9 +9,6 @@ from django.contrib.auth.admin import UserAdmin
 from .models import Profile, CredentialHistory
 
 
-# ==============================================================================
-# SECTION: Profile Inline
-# ==============================================================================
 
 # 1. Define the inline layout for Profile
 class ProfileInline(admin.StackedInline):
@@ -19,9 +16,6 @@ class ProfileInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Profile Details'
 
-# ==============================================================================
-# SECTION: Custom User Admin
-# ==============================================================================
 
 # 2. Embed the inline into a custom User structural view
 class CustomUserAdmin(UserAdmin):
@@ -35,9 +29,6 @@ admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile)
 
 
-# ==============================================================================
-# SECTION: CredentialHistory Admin
-# ==============================================================================
 
 @admin.register(CredentialHistory)
 class CredentialHistoryAdmin(admin.ModelAdmin):

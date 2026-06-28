@@ -203,7 +203,6 @@
     if (closeBtn) closeBtn.addEventListener('click', function(){ nav.classList.remove('fn-open'); });
     if (topBtn) topBtn.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); nav.classList.remove('fn-open'); });
 
-    /* ─── Only show section links that exist on this page ─── */
     var groups = nav.querySelectorAll('.fn-group');
     groups.forEach(function(group){
       var links = group.querySelectorAll('.fn-item[data-target]');
@@ -217,7 +216,6 @@
       else { group.style.display = ''; }
     });
 
-    /* ─── Smooth scroll with header offset ─── */
     var headerEl = document.querySelector('.main-nav') || document.querySelector('header');
     var headerH = headerEl ? headerEl.offsetHeight : 0;
 
@@ -238,7 +236,6 @@
     });
   })();
 
-  /* ─── Image error fallback — replaces broken product/category images ─── */
   document.addEventListener('error', function(e) {
     var img = e.target;
     if (img.tagName !== 'IMG') return;

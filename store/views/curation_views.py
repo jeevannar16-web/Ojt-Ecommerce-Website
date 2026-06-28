@@ -1,4 +1,4 @@
-"""Product curation — featured and hand-picked product selections for the homepage and promotional sections."""
+"""Product curation views."""
 
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
@@ -8,9 +8,7 @@ import base64
 from ..models import Product
 
 
-# ════════════════════════════════════════════════════════════════
 # PRODUCT CURATION & IMAGE MANAGEMENT
-# ════════════════════════════════════════════════════════════════
 def curation_workspace(request):
     """Display the curation workspace with a single product - ALLOW EDITING ANYTIME."""
     current_id = request.GET.get('id')
@@ -46,15 +44,12 @@ def curation_workspace(request):
         'current_position': current_position,
     }
     
-    print(f"\n✅ Curation Workspace - Product {product.id if product else 'None'}")
+    print(f"\nCuration Workspace - Product {product.id if product else 'None'}")
     print(f"   Position: {current_position}/{total} | Curated: {curated}")
     
     return render(request, 'store/curation.html', context)
 
 
-# ==============================================================================
-# SECTION: Update Curation Asset
-# ==============================================================================
 
 @csrf_exempt
 def update_curation_asset(request):
@@ -119,12 +114,12 @@ def update_curation_asset(request):
             category = product.category
             file_name = f"curated_cat_{category.id}.{ext}"
             category.image.save(file_name, raw_binary_file, save=True)
-            print(f"✅ Updated category image: {file_name}")
+            print(f"Updated category image: {file_name}")
         else:
             file_name = f"curated_prod_{product.id}.{ext}"
             product.image.save(file_name, raw_binary_file, save=True)
             product.save()
-            print(f"✅ Updated product image: {file_name}")
+            print(f"Updated product image: {file_name}")
 
         next_product = Product.objects.filter(id__gt=product.id).order_by('id').first()
 

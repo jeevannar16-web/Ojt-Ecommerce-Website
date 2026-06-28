@@ -1,13 +1,10 @@
-"""Django admin config for verification models."""
+"""Verification admin configuration."""
 
 from django.contrib import admin
 
 from .models import EmailVerification, PhoneVerification
 
 
-# ==============================================================================
-# SECTION: EmailVerification Admin
-# ==============================================================================
 
 @admin.register(EmailVerification)
 class EmailVerificationAdmin(admin.ModelAdmin):
@@ -17,9 +14,6 @@ class EmailVerificationAdmin(admin.ModelAdmin):
     readonly_fields = ['token', 'otp']
 
 
-# ==============================================================================
-# SECTION: PhoneVerification Admin
-# ==============================================================================
 
 @admin.register(PhoneVerification)
 class PhoneVerificationAdmin(admin.ModelAdmin):

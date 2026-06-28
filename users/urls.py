@@ -1,12 +1,9 @@
-"""URL patterns for authentication, profiles, and credential history."""
+"""User URL routing."""
 
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 
-# ==============================================================================
-# SECTION: URL Patterns
-# ==============================================================================
 
 urlpatterns = [
     path('register/', views.register, name='register'),

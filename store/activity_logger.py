@@ -1,4 +1,4 @@
-"""Centralized activity logging — records admin and user actions for the audit trail in the dashboard."""
+"""Centralized activity logging."""
 
 from .models import ActivityLog
 

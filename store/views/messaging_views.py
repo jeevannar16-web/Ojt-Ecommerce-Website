@@ -1,4 +1,4 @@
-"""Messaging system — buyer-seller chat, seller-admin support tickets, conversation lists, and unread polling."""
+"""Messaging system views."""
 
 import json
 from django.shortcuts import render, get_object_or_404, redirect
@@ -15,9 +15,6 @@ from users.models import Profile
 from django.views.decorators.http import require_POST
 
 
-# ==============================================================================
-# SECTION: Conversation List
-# ==============================================================================
 
 @login_required
 def conversation_list(request):
@@ -132,9 +129,6 @@ def conversation_list(request):
     return render(request, 'store/messages/list.html', base_ctx)
 
 
-# ==============================================================================
-# SECTION: Conversation Detail
-# ==============================================================================
 
 @login_required
 def conversation_detail(request, conversation_id):
@@ -201,9 +195,9 @@ def conversation_detail(request, conversation_id):
     is_seller = hasattr(user, 'profile') and user.profile.is_seller
 
     status_options = [
-        ('🟢', 'Available'), ('🟠', 'Busy'), ('🔴', 'DND'),
-        ('🌙', 'Away'), ('💼', 'At Work'), ('📞', 'On Call'),
-        ('🏠', 'At Home'), ('⚡', 'Online'), ('⛔', 'Offline'),
+        ('', 'Available'), ('🟠', 'Busy'), ('', 'DND'),
+        ('', 'Away'), ('💼', 'At Work'), ('📞', 'On Call'),
+        ('🏠', 'At Home'), ('⚡', 'Online'), ('', 'Offline'),
     ]
 
     context = {
@@ -229,9 +223,6 @@ def conversation_detail(request, conversation_id):
     return render(request, 'store/messages/detail.html', context)
 
 
-# ==============================================================================
-# SECTION: Start Conversation
-# ==============================================================================
 
 @login_required
 def start_conversation(request, product_id):
@@ -263,9 +254,6 @@ def start_conversation(request, product_id):
     return redirect('store:conversation_detail', conversation_id=conv.id)
 
 
-# ==============================================================================
-# SECTION: Contact Admin
-# ==============================================================================
 
 @login_required
 def contact_admin(request):
@@ -299,9 +287,6 @@ def contact_admin(request):
     return redirect('store:conversation_detail', conversation_id=conv.id)
 
 
-# ==============================================================================
-# SECTION: API - Edit Message
-# ==============================================================================
 
 @login_required
 def api_edit_message(request):
@@ -322,9 +307,6 @@ def api_edit_message(request):
     return JsonResponse({'ok': True, 'content': new_content})
 
 
-# ==============================================================================
-# SECTION: API - Unread Count
-# ==============================================================================
 
 @login_required
 def api_unread_count(request):
@@ -339,9 +321,6 @@ def api_unread_count(request):
     return JsonResponse({'unread': total})
 
 
-# ==============================================================================
-# SECTION: API - New Messages
-# ==============================================================================
 
 @login_required
 def api_new_messages(request, conversation_id):
@@ -393,9 +372,6 @@ def api_new_messages(request, conversation_id):
     return JsonResponse({'messages': data, 'now': timezone.now().timestamp(), 'theme': conv.theme})
 
 
-# ==============================================================================
-# SECTION: API - React to Message
-# ==============================================================================
 
 @login_required
 @require_POST
@@ -470,9 +446,6 @@ def api_reaction_updates(request, conversation_id):
     })
 
 
-# ==============================================================================
-# SECTION: API - Upload Image
-# ==============================================================================
 
 @login_required
 @require_POST
@@ -504,9 +477,6 @@ def api_upload_image(request):
     })
 
 
-# ==============================================================================
-# SECTION: API - Pin Message
-# ==============================================================================
 
 @login_required
 @require_POST
@@ -525,9 +495,6 @@ def api_pin_message(request):
     return JsonResponse({'ok': True, 'is_pinned': msg.is_pinned})
 
 
-# ==============================================================================
-# SECTION: API - Search Messages
-# ==============================================================================
 
 @login_required
 def api_search_messages(request, conversation_id):
@@ -550,9 +517,6 @@ def api_search_messages(request, conversation_id):
     return JsonResponse({'results': data})
 
 
-# ==============================================================================
-# SECTION: Block User
-# ==============================================================================
 
 @login_required
 def block_user(request, conversation_id):
@@ -582,9 +546,6 @@ def block_user(request, conversation_id):
     return redirect('store:conversation_detail', conversation_id=conv.id)
 
 
-# ==============================================================================
-# SECTION: API - Mute Conversation
-# ==============================================================================
 
 @login_required
 @require_POST
@@ -600,9 +561,6 @@ def api_mute_conversation(request):
     return JsonResponse({'ok': True, 'is_muted': conv.is_muted})
 
 
-# ==============================================================================
-# SECTION: API - Change Theme
-# ==============================================================================
 
 @login_required
 @require_POST
@@ -622,9 +580,6 @@ def api_change_theme(request):
     return JsonResponse({'ok': True, 'theme': theme})
 
 
-# ==============================================================================
-# SECTION: API - Upload File
-# ==============================================================================
 
 @login_required
 @require_POST
@@ -672,9 +627,6 @@ def api_upload_file(request):
     })
 
 
-# ==============================================================================
-# SECTION: API - Delete Message
-# ==============================================================================
 
 @login_required
 @require_POST
@@ -696,9 +648,6 @@ def api_delete_message(request):
     return JsonResponse({'ok': True, 'scope': scope})
 
 
-# ==============================================================================
-# SECTION: API - Report Message
-# ==============================================================================
 
 @login_required
 @require_POST
@@ -725,9 +674,6 @@ def api_report_message(request):
     return JsonResponse({'ok': True})
 
 
-# ==============================================================================
-# SECTION: API - Online Status
-# ==============================================================================
 
 @login_required
 @require_POST
@@ -786,9 +732,6 @@ def api_online_status(request):
     })
 
 
-# ==============================================================================
-# SECTION: API - User Info
-# ==============================================================================
 
 @login_required
 @require_POST
@@ -849,9 +792,6 @@ def api_user_info(request):
     })
 
 
-# ==============================================================================
-# SECTION: API - Start Call
-# ==============================================================================
 
 @login_required
 @require_POST
@@ -863,9 +803,6 @@ def api_start_call(request):
     })
 
 
-# ==============================================================================
-# SECTION: API - Update Status
-# ==============================================================================
 
 @login_required
 @require_POST
@@ -874,7 +811,7 @@ def api_update_status(request):
         data = json.loads(request.body)
     except (ValueError, TypeError):
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
-    emoji = data.get('emoji', '🟢')
+    emoji = data.get('emoji', '')
     text = data.get('text', 'Available')
     profile = request.user.profile
     profile.status_emoji = emoji
@@ -887,9 +824,6 @@ def api_update_status(request):
     return JsonResponse({'ok': True, 'emoji': emoji, 'text': text, 'is_online': status.is_online})
 
 
-# ==============================================================================
-# SECTION: API - Mark Read
-# ==============================================================================
 
 @login_required
 def api_mark_read(request):
@@ -906,9 +840,6 @@ def api_mark_read(request):
     return JsonResponse({'ok': True})
 
 
-# ==============================================================================
-# SECTION: API - Delete Conversation
-# ==============================================================================
 
 @login_required
 def api_delete_conversation(request):

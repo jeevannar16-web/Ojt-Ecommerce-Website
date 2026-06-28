@@ -1,4 +1,4 @@
-"""Admin category curation — organizes products into curated sections on category pages."""
+"""Category curation views."""
 
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
@@ -8,9 +8,7 @@ import base64
 from ..models import Category
 
 
-# ════════════════════════════════════════════════════════════════
 # CATEGORY CURATION & IMAGE MANAGEMENT
-# ════════════════════════════════════════════════════════════════
 def category_curation_workspace(request):
     """Display category curation workspace - ALLOW EDITING ANYTIME."""
     current_id = request.GET.get('id')
@@ -43,15 +41,12 @@ def category_curation_workspace(request):
         'current_position': current_position,
     }
 
-    print(f"\n✅ Category Curation - Category {category.id if category else 'None'}")
+    print(f"\nCategory Curation - Category {category.id if category else 'None'}")
     print(f"   Position: {current_position}/{total}")
 
     return render(request, 'store/curation_category.html', context)
 
 
-# ==============================================================================
-# SECTION: Update Category Asset
-# ==============================================================================
 
 @csrf_exempt
 def update_category_asset(request):
@@ -83,7 +78,7 @@ def update_category_asset(request):
         raw_binary_file = ContentFile(base64.b64decode(imgstr))
         file_name = f"curated_cat_{category.id}.{ext}"
         category.image.save(file_name, raw_binary_file, save=True)
-        print(f"✅ Updated category image: {file_name}")
+        print(f"Updated category image: {file_name}")
 
         next_category = Category.objects.filter(id__gt=category.id).order_by('id').first()
         

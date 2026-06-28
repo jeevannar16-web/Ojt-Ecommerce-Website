@@ -1,4 +1,4 @@
-"""Middleware that redirects unverified users to the verification page."""
+"""Email verification middleware."""
 
 from django.conf import settings
 from django.shortcuts import redirect

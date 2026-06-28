@@ -1,4 +1,4 @@
-"""Newsletter signup and unsubscribe — handles email subscription with confirmation and removal."""
+"""Newsletter signup views."""
 
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect

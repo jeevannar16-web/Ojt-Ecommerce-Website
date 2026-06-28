@@ -1,6 +1,4 @@
-<!-- ========================================================================= -->
 <!-- Messages: Customer Conversation Detail (Chat Log, Reply Form)           -->
-<!-- ========================================================================= -->
 {% extends 'layout/messages_base.html' %}
 {% load static %}
 
@@ -140,7 +138,6 @@
 {% with user_blocked=is_blocked %}
 <div class="cd-page" id="cd-page">
 
-  <!-- ─── TOP BAR ─── -->
   <div class="cd-top-bar">
     <a href="{% url 'store:messages_list' %}" class="cd-back"><i class="bi bi-arrow-left"></i></a>
     <a href="{% url 'home' %}" class="cd-home-btn" title="{{ 'Home'|t }}"><i class="bi bi-house-door"></i></a>
@@ -199,7 +196,6 @@
     </div>
   </div>
 
-  <!-- ─── MORE MENU ─── -->
   <div class="cd-more-menu" id="more-menu">
     <form method="POST" action="{% url 'store:block_user' conversation.id %}" style="margin:0;">
       {% csrf_token %}
@@ -218,14 +214,12 @@
     </button>
   </div>
 
-  <!-- ─── SEARCH BAR ─── -->
   <div class="cd-search-bar" id="search-bar">
     <input type="text" id="search-input" placeholder="{{ 'Search messages...'|t }}" autocomplete="off">
     <button class="cd-icon-btn" id="search-close" style="width:28px;height:28px;font-size:0.9rem;"><i class="bi bi-x"></i></button>
     <div class="cd-search-results" id="search-results"></div>
   </div>
 
-  <!-- ─── PINNED BAR ─── -->
   {% if pinned_message %}
   <div class="cd-pinned-bar open" id="pinned-bar">
     <i class="bi bi-pin-angle-fill"></i>
@@ -234,7 +228,6 @@
   </div>
   {% endif %}
 
-  <!-- ─── STORE INFO ─── -->
   {% if not conversation.is_admin_conversation and seller_profile and seller_profile.store_slug %}
   <div class="cd-store-row">
     <a href="{% url 'store:seller_storefront' seller_profile.store_slug %}" class="store-badge">
@@ -252,7 +245,6 @@
   </div>
   {% endif %}
 
-  <!-- ─── BLOCKED BANNER ─── -->
   {% if user_blocked %}
   <div class="cd-blocked-banner">
     <i class="bi bi-shield-exclamation"></i>
@@ -265,7 +257,6 @@
   </div>
   {% endif %}
 
-  <!-- ─── MESSAGE BODY ─── -->
   <div class="cd-body" id="msg-body">
     {% for msg in messages %}
     {% ifchanged msg.created_at|date:"Y-m-d" %}
@@ -362,7 +353,6 @@
     {% endfor %}
   </div>
 
-  <!-- ─── ATTACHMENT PREVIEW ─── -->
   <div class="cd-attach-preview" id="attach-preview">
     <div style="font-size:1.5rem;" id="attach-icon"><i class="bi bi-file-earmark"></i></div>
     <div style="flex:1;min-width:0;">
@@ -373,7 +363,6 @@
   </div>
   <input type="file" id="file-input" accept="*/*" style="display:none;">
 
-  <!-- ─── FOOTER ─── -->
   {% if not user_blocked %}
   <div class="cd-footer">
     <div class="cd-footer-tools">
@@ -411,12 +400,10 @@
   {% endif %}
 </div>
 
-<!-- ─── LIGHTBOX ─── -->
 <div class="cd-lightbox" id="lightbox" onclick="closeLightbox()">
   <img id="lightbox-img" src="" alt="">
 </div>
 
-<!-- ─── PROFILE SIDEBAR ─── -->
 <div class="cd-profile-overlay" id="profile-overlay" onclick="closeProfileSidebar()"></div>
 <div class="cd-profile-sidebar" id="profile-sidebar">
   <div class="ps-header">
@@ -458,7 +445,6 @@
 .dot.online { background:#2ecc71 !important; }
 </style>
 
-<!-- ─── DELETE MODAL ─── -->
 <div class="cd-modal-overlay" id="delete-modal">
   <div class="cd-modal">
     <h3><i class="bi bi-exclamation-triangle" style="color:#e74c3c;"></i> {{ 'Delete Message?'|t }}</h3>
@@ -471,7 +457,6 @@
   </div>
 </div>
 
-<!-- ─── REPORT MODAL ─── -->
 <div class="cd-modal-overlay" id="report-modal">
   <div class="cd-modal">
     <h3><i class="bi bi-flag" style="color:#d4af37;"></i> {{ 'Report Message'|t }}</h3>
@@ -489,7 +474,6 @@
   </div>
 </div>
 
-<!-- ─── DELETE CONVERSATION CONFIRM ─── -->
 <div class="cd-modal-overlay" id="delete-conv-modal">
   <div class="cd-modal">
     <h3><i class="bi bi-exclamation-triangle" style="color:#e74c3c;"></i> {{ 'Delete Conversation?'|t }}</h3>

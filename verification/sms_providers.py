@@ -1,4 +1,4 @@
-"""SMS provider abstraction layer — supports multiple backends for sending OTPs."""
+"""SMS provider integrations."""
 
 import logging
 from abc import ABC, abstractmethod
@@ -8,9 +8,6 @@ from django.conf import settings
 logger = logging.getLogger(__name__)
 
 
-# ==============================================================================
-# SECTION: Abstract Base Provider
-# ==============================================================================
 
 class SMSProvider(ABC):
     @abstractmethod
@@ -71,9 +68,6 @@ class TwilioSMSProvider(SMSProvider):
         return 'twilio'
 
 
-# ==============================================================================
-# SECTION: Console Provider (Dev)
-# ==============================================================================
 
 class ConsoleSMSProvider(SMSProvider):
     """Displays the OTP directly on the user's screen — no SMS needed."""
@@ -90,9 +84,6 @@ class ConsoleSMSProvider(SMSProvider):
         return 'console'
 
 
-# ==============================================================================
-# SECTION: Provider Factory
-# ==============================================================================
 
 def get_sms_provider() -> SMSProvider:
     provider_name = getattr(settings, 'SMS_PROVIDER', 'console').lower()

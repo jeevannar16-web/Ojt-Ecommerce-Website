@@ -1,4 +1,4 @@
-"""Admin dashboard — sales stats, order management, seller approvals, low stock alerts, and activity log viewer."""
+"""Admin dashboard views."""
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
@@ -17,9 +17,6 @@ from django.core.paginator import Paginator
 from django.db.models.functions import TruncMonth
 
 
-# ==============================================================================
-# SECTION: Admin Dashboard
-# ==============================================================================
 
 @staff_member_required
 def admin_dashboard(request):
@@ -123,9 +120,6 @@ def admin_dashboard(request):
     return render(request, 'store/admin_dashboard.html', context)
 
 
-# ==============================================================================
-# SECTION: Admin Activity Log
-# ==============================================================================
 
 @staff_member_required
 def admin_activity_log(request):
@@ -169,9 +163,6 @@ def admin_activity_log(request):
     return render(request, 'store/admin_activity_log.html', context)
 
 
-# ==============================================================================
-# SECTION: Admin Favorites
-# ==============================================================================
 
 @staff_member_required
 def admin_favorites(request):
@@ -214,9 +205,6 @@ def admin_favorites(request):
     return render(request, 'store/admin_favorites.html', context)
 
 
-# ==============================================================================
-# SECTION: Admin Cart
-# ==============================================================================
 
 @staff_member_required
 def admin_cart(request):
@@ -264,9 +252,6 @@ def admin_cart(request):
     return render(request, 'store/admin_cart.html', context)
 
 
-# ==============================================================================
-# SECTION: Admin Sellers
-# ==============================================================================
 
 @staff_member_required
 def admin_sellers(request):
@@ -343,9 +328,6 @@ def admin_sellers(request):
     return render(request, 'store/admin_sellers.html', context)
 
 
-# ==============================================================================
-# SECTION: Admin Seller Detail
-# ==============================================================================
 
 @staff_member_required
 def admin_seller_detail(request, seller_id):
@@ -408,9 +390,6 @@ def admin_seller_detail(request, seller_id):
     return render(request, 'store/admin_seller_detail.html', context)
 
 
-# ==============================================================================
-# SECTION: Newsletter — Broadcast
-# ==============================================================================
 
 @staff_member_required
 def admin_newsletter_broadcast(request):
@@ -456,9 +435,6 @@ def admin_newsletter_broadcast(request):
     return render(request, 'store/admin_newsletter_broadcast.html')
 
 
-# ==============================================================================
-# SECTION: Newsletter — Subscriber Management
-# ==============================================================================
 
 @staff_member_required
 def admin_manage_subscribers(request):

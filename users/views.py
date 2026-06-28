@@ -1,4 +1,4 @@
-"""Registration, login, profile editing, and seller request management."""
+"""User registration, login, and profile views."""
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
@@ -20,9 +20,7 @@ from store.activity_logger import log_action
 from verification.email_validator import validate_email_deliverability
 
 
-# ════════════════════════════════════════════════════════════════
 # AUTHENTICANTION
-# ════════════════════════════════════════════════════════════════
 
 class CustomPasswordResetForm(PasswordResetForm):
     def clean_email(self):
@@ -72,9 +70,7 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
         return ctx
 
 
-# ════════════════════════════════════════════════════════════════
 # REGISTRATION & LOGIN HANDLERS
-# ════════════════════════════════════════════════════════════════
 
 
 def _send_welcome_email(user):
@@ -157,9 +153,6 @@ def register(request):
     return render(request, 'users/register.html', {'form': form, 'remembered': remembered_data})
 
 
-# ==============================================================================
-# SECTION: Login
-# ==============================================================================
 
 def user_login(request):
     remembered_username = request.session.get('remembered_username', '')
@@ -187,9 +180,6 @@ def user_login(request):
     return render(request, 'users/login.html', {'remembered_username': remembered_username})
 
 
-# ==============================================================================
-# SECTION: Profile
-# ==============================================================================
 
 @login_required
 def profile(request):
@@ -253,7 +243,7 @@ def profile(request):
             'unread': c.unread_count(request.user),
             'other_user': other,
             'is_support': other.is_staff or other.is_superuser,
-            'other_status_emoji': getattr(other.profile, 'status_emoji', '🟢') if hasattr(other, 'profile') else '🟢',
+            'other_status_emoji': getattr(other.profile, 'status_emoji', '') if hasattr(other, 'profile') else '',
             'other_status_text': getattr(other.profile, 'status_text', 'Available') if hasattr(other, 'profile') else 'Available',
             'product': c.product,
             'store_slug': getattr(other.profile, 'store_slug', '') if hasattr(other, 'profile') else '',
@@ -269,9 +259,6 @@ def profile(request):
     return render(request, 'users/profile.html', context)
 
 
-# ==============================================================================
-# SECTION: Delete Account
-# ==============================================================================
 
 @login_required
 def delete_account(request):
@@ -291,9 +278,6 @@ def delete_account(request):
     return redirect('profile')
 
 
-# ==============================================================================
-# SECTION: Password Change (Logged-In Users)
-# ==============================================================================
 
 class CustomPasswordChangeView(auth_views.PasswordChangeView):
     template_name = 'users/password_change.html'
@@ -319,9 +303,6 @@ class CustomPasswordChangeView(auth_views.PasswordChangeView):
         return resp
 
 
-# ==============================================================================
-# SECTION: Logout
-# ==============================================================================
 
 def user_logout(request):
     try:

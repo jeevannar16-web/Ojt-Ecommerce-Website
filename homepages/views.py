@@ -1,4 +1,4 @@
-"""Homepage, about, contact, and other static page views."""
+"""Homepage and static page views."""
 
 import random
 import datetime
@@ -10,9 +10,6 @@ from store.models import Product, Category, OrderItem, CartItem
 from users.models import Profile
 
 
-# ==============================================================================
-# SECTION: Home View
-# ==============================================================================
 
 def home(request):
     base_qs = Product.objects.select_related('category')
@@ -198,7 +195,7 @@ def home(request):
                 'unread': c.unread_count(user),
                 'other_user': other,
                 'is_support': other.is_staff or other.is_superuser,
-                'other_status_emoji': getattr(other.profile, 'status_emoji', '🟢') if hasattr(other, 'profile') else '🟢',
+                'other_status_emoji': getattr(other.profile, 'status_emoji', '') if hasattr(other, 'profile') else '',
                 'other_status_text': getattr(other.profile, 'status_text', 'Available') if hasattr(other, 'profile') else 'Available',
                 'product': c.product,
                 'store_slug': getattr(other.profile, 'store_slug', '') if hasattr(other, 'profile') else '',
@@ -230,9 +227,6 @@ def home(request):
     return render(request, 'index.html', context)
 
 
-# ==============================================================================
-# SECTION: Static Pages
-# ==============================================================================
 
 class PrivacyPolicyView(TemplateView):
     template_name = 'homepages/privacy.html'

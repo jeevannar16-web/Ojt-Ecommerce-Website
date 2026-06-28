@@ -12,8 +12,6 @@ cp .env.example .env    # edit with your keys
 ./start.sh              # creates venv, installs deps, runs on port 8000
 ```
 
-Pre-created admin: **jeevan** / `REPLACED_ADMIN_PASS`
-
 Windows: `start.bat`
 Stop: `./stop.sh`
 
@@ -50,7 +48,7 @@ Set these in **Render Dashboard → Environment**:
 | `DEBUG` | `False` |
 | `ALLOWED_HOSTS` | `localhost,127.0.0.1,.onrender.com` |
 | `BASE_URL` | `https://ojt-ecommerce-website.onrender.com` |
-| `CLOUD_NAME` | `your-cloud-name` |
+| `CLOUD_NAME` | Your Cloudinary cloud name |
 | `CLOUD_API_KEY` | Your Cloudinary API key |
 | `CLOUD_API_SECRET` | Your Cloudinary API secret |
 | `GOOGLE_CLIENT_ID` | Google OAuth client ID |
@@ -60,7 +58,7 @@ Set these in **Render Dashboard → Environment**:
 | `EMAIL_VERIFICATION_REQUIRED` | `False` |
 
 The `start_render.sh` script auto-creates:
-- Superuser: **jeevan** / `REPLACED_ADMIN_PASS`
+- Superuser (from `ADMIN_EMAIL` / `ADMIN_PASSWORD` env vars)
 - Google SocialApp (from env vars)
 - Site domain (from `BASE_URL`)
 - Seed data (446 products, 17 categories) from `fixtures/seed_data.json`

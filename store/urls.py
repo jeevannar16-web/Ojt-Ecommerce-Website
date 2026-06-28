@@ -1,4 +1,4 @@
-"""URL routing for every endpoint in the store app — products, cart, checkout, orders, messaging, and dashboards."""
+"""URL routing for the store app."""
 
 from django.urls import path
 from . import views
@@ -8,9 +8,6 @@ from .views import messaging_views
 
 app_name = 'store'
 
-# ==============================================================================
-# SECTION: URL Patterns
-# ==============================================================================
 
 urlpatterns = [
     path('admin-dashboard/', admin_dashboard_views.admin_dashboard, name='admin_dashboard'),
@@ -41,23 +38,17 @@ urlpatterns = [
     path('products/<int:product_id>/review/', views.submit_review, name='submit_review'),
 
     # ==============================================================================
-# SECTION: Product Curation
-# ==============================================================================
     path('curation/', views.curation_workspace, name='curation_workspace'),
     path('curation/update-asset/', views.update_curation_asset, name='update_curation_asset'),
     path('curation/category/', views.category_curation_workspace, name='category_curation_workspace'),
     path('curation/category/update-asset/', views.update_category_asset, name='update_category_asset'),
 
     # ==============================================================================
-# SECTION: Seller Center
-# ==============================================================================
     path('seller-center/', seller_views.seller_center, name='seller_center'),
     path('seller/apply/', seller_views.seller_apply, name='seller_apply'),
     path('seller/store/<slug:slug>/', seller_views.seller_storefront, name='seller_storefront'),
 
     # ==============================================================================
-# SECTION: Seller Dashboard
-# ==============================================================================
     path('seller/', seller_views.seller_dashboard, name='seller_dashboard'),
     path('seller/products/', seller_views.seller_product_list, name='seller_product_list'),
     path('seller/products/add/', seller_views.seller_product_add, name='seller_product_add'),
@@ -66,8 +57,6 @@ urlpatterns = [
     path('seller/orders/', seller_views.seller_orders, name='seller_orders'),
 
     # ==============================================================================
-# SECTION: Messaging
-# ==============================================================================
     path('messages/', messaging_views.conversation_list, name='messages_list'),
     path('messages/<int:conversation_id>/', messaging_views.conversation_detail, name='conversation_detail'),
     path('messages/start/<int:product_id>/', messaging_views.start_conversation, name='start_conversation'),

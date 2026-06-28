@@ -1,4 +1,4 @@
-"""Translation service — fetches and stores translations from external APIs."""
+"""Localization service functions."""
 
 from django.conf import settings
 from django.core.cache import cache
@@ -8,9 +8,6 @@ from .models import Language, Translation
 _cache = {}
 
 
-# ==============================================================================
-# SECTION: Translator Class
-# ==============================================================================
 
 class Translator:
     def __init__(self, language_code=None):

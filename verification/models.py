@@ -1,4 +1,4 @@
-"""Models for email and phone verification (OTP codes, expiry, attempts)."""
+"""Verification models."""
 
 import secrets
 from datetime import timedelta
@@ -21,9 +21,6 @@ def _generate_token():
     return secrets.token_urlsafe(32)
 
 
-# ==============================================================================
-# SECTION: EmailVerification Model
-# ==============================================================================
 
 class EmailVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='email_verifications')
@@ -99,9 +96,6 @@ class EmailVerification(models.Model):
         return f'{self.user.username} → {self.email} [{"✓" if self.is_verified else "✗"}]'
 
 
-# ==============================================================================
-# SECTION: PhoneVerification Model
-# ==============================================================================
 
 class PhoneVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='phone_verifications')

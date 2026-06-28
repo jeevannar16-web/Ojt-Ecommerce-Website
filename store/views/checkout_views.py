@@ -1,4 +1,4 @@
-"""Checkout flow — delivery address, shipping selection, payment, and order placement with map picking."""
+"""Checkout flow views."""
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -12,9 +12,6 @@ from users.models import Profile
 import uuid
 
 
-# ==============================================================================
-# SECTION: Checkout View
-# ==============================================================================
 
 @login_required
 def checkout_view(request):

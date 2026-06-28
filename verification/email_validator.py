@@ -1,4 +1,4 @@
-"""Email deliverability checks — multiple third-party APIs plus DNS MX fallback."""
+"""Email validation service."""
 
 import re
 import logging
@@ -8,9 +8,6 @@ from django.conf import settings
 logger = logging.getLogger(__name__)
 
 
-# ==============================================================================
-# SECTION: DNS MX Check
-# ==============================================================================
 
 def _check_mx(domain):
     try:
@@ -34,9 +31,6 @@ def _check_mx(domain):
         return True, None
 
 
-# ==============================================================================
-# SECTION: Validation Services Registry
-# ==============================================================================
 
 SERVICES = []
 
@@ -151,9 +145,6 @@ _register_service('Check-Mail', _check_checkmail)
 _register_service('MyEmailVerifier', _check_myemailverifier)
 
 
-# ==============================================================================
-# SECTION: Main Validator
-# ==============================================================================
 
 def validate_email_deliverability(email):
     if not email or '@' not in email:

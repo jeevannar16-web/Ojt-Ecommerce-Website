@@ -1,4 +1,4 @@
-"""DB-backed Translation model for multi-language content."""
+"""Localization database models."""
 
 from django.db import models
 from django.core.cache import cache
@@ -13,9 +13,6 @@ LANGUAGE_CHOICES = [
 ]
 
 
-# ==============================================================================
-# SECTION: Language Model
-# ==============================================================================
 
 class Language(models.Model):
     code = models.CharField(max_length=10, unique=True, choices=LANGUAGE_CHOICES)
@@ -32,9 +29,6 @@ class Language(models.Model):
         return f'{self.name} ({self.code})'
 
 
-# ==============================================================================
-# SECTION: Translation Model
-# ==============================================================================
 
 class Translation(models.Model):
     key = models.SlugField(

@@ -1,4 +1,4 @@
-"""Favorites/wishlist — toggle products on and off the wishlist and list them for the logged-in user."""
+"""Favorites and wishlist views."""
 
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
@@ -8,9 +8,7 @@ from ..models import Product, FavoriteItem
 from ..activity_logger import log_action
 
 
-# ════════════════════════════════════════════════════════════════
 # FAVORITES / WISHLIST MANAGEMENT
-# ════════════════════════════════════════════════════════════════
 @login_required(login_url='/users/login/')
 def toggle_favorite(request, product_id):
     if not request.user.is_authenticated:
@@ -44,9 +42,6 @@ def toggle_favorite(request, product_id):
     })
 
 
-# ==============================================================================
-# SECTION: Favorites List
-# ==============================================================================
 
 @login_required(login_url='/users/login/')
 def favorites_list(request):

@@ -1,4 +1,4 @@
-"""Language detection middleware — reads ?lang= query param and sets the active language."""
+"""Language middleware."""
 
 import threading
 

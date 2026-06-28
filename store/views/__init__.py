@@ -1,8 +1,6 @@
-"""Re-exports all view functions so `from store.views import ...` works cleanly."""
+"""Store views module."""
 
-# ════════════════════════════════════════════════════════════════
 # STORE VIEWS MODULE - RE-EXPORTS
-# ════════════════════════════════════════════════════════════════
 # Re-exports all store views for backward compatibility
 # Modular view structure split from monolithic store/views.py
 

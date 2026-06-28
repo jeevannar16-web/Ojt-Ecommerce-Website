@@ -1,4 +1,4 @@
-"""Root URL configuration — maps paths to views across all apps."""
+"""Root URL configuration."""
 
 from django.contrib import admin
 from django.urls import path, include
@@ -8,9 +8,6 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 
 
-# ==============================================================================
-# SECTION: URL Patterns
-# ==============================================================================
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,17 +20,11 @@ urlpatterns = [
 ]
 
 
-# ==============================================================================
-# SECTION: Media URLs (Development Only)
-# ==============================================================================
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
-# ==============================================================================
-# SECTION: Error Handlers
-# ==============================================================================
 
 def handler404(request, exception=None):
     return render(request, '404.html', status=404)

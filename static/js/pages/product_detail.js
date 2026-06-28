@@ -113,7 +113,7 @@ function submitReview(productId) {
     .then(function(res) { return res.json(); })
     .then(function(data) {
         if (data.success) {
-            showToast(data.created ? '⭐ Review submitted!' : '✅ Review updated!');
+            showToast(data.created ? '⭐ Review submitted!' : ' Review updated!');
             var ratingVal = document.getElementById('product-rating-val');
             var reviewCount = document.getElementById('product-review-count');
             var starsDisplay = document.getElementById('product-stars-display');

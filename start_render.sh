@@ -14,7 +14,7 @@ ls -la fixtures/ 2>&1 || echo "No fixtures dir"
 
 python manage.py migrate --noinput
 
-# --- Load full seed data (products, users, translations, etc.) if DB is empty ---
+# --- Load seed data if DB is empty ---
 python -c "
 import django, os, sys, traceback
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fitness_hub.settings')
@@ -50,7 +50,7 @@ else:
     print('Skipping fixture load — products already exist')
 " 2>&1
 
-# --- Restore product/category images from fixture if they were cleared ---
+# --- Restore images from fixture ---
 python manage.py fix_product_images 2>&1 || echo "Image restoration skipped (non-fatal)"
 
 # Auto-setup script (ensures superuser, Site, and SocialApp exist)
@@ -62,7 +62,7 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from allauth.socialaccount.models import SocialApp
 
-# --- List all existing admin/staff accounts ---
+# --- List admin accounts ---
 staff = User.objects.filter(is_staff=True)
 if staff.exists():
     print('Staff/superuser accounts in DB:')
@@ -71,18 +71,19 @@ if staff.exists():
 else:
     print('No staff accounts found')
 
-# --- Ensure superuser jeevan exists with correct password ---
+# --- Ensure superuser jeevan exists (password from env or auto-generated) ---
 admin_email = os.environ.get('ADMIN_EMAIL', 'jeevanadmin@outlook.com')
 user, created = User.objects.get_or_create(
     username='jeevan',
     defaults={'email': admin_email, 'is_superuser': True, 'is_staff': True}
 )
-user.set_password('REPLACED_ADMIN_PASS')
+admin_pass = os.environ.get('ADMIN_PASSWORD', User.objects.make_random_password())
+user.set_password(admin_pass)
 user.is_superuser = True
 user.is_staff = True
 user.save()
-status_flag = 'created' if created else 'updated'
-print(f'Superuser {status_flag}: jeevan / REPLACED_ADMIN_PASS (email: {user.email})')
+status = 'created' if created else 'updated'
+print(f'superuser jeevan {status}')
 
 # --- Site domain ---
 domain = os.environ.get('BASE_URL', 'https://ojt-ecommerce-website.onrender.com').replace('https://','').replace('http://','').split('/')[0]

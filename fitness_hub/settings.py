@@ -1,4 +1,4 @@
-"""All the Django config — apps, middleware, database, templates, static files, and third-party integrations."""
+"""Django project settings."""
 
 import os
 import warnings
@@ -11,9 +11,6 @@ from pathlib import Path
 load_dotenv()
 
 
-# ==============================================================================
-# SECTION: Core Settings
-# ==============================================================================
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,9 +22,6 @@ SITE_ID = 1
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,.onrender.com').split(',')
 
-# ==============================================================================
-# SECTION: Installed Apps
-# ==============================================================================
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -53,9 +47,6 @@ INSTALLED_APPS = [
 ]
 
 
-# ==============================================================================
-# SECTION: Middleware
-# ==============================================================================
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -71,9 +62,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# ==============================================================================
-# SECTION: Templates
-# ==============================================================================
 
 ROOT_URLCONF = 'fitness_hub.urls'
 
@@ -97,9 +85,6 @@ TEMPLATES = [
     },
 ]
 
-# ==============================================================================
-# SECTION: Database & Auth
-# ==============================================================================
 
 WSGI_APPLICATION = 'fitness_hub.wsgi.application'
 
@@ -124,9 +109,6 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-# ==============================================================================
-# SECTION: Internationalization & Static Files
-# ==============================================================================
 
 LANGUAGE_CODE = 'en'
 TIME_ZONE = 'Asia/Kathmandu'
@@ -140,9 +122,6 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# ==============================================================================
-# SECTION: Authentication Settings
-# ==============================================================================
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -152,9 +131,6 @@ LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 
 
-# ==============================================================================
-# SECTION: django-allauth
-# ==============================================================================
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 ACCOUNT_EMAIL_VERIFICATION = 'none'
@@ -183,9 +159,6 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
-# ==============================================================================
-# SECTION: CSRF & Sessions
-# ==============================================================================
 
 CSRF_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_HTTPONLY = False
@@ -198,9 +171,6 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
-# ==============================================================================
-# SECTION: Email Configuration
-# ==============================================================================
 
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.filebased.EmailBackend')
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
@@ -214,9 +184,6 @@ BASE_URL = os.environ.get('BASE_URL', 'http://localhost:8000')
 PASSWORD_RESET_TIMEOUT = 300
 
 
-# ==============================================================================
-# SECTION: SMS / Twilio Configuration
-# ==============================================================================
 
 SMS_PROVIDER = os.environ.get('SMS_PROVIDER', 'console')
 TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
@@ -227,9 +194,6 @@ TWILIO_MESSAGING_SERVICE_SID = os.environ.get('TWILIO_MESSAGING_SERVICE_SID', ''
 DEFAULT_COUNTRY_CODE = os.environ.get('DEFAULT_COUNTRY_CODE', 'US')
 
 
-# ==============================================================================
-# SECTION: Verification Settings
-# ==============================================================================
 
 VERIFICATION_COOLDOWN_MINUTES = int(os.environ.get('VERIFICATION_COOLDOWN_MINUTES', 1))
 

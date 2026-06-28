@@ -1,12 +1,9 @@
-"""Template context processors — injects cart count, categories, and other global data into every page."""
+"""Template context processors."""
 
 from .models import Product, Category, FavoriteItem, CartItem
 from django.db.models import Sum
 
 
-# ==============================================================================
-# SECTION: Global Context
-# ==============================================================================
 
 def global_context(request):
     categories = Category.objects.all()

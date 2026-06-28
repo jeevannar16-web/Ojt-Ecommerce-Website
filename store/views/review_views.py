@@ -1,4 +1,4 @@
-"""Product reviews — submit, edit, and display ratings and comments for purchased items."""
+"""Product review views."""
 
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
@@ -9,9 +9,7 @@ from ..activity_logger import log_action
 from django.db.models import Avg
 
 
-# ════════════════════════════════════════════════════════════════
 # PRODUCT REVIEWS & RATINGS
-# ════════════════════════════════════════════════════════════════
 @login_required
 def submit_review(request, product_id):
     if request.method != 'POST':

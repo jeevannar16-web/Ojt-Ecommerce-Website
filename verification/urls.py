@@ -1,11 +1,8 @@
-"""URL patterns for email and phone verification endpoints."""
+"""Verification URL patterns."""
 
 from django.urls import path
 from . import views
 
-# ==============================================================================
-# SECTION: URL Patterns
-# ==============================================================================
 
 urlpatterns = [
     path('setup/', views.verification_setup, name='verification_setup'),

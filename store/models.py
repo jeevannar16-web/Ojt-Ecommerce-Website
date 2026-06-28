@@ -1,4 +1,4 @@
-"""Database models for the store — products, categories, orders, cart items, reviews, and everything in between."""
+"""Database models for the store app."""
 
 import mimetypes
 
@@ -29,9 +29,6 @@ product_image_path = _UploadToPath('products', subfolder_attr='category')
 category_image_path = _UploadToPath('category_images')
 
 
-# ==============================================================================
-# SECTION: Category Model
-# ==============================================================================
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -53,13 +50,10 @@ class Category(models.Model):
         super().save(*args, **kwargs)
 
 
-# ==============================================================================
-# SECTION: Product Model
-# ==============================================================================
 
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
-    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products', null=True, blank=True, help_text="The seller who owns this product")
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products', null=True, blank=True, help_text="seller")
     name = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField(default=0)
@@ -73,10 +67,10 @@ class Product(models.Model):
         max_length=100,
         blank=True,
         null=True,
-        help_text="Comma-separated sizes, e.g. S,M,L,XL or 5kg,10kg,20kg"
+        help_text="sizes"
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
-    original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Original price before discount. Leave blank if same as price.")
+    original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="original price")
 
     def __str__(self):
         return self.name
@@ -101,13 +95,10 @@ class Product(models.Model):
         return 0
 
 
-# ==============================================================================
-# SECTION: ProductSize Model
-# ==============================================================================
 
 class ProductSize(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='sizes')
-    size = models.CharField(max_length=50, help_text="e.g. S, M, L, XL or 5kg, 10kg")
+    size = models.CharField(max_length=50, help_text="e.g. S, M, L")
     stock = models.PositiveIntegerField(default=0)
 
     class Meta:
@@ -117,9 +108,6 @@ class ProductSize(models.Model):
         return f"{self.product.name} - {self.size} ({self.stock})"
 
 
-# ==============================================================================
-# SECTION: CartItem Model
-# ==============================================================================
 
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart_items')
@@ -140,9 +128,6 @@ class CartItem(models.Model):
         return self.product.price * self.quantity
 
 
-# ==============================================================================
-# SECTION: Order Model
-# ==============================================================================
 
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -158,8 +143,8 @@ class Order(models.Model):
     full_name = models.CharField(max_length=255)
     email = models.EmailField()
     shipping_address = models.TextField()
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="Delivery latitude from map picker")
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="Delivery longitude from map picker")
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="latitude")
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="longitude")
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     coupon_code = models.CharField(max_length=50, blank=True, null=True)
     discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -170,9 +155,6 @@ class Order(models.Model):
         return f"Order #{self.id} - {self.order_number if self.order_number else 'No Number'}"
 
 
-# ==============================================================================
-# SECTION: OrderItem Model
-# ==============================================================================
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
@@ -188,9 +170,6 @@ class OrderItem(models.Model):
         return label
 
 
-# ==============================================================================
-# SECTION: FavoriteItem Model
-# ==============================================================================
 
 class FavoriteItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
@@ -204,15 +183,12 @@ class FavoriteItem(models.Model):
         return f"{self.user.username} favorited {self.product.name}"
 
 
-# ==============================================================================
-# SECTION: NewsletterSubscriber Model
-# ==============================================================================
 
 class NewsletterSubscriber(models.Model):
     email = models.EmailField(unique=True, max_length=254)
     subscribed_at = models.DateTimeField(auto_now_add=True)
-    active = models.BooleanField(default=True, help_text="Is this subscriber still active?")
-    token = models.CharField(max_length=64, unique=True, blank=True, null=True, help_text="Unique token for unsubscribe")
+    active = models.BooleanField(default=True, help_text="active")
+    token = models.CharField(max_length=64, unique=True, blank=True, null=True, help_text="unsubscribe token")
 
     def save(self, *args, **kwargs):
         import uuid
@@ -224,9 +200,6 @@ class NewsletterSubscriber(models.Model):
         return f"{self.email} ({'active' if self.active else 'inactive'})"
 
 
-# ==============================================================================
-# SECTION: ActivityLog Model
-# ==============================================================================
 
 class ActivityLog(models.Model):
     ACTION_TYPES = [
@@ -270,9 +243,6 @@ class ActivityLog(models.Model):
         return f"{username} — {self.get_action_type_display()} ({self.created_at})"
 
 
-# ==============================================================================
-# SECTION: Review Model
-# ==============================================================================
 
 class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
@@ -288,9 +258,6 @@ class Review(models.Model):
         return f"{self.user.username} — {self.product.name} ({self.rating}★)"
 
 
-# ==============================================================================
-# SECTION: UserOnline Model
-# ==============================================================================
 
 class UserOnline(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='online_status')
@@ -301,9 +268,6 @@ class UserOnline(models.Model):
         return f"{self.user.username} {'online' if self.is_online else 'offline'}'"
 
 
-# ==============================================================================
-# SECTION: Conversation Model
-# ==============================================================================
 
 class Conversation(models.Model):
     THEME_CHOICES = [
@@ -351,9 +315,6 @@ class Conversation(models.Model):
         return self.customer
 
 
-# ==============================================================================
-# SECTION: Message Model
-# ==============================================================================
 
 class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
@@ -384,9 +345,6 @@ class Message(models.Model):
         return f"[{self.created_at:%H:%M}] {self.sender.username}: {self.content[:50]}"
 
 
-# ==============================================================================
-# SECTION: BlockedUser Model
-# ==============================================================================
 
 class BlockedUser(models.Model):
     blocker = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blocked_users')
@@ -402,9 +360,6 @@ class BlockedUser(models.Model):
         return f"{self.blocker.username} blocked {self.blocked.username}"
 
 
-# ==============================================================================
-# SECTION: MessageReport Model
-# ==============================================================================
 
 class MessageReport(models.Model):
     REASON_CHOICES = [

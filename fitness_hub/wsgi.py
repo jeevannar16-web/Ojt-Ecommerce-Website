@@ -1,4 +1,4 @@
-"""WSGI entry point — serves the project via production-ready web servers like Gunicorn."""
+"""WSGI configuration."""
 
 """
 WSGI config for fitness_hub project.

@@ -10,9 +10,6 @@ from ..models import CartItem, Product, ProductSize, Category
 from ..activity_logger import log_action
 
 
-# ==============================================================================
-# SECTION: Add to Cart
-# ==============================================================================
 
 def add_to_cart(request, product_id):
     if not request.user.is_authenticated:
@@ -101,9 +98,6 @@ def add_to_cart(request, product_id):
     return JsonResponse(response_data)
 
 
-# ==============================================================================
-# SECTION: Cart View
-# ==============================================================================
 
 def cart_view(request):
     cart_items = []
@@ -233,9 +227,6 @@ def cart_view(request):
     return render(request, 'store/cart.html', context)
 
 
-# ==============================================================================
-# SECTION: Update Cart Quantity
-# ==============================================================================
 
 def update_cart_quantity(request, product_id, action):
     is_ajax = request.GET.get('_ajax') == '1'
@@ -330,9 +321,6 @@ def update_cart_quantity(request, product_id, action):
     return redirect('store:cart')
 
 
-# ==============================================================================
-# SECTION: Batch Delete
-# ==============================================================================
 
 @login_required
 def cart_batch_delete(request):
@@ -387,9 +375,6 @@ def cart_batch_delete(request):
     })
 
 
-# ==============================================================================
-# SECTION: Cart Mini API
-# ==============================================================================
 
 @login_required
 def cart_mini_api(request):

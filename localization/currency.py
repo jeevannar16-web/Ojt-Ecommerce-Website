@@ -1,4 +1,4 @@
-"""Auto-currency conversion — live exchange rates with file-based caching."""
+"""Currency conversion utilities."""
 
 import json
 import os
@@ -20,9 +20,6 @@ LANG_CURRENCY = {
 BASE_CURRENCY = 'USD'
 
 
-# ==============================================================================
-# SECTION: Cache Helpers
-# ==============================================================================
 
 def _load_cache():
     if not CACHE_FILE.exists():
@@ -67,9 +64,6 @@ def get_rate(target_code):
     return rates.get(target_code, 1.0)
 
 
-# ==============================================================================
-# SECTION: Price Conversion
-# ==============================================================================
 
 def convert_price(amount_usd, lang_code):
     code, symbol = LANG_CURRENCY.get(lang_code, ('USD', '$'))

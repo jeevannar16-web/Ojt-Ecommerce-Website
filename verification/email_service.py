@@ -1,4 +1,4 @@
-"""Sends verification emails with OTP codes via Django's email backend."""
+"""Email sending service."""
 
 import logging
 from datetime import timedelta
@@ -13,9 +13,6 @@ from .models import EmailVerification
 logger = logging.getLogger(__name__)
 
 
-# ==============================================================================
-# SECTION: EmailVerificationService
-# ==============================================================================
 
 class EmailVerificationService:
     @staticmethod

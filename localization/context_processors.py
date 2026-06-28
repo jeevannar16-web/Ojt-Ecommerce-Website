@@ -1,4 +1,4 @@
-"""Injects available languages into all template contexts."""
+"""Localization context processors."""
 
 from django.conf import settings
 
@@ -7,9 +7,6 @@ from .models import Language, Translation
 from .services import Translator
 
 
-# ==============================================================================
-# SECTION: Localization Context
-# ==============================================================================
 
 def localization_context(request):
     lang_code = getattr(request, 'LANGUAGE_CODE', settings.LANGUAGE_CODE)

@@ -1,13 +1,11 @@
-"""Admin interface customization for all store models — list displays, filters, search, and inline editing."""
+"""Admin customization for store models."""
 
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import Product, ProductSize, CartItem, Order, OrderItem, Category, FavoriteItem, NewsletterSubscriber, Review
 
 
-# ════════════════════════════════════════════════════════════════
 # HELPERS
-# ════════════════════════════════════════════════════════════════
 def image_preview(url):
     return format_html(
         '<img src="{}" style="width:60px; height:60px; object-fit:cover; border-radius:6px;" />',
@@ -15,9 +13,7 @@ def image_preview(url):
     )
 
 
-# ════════════════════════════════════════════════════════════════
 # ORDER ADMIN
-# ════════════════════════════════════════════════════════════════
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
@@ -49,17 +45,13 @@ class OrderAdmin(admin.ModelAdmin):
     )
 
 
-# ════════════════════════════════════════════════════════════════
 # PRODUCT SIZE INLINE
-# ════════════════════════════════════════════════════════════════
 class ProductSizeInline(admin.TabularInline):
     model = ProductSize
     extra = 1
 
 
-# ════════════════════════════════════════════════════════════════
 # PRODUCT SIZE ADMIN
-# ════════════════════════════════════════════════════════════════
 @admin.register(ProductSize)
 class ProductSizeAdmin(admin.ModelAdmin):
     list_display = ['product', 'size', 'stock']
@@ -67,9 +59,7 @@ class ProductSizeAdmin(admin.ModelAdmin):
     search_fields = ['product__name', 'size']
 
 
-# ════════════════════════════════════════════════════════════════
 # PRODUCT ADMIN  (word-wrap friendly)
-# ════════════════════════════════════════════════════════════════
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['image_tag', 'colored_name', 'category', 'seller', 'price', 'stock', 'rating', 'is_featured', 'is_sale']
@@ -114,9 +104,7 @@ class ProductAdmin(admin.ModelAdmin):
     )
 
 
-# ════════════════════════════════════════════════════════════════
 # CATEGORY ADMIN
-# ════════════════════════════════════════════════════════════════
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['image_tag', 'id', 'name']
@@ -129,9 +117,7 @@ class CategoryAdmin(admin.ModelAdmin):
         return '—'
 
 
-# ════════════════════════════════════════════════════════════════
 # REVIEW ADMIN
-# ════════════════════════════════════════════════════════════════
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ['product_image', 'product', 'user', 'rating', 'created_at']
@@ -155,9 +141,7 @@ class ReviewAdmin(admin.ModelAdmin):
     )
 
 
-# ════════════════════════════════════════════════════════════════
 # CART ITEM ADMIN
-# ════════════════════════════════════════════════════════════════
 @admin.register(CartItem)
 class CartItemAdmin(admin.ModelAdmin):
     list_display = ['product_image', 'user', 'product', 'quantity', 'item_total']
@@ -183,9 +167,7 @@ class CartItemAdmin(admin.ModelAdmin):
     )
 
 
-# ════════════════════════════════════════════════════════════════
 # FAVORITE ITEM ADMIN
-# ════════════════════════════════════════════════════════════════
 @admin.register(FavoriteItem)
 class FavoriteItemAdmin(admin.ModelAdmin):
     list_display = ['product_image', 'user', 'product', 'product_price', 'product_category', 'created_at']
@@ -218,9 +200,7 @@ class FavoriteItemAdmin(admin.ModelAdmin):
     )
 
 
-# ════════════════════════════════════════════════════════════════
 # NEWSLETTER SUBSCRIBER ADMIN
-# ════════════════════════════════════════════════════════════════
 @admin.register(NewsletterSubscriber)
 class NewsletterSubscriberAdmin(admin.ModelAdmin):
     list_display = ['email']

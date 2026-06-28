@@ -166,7 +166,7 @@
       <div class="rec-card">
         <div class="rec-card-img">
           {% if rec.image %}
-            <img src="{% if 'http' in rec.image.name or 'http' in rec.image %}{% if rec.image.name %}{{ rec.image.name }}{% else %}{{ rec.image }}{% endif %}{% else %}{{ rec.image.url }}{% endif %}" alt="{{ rec.name|t }}">
+            <img src="{{ rec.image.url }}" alt="{{ rec.name|t }}">
           {% else %}
             <div class="rec-card-placeholder">🏋️</div>
           {% endif %}

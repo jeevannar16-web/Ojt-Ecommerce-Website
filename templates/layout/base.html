@@ -237,6 +237,17 @@
       if (!nav.contains(e.target)) nav.classList.remove('fn-open');
     });
   })();
+
+  /* ─── Image error fallback — replaces broken product/category images ─── */
+  document.addEventListener('error', function(e) {
+    var img = e.target;
+    if (img.tagName !== 'IMG') return;
+    if (img.dataset.fallback) return;
+    img.dataset.fallback = '1';
+    img.src = img.closest('[class*="cat-card"], [class*="category"]')
+      ? 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600'
+      : 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600';
+  }, true);
   </script>
 
 </body>

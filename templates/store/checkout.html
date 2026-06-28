@@ -32,7 +32,7 @@
 
         <div class="row g-4">
             <div class="col-lg-8">
-                <form action="{% url 'store:checkout' %}{% if request.GET.items %}?items={{ request.GET.items }}{% endif %}" method="POST" id="checkout-form" novalidate>
+                <form action="{% url 'store:checkout' %}{% if request.GET.items %}?items={{ request.GET.items }}{% endif %}" method="POST" id="checkout-form" novalidate data-no-loader="true">
                     {% csrf_token %}
 
                     <div class="card-dz">
@@ -266,10 +266,4 @@
 {% block extra_js %}
 <script src="{% static 'js/pages/checkout.js' %}"></script>
 <script src="{% static 'js/pages/checkout_map.js' %}?v=3"></script>
-<script>
-document.getElementById('checkout-form')?.addEventListener('submit', function () {
-  const btn = document.getElementById('place-order-btn');
-  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="loader-ring-sm"></span> {{ 'Processing...'|t }}'; }
-});
-</script>
 {% endblock %}

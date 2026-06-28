@@ -2,6 +2,7 @@
 
 import os
 from dotenv import load_dotenv
+import dj_database_url
 
 from pathlib import Path
 
@@ -16,15 +17,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'REPLACED_PLACEHOLDER_KEY'
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 SITE_ID = 1
 
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    '.lhr.life',
-    '.trycloudflare.com',
+    '.onrender.com',
 ]
 
 # ==============================================================================
@@ -61,6 +61,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'localization.middleware.LanguageMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -105,10 +106,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'fitness_hub.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(default='sqlite:///db.sqlite3')
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -169,7 +167,7 @@ NEVERBOUNCE_API_KEY = os.environ.get('NEVERBOUNCE_API_KEY', '')
 CHECKMAIL_API_KEY = os.environ.get('CHECKMAIL_API_KEY', '')
 MYEMAILVERIFIER_API_KEY = os.environ.get('MYEMAILVERIFIER_API_KEY', '')
 
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -188,8 +186,7 @@ CSRF_COOKIE_HTTPONLY = False
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
-    'https://*.lhr.life',
-    'https://*.trycloudflare.com',
+    'https://*.onrender.com',
 ]
 
 SESSION_COOKIE_SECURE = False
@@ -235,3 +232,12 @@ DEFAULT_COUNTRY_CODE = os.environ.get('DEFAULT_COUNTRY_CODE', 'US')
 VERIFICATION_COOLDOWN_MINUTES = int(os.environ.get('VERIFICATION_COOLDOWN_MINUTES', 1))
 
 EMAIL_VERIFICATION_REQUIRED = os.environ.get('EMAIL_VERIFICATION_REQUIRED', 'True').lower() == 'true'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUD_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUD_API_SECRET'),
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

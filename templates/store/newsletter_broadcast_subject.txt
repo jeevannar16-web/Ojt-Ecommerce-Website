@@ -1,2 +1,0 @@
-<!-- Newsletter broadcast subject line template -->
-{{ subject }}

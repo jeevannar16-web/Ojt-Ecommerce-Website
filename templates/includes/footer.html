@@ -98,7 +98,7 @@
         <div class="footer-col-heading">{{ 'Newsletter'|t }}</div>
         <div class="footer-nl-box">
           <p class="footer-nl-desc">{{ 'Get early access to exclusive drops and members-only deals.'|t }}</p>
-          <form id="ajax-newsletter-form" class="footer-nl-form" novalidate>
+          <form id="ajax-newsletter-form" class="footer-nl-form" novalidate data-no-loader="true">
             {% csrf_token %}
             <div style="position:relative; flex:1;">
               <input

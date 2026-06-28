@@ -67,6 +67,13 @@
   document.addEventListener('submit', function (e) {
     if (e.target.getAttribute('data-no-loader') === 'true') return;
     showDelayed(150);
+    var submitTimer = timer;
+    setTimeout(function () {
+      if (e.defaultPrevented) {
+        clearTimeout(submitTimer);
+        hide();
+      }
+    }, 0);
   });
 
 

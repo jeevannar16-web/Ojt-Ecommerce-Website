@@ -193,46 +193,48 @@ def user_login(request):
 
 @login_required
 def profile(request):
-    user_profile, created = Profile.objects.get_or_create(user=request.user)
-
     if request.method == 'POST':
         if request.POST.get('request_seller'):
+            user_profile, _ = Profile.objects.get_or_create(user=request.user)
             user_profile.seller_requested = True
             user_profile.seller_rejection_reason = ''
-            from django.utils import timezone
             user_profile.seller_requested_at = timezone.now()
             user_profile.save()
             log_action(request.user, 'seller_apply', f"Requested seller access from profile",
                        {'username': request.user.username}, request)
             messages.success(request, "Seller request submitted! An admin will review it.")
             return redirect('store:seller_apply')
-        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
-        if form.is_valid():
-            form.save()
-            lat = request.POST.get('latitude', '').strip()
-            lng = request.POST.get('longitude', '').strip()
-            if lat:
-                try:
-                    user_profile.latitude = float(lat)
-                except (ValueError, TypeError):
-                    pass
-            if lng:
-                try:
-                    user_profile.longitude = float(lng)
-                except (ValueError, TypeError):
-                    pass
-            user_profile.save()
-            new_username = request.POST.get('username', '').strip()
-            if new_username and new_username != request.user.username:
-                if not User.objects.filter(username=new_username).exclude(pk=request.user.pk).exists():
-                    request.user.username = new_username
-                    request.user.save()
-            messages.success(request, "Profile updated successfully!")
-            return redirect('profile')
-    else:
-        form = UserProfileForm(instance=user_profile)
+        # Save profile directly — avoids form/refresh issues
+        user_profile, _ = Profile.objects.get_or_create(user=request.user)
+        for f in ['phone', 'address_line1', 'address_line2', 'city', 'state', 'zip_code', 'country']:
+            val = request.POST.get(f, '').strip()
+            setattr(user_profile, f, val)
+        if request.FILES.get('avatar'):
+            user_profile.avatar = request.FILES['avatar']
+        lat = request.POST.get('latitude', '').strip()
+        lng = request.POST.get('longitude', '').strip()
+        if lat:
+            try:
+                user_profile.latitude = float(lat)
+            except (ValueError, TypeError):
+                pass
+        if lng:
+            try:
+                user_profile.longitude = float(lng)
+            except (ValueError, TypeError):
+                pass
+        user_profile.save()
+        new_username = request.POST.get('username', '').strip()
+        if new_username and new_username != request.user.username:
+            if not User.objects.filter(username=new_username).exclude(pk=request.user.pk).exists():
+                request.user.username = new_username
+                request.user.save()
+        messages.success(request, "Profile updated successfully!")
+        return redirect('profile')
 
-    user_profile.refresh_from_db()
+    # GET — fresh fetch every time
+    user_profile, _ = Profile.objects.get_or_create(user=request.user)
+    form = UserProfileForm(instance=user_profile)
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     favorites = FavoriteItem.objects.filter(user=request.user).select_related('product')
 

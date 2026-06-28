@@ -50,6 +50,13 @@
     btn.disabled = true;
     btn.textContent = 'Sending...';
 
+    var resetBtn = function() {
+      btn.disabled = false;
+      btn.textContent = 'Subscribe';
+    };
+
+    var safetyTimer = setTimeout(resetBtn, 15000);
+
     fetch('/store/newsletter/subscribe/', {
       method: 'POST',
       headers: {
@@ -60,7 +67,7 @@
       body: JSON.stringify({ email: email })
     })
     .then(r => r.json())
-    .then(data => {
+    .then(function(data) {
       if (data.status === 'success') {
         input.value = '';
         showToast(data.message || '✓ Subscribed successfully!');
@@ -69,14 +76,15 @@
       } else {
         if (errEl) { errEl.textContent = data.message || 'Subscription failed'; errEl.style.display = 'block'; }
         input.style.borderColor = '#ef4444';
+        showToast(data.message || 'Subscription failed', true);
       }
     })
-    .catch(() => {
+    .catch(function() {
       showToast('Network error. Please try again.', true);
     })
-    .finally(() => {
-      btn.disabled = false;
-      btn.textContent = 'Subscribe';
+    .finally(function() {
+      clearTimeout(safetyTimer);
+      resetBtn();
     });
   });
 })();

@@ -1,50 +1,75 @@
 
-## Quick Start
+> **Last updated:** June 28, 2026
+
+---
+
+## Quick Start (Local Dev)
 
 ```bash
 git clone <repo-url>
-cd Ojt-Ecommerce-Website(Navigate to the cloned Directory/Folder)
+cd Ojt-Ecommerce-Website
 cp .env.example .env    # edit with your keys
-./start.sh
+./start.sh              # creates venv, installs deps, runs on port 8000
 ```
 
-One command creates venv, installs deps, and starts the server on port 8000. The `db.sqlite3` is included — no migrations or seed scripts needed. Pre-created admin user: **jeevan** (superuser + seller).
+Pre-created admin: **jeevan** / `REPLACED_ADMIN_PASS`
 
 Windows: `start.bat`
-
 Stop: `./stop.sh`
 
 ---
 
-## Deployment (Render)
+## Deployment (Production on Render.com)
 
-1. Push this repo to GitHub
-2. On [Render](https://dashboard.render.com), create a **Blueprint** from your repo (`render.yaml` auto-configures the service + PostgreSQL)
-3. Or create a **Web Service** manually:
-   - **Build Command**: `pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate`
-   - **Start Command**: `gunicorn fitness_hub.wsgi:application --workers=4 --threads=2`
-   - Add a **PostgreSQL database** from the Render Dashboard and link it (sets `DATABASE_URL` automatically)
-4. Set these environment variables in Render dashboard:
+**Live URL:** https://ojt-ecommerce-website.onrender.com
+
+### What's Used for Deployment
+
+| Service | Purpose | Cost |
+|---------|---------|------|
+| **Render** | Web service + PostgreSQL | Free tier |
+| **Cloudinary** | Product/category image CDN | Free tier |
+| **GitHub Actions** | Keep-alive ping (every 10 min) | Free (public repo) |
+| **UptimeRobot** | Uptime monitoring w/ email alerts | Free |
+
+### Infrastructure Files
+
+| File | What it does |
+|------|-------------|
+| `start_render.sh` | Render start command — migrates, loads seed data, restores images, creates superuser, starts gunicorn |
+| `.github/workflows/keep-alive.yml` | GitHub Actions cron — pings Render every 10 min to prevent cold start |
+| `store/management/commands/fix_product_images.py` | Syncs DB image paths from fixture JSON (runs on each deploy) |
+
+### Required Environment Variables
+
+Set these in **Render Dashboard → Environment**:
 
 | Variable | Value |
 |----------|-------|
-| `DJANGO_SECRET_KEY` | Auto-generated (or use a long random string) |
+| `DJANGO_SECRET_KEY` | Long random string |
 | `DEBUG` | `False` |
 | `ALLOWED_HOSTS` | `localhost,127.0.0.1,.onrender.com` |
-| `BASE_URL` | `https://your-app.onrender.com` |
-| `EMAIL_VERIFICATION_REQUIRED` | `False` |
-| `EMAIL_BACKEND` | `django.core.mail.backends.smtp.EmailBackend` (if using SMTP) |
-| `CLOUD_NAME` | Your Cloudinary cloud name (for media uploads) |
+| `BASE_URL` | `https://ojt-ecommerce-website.onrender.com` |
+| `CLOUD_NAME` | `your-cloud-name` |
 | `CLOUD_API_KEY` | Your Cloudinary API key |
 | `CLOUD_API_SECRET` | Your Cloudinary API secret |
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
+| `EMAIL_HOST_USER` | SMTP email (for password reset) |
+| `EMAIL_HOST_PASSWORD` | SMTP password |
+| `EMAIL_VERIFICATION_REQUIRED` | `False` |
 
-On first deploy, create a superuser via Render's shell:
+The `start_render.sh` script auto-creates:
+- Superuser: **jeevan** / `REPLACED_ADMIN_PASS`
+- Google SocialApp (from env vars)
+- Site domain (from `BASE_URL`)
+- Seed data (446 products, 17 categories) from `fixtures/seed_data.json`
 
-```bash
-python manage.py createsuperuser --username=jeevan --email=you@example.com
-```
+### Cold Start
 
-**Note:** Render's filesystem is ephemeral — uploaded media files (avatars, product images) are lost on restart unless you configure Cloudinary. The app falls back to local filesystem storage if Cloudinary env vars aren't set, but files won't persist across deploys.
+Render free tier spins down after 15 minutes idle. First request after idle takes **~60s**. Subsequent requests are **~1s** (template fragment caching keeps 10 product sections cached for 10 minutes).
+
+GitHub Actions (every 10 min) + UptimeRobot (every 5 min) keep the app warm to avoid cold starts during normal use.
 
 ---
 
@@ -158,7 +183,7 @@ Full-stack Django ecommerce platform with seller marketplace, admin dashboard, r
 
 - Email validation runs ALL services in parallel; any "invalid" rejects immediately
 - Verification email is NEVER auto-sent — prevents bounces to admin's inbox
-- Database (`db.sqlite3`) tracked in git so clones include all data
+- Database (`db.sqlite3`) gitignored; seed data lives in `fixtures/seed_data.json`
 - Admin dashboard protected by `@staff_member_required`
 - Product sizes handled via dedicated `ProductSize` model (not free-text)
 - Leaflet/OSM for maps — no API key required, completely free

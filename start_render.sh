@@ -1,5 +1,10 @@
 #!/bin/bash
-# start_render.sh — Render start command
+# =============================================================================
+# start_render.sh — Render.com start command
+# This script runs on EVERY deploy/restart on Render.
+# It: migrates DB → loads fixture (if empty) → restores images → creates
+#     superuser/Site/SocialApp → starts gunicorn
+# =============================================================================
 set -e
 
 echo "=== START_RENDER.SH STARTED ==="
@@ -76,7 +81,8 @@ user.set_password('REPLACED_ADMIN_PASS')
 user.is_superuser = True
 user.is_staff = True
 user.save()
-print(f'Superuser {"created" if created else "updated"}: jeevan / REPLACED_ADMIN_PASS (email: {user.email})')
+status_flag = 'created' if created else 'updated'
+print(f'Superuser {status_flag}: jeevan / REPLACED_ADMIN_PASS (email: {user.email})')
 
 # --- Site domain ---
 domain = os.environ.get('BASE_URL', 'https://ojt-ecommerce-website.onrender.com').replace('https://','').replace('http://','').split('/')[0]

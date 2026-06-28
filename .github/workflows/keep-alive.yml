@@ -1,3 +1,8 @@
+# =============================================================================
+# keep-alive.yml — GitHub Actions workflow
+# Keeps the Render free-tier app from spinning down (15-min idle timeout).
+# Pings every 10 minutes with a 120s timeout.
+# =============================================================================
 name: Keep Render alive
 on:
   schedule:

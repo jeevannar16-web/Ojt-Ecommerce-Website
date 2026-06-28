@@ -84,4 +84,45 @@ else:
     print(f'Products already exist: {Product.objects.count()}')
 " 2>&1
 
+# --- Seed English translations if empty ---
+python -c "
+import django, os, sys
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fitness_hub.settings')
+django.setup()
+from localization.models import Language, Translation
+
+# Ensure English language exists
+en_lang, created = Language.objects.get_or_create(
+    code='en', defaults={'name': 'English', 'is_active': True}
+)
+if created:
+    print('English language created')
+# Also create other supported languages
+for code, name in [('ne', 'Nepali'), ('hi', 'Hindi'), ('ko', 'Korean')]:
+    Language.objects.get_or_create(code=code, defaults={'name': name, 'is_active': True})
+print(f'Languages available: {Language.objects.filter(is_active=True).count()}')
+
+if not Translation.objects.filter(language=en_lang).exists():
+    entries = {
+        'nav.login': 'Login',
+        'nav.register': 'Register',
+        'nav.logout': 'Logout',
+        'nav.profile': 'Profile',
+        'nav.cart': 'Cart',
+        'nav.admin_dashboard': 'Admin Dashboard',
+        'nav.seller_dashboard': 'Seller Dashboard',
+        'home.hero_title': 'Premium Fitness Gear',
+        'home.hero_subtitle': 'Curated fitness goods, beautifully delivered. Find what moves you.',
+        'home.shop_now': 'Shop Now \u2192',
+        'home.featured': 'Featured Products',
+        'home.new_arrivals': 'New Arrivals',
+        'profile.orders': 'My Orders',
+    }
+    objs = [Translation(key=k, value=v, language=en_lang) for k, v in entries.items()]
+    Translation.objects.bulk_create(objs)
+    print(f'English translations seeded: {len(objs)}')
+else:
+    print(f'Translations already exist: {Translation.objects.count()}')
+" 2>&1
+
 exec gunicorn fitness_hub.wsgi:application --workers=4 --threads=2 --worker-class=gthread

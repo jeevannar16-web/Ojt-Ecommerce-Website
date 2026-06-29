@@ -14,7 +14,7 @@ import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
 sentry_sdk.init(
-    dsn="https://REPLACED_SENTRY_DSN",
+    dsn=os.environ.get('SENTRY_DSN') or None,
     integrations=[DjangoIntegration()],
     traces_sample_rate=1.0,
     send_default_pii=True,
@@ -113,7 +113,7 @@ CACHES = {
 }
 
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', 'OPTIONS': {'min_length': 6}},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', 'OPTIONS': {'min_length': 8}},
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -181,6 +181,10 @@ SESSION_COOKIE_HTTPONLY = True
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
 
 
 

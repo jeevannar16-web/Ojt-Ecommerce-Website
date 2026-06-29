@@ -190,4 +190,4 @@ Full-stack Django ecommerce platform with seller marketplace, admin dashboard, r
 - Session-stored theme (not `localStorage`) to avoid flash on server-rendered pages
 - Single-session enforcement via Django signal (not middleware)
 - OTP displayed on-screen for non-Twilio mode (no SMS dependency)
-- All API keys sourced from `.env` only (gitignored); no hardcoded secrets
+- All API keys sourced from `.env` only (gitignored) or fall back to placeholders; no hardcoded real secrets

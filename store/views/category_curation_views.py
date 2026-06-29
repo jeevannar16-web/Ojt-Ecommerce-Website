@@ -3,6 +3,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.admin.views.decorators import staff_member_required
 from django.core.files.base import ContentFile
 import base64
 from ..models import Category
@@ -48,6 +49,7 @@ def category_curation_workspace(request):
 
 
 
+@staff_member_required
 @csrf_exempt
 def update_category_asset(request):
     """Handle category image upload - ALLOW EDITING ANYTIME."""

@@ -33,7 +33,7 @@
       "user": 2,
       "content_type": 7,
       "object_id": "2",
-      "object_repr": "jeevan",
+      "object_repr": "devuser1",
       "action_flag": 3,
       "change_message": ""
     }
@@ -72,7 +72,7 @@
       "user": 2,
       "content_type": 7,
       "object_id": "3",
-      "object_repr": "hitesh",
+      "object_repr": "devuser3",
       "action_flag": 3,
       "change_message": ""
     }
@@ -98,7 +98,7 @@
       "user": 2,
       "content_type": 4,
       "object_id": "3",
-      "object_repr": "hitesh",
+      "object_repr": "devuser3",
       "action_flag": 3,
       "change_message": ""
     }
@@ -124,7 +124,7 @@
       "user": 2,
       "content_type": 14,
       "object_id": "3",
-      "object_repr": "hi@gmail.com",
+      "object_repr": "user2@example.com",
       "action_flag": 3,
       "change_message": ""
     }
@@ -137,7 +137,7 @@
       "user": 2,
       "content_type": 14,
       "object_id": "2",
-      "object_repr": "hit@gmail.com",
+      "object_repr": "user4@example.com",
       "action_flag": 3,
       "change_message": ""
     }
@@ -150,7 +150,7 @@
       "user": 2,
       "content_type": 14,
       "object_id": "1",
-      "object_repr": "hit12@gmail.com",
+      "object_repr": "user3@example.com",
       "action_flag": 3,
       "change_message": ""
     }
@@ -163,7 +163,7 @@
       "user": 2,
       "content_type": 4,
       "object_id": "5",
-      "object_repr": "hi",
+      "object_repr": "testuser",
       "action_flag": 3,
       "change_message": ""
     }
@@ -193,10 +193,10 @@
       "password": "pbkdf2_sha256$720000$OrAPxYkhOMQ3CUxu3tknBP$LXlKlBWkdliM/E3oFSqEe837esnZRYW5tHh4VrriFgM=",
       "last_login": "2026-06-24T11:23:16.803Z",
       "is_superuser": false,
-      "username": "hitesh",
+      "username": "devuser3",
       "first_name": "",
       "last_name": "",
-      "email": "hitesh@gmail.com",
+      "email": "user5@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-20T02:48:39.223Z",
@@ -1219,10 +1219,10 @@
       "password": "pbkdf2_sha256$720000$zi6isSIOtbf74dwEyr9qWg$RHibqlhyHAGHL7jolj8MLYbLbP1dI4e6n1cOR2ReK9w=",
       "last_login": "2026-06-21T04:07:03.802Z",
       "is_superuser": false,
-      "username": "kulraj",
+      "username": "userthree",
       "first_name": "",
       "last_name": "",
-      "email": "kulraj@gmail.com",
+      "email": "user8@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-21T04:07:03.506Z",
@@ -1240,7 +1240,7 @@
       "username": "why",
       "first_name": "",
       "last_name": "",
-      "email": "why@gmail.com",
+      "email": "user10@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-21T04:37:04.233Z",
@@ -1258,7 +1258,7 @@
       "username": "hi",
       "first_name": "",
       "last_name": "",
-      "email": "hi@gmail.com",
+      "email": "user2@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-21T05:06:07.525Z",
@@ -1276,7 +1276,7 @@
       "username": "hi ",
       "first_name": "",
       "last_name": "",
-      "email": "hi@gmail.com",
+      "email": "user2@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-21T05:09:54.792Z",
@@ -1294,7 +1294,7 @@
       "username": "hii",
       "first_name": "",
       "last_name": "",
-      "email": "hi@gmail.com",
+      "email": "user2@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-21T05:10:12.706Z",
@@ -1312,7 +1312,7 @@
       "username": "hiii",
       "first_name": "",
       "last_name": "",
-      "email": "jeevannar16@gmail.com",
+      "email": "user1@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-21T05:13:06.626Z",
@@ -1330,7 +1330,7 @@
       "username": "hit",
       "first_name": "",
       "last_name": "",
-      "email": "alisharijn8@gmail.com",
+      "email": "user2@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-21T06:49:20.171Z",
@@ -1348,7 +1348,7 @@
       "username": "hit1",
       "first_name": "",
       "last_name": "",
-      "email": "alisharijn8@gmail.com",
+      "email": "user2@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-21T06:50:07.431Z",
@@ -1366,7 +1366,7 @@
       "username": "12",
       "first_name": "",
       "last_name": "",
-      "email": "alisharijn8@gmail.com",
+      "email": "user2@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-21T06:58:22.982Z",
@@ -1384,7 +1384,7 @@
       "username": "jeev-web",
       "first_name": "",
       "last_name": "",
-      "email": "jeevannar16@gmail.com",
+      "email": "user1@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-21T07:00:59.840Z",
@@ -1402,7 +1402,7 @@
       "username": "sis",
       "first_name": "",
       "last_name": "",
-      "email": "hi@gmail.com",
+      "email": "user2@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-21T07:04:49.137Z",
@@ -1420,7 +1420,7 @@
       "username": "kee",
       "first_name": "",
       "last_name": "",
-      "email": "ke@gmail.com",
+      "email": "user7@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-21T07:10:12.512Z",
@@ -1438,7 +1438,7 @@
       "username": "ji",
       "first_name": "",
       "last_name": "",
-      "email": "alisharijn8@gmail.com",
+      "email": "user2@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-21T07:11:23.759Z",
@@ -1456,7 +1456,7 @@
       "username": "ka",
       "first_name": "",
       "last_name": "",
-      "email": "ka@gmail.com",
+      "email": "user6@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-21T07:24:35.834Z",
@@ -1474,7 +1474,7 @@
       "username": "hi1",
       "first_name": "",
       "last_name": "",
-      "email": "hi@gmail.com",
+      "email": "user2@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-21T08:09:05.782Z",
@@ -1489,10 +1489,10 @@
       "password": "!3racoa49s4ggvUnCEkKFCzNhFttD5M9zpIuojrIt",
       "last_login": "2026-06-22T13:13:21.828Z",
       "is_superuser": false,
-      "username": "kulraj0",
-      "first_name": "kulraj",
+      "username": "userthree0",
+      "first_name": "User",
       "last_name": "",
-      "email": "kulraj024@gmail.com",
+      "email": "user3@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-22T13:13:21.760Z",
@@ -1507,10 +1507,10 @@
       "password": "pbkdf2_sha256$720000$KLkyRiFmA5zHTJicTBzjrC$FMuS83LzN3LZldrtTpHaRNCSYEZ+eurLH/g6bdGSPxg=",
       "last_login": "2026-06-22T13:14:06.376Z",
       "is_superuser": false,
-      "username": "bikram",
+      "username": "devuser2",
       "first_name": "",
       "last_name": "",
-      "email": "jeevannar16@gmail.com",
+      "email": "user1@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-22T13:14:06.058Z",
@@ -1525,10 +1525,10 @@
       "password": "pbkdf2_sha256$720000$Y9vwASCYHQIbzAcXkcUotP$8yadEZbJBOsI4wAWZbj+9SaaozzdHpWZ/KQNe6qY8cI=",
       "last_login": "2026-06-22T13:18:27.754Z",
       "is_superuser": false,
-      "username": "bikram1",
+      "username": "devuser2a",
       "first_name": "",
       "last_name": "",
-      "email": "bikramgole.genius@gmail.com",
+      "email": "user1@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-22T13:18:27.463Z",
@@ -1543,10 +1543,10 @@
       "password": "pbkdf2_sha256$720000$RIf0dVv8CZAhVjmTTcXPwQ$Ruotx7OetRsKse+bVlpQKhtVJ0MJSmixbPJrpb/6jH8=",
       "last_login": "2026-06-27T15:08:33.613Z",
       "is_superuser": false,
-      "username": "manlal",
-      "first_name": "Manlal",
-      "last_name": "Neupane",
-      "email": "neupanemanlal1@gmail.com",
+      "username": "devuser4",
+      "first_name": "User",
+      "last_name": "Last",
+      "email": "user4@example.com",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2026-06-27T08:40:04.524Z",
@@ -3818,7 +3818,7 @@
       "seller_requested": false,
       "seller_rejection_reason": "",
       "seller_requested_at": null,
-      "phone": "+19768603961",
+      "phone": "+00000000000",
       "address_line1": "",
       "address_line2": "",
       "city": "",
@@ -14587,7 +14587,7 @@
     "fields": {
       "user": 2,
       "order_number": "6E1F1D6131",
-      "full_name": "jeevan",
+      "full_name": "devuser1",
       "email": "",
       "shipping_address": "home, Online Store Delivery (ZIP: 00000)",
       "latitude": null,
@@ -14605,7 +14605,7 @@
     "fields": {
       "user": 2,
       "order_number": "70A702AE9E",
-      "full_name": "jeevan",
+      "full_name": "devuser1",
       "email": "",
       "shipping_address": "hi, Online Store Delivery (ZIP: 00000)",
       "latitude": null,
@@ -14623,7 +14623,7 @@
     "fields": {
       "user": 2,
       "order_number": "08269624C6",
-      "full_name": "jeevan",
+      "full_name": "devuser1",
       "email": "",
       "shipping_address": "hi, Online Store Delivery (ZIP: 00000)",
       "latitude": null,
@@ -17251,8 +17251,8 @@
     "fields": {
       "user": 2,
       "order_number": "AE0B4F7AD8",
-      "full_name": "jeevan",
-      "email": "jeevannar16@gmail.com",
+      "full_name": "devuser1",
+      "email": "user1@example.com",
       "shipping_address": "Kathmandu, Nepal, Kathmandu Metropolitan City, Bagamati Province, ZIP: 46600",
       "latitude": "27.708317",
       "longitude": "85.320582",
@@ -24950,7 +24950,7 @@
     "model": "store.newslettersubscriber",
     "pk": 9,
     "fields": {
-      "email": "jeevannar16@gmail.com",
+      "email": "user1@example.com",
       "subscribed_at": "2026-06-26T03:49:58.917Z",
       "active": true,
       "token": "a177b348e3dd46fe9989b92f1dc9a205"
@@ -24962,9 +24962,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-20T06:10:27.299Z"
@@ -24976,10 +24976,10 @@
     "fields": {
       "user": 2,
       "action_type": "seller_revoke",
-      "description": "Revoked seller access for @hitesh",
+      "description": "Revoked seller access for @devuser3",
       "details": {
         "user_id": 4,
-        "username": "hitesh"
+        "username": "devuser3"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-20T06:11:16.228Z"
@@ -24991,9 +24991,9 @@
     "fields": {
       "user": 4,
       "action_type": "login",
-      "description": "User logged in: hitesh",
+      "description": "User logged in: devuser3",
       "details": {
-        "username": "hitesh"
+        "username": "devuser3"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-20T06:14:20.981Z"
@@ -25039,9 +25039,9 @@
     "fields": {
       "user": 4,
       "action_type": "login",
-      "description": "User logged in: hitesh",
+      "description": "User logged in: devuser3",
       "details": {
-        "username": "hitesh"
+        "username": "devuser3"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T03:25:42.134Z"
@@ -25053,9 +25053,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T03:32:29.063Z"
@@ -25067,9 +25067,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T03:37:43.243Z"
@@ -25081,9 +25081,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T04:05:31.585Z"
@@ -25095,10 +25095,10 @@
     "fields": {
       "user": 65,
       "action_type": "user_register",
-      "description": "New user registered: kulraj",
+      "description": "New user registered: userthree",
       "details": {
-        "username": "kulraj",
-        "email": "kulraj@gmail.com",
+        "username": "userthree",
+        "email": "user8@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25111,9 +25111,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T04:12:06.487Z"
@@ -25125,9 +25125,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T04:14:23.700Z"
@@ -25142,7 +25142,7 @@
       "description": "New user registered: why",
       "details": {
         "username": "why",
-        "email": "why@gmail.com",
+        "email": "user10@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25155,9 +25155,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T05:04:47.760Z"
@@ -25172,7 +25172,7 @@
       "description": "New user registered: hi",
       "details": {
         "username": "hi",
-        "email": "hi@gmail.com",
+        "email": "user2@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25188,7 +25188,7 @@
       "description": "New user registered: hi ",
       "details": {
         "username": "hi ",
-        "email": "hi@gmail.com",
+        "email": "user2@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25204,7 +25204,7 @@
       "description": "New user registered: hii",
       "details": {
         "username": "hii",
-        "email": "hi@gmail.com",
+        "email": "user2@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25217,9 +25217,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T05:10:56.898Z"
@@ -25234,7 +25234,7 @@
       "description": "New user registered: hiii",
       "details": {
         "username": "hiii",
-        "email": "jeevannar16@gmail.com",
+        "email": "user1@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25247,9 +25247,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T06:20:49.731Z"
@@ -25261,9 +25261,9 @@
     "fields": {
       "user": 4,
       "action_type": "login",
-      "description": "User logged in: hitesh",
+      "description": "User logged in: devuser3",
       "details": {
-        "username": "hitesh"
+        "username": "devuser3"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T06:32:00.793Z"
@@ -25278,7 +25278,7 @@
       "description": "New user registered: hit",
       "details": {
         "username": "hit",
-        "email": "alisharijn8@gmail.com",
+        "email": "user2@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25294,7 +25294,7 @@
       "description": "New user registered: hit1",
       "details": {
         "username": "hit1",
-        "email": "alisharijn8@gmail.com",
+        "email": "user2@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25310,7 +25310,7 @@
       "description": "New user registered: 12",
       "details": {
         "username": "12",
-        "email": "alisharijn8@gmail.com",
+        "email": "user2@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25323,9 +25323,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T06:59:22.689Z"
@@ -25340,7 +25340,7 @@
       "description": "New user registered: jeev",
       "details": {
         "username": "jeev",
-        "email": "jeevannar16@gmail.com",
+        "email": "user1@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25369,9 +25369,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T07:03:04.564Z"
@@ -25416,7 +25416,7 @@
       "description": "New user registered: sis",
       "details": {
         "username": "sis",
-        "email": "hi@gmail.com",
+        "email": "user2@example.com",
         "want_seller": true
       },
       "ip_address": "127.0.0.1",
@@ -25429,9 +25429,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T07:07:23.702Z"
@@ -25446,7 +25446,7 @@
       "description": "New user registered: kee",
       "details": {
         "username": "kee",
-        "email": "ke@gmail.com",
+        "email": "user7@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25462,7 +25462,7 @@
       "description": "New user registered: ji",
       "details": {
         "username": "ji",
-        "email": "alisharijn8@gmail.com",
+        "email": "user2@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25478,7 +25478,7 @@
       "description": "New user registered: ka",
       "details": {
         "username": "ka",
-        "email": "ka@gmail.com",
+        "email": "user6@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25494,7 +25494,7 @@
       "description": "New user registered: hi1",
       "details": {
         "username": "hi1",
-        "email": "hi@gmail.com",
+        "email": "user2@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25541,9 +25541,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T10:30:33.085Z"
@@ -25555,9 +25555,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T11:24:53.713Z"
@@ -25569,9 +25569,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T11:28:49.473Z"
@@ -25583,7 +25583,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T11:39:53.901Z"
@@ -25595,9 +25595,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T11:41:32.372Z"
@@ -25609,7 +25609,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T11:44:02.676Z"
@@ -25621,7 +25621,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T11:47:52.661Z"
@@ -25633,7 +25633,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T11:48:05.768Z"
@@ -25645,9 +25645,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T11:49:30.269Z"
@@ -25659,7 +25659,7 @@
     "fields": {
       "user": 72,
       "action_type": "social_login",
-      "description": "Logged in via Google (alisharijn8@gmail.com)",
+      "description": "Logged in via Google (user2@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T11:53:25.975Z"
@@ -25705,7 +25705,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T12:24:52.954Z"
@@ -25717,9 +25717,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T12:26:03.141Z"
@@ -25731,9 +25731,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-21T12:31:48.363Z"
@@ -25760,9 +25760,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-22T05:51:02.538Z"
@@ -25774,7 +25774,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-22T05:52:22.485Z"
@@ -25786,7 +25786,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-22T13:11:55.082Z"
@@ -25798,7 +25798,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-22T13:12:13.586Z"
@@ -25810,9 +25810,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-22T13:12:24.695Z"
@@ -25824,7 +25824,7 @@
     "fields": {
       "user": 80,
       "action_type": "social_login",
-      "description": "Logged in via Google (kulraj024@gmail.com)",
+      "description": "Logged in via Google (user3@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-22T13:13:21.809Z"
@@ -25836,10 +25836,10 @@
     "fields": {
       "user": 81,
       "action_type": "user_register",
-      "description": "New user registered: bikram",
+      "description": "New user registered: devuser2",
       "details": {
-        "username": "bikram",
-        "email": "jeevannar16@gmail.com",
+        "username": "devuser2",
+        "email": "user1@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25852,10 +25852,10 @@
     "fields": {
       "user": 82,
       "action_type": "user_register",
-      "description": "New user registered: bikram1",
+      "description": "New user registered: devuser2a",
       "details": {
-        "username": "bikram1",
-        "email": "bikramgole.genius@gmail.com",
+        "username": "devuser2a",
+        "email": "user1@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -25868,9 +25868,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-22T15:00:34.448Z"
@@ -25882,9 +25882,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-22T15:29:31.229Z"
@@ -25896,9 +25896,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-23T02:46:27.160Z"
@@ -25910,9 +25910,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-23T04:05:33.539Z"
@@ -25924,9 +25924,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-23T07:59:37.683Z"
@@ -27536,9 +27536,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-23T08:22:45.627Z"
@@ -29051,7 +29051,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-23T09:16:16.462Z"
@@ -29233,9 +29233,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-23T09:19:19.328Z"
@@ -29876,7 +29876,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-23T09:29:10.301Z"
@@ -30074,9 +30074,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-23T09:37:28.357Z"
@@ -32294,7 +32294,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T04:21:27.835Z"
@@ -32306,7 +32306,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T04:21:44.097Z"
@@ -32334,9 +32334,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T04:22:45.726Z"
@@ -32365,7 +32365,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T04:23:25.607Z"
@@ -32394,7 +32394,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T04:32:29.601Z"
@@ -32406,7 +32406,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T04:33:34.375Z"
@@ -32418,9 +32418,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T04:42:31.634Z"
@@ -32432,7 +32432,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T04:42:58.914Z"
@@ -32444,9 +32444,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T07:41:13.669Z"
@@ -32458,7 +32458,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T07:49:54.018Z"
@@ -32470,9 +32470,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T08:00:39.760Z"
@@ -32484,7 +32484,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T08:16:01.098Z"
@@ -32547,9 +32547,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T08:25:31.122Z"
@@ -32561,7 +32561,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T08:26:33.007Z"
@@ -32573,9 +32573,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T08:53:53.377Z"
@@ -32587,7 +32587,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T09:06:41.719Z"
@@ -32599,7 +32599,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T09:10:41.459Z"
@@ -32614,7 +32614,7 @@
       "description": "New user registered: jw",
       "details": {
         "username": "jw",
-        "email": "jeevannar16@gmail.com",
+        "email": "user1@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -32627,9 +32627,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T09:21:53.263Z"
@@ -32641,7 +32641,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T11:28:26.777Z"
@@ -32667,9 +32667,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T14:22:46.534Z"
@@ -32681,7 +32681,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T14:25:12.743Z"
@@ -32736,9 +32736,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T15:14:55.556Z"
@@ -32778,7 +32778,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-24T15:47:16.035Z"
@@ -32790,9 +32790,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T01:47:39.439Z"
@@ -33484,9 +33484,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T05:53:00.658Z"
@@ -33498,9 +33498,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T05:58:06.817Z"
@@ -33526,9 +33526,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T06:49:21.554Z"
@@ -33554,7 +33554,7 @@
     "fields": {
       "user": null,
       "action_type": "conversation_start",
-      "description": "Started conversation about Weight Loss \u2013 Calorie Counting Food Scale with jeevan",
+      "description": "Started conversation about Weight Loss \u2013 Calorie Counting Food Scale with devuser1",
       "details": {
         "product_id": 1062,
         "seller_id": 2
@@ -33598,7 +33598,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T07:06:43.205Z"
@@ -33624,9 +33624,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T07:14:27.873Z"
@@ -33708,7 +33708,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T07:31:16.539Z"
@@ -33734,7 +33734,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T07:47:11.234Z"
@@ -33879,7 +33879,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T08:19:53.207Z"
@@ -33905,9 +33905,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T08:26:46.250Z"
@@ -33919,9 +33919,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T08:31:29.061Z"
@@ -33976,9 +33976,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T09:08:33.050Z"
@@ -33990,7 +33990,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T09:09:48.619Z"
@@ -34005,7 +34005,7 @@
       "description": "New user registered: kul",
       "details": {
         "username": "kul",
-        "email": "jeevannar16@gmail.com",
+        "email": "user1@example.com",
         "want_seller": false
       },
       "ip_address": "127.0.0.1",
@@ -34032,7 +34032,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T09:13:16.241Z"
@@ -34104,7 +34104,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "2407:54c0:1b22:b533:4d1b:9897:6594:bee2",
       "created_at": "2026-06-25T10:13:50.875Z"
@@ -34116,7 +34116,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "2407:54c0:1b22:b533:4d1b:9897:6594:bee2",
       "created_at": "2026-06-25T10:15:56.809Z"
@@ -34128,9 +34128,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "2407:54c0:1b22:b533:4d1b:9897:6594:bee2",
       "created_at": "2026-06-25T10:16:36.517Z"
@@ -34156,7 +34156,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "2407:54c0:1b22:b533:4d1b:9897:6594:bee2",
       "created_at": "2026-06-25T10:18:26.632Z"
@@ -34168,7 +34168,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "2407:54c0:1b22:db39:a005:7007:c7ed:442b",
       "created_at": "2026-06-25T14:12:52.823Z"
@@ -34180,9 +34180,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T14:15:09.275Z"
@@ -34194,7 +34194,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "2407:54c0:1b22:db39:50ee:91d:fe0c:6e0c",
       "created_at": "2026-06-25T15:02:49.927Z"
@@ -34206,9 +34206,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-25T15:20:43.769Z"
@@ -34220,7 +34220,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-26T00:03:01.579Z"
@@ -34232,7 +34232,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-26T00:34:04.343Z"
@@ -34244,7 +34244,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-26T00:59:18.678Z"
@@ -34256,9 +34256,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-26T03:28:23.561Z"
@@ -34270,7 +34270,7 @@
     "fields": {
       "user": 2,
       "action_type": "block_user",
-      "description": "jeevan blocked jeev",
+      "description": "devuser1 blocked jeev",
       "details": {
         "conversation_id": 2
       },
@@ -34284,7 +34284,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-26T03:42:26.331Z"
@@ -34296,9 +34296,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-26T03:49:00.179Z"
@@ -34310,9 +34310,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-26T03:53:23.368Z"
@@ -34324,7 +34324,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-26T06:57:12.934Z"
@@ -34336,9 +34336,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-26T06:57:37.245Z"
@@ -34350,7 +34350,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-26T11:04:24.542Z"
@@ -34362,9 +34362,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-26T11:04:58.986Z"
@@ -34376,7 +34376,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "2407:54c0:1b22:101e:4cd0:db91:a670:4096",
       "created_at": "2026-06-26T13:56:17.820Z"
@@ -34388,9 +34388,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-26T13:57:31.169Z"
@@ -34501,9 +34501,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "202.51.89.75",
       "created_at": "2026-06-26T14:55:53.421Z"
@@ -34515,7 +34515,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "2404:7c00:48:932e:92e3:9c51:4f3f:4277",
       "created_at": "2026-06-27T05:41:21.711Z"
@@ -34561,7 +34561,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-27T08:28:19.550Z"
@@ -34573,7 +34573,7 @@
     "fields": {
       "user": 85,
       "action_type": "social_login",
-      "description": "Logged in via Google (neupanemanlal1@gmail.com)",
+      "description": "Logged in via Google (user4@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-27T08:40:04.614Z"
@@ -34585,9 +34585,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-27T09:12:33.769Z"
@@ -34599,7 +34599,7 @@
     "fields": {
       "user": 85,
       "action_type": "social_login",
-      "description": "Logged in via Google (neupanemanlal1@gmail.com)",
+      "description": "Logged in via Google (user4@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-27T15:06:33.145Z"
@@ -34611,9 +34611,9 @@
     "fields": {
       "user": 85,
       "action_type": "login",
-      "description": "User logged in: Manlal",
+      "description": "User logged in: userfour",
       "details": {
-        "username": "Manlal"
+        "username": "userfour"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-27T15:08:33.656Z"
@@ -34625,7 +34625,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-27T16:04:11.202Z"
@@ -34637,9 +34637,9 @@
     "fields": {
       "user": 2,
       "action_type": "login",
-      "description": "User logged in: jeevan",
+      "description": "User logged in: devuser1",
       "details": {
-        "username": "jeevan"
+        "username": "devuser1"
       },
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-27T16:07:07.541Z"
@@ -34733,7 +34733,7 @@
     "fields": {
       "user": 74,
       "action_type": "social_login",
-      "description": "Logged in via Google (jeevannar16@gmail.com)",
+      "description": "Logged in via Google (user1@example.com)",
       "details": {},
       "ip_address": "127.0.0.1",
       "created_at": "2026-06-28T00:03:46.252Z"
@@ -36228,7 +36228,7 @@
       "image": "",
       "reactions": {
         "\ud83d\udd25": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-25T14:15:45.917Z",
@@ -36251,10 +36251,10 @@
       "image": "",
       "reactions": {
         "\ud83c\udf89": [
-          "jeevan"
+          "devuser1"
         ],
         "\u2764\ufe0f": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-25T14:16:02.740Z",
@@ -36315,7 +36315,7 @@
       "image": "",
       "reactions": {
         "\ud83d\ude0a": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-26T05:08:46.066Z",
@@ -36338,7 +36338,7 @@
       "image": "",
       "reactions": {
         "\ud83d\ude0a": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-26T05:08:46.947Z",
@@ -36608,10 +36608,10 @@
       "image": "",
       "reactions": {
         "\ud83d\udd25": [
-          "jeevan"
+          "devuser1"
         ],
         "\ud83c\udf89": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-26T06:57:44.295Z",
@@ -36657,7 +36657,7 @@
       "image": "",
       "reactions": {
         "\ud83d\ude22": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-26T07:05:26.662Z",
@@ -36722,7 +36722,7 @@
       "image": "",
       "reactions": {
         "\ud83d\udd25": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-26T13:58:29.151Z",
@@ -36774,7 +36774,7 @@
           "jeev"
         ],
         "\u2764\ufe0f": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-26T13:58:57.833Z",
@@ -37177,7 +37177,7 @@
       "image": "",
       "reactions": {
         "\ud83d\udd25": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-26T14:42:19.104Z",
@@ -37432,7 +37432,7 @@
       "image": "",
       "reactions": {
         "\ud83d\ude2e": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-26T14:57:47.603Z",
@@ -37516,7 +37516,7 @@
       "image": "",
       "reactions": {
         "\u2764\ufe0f": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-26T14:58:28.247Z",
@@ -37710,7 +37710,7 @@
       "image": "",
       "reactions": {
         "\ud83d\ude22": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-26T15:00:21.541Z",
@@ -37752,7 +37752,7 @@
       "image": "",
       "reactions": {
         "\ud83d\ude22": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-26T15:00:36.057Z",
@@ -38143,7 +38143,7 @@
       "image": "",
       "reactions": {
         "\ud83d\ude02": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-26T15:05:49.077Z",
@@ -38166,7 +38166,7 @@
       "image": "",
       "reactions": {
         "\ud83c\udf89": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-26T15:05:56.760Z",
@@ -38353,7 +38353,7 @@
       "image": "",
       "reactions": {
         "\ud83d\ude22": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-27T05:41:57.993Z",
@@ -38376,7 +38376,7 @@
       "image": "",
       "reactions": {
         "\ud83c\udf89": [
-          "jeevan",
+          "devuser1",
           "jeev"
         ],
         "\u2764\ufe0f": [
@@ -38422,7 +38422,7 @@
       "image": "",
       "reactions": {
         "\ud83d\udd25": [
-          "jeevan"
+          "devuser1"
         ]
       },
       "created_at": "2026-06-27T06:15:13.936Z",
@@ -43613,9 +43613,9 @@
     "model": "localization.translation",
     "pk": 564,
     "fields": {
-      "key": "Enter a valid email (e.g. yourname@gmail.com)",
+      "key": "Enter a valid email (e.g. user11@example.com)",
       "language": 2,
-      "value": "\u092e\u093e\u0928\u094d\u092f \u0907\u092e\u0947\u0932 \u092a\u094d\u0930\u0935\u093f\u0937\u094d\u091f \u0917\u0930\u094d\u0928\u0941\u0939\u094b\u0938\u094d (\u091c\u0938\u094d\u0924\u0948 yourname@gmail.com)",
+      "value": "\u092e\u093e\u0928\u094d\u092f \u0907\u092e\u0947\u0932 \u092a\u094d\u0930\u0935\u093f\u0937\u094d\u091f \u0917\u0930\u094d\u0928\u0941\u0939\u094b\u0938\u094d (\u091c\u0938\u094d\u0924\u0948 user11@example.com)",
       "updated_at": "2026-06-23T03:11:05.788Z"
     }
   },
@@ -45843,9 +45843,9 @@
     "model": "localization.translation",
     "pk": 935,
     "fields": {
-      "key": "Enter a valid email (e.g. yourname@gmail.com)",
+      "key": "Enter a valid email (e.g. user11@example.com)",
       "language": 3,
-      "value": "\u090f\u0915 \u0935\u0948\u0927 \u0908\u092e\u0947\u0932 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902 (\u0909\u0926\u093e. yourname@gmail.com)",
+      "value": "\u090f\u0915 \u0935\u0948\u0927 \u0908\u092e\u0947\u0932 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902 (\u0909\u0926\u093e. user11@example.com)",
       "updated_at": "2026-06-23T03:15:49.930Z"
     }
   },
@@ -48043,9 +48043,9 @@
     "model": "localization.translation",
     "pk": 1155,
     "fields": {
-      "key": "Enter a valid email (e.g. yourname@gmail.com)",
+      "key": "Enter a valid email (e.g. user11@example.com)",
       "language": 4,
-      "value": "\uc720\ud6a8\ud55c \uc774\uba54\uc77c\uc744 \uc785\ub825\ud558\uc138\uc694(\uc608: yourname@gmail.com).",
+      "value": "\uc720\ud6a8\ud55c \uc774\uba54\uc77c\uc744 \uc785\ub825\ud558\uc138\uc694(\uc608: user11@example.com).",
       "updated_at": "2026-06-23T03:18:37.478Z"
     }
   },
@@ -49843,9 +49843,9 @@
     "model": "localization.translation",
     "pk": 1335,
     "fields": {
-      "key": "yourname@gmail.com",
+      "key": "user11@example.com",
       "language": 4,
-      "value": "\uadc0\ud558\uc758 \uc774\ub984@gmail.com",
+      "value": "\uadc0\ud558\uc758 \uc774\user9@example.com",
       "updated_at": "2026-06-23T03:21:39.998Z"
     }
   },
@@ -50473,9 +50473,9 @@
     "model": "localization.translation",
     "pk": 1398,
     "fields": {
-      "key": "Enter a valid email (e.g. yourname@gmail.com)",
+      "key": "Enter a valid email (e.g. user11@example.com)",
       "language": 1,
-      "value": "Enter a valid email (e.g. yourname@gmail.com)",
+      "value": "Enter a valid email (e.g. user11@example.com)",
       "updated_at": "2026-06-23T03:21:43.304Z"
     }
   },
@@ -52733,9 +52733,9 @@
     "model": "localization.translation",
     "pk": 1624,
     "fields": {
-      "key": "yourname@gmail.com",
+      "key": "user11@example.com",
       "language": 1,
-      "value": "yourname@gmail.com",
+      "value": "user11@example.com",
       "updated_at": "2026-06-23T03:21:44.738Z"
     }
   },
@@ -70764,7 +70764,7 @@
     "pk": 3,
     "fields": {
       "user": 65,
-      "email": "kulraj@gmail.com",
+      "email": "user8@example.com",
       "token": "416pW8ABO94knArHp_KtVuSQVf2v5BbPthBI0psfBys",
       "otp": "818730",
       "created_at": "2026-06-21T04:07:03.812Z",
@@ -70779,7 +70779,7 @@
     "pk": 4,
     "fields": {
       "user": 65,
-      "email": "kulraj@gmail.com",
+      "email": "user8@example.com",
       "token": "0HR3Kw-ny_gXPJUYFdm_KAmPIRx7hDNqcJKGq091fXM",
       "otp": "381185",
       "created_at": "2026-06-21T04:08:17.007Z",
@@ -70794,7 +70794,7 @@
     "pk": 5,
     "fields": {
       "user": 66,
-      "email": "why@gmail.com",
+      "email": "user10@example.com",
       "token": "HPi6yRqTi2YbpjEWuCcFKSY6sfA_NF6aOlMpJ9kIRak",
       "otp": "936066",
       "created_at": "2026-06-21T04:37:04.523Z",
@@ -70809,7 +70809,7 @@
     "pk": 6,
     "fields": {
       "user": 67,
-      "email": "hi@gmail.com",
+      "email": "user2@example.com",
       "token": "BXLtM9A0khDJBmnZ5zAXkz9dY3sNwzwpq6y9VF9sVcQ",
       "otp": "592611",
       "created_at": "2026-06-21T05:06:07.818Z",
@@ -70824,7 +70824,7 @@
     "pk": 7,
     "fields": {
       "user": 68,
-      "email": "hi@gmail.com",
+      "email": "user2@example.com",
       "token": "ysazmM_o_x2DEBsEtCoWrZ7bTCOii23CfCA7OGp1Sqc",
       "otp": "656508",
       "created_at": "2026-06-21T05:09:55.119Z",
@@ -70839,7 +70839,7 @@
     "pk": 8,
     "fields": {
       "user": 69,
-      "email": "hi@gmail.com",
+      "email": "user2@example.com",
       "token": "1lkpeUN0LTHXZMYuvgu7s2zw_dVavpFGl_CFGD2U7wo",
       "otp": "690260",
       "created_at": "2026-06-21T05:10:12.991Z",
@@ -70854,7 +70854,7 @@
     "pk": 9,
     "fields": {
       "user": 70,
-      "email": "jeevannar16@gmail.com",
+      "email": "user1@example.com",
       "token": "2cfBHjl-AOgGI-lEmr1O6zzeMacucKz-DNEEwUQzA8o",
       "otp": "869754",
       "created_at": "2026-06-21T05:13:06.950Z",
@@ -70869,7 +70869,7 @@
     "pk": 10,
     "fields": {
       "user": 74,
-      "email": "jeevannar16@gmail.com",
+      "email": "user1@example.com",
       "token": "YOpUJW9d3dL8rTAnSTztx18Ob-VSH0FzfqbS67oa3tY",
       "otp": "104442",
       "created_at": "2026-06-21T07:01:00.128Z",
@@ -70884,7 +70884,7 @@
     "pk": 11,
     "fields": {
       "user": 75,
-      "email": "hi@gmail.com",
+      "email": "user2@example.com",
       "token": "8OXSiF8Gd40uBaN6hR6dTKd76dZQugrIe9EyVIeftYs",
       "otp": "923775",
       "created_at": "2026-06-21T07:04:49.433Z",
@@ -70899,7 +70899,7 @@
     "pk": 12,
     "fields": {
       "user": 75,
-      "email": "hi@gmail.com",
+      "email": "user2@example.com",
       "token": "Say77U3Esjqsyz0szE58DH6_0Yu0IvX-g8GU9xwR2aE",
       "otp": "186897",
       "created_at": "2026-06-21T07:06:56.568Z",
@@ -70914,7 +70914,7 @@
     "pk": 13,
     "fields": {
       "user": 76,
-      "email": "ke@gmail.com",
+      "email": "user7@example.com",
       "token": "RwF0ijs002HSWaJi9hrHg7rx-GpcGrWcJ1hd6H9hUsg",
       "otp": "065258",
       "created_at": "2026-06-21T07:10:12.821Z",
@@ -70929,7 +70929,7 @@
     "pk": 14,
     "fields": {
       "user": 77,
-      "email": "alisharijn8@gmail.com",
+      "email": "user2@example.com",
       "token": "HXZBsGH9b0a3Ubif6zPhFVVLc077m3HKxEAzg8FjdO0",
       "otp": "559882",
       "created_at": "2026-06-21T07:11:24.043Z",
@@ -70944,7 +70944,7 @@
     "pk": 15,
     "fields": {
       "user": 78,
-      "email": "ka@gmail.com",
+      "email": "user6@example.com",
       "token": "G9eDx2KXxHtjNZf8QSbSZlh-6qtDpNZ0PJQWcDF6_QU",
       "otp": "415572",
       "created_at": "2026-06-21T07:24:44.160Z",
@@ -70959,7 +70959,7 @@
     "pk": 16,
     "fields": {
       "user": 79,
-      "email": "hi@gmail.com",
+      "email": "user2@example.com",
       "token": "jM1-MBpxJRYVo9wr3iyJP50DXfT5WRSkW2-h1DxdnVc",
       "otp": "090810",
       "created_at": "2026-06-21T08:09:11.196Z",
@@ -70974,7 +70974,7 @@
     "pk": 17,
     "fields": {
       "user": 81,
-      "email": "jeevannar16@gmail.com",
+      "email": "user1@example.com",
       "token": "oKEfdHc2fEtkpWoE6_CprNEAXmoliC0yEdeu-KmzOv4",
       "otp": "966848",
       "created_at": "2026-06-22T13:14:27.531Z",
@@ -70989,7 +70989,7 @@
     "pk": 18,
     "fields": {
       "user": 82,
-      "email": "bikramgole.genius@gmail.com",
+      "email": "user1@example.com",
       "token": "totHjKqwE4DyeeG4zG7bC3HGL5zVnHFURIQGyVP6_ak",
       "otp": "993258",
       "created_at": "2026-06-22T13:18:29.701Z",
@@ -71004,7 +71004,7 @@
     "pk": 3,
     "fields": {
       "user": 66,
-      "phone": "+19768603961",
+      "phone": "+00000000000",
       "otp": "257387",
       "provider_sid": "dev-mode",
       "created_at": "2026-06-21T04:37:57.412Z",
@@ -71049,7 +71049,7 @@
     "pk": 1,
     "fields": {
       "user": 80,
-      "email": "kulraj024@gmail.com",
+      "email": "user3@example.com",
       "verified": true,
       "primary": true
     }
@@ -71059,7 +71059,7 @@
     "pk": 2,
     "fields": {
       "user": 85,
-      "email": "neupanemanlal1@gmail.com",
+      "email": "user4@example.com",
       "verified": true,
       "primary": true
     }
@@ -71086,21 +71086,21 @@
     "fields": {
       "user": 74,
       "provider": "google",
-      "uid": "111915305618977796654",
+      "uid": "000000000000000000001",
       "last_login": "2026-06-28T00:03:46.246Z",
       "date_joined": "2026-06-21T11:20:24.533Z",
       "extra_data": {
         "iss": "https://accounts.google.com",
-        "azp": "your-google-client-id",
-        "aud": "your-google-client-id",
-        "sub": "111915305618977796654",
-        "email": "jeevannar16@gmail.com",
+        "azp": "placeholder-client-id.apps.googleusercontent.com",
+        "aud": "placeholder-client-id.apps.googleusercontent.com",
+        "sub": "000000000000000000000",
+        "email": "user1@example.com",
         "email_verified": true,
         "at_hash": "zqRNLuECLH4mdfA8MkOwHA",
-        "name": "Jeevan Neupane",
-        "picture": "https://lh3.googleusercontent.com/a/ACg8ocLvoo9I5kj1KkkXoQGiTh35VqQYDFBJjN7Mc1kMmFK_Ah5h96Q=s96-c",
-        "given_name": "Jeevan",
-        "family_name": "Neupane",
+        "name": "User One",
+        "picture": "https://example.com/avatar.png",
+        "given_name": "User",
+        "family_name": "One",
         "iat": 1782605026,
         "exp": 1782608626
       }
@@ -71112,21 +71112,21 @@
     "fields": {
       "user": 72,
       "provider": "google",
-      "uid": "117870584970149684230",
+      "uid": "000000000000000000002",
       "last_login": "2026-06-21T11:53:25.968Z",
       "date_joined": "2026-06-21T11:26:09.476Z",
       "extra_data": {
         "iss": "https://accounts.google.com",
-        "azp": "your-google-client-id",
-        "aud": "your-google-client-id",
-        "sub": "117870584970149684230",
-        "email": "alisharijn8@gmail.com",
+        "azp": "placeholder-client-id.apps.googleusercontent.com",
+        "aud": "placeholder-client-id.apps.googleusercontent.com",
+        "sub": "000000000000000000000",
+        "email": "user2@example.com",
         "email_verified": true,
         "at_hash": "GBPFrYt7T_R1nbhiL-ElKw",
-        "name": "Alisha Rijal",
-        "picture": "https://lh3.googleusercontent.com/a/ACg8ocInPJZQdUonSbsbTNZ50InzXgrpyAtkTWMSOrQt0t8QTVxUXQ=s96-c",
-        "given_name": "Alisha",
-        "family_name": "Rijal",
+        "name": "User Two",
+        "picture": "https://example.com/avatar.png",
+        "given_name": "User",
+        "family_name": "Two",
         "iat": 1782042805,
         "exp": 1782046405
       }
@@ -71138,20 +71138,20 @@
     "fields": {
       "user": 80,
       "provider": "google",
-      "uid": "105193260745568117073",
+      "uid": "000000000000000000003",
       "last_login": "2026-06-22T13:13:21.786Z",
       "date_joined": "2026-06-22T13:13:21.786Z",
       "extra_data": {
         "iss": "https://accounts.google.com",
-        "azp": "your-google-client-id",
-        "aud": "your-google-client-id",
-        "sub": "105193260745568117073",
-        "email": "kulraj024@gmail.com",
+        "azp": "placeholder-client-id.apps.googleusercontent.com",
+        "aud": "placeholder-client-id.apps.googleusercontent.com",
+        "sub": "000000000000000000000",
+        "email": "user3@example.com",
         "email_verified": true,
         "at_hash": "VM6rYZP05MiWT6hS9lfgPQ",
-        "name": "kulraj",
-        "picture": "https://lh3.googleusercontent.com/a/ACg8ocJqwbrtfftfN-yFeOMy1mWI9gtJw2dZPMmMXaUK9wOChAbMAA=s96-c",
-        "given_name": "kulraj",
+        "name": "user",
+        "picture": "https://example.com/avatar.png",
+        "given_name": "user",
         "iat": 1782134001,
         "exp": 1782137601
       }
@@ -71163,21 +71163,21 @@
     "fields": {
       "user": 85,
       "provider": "google",
-      "uid": "117821818977558639427",
+      "uid": "000000000000000000004",
       "last_login": "2026-06-27T15:06:33.126Z",
       "date_joined": "2026-06-27T08:40:04.567Z",
       "extra_data": {
         "iss": "https://accounts.google.com",
-        "azp": "your-google-client-id",
-        "aud": "your-google-client-id",
-        "sub": "117821818977558639427",
-        "email": "neupanemanlal1@gmail.com",
+        "azp": "placeholder-client-id.apps.googleusercontent.com",
+        "aud": "placeholder-client-id.apps.googleusercontent.com",
+        "sub": "000000000000000000000",
+        "email": "user4@example.com",
         "email_verified": true,
         "at_hash": "qve53RTx89E9Dw44caYGXg",
-        "name": "Manlal Neupane",
-        "picture": "https://lh3.googleusercontent.com/a/ACg8ocK_M2tUgcUjwf9AbHeRc3mkFc-ALu8NzxPKFOmZk9UCUUjJlA=s96-c",
-        "given_name": "Manlal",
-        "family_name": "Neupane",
+        "name": "User Four",
+        "picture": "https://example.com/avatar.png",
+        "given_name": "User",
+        "family_name": "One",
         "iat": 1782572793,
         "exp": 1782576393
       }

@@ -571,6 +571,9 @@
 
   /* ═══ HIDE NON-ESSENTIAL ON MOBILE ═══ */
   .theme-picker-wrap { display: none !important; }
+
+  /* ═══ PRODUCT DETAIL CARDS ═══ */
+  .rec-card-item { flex: 1 1 140px !important; max-width: 160px !important; }
 }
 
 /* ═══ UTILITY: Mobile filter toggle ═══ */
@@ -638,6 +641,7 @@
   background: rgba(0,0,0,0.6);
   backdrop-filter: blur(4px);
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.3s ease;
 }
 .mobile-nav-overlay.open { display: block; opacity: 1; pointer-events: auto; }

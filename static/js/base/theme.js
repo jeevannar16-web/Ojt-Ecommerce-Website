@@ -49,6 +49,7 @@
     updateBtnIcon(themeId);
     var picker = document.getElementById('theme-picker-dropdown');
     if (picker) picker.classList.remove('open');
+    document.dispatchEvent(new CustomEvent('themeChanged'));
   }
 
   // Restore saved theme
@@ -99,4 +100,7 @@
       }
     });
   }
+
+  // Expose for mobile menu
+  window.__themeData = { themes: THEMES, apply: applyTheme };
 })();

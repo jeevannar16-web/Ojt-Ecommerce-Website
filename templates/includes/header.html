@@ -186,6 +186,20 @@
       <a href="{% url 'store:admin_dashboard' %}" class="mobile-nav-item"><i class="bi bi-shield"></i> {{ 'nav.admin_dashboard'|t }}</a>
       {% endif %}
       <div class="mobile-nav-divider"></div>
+      <div class="mobile-nav-item" style="flex-wrap:wrap; gap:6px; padding:8px 18px;">
+        <span style="width:100%; color:#666; font-size:0.72rem; font-weight:700; letter-spacing:1px; text-transform:uppercase;">{{ 'Theme'|t }}</span>
+        <div id="mobile-theme-options" style="display:flex; flex-wrap:wrap; gap:4px; width:100%;"></div>
+      </div>
+      <div class="mobile-nav-item" style="flex-wrap:wrap; gap:6px; padding:8px 18px;">
+        <span style="width:100%; color:#666; font-size:0.72rem; font-weight:700; letter-spacing:1px; text-transform:uppercase;">{{ 'Language'|t }}</span>
+        {% for lang in available_languages %}
+        <a href="?lang={{ lang.code }}" class="mobile-nav-lang" style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(255,255,255,0.04);border-radius:6px;color:#ccc;text-decoration:none;font-size:0.78rem;{% if LANGUAGE_CODE|slice:':2' == lang.code %}background:rgba(212,175,55,0.12);color:#d4af37;{% endif %}">
+          <span>{{ lang.flag_icon }}</span>
+          <span>{{ lang.name }}</span>
+        </a>
+        {% endfor %}
+      </div>
+      <div class="mobile-nav-divider"></div>
       {% if user.is_authenticated %}
       <form method="post" action="{% url 'logout' %}" class="mobile-nav-logout-form">
         {% csrf_token %}

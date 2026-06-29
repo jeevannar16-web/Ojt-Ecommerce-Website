@@ -107,6 +107,32 @@
   </script>
   <!-- Scripts: External JS Files -->
   <script src="{% static 'js/base/theme.js' %}?v=1"></script>
+  <script>
+  (function(){
+    var container = document.getElementById('mobile-theme-options');
+    if (!container || !window.__themeData) return;
+    var cur = document.documentElement.getAttribute('data-global-theme') || 'obsidian';
+    __themeData.themes.forEach(function(t){
+      var btn = document.createElement('button');
+      btn.className = 'tp-opt' + (t.id === cur ? ' tp-active' : '');
+      btn.setAttribute('data-theme-id', t.id);
+      btn.innerHTML = '<span class="tp-opt-swatch" style="background:' + t.color + '"></span><span class="tp-opt-icon">' + t.icon + '</span><span class="tp-opt-label">' + t.label + '</span>';
+      btn.addEventListener('click', function(){
+        __themeData.apply(t.id);
+        container.querySelectorAll('.tp-opt').forEach(function(o){ o.classList.remove('tp-active'); });
+        btn.classList.add('tp-active');
+      });
+      container.appendChild(btn);
+    });
+    // Keep mobile theme in sync when changed from desktop picker
+    document.addEventListener('themeChanged', function(){
+      var cur = document.documentElement.getAttribute('data-global-theme') || 'obsidian';
+      container.querySelectorAll('.tp-opt').forEach(function(o){
+        o.classList.toggle('tp-active', o.getAttribute('data-theme-id') === cur);
+      });
+    });
+  })();
+  </script>
   <script src="{% static 'js/base/loading.js' %}?v=7"></script>
   <script src="{% static 'js/base/main.js' %}?v=7"></script>
   <script src="{% static 'js/base/cart.js' %}?v=7"></script>

@@ -34,7 +34,7 @@
   {% endif %}
 
   <!-- Filter Sidebar -->
-  <form method="GET" action="" id="filter-form" class="pl-sidebar-wrap">
+  <form method="GET" action="" id="filter-form" class="pl-sidebar-wrap" data-no-loader="true">
     <input type="hidden" name="search" value="{{ request.GET.search|default:'' }}">
     <input type="hidden" name="goal" value="{{ active_goal|default:'' }}">
     <input type="hidden" name="sort" value="{{ active_sort|default:'' }}">

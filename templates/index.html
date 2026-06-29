@@ -3,6 +3,7 @@
 <!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
+{% load cache %}
 
 {% block title %}FITNESS HUB — {{ 'home.hero_title'|t }}{% endblock %}
 
@@ -12,6 +13,7 @@
 
 {% block content %}
 
+{% cache 300 home_content request.LANGUAGE_CODE user.is_authenticated %}
 <!-- ═══ MEGA BANNER — Auto-rotating ═══ -->
 {% if banner_products %}
 <div class="mega-banner-wrap">
@@ -474,6 +476,7 @@
   {% endif %}
 </section>
 
+{% endcache %}
 {% endblock %}
 
 {% block extra_js %}

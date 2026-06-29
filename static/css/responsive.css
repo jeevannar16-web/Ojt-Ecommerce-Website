@@ -93,20 +93,25 @@
 
   /* ═══ NAV ═══ */
   .main-nav {
-    padding: 0 0.75rem;
-    gap: 8px;
+    flex-wrap: wrap;
+    height: auto;
+    padding: 8px 0.75rem;
+    gap: 6px;
   }
-  .nav-left-brand { gap: 6px; }
-  .logo-img { height: 44px; }
+  .nav-left-brand { gap: 4px; }
+  .logo-img { height: 40px; }
   .nav-lang-btn { padding: 2px 4px; }
   .nav-lang-flag { width: 18px; height: 18px; font-size: 0.5rem; }
-  .nav-lang-split { margin: 0 3px; }
+  .nav-lang { display: none !important; }
+  .nav-lang-split { display: none !important; }
 
-  /* Collapse search on mobile */
+  /* Collapse search on mobile → full width second row */
   .search-wrap {
+    order: 3;
+    flex: 1 1 100%;
     max-width: none;
-    flex: 1;
     min-width: 0;
+    margin-top: 2px;
   }
   .search-wrap form { gap: 4px; }
   .search-wrap input { padding: 8px 36px 8px 14px !important; font-size: 0.8rem !important; }
@@ -124,9 +129,9 @@
   .nav-actions .nav-icon-btn i { font-size: 1rem !important; }
   .global-fav-count,
   #cart-count { min-width: 16px !important; height: 16px !important; font-size: 0.55rem !important; top: -5px !important; right: -5px !important; border-width: 1.5px !important; }
-  .btn-login { font-size: 0.78rem; padding: 6px 12px; }
-  .btn-register { font-size: 0.78rem; padding: 6px 14px; }
-  .btn-seller-center { font-size: 0.72rem; padding: 6px 12px; }
+  .btn-seller-center { display: none !important; }
+  .btn-login { font-size: 0.72rem; padding: 6px 10px; white-space: nowrap; }
+  .btn-register { font-size: 0.72rem; padding: 6px 12px; white-space: nowrap; }
   .nav-actions a[title*="Delivery"] { height: 34px !important; padding: 0 8px !important; font-size: 0.65rem !important; }
   .nav-actions a[title*="Delivery"] i { font-size: 0.75rem !important; }
   .nav-actions a[title*="Delivery"] span { max-width: 50px !important; }
@@ -566,7 +571,6 @@
 
   /* ═══ HIDE NON-ESSENTIAL ON MOBILE ═══ */
   .theme-picker-wrap { display: none !important; }
-  .nav-lang-split { display: none !important; }
 }
 
 /* ═══ UTILITY: Mobile filter toggle ═══ */

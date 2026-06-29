@@ -5,6 +5,8 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.template.loader import render_to_string
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
 from ..models import Category, Product, FavoriteItem, Review, OrderItem
 from django.db.models import Count, Avg
 
@@ -35,7 +37,7 @@ SORT_MAP = {
 
 
 def _filter_and_sort_products(request):
-    products = Product.objects.all()
+    products = Product.objects.select_related('category').all()
     title = "Our Full Catalog"
     is_search = False
 
@@ -95,6 +97,8 @@ def _filter_and_sort_products(request):
 
 
 
+@vary_on_cookie
+@cache_page(300, key_prefix='products')
 def product_list(request):
     products, title, is_search, category_id, goal, sort, price_min, price_max, selected_types, only_available, search_query = _filter_and_sort_products(request)
 
@@ -107,9 +111,11 @@ def product_list(request):
 
     filtered_cat_ids_list = [c['category_id'] for c in filtered_category_ids if c['category_id']]
     if filtered_cat_ids_list:
-        recommendations = Product.objects.filter(category_id__in=filtered_cat_ids_list).order_by('?')[:4]
+        recommendations = Product.objects.filter(category_id__in=filtered_cat_ids_list).order_by('-created_at')[:4]
     else:
-        recommendations = Product.objects.all().order_by('?')[:4]
+        recommendations = Product.objects.filter(is_featured=True)[:4]
+    if not recommendations.exists():
+        recommendations = Product.objects.order_by('-created_at')[:4]
 
     all_category_names = set(Category.objects.filter(products__isnull=False).values_list('name', flat=True))
     active_goals = []

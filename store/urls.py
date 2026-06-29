@@ -79,7 +79,6 @@ urlpatterns = [
     path('api/messages/user-info/', messaging_views.api_user_info, name='api_user_info'),
     path('api/messages/start-call/', messaging_views.api_start_call, name='api_start_call'),
     path('api/messages/update-status/', messaging_views.api_update_status, name='api_update_status'),
-    path('api/messages/update-theme/', messaging_views.api_update_conversation_theme, name='api_update_conversation_theme'),
     path('api/messages/mark-read/', messaging_views.api_mark_read, name='api_mark_read'),
     path('api/messages/delete-conversation/', messaging_views.api_delete_conversation, name='api_delete_conversation'),
     path('messages/<int:conversation_id>/block/', messaging_views.block_user, name='block_user'),

@@ -5,14 +5,17 @@ import datetime
 from django.shortcuts import render
 from django.db import models
 from django.db.models import Q, Count, Sum
-from django.views.decorators.cache import never_cache
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
 from django.views.generic import TemplateView
+from django.utils.cache import patch_cache_control
 
 from store.models import Product, Category, OrderItem, CartItem
 from users.models import Profile
 
 
-@never_cache
+@vary_on_cookie
+@cache_page(300, key_prefix='home')
 def home(request):
     base_qs = Product.objects.select_related('category')
     categories = Category.objects.annotate(pcount=Count('products'))
@@ -226,7 +229,9 @@ def home(request):
         'seller_revenue': seller_revenue,
         'recent_conversations': recent_convs,
     }
-    return render(request, 'index.html', context)
+    response = render(request, 'index.html', context)
+    patch_cache_control(response, s_maxage=300, max_age=0, must_revalidate=True)
+    return response
 
 
 

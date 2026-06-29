@@ -118,7 +118,7 @@
   .nav-actions { gap: 6px; }
   .nav-actions a[href*="favorites"],
   .nav-actions .cart-dropdown-wrap .nav-icon-btn,
-  .nav-actions .nav-icon-btn { width: 34px; height: 34px; }
+  .nav-actions .nav-icon-btn { width: 34px !important; height: 34px !important; }
   .nav-actions a[href*="favorites"] i,
   .nav-actions .cart-dropdown-wrap .nav-icon-btn i,
   .nav-actions .nav-icon-btn i { font-size: 1rem !important; }
@@ -563,6 +563,10 @@
   /* ═══ TOAST / MESSAGES ═══ */
   .toast-container { width: calc(100vw - 24px); max-width: 360px; right: 12px !important; bottom: 80px !important; }
   .toast-message { padding: 12px 14px; font-size: 0.82rem; }
+
+  /* ═══ HIDE NON-ESSENTIAL ON MOBILE ═══ */
+  .theme-picker-wrap { display: none !important; }
+  .nav-lang-split { display: none !important; }
 }
 
 /* ═══ UTILITY: Mobile filter toggle ═══ */

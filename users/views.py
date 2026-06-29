@@ -174,7 +174,7 @@ def user_login(request):
         if user is not None:
             if 'remembered_username' in request.session:
                 del request.session['remembered_username']
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             request.session.save()
             log_action(user, 'login', f"User logged in: {username}",
                        {'username': username}, request)

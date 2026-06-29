@@ -157,30 +157,36 @@ def register(request):
 
 
 def user_login(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+
     remembered_username = request.session.get('remembered_username', '')
+    next_url = request.GET.get('next') or request.POST.get('next') or 'home'
+
     if request.method == 'POST':
         username = request.POST.get('username', '')
         password = request.POST.get('password', '')
         if not username or not password:
             messages.error(request, "Please enter both username and password.")
             request.session['remembered_username'] = username
-            return render(request, 'users/login.html', {'remembered_username': username})
+            return render(request, 'users/login.html', {'remembered_username': username, 'next': next_url})
         user = authenticate(request, username=username, password=password)
         if user is not None:
             if 'remembered_username' in request.session:
                 del request.session['remembered_username']
             login(request, user)
+            request.session.save()
             log_action(user, 'login', f"User logged in: {username}",
                        {'username': username}, request)
             profile = getattr(user, 'profile', None)
             if profile and not profile.is_email_verified and getattr(settings, 'EMAIL_VERIFICATION_REQUIRED', True):
                 return redirect('verification_setup')
-            return redirect('home')
+            return redirect(next_url)
         else:
             request.session['remembered_username'] = username
             messages.error(request, "Invalid username or password.")
-            return render(request, 'users/login.html', {'remembered_username': username})
-    return render(request, 'users/login.html', {'remembered_username': remembered_username})
+            return render(request, 'users/login.html', {'remembered_username': username, 'next': next_url})
+    return render(request, 'users/login.html', {'remembered_username': remembered_username, 'next': next_url})
 
 
 

@@ -20,7 +20,7 @@
       <p>{{ 'Join FitnessHub and start your journey'|t }}</p>
     </div>
 
-    <form method="POST" class="reg-form">
+    <form method="POST" class="reg-form" action="{% url 'register' %}">
       {% csrf_token %}
       <div class="form-row">
         <label for="id_username">{{ 'Username'|t }}</label>

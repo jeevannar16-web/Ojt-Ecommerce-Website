@@ -57,7 +57,7 @@
         {% if item.conv.is_admin_conversation %}
         <i class="bi bi-shield-shaded"></i>
         {% elif item.other_user_profile and item.other_user_profile.avatar %}
-        <img src="{{ item.other_user_profile.avatar.url }}" alt="">
+        <img loading="lazy" src="{{ item.other_user_profile.avatar.url }}" alt="">
         {% else %}
         {{ item.other_user.username|first|upper }}
         {% endif %}

@@ -674,7 +674,7 @@
                     <div class="img-corner img-corner-tr"></div>
                     <div class="img-corner img-corner-bl"></div>
                     <div class="img-corner img-corner-br"></div>
-                    <img id="previewImage"
+                    <img loading="lazy" id="previewImage"
                          src="{% if product.image %}{{ product.image.url }}{% else %}https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600{% endif %}"
                          class="product-img-focus" alt="Product">
                 </div>

@@ -11,6 +11,20 @@
 <style>
 /* Default theme — CSS variables used by structural selectors */
 .md-page { --chat-bg:#0d0d0d; --chat-surface:#121212; --chat-border:rgba(255,255,255,0.05); --chat-text:#f0ece4; --chat-text-sec:#888; --chat-text-muted:#555; --sender-bubble:linear-gradient(135deg,rgba(212,175,55,0.14),rgba(212,175,55,0.04)); --sender-text:#f0ece4; --receiver-bubble:rgba(255,255,255,0.04); --receiver-text:#f0ece4; --accent:#d4af37; --chat-wallpaper:none; position:relative; z-index:1; }
+.md-page[data-theme=light] { --chat-bg:#f5f5f0; --chat-surface:#ffffff; --chat-text:#2d2d2d; --chat-text-sec:#777; --chat-text-muted:#aaa; --sender-bubble:linear-gradient(135deg,rgba(212,175,55,0.1),rgba(212,175,55,0.02)); --sender-text:#2d2d2d; --receiver-bubble:rgba(0,0,0,0.04); --receiver-text:#2d2d2d; --accent:#c8a830; }
+.md-page[data-theme=gold] { --chat-bg:#0f0b04; --chat-surface:#1a1408; --chat-text:#f0ece4; --chat-text-sec:#b89e5a; --chat-text-muted:#6e5c30; --sender-bubble:linear-gradient(135deg,rgba(212,175,55,0.2),rgba(212,175,55,0.06)); --sender-text:#f0ece4; --receiver-bubble:rgba(212,175,55,0.04); --receiver-text:#f0ece4; --accent:#d4af37; }
+.md-page[data-theme=ocean] { --chat-bg:#060e12; --chat-surface:#0c1a20; --chat-text:#d4eaf0; --chat-text-sec:#6a9db5; --chat-text-muted:#3a6a80; --sender-bubble:linear-gradient(135deg,rgba(46,196,182,0.2),rgba(46,196,182,0.06)); --sender-text:#d4eaf0; --receiver-bubble:rgba(46,196,182,0.04); --receiver-text:#d4eaf0; --accent:#2ec4b6; }
+.md-page[data-theme=purple] { --chat-bg:#0c0612; --chat-surface:#160a24; --chat-text:#e8d4f0; --chat-text-sec:#8a6ab5; --chat-text-muted:#5a3a80; --sender-bubble:linear-gradient(135deg,rgba(150,90,200,0.2),rgba(150,90,200,0.06)); --sender-text:#e8d4f0; --receiver-bubble:rgba(150,90,200,0.04); --receiver-text:#e8d4f0; --accent:#965ac8; }
+.md-page[data-theme=fifa] { --chat-bg:#060e0a; --chat-surface:#0c1a10; --chat-text:#d4f0dc; --chat-text-sec:#5ab87a; --chat-text-muted:#2a6a40; --sender-bubble:linear-gradient(135deg,rgba(60,200,100,0.2),rgba(60,200,100,0.06)); --sender-text:#d4f0dc; --receiver-bubble:rgba(60,200,100,0.04); --receiver-text:#d4f0dc; --accent:#3cc864; }
+.md-page[data-theme=cricket] { --chat-bg:#120e06; --chat-surface:#1e180c; --chat-text:#f0e8d4; --chat-text-sec:#b89a5a; --chat-text-muted:#6e5a30; --sender-bubble:linear-gradient(135deg,rgba(200,170,60,0.2),rgba(200,170,60,0.06)); --sender-text:#f0e8d4; --receiver-bubble:rgba(200,170,60,0.04); --receiver-text:#f0e8d4; --accent:#c8aa3c; }
+.md-page[data-theme=anime] { --chat-bg:#12060e; --chat-surface:#1e0c18; --chat-text:#f0d4e8; --chat-text-sec:#b85a9a; --chat-text-muted:#6e305a; --sender-bubble:linear-gradient(135deg,rgba(200,60,150,0.2),rgba(200,60,150,0.06)); --sender-text:#f0d4e8; --receiver-bubble:rgba(200,60,150,0.04); --receiver-text:#f0d4e8; --accent:#c83c96; }
+.md-page[data-theme=dev] { --chat-bg:#060c0e; --chat-surface:#0c1418; --chat-text:#cce4f0; --chat-text-sec:#5a8ab0; --chat-text-muted:#2a5a70; --sender-bubble:linear-gradient(135deg,rgba(40,140,200,0.2),rgba(40,140,200,0.06)); --sender-text:#cce4f0; --receiver-bubble:rgba(40,140,200,0.04); --receiver-text:#cce4f0; --accent:#288cc8; }
+.md-page[data-theme=spiderman] { --chat-bg:#0e0606; --chat-surface:#1a0c0c; --chat-text:#f0d4d4; --chat-text-sec:#b85a5a; --chat-text-muted:#6e3030; --sender-bubble:linear-gradient(135deg,rgba(200,50,50,0.2),rgba(200,50,50,0.06)); --sender-text:#f0d4d4; --receiver-bubble:rgba(200,50,50,0.04); --receiver-text:#f0d4d4; --accent:#c83232; }
+.md-page[data-theme=batman] { --chat-bg:#060608; --chat-surface:#0c0c12; --chat-text:#c8c8d4; --chat-text-sec:#6a6a80; --chat-text-muted:#3a3a50; --sender-bubble:linear-gradient(135deg,rgba(80,80,100,0.2),rgba(80,80,100,0.06)); --sender-text:#c8c8d4; --receiver-bubble:rgba(80,80,100,0.04); --receiver-text:#c8c8d4; --accent:#505064; }
+.md-page[data-theme=ironman] { --chat-bg:#0e0604; --chat-surface:#1c0c08; --chat-text:#f0d8c8; --chat-text-sec:#c87850; --chat-text-muted:#7a3a20; --sender-bubble:linear-gradient(135deg,rgba(200,80,40,0.2),rgba(200,80,40,0.06)); --sender-text:#f0d8c8; --receiver-bubble:rgba(200,80,40,0.04); --receiver-text:#f0d8c8; --accent:#c85028; }
+.md-page[data-theme=naruto] { --chat-bg:#100e06; --chat-surface:#1e180c; --chat-text:#f0e8c8; --chat-text-sec:#b8a050; --chat-text-muted:#6e5a20; --sender-bubble:linear-gradient(135deg,rgba(220,180,50,0.2),rgba(220,180,50,0.06)); --sender-text:#f0e8c8; --receiver-bubble:rgba(220,180,50,0.04); --receiver-text:#f0e8c8; --accent:#dcb432; }
+.md-page[data-theme=goku] { --chat-bg:#060e0c; --chat-surface:#0c1a14; --chat-text:#d4f0e8; --chat-text-sec:#5ab89a; --chat-text-muted:#2a6a5a; --sender-bubble:linear-gradient(135deg,rgba(60,200,150,0.2),rgba(60,200,150,0.06)); --sender-text:#d4f0e8; --receiver-bubble:rgba(60,200,150,0.04); --receiver-text:#d4f0e8; --accent:#3cc896; }
+.md-page[data-theme=onepiece] { --chat-bg:#0e1006; --chat-surface:#1a1c0c; --chat-text:#e8f0c8; --chat-text-sec:#a0b050; --chat-text-muted:#5a6a20; --sender-bubble:linear-gradient(135deg,rgba(180,200,50,0.2),rgba(180,200,50,0.06)); --sender-text:#e8f0c8; --receiver-bubble:rgba(180,200,50,0.04); --receiver-text:#e8f0c8; --accent:#b4c832; }
 .md-page .md-top-bar,
 .md-page .md-footer,
 .md-page .md-store-row,
@@ -129,7 +143,7 @@
 
 {% block content %}
 {% with user_blocked=is_blocked %}
-<div class="md-page" id="md-page">
+<div class="md-page" id="md-page" data-theme="{{ conversation.theme|default:'dark' }}">
   <!-- TOP BAR — PREMIUM -->
   <div class="md-top-bar">
     <a href="{% url 'store:messages_list' %}" class="md-back"><i class="bi bi-arrow-left"></i></a>
@@ -138,7 +152,7 @@
       {% if conversation.is_admin_conversation %}
       <i class="bi bi-shield-shaded" style="font-size:1.1rem;"></i>
       {% elif other_user_profile and other_user_profile.avatar %}
-      <img src="{{ other_user_profile.avatar.url }}" alt="">
+      <img loading="lazy" src="{{ other_user_profile.avatar.url }}" alt="">
       {% else %}
       {{ other_user.username|first|upper }}
       {% endif %}
@@ -206,6 +220,17 @@
       <i class="bi bi-bell{% if conversation.is_muted %}-slash{% endif %}"></i>
       {% if conversation.is_muted %}{{ 'Unmute'|t }}{% else %}{{ 'Mute'|t }}{% endif %}
     </button>
+    <button onclick="toggleThemePicker()" style="width:100%;padding:8px 12px;background:none;border:none;color:var(--text);font-size:0.8rem;cursor:pointer;border-radius:6px;display:flex;align-items:center;gap:8px;transition:all 0.1s;" onmouseover="this.style.background='var(--msg-theirs)'" onmouseout="this.style.background='none'">
+      <i class="bi bi-palette"></i> {{ 'Theme'|t }}
+    </button>
+  </div>
+  <div id="theme-picker-menu" style="display:none;position:absolute;top:52px;right:210px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:6px;z-index:40;box-shadow:0 8px 32px rgba(0,0,0,0.5);min-width:200px;max-height:320px;overflow-y:auto;">
+    <div style="padding:6px 10px;font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:#666;font-weight:700;">{{ 'Chat Theme'|t }}</div>
+    {% for key, label in theme_choices %}
+    <button onclick="setChatTheme('{{ key }}')" style="width:100%;padding:8px 12px;background:none;border:none;color:var(--text);font-size:0.8rem;cursor:pointer;border-radius:6px;display:flex;align-items:center;gap:8px;transition:all 0.1s;text-align:left;" onmouseover="this.style.background='var(--msg-theirs)'" onmouseout="this.style.background='none'">
+      <span>{{ label }}</span>
+    </button>
+    {% endfor %}
   </div>
 
   <!-- SEARCH BAR -->
@@ -398,7 +423,7 @@
 
 <!-- LIGHTBOX -->
 <div class="md-lightbox" id="lightbox" onclick="closeLightbox()">
-  <img id="lightbox-img" src="" alt="">
+  <img loading="lazy" id="lightbox-img" src="" alt="">
 </div>
 
 <!-- PROFILE SIDEBAR -->
@@ -1384,6 +1409,33 @@ document.addEventListener('click', function(e){
   if(picker && display && !picker.contains(e.target) && !display.contains(e.target)){
     picker.classList.remove('open');
   }
+  var themeMenu = document.getElementById('theme-picker-menu');
+  var moreMenu = document.getElementById('more-menu');
+  var moreToggle = document.getElementById('more-toggle');
+  if(themeMenu && !themeMenu.contains(e.target) && !e.target.closest('[onclick*="toggleThemePicker"]') && !e.target.closest('[onclick*="toggleThemePicker"]')){
+    themeMenu.style.display = 'none';
+  }
 });
+
+// === THEME PICKER ===
+function toggleThemePicker(){
+  var menu = document.getElementById('theme-picker-menu');
+  var more = document.getElementById('more-menu');
+  if(!menu) return;
+  var shown = menu.style.display === 'block';
+  if(more) more.style.display = 'none';
+  menu.style.display = shown ? 'none' : 'block';
+}
+
+function setChatTheme(themeKey){
+  var page = document.getElementById('md-page');
+  if(page) page.setAttribute('data-theme', themeKey);
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '{% url "store:api_update_conversation_theme" %}', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+  xhr.send(JSON.stringify({conversation_id: {{ conversation.id }}, theme: themeKey}));
+  document.getElementById('theme-picker-menu').style.display = 'none';
+}
 </script>
 {% endblock %}

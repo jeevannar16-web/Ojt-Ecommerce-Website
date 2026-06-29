@@ -45,7 +45,7 @@
       {% if conversation.is_admin_conversation %}
       <i class="bi bi-shield-shaded"></i>
       {% elif other_user_profile and other_user_profile.avatar %}
-      <img src="{{ other_user_profile.avatar.url }}" alt="">
+      <img loading="lazy" src="{{ other_user_profile.avatar.url }}" alt="">
       {% else %}
       {{ other_user.username|first|upper }}
       {% endif %}
@@ -101,9 +101,21 @@
       <i class="bi bi-bell{% if conversation.is_muted %}-slash{% endif %}"></i>
       {% if conversation.is_muted %}{{ 'Unmute'|t }}{% else %}{{ 'Mute'|t }}{% endif %}
     </button>
+    <button onclick="toggleThemePicker()">
+      <i class="bi bi-palette"></i> {{ 'Theme'|t }}
+    </button>
     <button onclick="deleteConversation()" class="danger">
       <i class="bi bi-trash3"></i> {{ 'Delete Conversation'|t }}
     </button>
+  </div>
+  <!-- THEME PICKER -->
+  <div id="theme-picker-menu" style="display:none;position:absolute;top:52px;right:210px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:6px;z-index:40;box-shadow:0 8px 32px rgba(0,0,0,0.5);min-width:200px;max-height:320px;overflow-y:auto;">
+    <div style="padding:6px 10px;font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:#666;font-weight:700;">{{ 'Chat Theme'|t }}</div>
+    {% for key, label in theme_choices %}
+    <button onclick="setChatTheme('{{ key }}')" style="width:100%;padding:8px 12px;background:none;border:none;color:var(--text);font-size:0.8rem;cursor:pointer;border-radius:6px;display:flex;align-items:center;gap:8px;transition:all 0.1s;text-align:left;" onmouseover="this.style.background='var(--msg-theirs)'" onmouseout="this.style.background='none'">
+      <span>{{ label }}</span>
+    </button>
+    {% endfor %}
   </div>
 
   <!-- ─── SEARCH BAR ─── -->
@@ -289,7 +301,7 @@
 
 <!-- ─── LIGHTBOX ─── -->
 <div class="cd-lightbox" id="lightbox" onclick="closeLightbox()">
-  <img id="lightbox-img" src="" alt="">
+  <img loading="lazy" id="lightbox-img" src="" alt="">
 </div>
 
 <!-- ─── PROFILE SIDEBAR ─── -->
@@ -973,7 +985,34 @@
     var picker = document.getElementById('status-picker');
     var display = document.getElementById('status-display');
     if(picker && picker.classList.contains('open') && !picker.contains(e.target) && e.target !== display && !(display && display.contains(e.target))) picker.classList.remove('open');
+    var themeMenu = document.getElementById('theme-picker-menu');
+    var moreToggle = document.getElementById('more-toggle');
+    if(themeMenu && !themeMenu.contains(e.target) && e.target !== moreToggle && !(moreToggle && moreToggle.contains(e.target))){
+      themeMenu.style.display = 'none';
+    }
   });
+
+  /* ── Theme picker ── */
+  window.toggleThemePicker = function(){
+    var menu = document.getElementById('theme-picker-menu');
+    var more = document.getElementById('more-menu');
+    if(!menu) return;
+    var shown = menu.style.display === 'block';
+    if(more) more.style.display = 'none';
+    menu.style.display = shown ? 'none' : 'block';
+  };
+
+  window.setChatTheme = function(themeKey){
+    var page = document.getElementById('md-page');
+    if(page) page.setAttribute('data-theme', themeKey);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '{% url "store:api_update_conversation_theme" %}', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRFToken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+    xhr.send(JSON.stringify({conversation_id: {{ conversation.id }}, theme: themeKey}));
+    var menu = document.getElementById('theme-picker-menu');
+    if(menu) menu.style.display = 'none';
+  };
 
   /* ── Helper ── */
   function escapeHtml(text){

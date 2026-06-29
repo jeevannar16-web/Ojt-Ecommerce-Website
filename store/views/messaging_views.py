@@ -823,6 +823,26 @@ def api_update_status(request):
     status.save(update_fields=['is_online', 'last_seen'])
     return JsonResponse({'ok': True, 'emoji': emoji, 'text': text, 'is_online': status.is_online})
 
+@login_required
+def api_update_conversation_theme(request):
+    try:
+        data = json.loads(request.body)
+    except (ValueError, TypeError):
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    conversation_id = data.get('conversation_id')
+    theme = data.get('theme')
+    if not conversation_id or not theme:
+        return JsonResponse({'error': 'Missing fields'}, status=400)
+    conv = get_object_or_404(Conversation, id=conversation_id)
+    if request.user != conv.customer and request.user != conv.seller and not request.user.is_staff:
+        return JsonResponse({'error': 'Forbidden'}, status=403)
+    valid_keys = [k for k, v in Conversation.THEME_CHOICES]
+    if theme not in valid_keys:
+        return JsonResponse({'error': 'Invalid theme'}, status=400)
+    conv.theme = theme
+    conv.save(update_fields=['theme'])
+    return JsonResponse({'ok': True, 'theme': theme})
+
 
 
 @login_required

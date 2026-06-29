@@ -80,7 +80,7 @@
         <label style="display:block;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#777;margin-bottom:6px;">{{ 'Product Image'|t }}</label>
         <input type="file" name="image" accept="image/*" style="width:100%;padding:8px;background:#0a0a0a;border:1px dashed #2a2a2a;border-radius:8px;color:#666;font-size:0.85rem;cursor:pointer;box-sizing:border-box;">
         {% if product and product.image %}
-        <img src="{{ product.image.url }}" alt="{{ product.name|t }}" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #2a2a2a;margin-top:8px;">
+        <img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name|t }}" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #2a2a2a;margin-top:8px;">
         {% endif %}
       </div>
 

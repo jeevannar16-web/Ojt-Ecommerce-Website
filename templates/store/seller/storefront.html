@@ -77,7 +77,7 @@
         <a href="{% url 'store:product_detail' product.id %}" class="sf-product-card">
           <div class="sf-product-img">
             {% if product.image %}
-              <img src="{{ product.image.url }}" alt="{{ product.name|t }}">
+              <img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name|t }}">
             {% else %}
               <div class="sf-img-placeholder"><i class="bi bi-image"></i></div>
             {% endif %}

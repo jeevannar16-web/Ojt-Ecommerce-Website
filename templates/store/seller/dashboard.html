@@ -246,7 +246,7 @@
             <div class="mw-item" data-other="{{ item.other_user.username|lower }}" data-last="{{ item.last_message.content|default:''|lower }}" data-unread="{% if item.unread > 0 %}1{% else %}0{% endif %}" data-support="{% if item.is_support %}1{% else %}0{% endif %}">
               {% if item.product and item.product.image %}
               <div class="mw-thumb">
-                <img src="{{ item.product.image.url }}" alt="">
+                <img loading="lazy" src="{{ item.product.image.url }}" alt="">
               </div>
               {% elif not item.product %}
               <div class="mw-avatar">
@@ -450,7 +450,7 @@
               <tr class="clickable-row" onclick="location.href='{% url 'store:seller_product_edit' product.id %}'">
                 <td>
                   {% if product.image %}
-                  <img src="{{ product.image.url }}" alt="" style="width:44px;height:44px;object-fit:cover;border-radius:8px;">
+                  <img loading="lazy" src="{{ product.image.url }}" alt="" style="width:44px;height:44px;object-fit:cover;border-radius:8px;">
                   {% else %}
                   <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#0e0e0e;border-radius:8px;color:#333;"><i class="bi bi-box" style="font-size:1.2rem;"></i></div>
                   {% endif %}

@@ -53,7 +53,7 @@
       {% for product in products %}
       <div style="background:#141414;border:1px solid #1f1f1f;border-radius:10px;overflow:hidden;">
         {% if product.image %}
-        <img src="{{ product.image.url }}" alt="{{ product.name|t }}" style="width:100%;aspect-ratio:1;object-fit:cover;">
+        <img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name|t }}" style="width:100%;aspect-ratio:1;object-fit:cover;">
         {% else %}
         <div style="width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:#0e0e0e;color:#333;font-size:2.5rem;"><i class="bi bi-box-seam"></i></div>
         {% endif %}

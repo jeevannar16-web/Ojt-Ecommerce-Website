@@ -3,6 +3,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
+from django.contrib import messages as django_messages
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
@@ -183,6 +185,7 @@ def user_login(request):
 
 
 @login_required
+@never_cache
 def profile(request):
     if request.method == 'POST':
         if request.POST.get('request_seller'):
@@ -313,4 +316,5 @@ def user_logout(request):
     except Exception:
         pass
     logout(request)
+    django_messages.success(request, "You have been logged out successfully.")
     return redirect('home')

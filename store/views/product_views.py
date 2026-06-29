@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.template.loader import render_to_string
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page, never_cache
 from django.views.decorators.vary import vary_on_cookie
 from ..models import Category, Product, FavoriteItem, Review, OrderItem
 from django.db.models import Count, Avg
@@ -97,6 +97,7 @@ def _filter_and_sort_products(request):
 
 
 
+@never_cache
 @vary_on_cookie
 @cache_page(300, key_prefix='products')
 def product_list(request):

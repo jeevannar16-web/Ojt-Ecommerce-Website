@@ -20,12 +20,6 @@
       <p>{{ 'Join FitnessHub and start your journey'|t }}</p>
     </div>
 
-    {% if messages %}
-      {% for message in messages %}
-        <div class="reg-error">{{ message }}</div>
-      {% endfor %}
-    {% endif %}
-
     <form method="POST" class="reg-form">
       {% csrf_token %}
       <div class="form-row">

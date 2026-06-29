@@ -71071,8 +71071,8 @@
       "provider": "google",
       "provider_id": "",
       "name": "Google Login",
-      "client_id": "your-google-client-id",
-      "secret": "your-google-client-secret",
+      "client_id": "placeholder",
+      "secret": "placeholder",
       "key": "",
       "settings": {},
       "sites": [

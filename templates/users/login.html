@@ -20,11 +20,7 @@
       <p>{{ 'Sign in to your account'|t }}</p>
     </div>
 
-    {% if messages %}
-      {% for message in messages %}
-        <div class="login-error">{{ message }}</div>
-      {% endfor %}
-    {% endif %}
+
 
     <form method="POST" class="login-form">
       {% csrf_token %}

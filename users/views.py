@@ -177,6 +177,7 @@ def user_login(request):
         else:
             request.session['remembered_username'] = username
             messages.error(request, "Invalid username or password.")
+            return render(request, 'users/login.html', {'remembered_username': username})
     return render(request, 'users/login.html', {'remembered_username': remembered_username})
 
 

@@ -66,7 +66,7 @@ cp .env.example .env
 ./start.sh
 ```
 
-One command creates venv, installs deps, runs migrations, and starts the server.
+One command creates venv, installs deps, runs migrations, and starts the server. The database (`db.sqlite3`) is included in the repo — products and data come pre-loaded.
 
 Windows: `start.bat`
 

@@ -27,6 +27,9 @@ if command -v lsof &>/dev/null; then
 fi
 
 echo ""
+echo "  Applying migrations..."
+python manage.py migrate 2>&1 | tail -3
+echo ""
 echo "  Starting server..."
 echo ""
 

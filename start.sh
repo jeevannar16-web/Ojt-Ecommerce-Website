@@ -30,6 +30,9 @@ echo ""
 echo "  Applying migrations..."
 python manage.py migrate --run-syncdb 2>&1 | tail -2
 echo ""
+echo "  Collecting static files..."
+python manage.py collectstatic --noinput 2>&1 | tail -2
+echo ""
 echo "  Starting server..."
 echo ""
 

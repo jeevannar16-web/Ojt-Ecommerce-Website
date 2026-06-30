@@ -1,5 +1,5 @@
 
-> **Last updated:** June 28, 2026
+> **Last updated:** June 30, 2026
 
 ---
 
@@ -11,6 +11,8 @@ cd Ojt-Ecommerce-Website
 cp .env.example .env    # edit with your keys
 ./start.sh              # creates venv, installs deps, runs on port 8000
 ```
+
+> **Note:** After the first clone, run `source venv/bin/activate && python manage.py migrate` before starting the server, or the site will return 500 errors (missing database tables). The `start.sh` script does NOT run migrations automatically.
 
 Windows: `start.bat`
 Stop: `./stop.sh`

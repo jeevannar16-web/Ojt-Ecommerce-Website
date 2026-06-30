@@ -52,12 +52,32 @@
     border: 1px solid rgba(212, 175, 55, 0.2);
     border-radius: 20px;
     overflow: hidden;
-    background: #121212;
+    background: #1a1a1a;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
     aspect-ratio: 1;
     max-height: 500px;
     position: relative;
     cursor: crosshair;
+}
+
+@keyframes pd-img-pulse {
+    0% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+    100% { opacity: 0.3; }
+}
+
+.pd-image-wrap .pd-loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+    background-size: 200% 100%;
+    animation: pd-img-pulse 1.5s ease-in-out infinite;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.pd-image-wrap.loaded .pd-loading-overlay {
+    display: none;
 }
 
 .pd-main-image {

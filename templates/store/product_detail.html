@@ -32,11 +32,14 @@
             <div class="pd-image-col">
                 <div class="pd-image-wrap" id="pd-image-wrap">
                     {% if product.image %}
+                        <div class="pd-loading-overlay"></div>
                         <img loading="lazy" 
                              src="{{ product.image|img_url:'600x600' }}" 
                              alt="{{ product.name|t }}"
                              id="pd-main-image"
-                             class="pd-main-image">
+                             class="pd-main-image"
+                             onload="document.getElementById('pd-image-wrap').classList.add('loaded')"
+                             onerror="document.getElementById('pd-image-wrap').classList.add('loaded')">
                         <div class="pd-image-zoom-lens" id="pd-zoom-lens"></div>
                     {% else %}
                         <div class="pd-image-placeholder">📦</div>

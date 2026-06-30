@@ -52,7 +52,13 @@
     show();
   });
 
-  if (navigator.onLine === false && banner) banner.style.display = 'flex';
+  function verifyOnline() {
+    if (!banner) return;
+    fetch(window.location.origin + '/', { method: 'HEAD', cache: 'no-cache' })
+      .then(function () { banner.style.display = 'none'; })
+      .catch(function () { banner.style.display = 'flex'; });
+  }
+  verifyOnline();
   window.addEventListener('offline', function () { if (banner) banner.style.display = 'flex'; });
   window.addEventListener('online', function () { if (banner) banner.style.display = 'none'; });
 })();

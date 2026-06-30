@@ -10,7 +10,8 @@ def global_context(request):
     cart_count = 0
     favorited_ids = []
 
-    if request.user.is_authenticated:
+    user = getattr(request, 'user', None)
+    if user and user.is_authenticated:
         cart_count = CartItem.objects.filter(
             user=request.user
         ).aggregate(total=Sum('quantity'))['total'] or 0

@@ -34,9 +34,15 @@ python manage.py migrate --run-syncdb 2>&1 | tail -2
 SEED_FLAG="venv/.seed_loaded"
 if [ ! -f "$SEED_FLAG" ]; then
   echo "  Loading seed data..."
-  python manage.py loaddata fixtures/seed_data.json 2>&1 | tail -3
-  touch "$SEED_FLAG"
-  echo "  ✅ Seed data loaded"
+  python manage.py loaddata fixtures/seed_data.json > /tmp/seed_load.log 2>&1
+  if [ $? -eq 0 ]; then
+    touch "$SEED_FLAG"
+    echo "  ✅ Seed data loaded"
+  else
+    echo "  ⚠️  Seed data load failed:"
+    tail -3 /tmp/seed_load.log
+    echo "  (Delete venv/.seed_loaded and re-run to retry)"
+  fi
 else
   echo "  Seed data already loaded, skipping."
 fi

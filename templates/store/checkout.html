@@ -122,18 +122,20 @@
                         <div class="card-title-dz"><i class="bi bi-truck"></i> {{ 'Delivery Method'|t }}</div>
                         <div style="display:flex;flex-direction:column;gap:8px;">
                             <label class="delivery-option selected">
-                                <input type="radio" name="delivery_method" value="standard" checked>
+                                <input type="radio" name="delivery_method" value="standard" checked onchange="updateDeliveryTotal()">
                                 <div>
                                     <div class="d-label">{{ 'Standard Delivery'|t }}</div>
-                                    <div class="d-desc">{{ 'Guaranteed delivery in 5-7 business days'|t }}</div>
+                                    <div class="d-desc">{{ 'Delivery in 5-7 business days'|t }}</div>
                                 </div>
-                                <div class="d-price" style="color:#2ec4b6;">{{ 'Free'|t }}</div>
+                                <div class="d-price" id="standard-delivery-price" style="color:#2ec4b6;">
+                                    {% if delivery_charge > 0 %}{{ delivery_charge|currency }}{% else %}{{ 'Free'|t }}{% endif %}
+                                </div>
                             </label>
                             <label class="delivery-option">
-                                <input type="radio" name="delivery_method" value="express">
+                                <input type="radio" name="delivery_method" value="express" onchange="updateDeliveryTotal()">
                                 <div>
                                     <div class="d-label">{{ 'Express Delivery'|t }}</div>
-                                    <div class="d-desc">{{ 'Guaranteed delivery in 2-3 business days'|t }}</div>
+                                    <div class="d-desc">{{ 'Delivery in 2-3 business days'|t }}</div>
                                 </div>
                                 <div class="d-price">$5.99</div>
                             </label>
@@ -201,7 +203,9 @@
                         </div>
                         <div class="total-row">
                             <span>{{ 'Shipping'|t }}</span>
-                            <span class="amount" style="color:#2ec4b6;">{{ 'Free'|t }}</span>
+                            <span class="amount" id="shipping-amount" style="color:#2ec4b6;">
+                                {% if delivery_charge > 0 %}{{ delivery_charge|currency }}{% else %}{{ 'Free'|t }}{% endif %}
+                            </span>
                         </div>
                         {% if discount_amount %}
                         <div class="total-row" style="color:#2ec4b6;">
@@ -267,6 +271,26 @@
 <script src="{% static 'js/pages/checkout.js' %}"></script>
 <script src="{% static 'js/pages/checkout_map.js' %}?v=3"></script>
 <script>
+var baseDeliveryCharge = {{ delivery_charge|default:'0' }};
+var totalAmount = {{ total_amount|default:'0' }};
+function updateDeliveryTotal() {
+  var method = document.querySelector('input[name="delivery_method"]:checked');
+  var charge = baseDeliveryCharge;
+  if (method && method.value === 'express') charge = baseDeliveryCharge + 5.99;
+  var shippingEl = document.getElementById('shipping-amount');
+  var grandEl = document.querySelector('.total-row.grand .amount');
+  if (shippingEl) {
+    shippingEl.textContent = charge > 0 ? '$' + charge.toFixed(2) : 'Free';
+  }
+  var discountText = document.querySelector('.total-row[style*="color:#2ec4b6;"] .amount');
+  var discount = 0;
+  if (discountText) {
+    var d = parseFloat(discountText.textContent.replace(/[^0-9.-]/g, ''));
+    if (!isNaN(d)) discount = Math.abs(d);
+  }
+  var grandTotal = totalAmount + charge - discount;
+  if (grandEl) grandEl.textContent = '$' + grandTotal.toFixed(2);
+}
 document.getElementById('checkout-form')?.addEventListener('submit', function () {
   const btn = document.getElementById('place-order-btn');
   if (btn) { btn.disabled = true; btn.innerHTML = '<span class="loader-ring-sm"></span> {{ 'Processing...'|t }}'; }

@@ -4,12 +4,38 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import re
+import math
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from ..models import CartItem, Order, OrderItem
 from ..activity_logger import log_action
 from users.models import Profile
 import uuid
+
+STORE_ORIGIN_LAT = 27.7172
+STORE_ORIGIN_LNG = 85.3240
+
+def _haversine_km(lat1, lon1, lat2, lon2):
+    R = 6371.0
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return R * c
+
+def _calc_delivery_charge(distance_km):
+    if distance_km <= 5:
+        return 0.0
+    elif distance_km <= 20:
+        return 2.99
+    elif distance_km <= 50:
+        return 4.99
+    elif distance_km <= 100:
+        return 7.99
+    elif distance_km <= 300:
+        return 11.99
+    else:
+        return 14.99
 
 
 
@@ -43,6 +69,11 @@ def checkout_view(request):
 
     profile, _ = Profile.objects.get_or_create(user=request.user)
 
+    delivery_charge = 0.0
+    if profile.latitude and profile.longitude:
+        dist = _haversine_km(STORE_ORIGIN_LAT, STORE_ORIGIN_LNG, float(profile.latitude), float(profile.longitude))
+        delivery_charge = _calc_delivery_charge(dist)
+
     if request.method == 'POST':
         full_name = request.POST.get('full_name', '').strip()
         email = request.POST.get('email', '').strip()
@@ -54,21 +85,36 @@ def checkout_view(request):
         latitude = request.POST.get('latitude', '').strip()
         longitude = request.POST.get('longitude', '').strip()
         coupon_code = request.POST.get('coupon_code', '').strip().upper()
+        delivery_method = request.POST.get('delivery_method', 'standard')
 
         discount_amount = 0.0
+        delivery_charge = 0.0
         final_amount = total_amount
         coupon_valid = False
+
+        if latitude and longitude:
+            try:
+                dist = _haversine_km(STORE_ORIGIN_LAT, STORE_ORIGIN_LNG, float(latitude), float(longitude))
+                delivery_charge = _calc_delivery_charge(dist)
+            except (ValueError, TypeError):
+                pass
+
+        if delivery_method == 'express':
+            delivery_charge += 5.99
+
         if coupon_code == "FIT-CODEX":
             if total_amount >= 7.0:
                 discount_amount = round(total_amount * 0.20, 2)
-                final_amount = round(total_amount - discount_amount, 2)
                 coupon_valid = True
+
+        final_amount = round(total_amount + delivery_charge - discount_amount, 2)
 
         # If "Apply" coupon button was clicked, re-render without creating order
         if request.POST.get('apply_coupon'):
             return render(request, 'store/checkout.html', {
                 'cart_items': cart_items,
                 'total_amount': total_amount,
+                'delivery_charge': delivery_charge,
                 'final_amount': final_amount,
                 'form_data': request.POST,
                 'coupon_code': coupon_code,
@@ -103,6 +149,7 @@ def checkout_view(request):
             return render(request, 'store/checkout.html', {
                 'cart_items': cart_items,
                 'total_amount': total_amount,
+                'delivery_charge': delivery_charge,
                 'final_amount': final_amount,
                 'form_data': request.POST,
                 'coupon_code': coupon_code,
@@ -158,6 +205,7 @@ def checkout_view(request):
             latitude=order_lat,
             longitude=order_lng,
             total_amount=final_amount,
+            delivery_charge=delivery_charge,
             coupon_code=coupon_code or None,
             discount_amount=discount_amount,
             status='Pending'
@@ -200,7 +248,8 @@ def checkout_view(request):
     return render(request, 'store/checkout.html', {
         'cart_items': cart_items,
         'total_amount': total_amount,
-        'final_amount': total_amount,
+        'delivery_charge': delivery_charge,
+        'final_amount': round(total_amount + delivery_charge, 2),
         'coupon_code': '',
         'discount_amount': 0,
         'coupon_valid': False,

@@ -12,9 +12,11 @@
 
   <!-- Head: Fonts, Icons, Leaflet -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap"></noscript>
+  <noscript><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"></noscript>
 
   {% load static %}
   <link rel="icon" type="image/jpeg" href="{% static 'images/logo.jpg' %}">
@@ -107,7 +109,7 @@
   })();
   </script>
   <!-- Scripts: External JS Files -->
-  <script src="{% static 'js/base/theme.js' %}?v=1"></script>
+  <script src="{% static 'js/base/theme.js' %}?v=1" defer></script>
   <script>
   (function(){
     var container = document.getElementById('mobile-theme-options');
@@ -135,14 +137,14 @@
   })();
   </script>
   <script src="{% static 'js/base/loading.js' %}?v=7"></script>
-  <script src="{% static 'js/base/main.js' %}?v=7"></script>
-  <script src="{% static 'js/base/cart.js' %}?v=7"></script>
-  <script src="{% static 'js/base/favorites.js' %}?v=7"></script>
-  <script src="{% static 'js/base/navigation.js' %}?v=7"></script>
-  <script src="{% static 'js/base/mini_cart.js' %}?v=8"></script>
-  <script src="{% static 'js/base/search.js' %}?v=7"></script>
-  <script src="{% static 'js/base/newsletter.js' %}?v=7"></script>
-  <script src="{% static 'js/base/messages.js' %}?v=1"></script>
+  <script src="{% static 'js/base/main.js' %}?v=7" defer></script>
+  <script src="{% static 'js/base/cart.js' %}?v=7" defer></script>
+  <script src="{% static 'js/base/favorites.js' %}?v=7" defer></script>
+  <script src="{% static 'js/base/navigation.js' %}?v=7" defer></script>
+  <script src="{% static 'js/base/mini_cart.js' %}?v=8" defer></script>
+  <script src="{% static 'js/base/search.js' %}?v=7" defer></script>
+  <script src="{% static 'js/base/newsletter.js' %}?v=7" defer></script>
+  <script src="{% static 'js/base/messages.js' %}?v=1" defer></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="{% static 'js/base/map.js' %}?v=7"></script>
   <script src="{% static 'js/base/map_enhance.js' %}?v=1"></script>

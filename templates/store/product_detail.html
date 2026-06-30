@@ -11,86 +11,110 @@
 
 {% block content %}
 
-<div style="background: radial-gradient(circle at top, #161616 0%, #0a0a0a 100%); min-height: 100vh; padding: 4rem 1rem; color: #fff; font-family: sans-serif;">
-    <div style="max-width: 1200px; margin: 0 auto;">
+<div class="product-detail-wrapper">
+    <div class="product-detail-container">
+
+        <!-- Breadcrumb -->
+        <nav class="pd-breadcrumb">
+            <a href="{% url 'store:product_list' %}">{{ 'Catalog'|t }}</a>
+            {% if product.category %}
+            <span class="pd-bc-sep">›</span>
+            <a href="{% url 'store:product_list' %}?category={{ product.category.id }}">{{ product.category.name|t }}</a>
+            {% endif %}
+            <span class="pd-bc-sep">›</span>
+            <span>{{ product.name|t|truncatechars:40 }}</span>
+        </nav>
 
         <!-- Product Detail Inner -->
-        <div class="product-detail-inner" style="display: flex; flex-wrap: wrap; gap: 3rem; align-items: flex-start; margin-bottom: 5rem;">
+        <div class="product-detail-inner">
 
             <!-- Product Image -->
-            <div style="flex: 1 1 450px; max-width: 550px;">
-                <div style="border: 1px solid rgba(212,175,55,0.2); border-radius: 20px; overflow: hidden; background: #121212; box-shadow: 0 15px 35px rgba(0,0,0,0.6); aspect-ratio: 1; max-height: 500px;">
+            <div class="pd-image-col">
+                <div class="pd-image-wrap" id="pd-image-wrap">
                     {% if product.image %}
-                        <img loading="lazy" src="{% if 'http' in product.image.name or 'http' in product.image %}{% if product.image.name %}{{ product.image.name }}{% else %}{{ product.image }}{% endif %}{% else %}{{ product.image.url }}{% endif %}" alt="{{ product.name|t }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                        <img loading="lazy" 
+                             src="{% if 'http' in product.image.name or 'http' in product.image %}{% if product.image.name %}{{ product.image.name }}{% else %}{{ product.image }}{% endif %}{% else %}{{ product.image.url }}{% endif %}" 
+                             alt="{{ product.name|t }}"
+                             id="pd-main-image"
+                             class="pd-main-image">
+                        <div class="pd-image-zoom-lens" id="pd-zoom-lens"></div>
                     {% else %}
-                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #1a1a1a; color: #444; font-size: 4rem;">📦</div>
+                        <div class="pd-image-placeholder">📦</div>
+                    {% endif %}
+                    {% if product.is_sale and product.discount_percent > 0 %}
+                    <div class="pd-sale-badge">-{{ product.discount_percent }}%</div>
                     {% endif %}
                 </div>
             </div>
 
             <!-- Product Info -->
-            <div style="flex: 1 1 450px;">
-                <span style="color: #f57224; text-transform: uppercase; font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; display: block; margin-bottom: 0.5rem;">
-                    {{ product.category.name|default:"Elite Gear"|t }}
-                </span>
-                <h1 style="font-size: 2.8rem; font-weight: bold; margin: 0 0 0.5rem 0;">{{ product.name|t }}</h1>
-                <div style="font-size: 2rem; font-weight: bold; color: #f57224; margin-bottom: 0.8rem;">{{ product.price|currency }}</div>
+            <div class="pd-info-col">
+                <span class="pd-category-label">{{ product.category.name|default:"Elite Gear"|t }}</span>
+                <h1 class="pd-title">{{ product.name|t }}</h1>
+                
+                <div class="pd-price-row">
+                    {% if product.original_price > product.price %}
+                    <span class="pd-price">{{ product.price|currency }}</span>
+                    <span class="pd-original-price">{{ product.original_price|currency }}</span>
+                    <span class="pd-discount-badge">-{{ product.discount_percent }}%</span>
+                    {% else %}
+                    <span class="pd-price">{{ product.price|currency }}</span>
+                    {% endif %}
+                </div>
 
                 <!-- Star Rating -->
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
-                    <div id="product-stars-display" style="display: flex; gap: 3px;">
+                <div class="pd-rating-row">
+                    <div id="product-stars-display" class="pd-stars">
                         {% for i in "12345" %}
                             {% if forloop.counter <= product.rating %}
-                                <i class="bi bi-star-fill" style="color: #faca51; font-size: 1rem;"></i>
+                                <i class="bi bi-star-fill"></i>
                             {% else %}
-                                <i class="bi bi-star" style="color: #333; font-size: 1rem;"></i>
+                                <i class="bi bi-star"></i>
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <span id="product-rating-val" style="color: #f57224; font-weight: 700; font-size: 1rem;">{{ product.rating }}</span>
-                    <span id="product-review-count" style="color: #666; font-size: 0.85rem;">({{ total_reviews }} review{{ total_reviews|pluralize }})</span>
+                    <span id="product-rating-val" class="pd-rating-num">{{ product.rating }}</span>
+                    <span id="product-review-count" class="pd-review-count">({{ total_reviews }} review{{ total_reviews|pluralize }})</span>
                 </div>
 
-                <div style="width: 100%; height: 1px; background: rgba(212,175,55,0.15); margin: 1.5rem 0;"></div>
-                <p style="color: #b0b0b0; font-size: 1.05rem; line-height: 1.8; margin-bottom: 2rem;">{{ product.description|t }}</p>
+                <div class="pd-divider"></div>
+                <p class="pd-description">{{ product.description|t }}</p>
 
                 <!-- Availability Status -->
-                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 1rem 1.2rem; border-radius: 12px; display: inline-block; min-width: 280px; margin-bottom: 2.5rem;">
-                    <span style="color: #888; font-size: 0.7rem; display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">{{ 'Availability Status'|t }}</span>
+                <div class="pd-availability">
+                    <span class="pd-avail-label">{{ 'Availability'|t }}</span>
                     <span id="stock-status-display">
                         {% if product.stock > 0 %}
-                            <span style="color: #2ec4b6; font-weight: bold; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                                <span style="width: 8px; height: 8px; background: #2ec4b6; border-radius: 50%; display: inline-block;"></span>
+                            <span class="pd-in-stock">
+                                <span class="pd-stock-dot"></span>
                                 <span>{{ 'In Stock'|t }}</span>
-                                <span id="stock-count" style="background:rgba(46,196,182,0.12); padding:1px 10px; border-radius:10px; font-size:0.82rem;">{{ product.stock }}</span>
-                                <span style="font-weight:400; font-size:0.82rem; color:#888;">{{ 'units available'|t }}</span>
+                                <span id="stock-count" class="pd-stock-count">{{ product.stock }}</span>
+                                <span class="pd-stock-unit">{{ 'units available'|t }}</span>
                             </span>
                             {% if product.stock <= 5 %}
-                            <div style="margin-top:6px; font-size:0.72rem; color:#f57224;">
+                            <div class="pd-low-stock">
                                 <i class="bi bi-lightning-fill"></i> {{ 'Only'|t }} {{ product.stock }} {{ 'left — order soon!'|t }}
                             </div>
                             {% endif %}
                         {% else %}
-                            <span style="color: #e63946; font-weight: bold; display: flex; align-items: center;">
-                                <span style="width: 8px; height: 8px; background: #e63946; border-radius: 50%; display: inline-block; margin-right: 8px;"></span>
+                            <span class="pd-out-of-stock">
+                                <span class="pd-stock-dot pd-dot-out"></span>
                                 {{ 'Out of Stock'|t }}
                             </span>
                         {% endif %}
                     </span>
                 </div>
 
-                <!-- Action Buttons Row -->
-                <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
-
-                    <!-- Seller Info + Chat (Daraz-style) -->
+                <!-- Seller Info + Chat -->
+                <div class="pd-actions-wrap">
                     {% if product.seller %}
-                    <div style="width:100%; display:flex; align-items:center; gap:12px; padding:12px 16px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; margin-bottom:8px;">
-                        <div style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#d4af37,#b8962e); display:flex; align-items:center; justify-content:center; font-size:0.85rem; color:#0d0d0d; font-weight:800; flex-shrink:0;">{{ product.seller.profile.store_name|default:product.seller.username|first|upper }}</div>
-                        <div style="flex:1; min-width:0;">
-                            <div style="font-size:0.68rem; color:#666; text-transform:uppercase; letter-spacing:0.5px;">{{ 'Sold by'|t }}</div>
-                            <div style="font-size:0.85rem; color:#f0ece4; font-weight:600;">
+                    <div class="pd-seller-card">
+                        <div class="pd-seller-avatar">{{ product.seller.profile.store_name|default:product.seller.username|first|upper }}</div>
+                        <div class="pd-seller-info">
+                            <div class="pd-seller-label">{{ 'Sold by'|t }}</div>
+                            <div class="pd-seller-name">
                                 {% if product.seller.profile.store_slug %}
-                                <a href="{% url 'store:seller_storefront' product.seller.profile.store_slug %}" style="color:#d4af37; text-decoration:none;">{{ product.seller.profile.store_name|default:product.seller.username }}</a>
+                                <a href="{% url 'store:seller_storefront' product.seller.profile.store_slug %}">{{ product.seller.profile.store_name|default:product.seller.username }}</a>
                                 {% else %}
                                 {{ product.seller.profile.store_name|default:product.seller.username }}
                                 {% endif %}
@@ -98,13 +122,13 @@
                         </div>
                         {% if user.is_authenticated %}
                             {% if product.seller != request.user %}
-                            <a href="{% url 'store:start_conversation' product.id %}" class="btn-chat-seller" style="white-space:nowrap; padding:10px 20px; font-size:0.82rem;">
-                                <i class="bi bi-chat-dots-fill"></i> {{ 'Chat with Seller'|t }}
+                            <a href="{% url 'store:start_conversation' product.id %}" class="btn-chat-seller">
+                                <i class="bi bi-chat-dots-fill"></i> {{ 'Chat'|t }}
                             </a>
                             {% endif %}
                         {% else %}
-                        <a href="{% url 'login' %}?next={{ request.path }}" style="white-space:nowrap; padding:10px 20px; border-radius:8px; font-size:0.78rem; font-weight:600; border:1px solid rgba(255,255,255,0.12); background:transparent; color:#888; text-decoration:none; transition:all 0.2s;">
-                            <i class="bi bi-box-arrow-in-right"></i> {{ 'Login to Chat'|t }}
+                        <a href="{% url 'login' %}?next={{ request.path }}" class="btn-chat-login">
+                            <i class="bi bi-box-arrow-in-right"></i>
                         </a>
                         {% endif %}
                     </div>
@@ -112,19 +136,15 @@
 
                     <!-- Size Selector + Qty + Add to Bag -->
                     {% if product.stock > 0 %}
-
                         {% if sizes or product.size %}
-                        <div style="width:100%; margin-bottom:0.5rem;">
-                            <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:#888; margin-bottom:0.75rem;">
-                                {{ 'Select Size'|t }}
-                            </div>
-                            <div style="display:flex; flex-wrap:wrap; gap:8px;" id="size-selector">
+                        <div class="pd-size-section">
+                            <div class="pd-size-label">{{ 'Select Size'|t }}</div>
+                            <div id="size-selector">
                                 {% if sizes %}
                                   {% for ps in sizes %}
                                     <button type="button"
                                             onclick="selectSize(this, '{{ ps.size }}')"
                                             class="size-btn {% if ps.stock == 0 %}size-oos{% endif %}"
-                                            style="padding:8px 18px; border-radius:8px; border:1px solid rgba(255,255,255,0.12); background:transparent; color:#aaa; font-size:0.82rem; font-weight:600; cursor:pointer; transition:all 0.2s; font-family:inherit;"
                                             {% if ps.stock == 0 %}disabled title="Out of stock"{% endif %}>
                                         {{ ps.size }}
                                     </button>
@@ -133,21 +153,18 @@
                                   {% for raw_sz in size_list %}
                                     <button type="button"
                                             onclick="selectSize(this, '{{ raw_sz }}')"
-                                            class="size-btn"
-                                            style="padding:8px 18px; border-radius:8px; border:1px solid rgba(255,255,255,0.12); background:transparent; color:#aaa; font-size:0.82rem; font-weight:600; cursor:pointer; transition:all 0.2s; font-family:inherit;">
+                                            class="size-btn">
                                         {{ raw_sz }}
                                     </button>
                                   {% endfor %}
                                 {% endif %}
                             </div>
-                            <div id="size-error" style="color:#e63946; font-size:0.78rem; margin-top:6px; display:none;">
-                                {{ 'Please select a size before adding to bag.'|t }}
-                            </div>
+                            <div id="size-error" class="pd-size-error">{{ 'Please select a size before adding to bag.'|t }}</div>
                         </div>
                         <input type="hidden" id="selected-size" value="">
                         {% endif %}
 
-                        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                        <div class="pd-action-row">
                             <div class="qty-picker">
                                 <button type="button" onclick="changeQty(-1)" id="qty-minus">−</button>
                                 <input type="number" id="qty-input" value="1" min="1" max="{{ product.stock }}" readonly>
@@ -157,13 +174,10 @@
                                 {{ 'ADD TO BAG'|t }}
                             </button>
                             <button type="button" class="btn-shop-now" onclick="shopNow(event, {{ product.id }})">
-                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M13 2L4 14h6v8l9-12h-6z"/>
-                                </svg>
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M13 2L4 14h6v8l9-12h-6z"/></svg>
                                 {{ 'SHOP NOW'|t }}
                             </button>
                         </div>
-                        <!-- Wishlist / Favorites Toggle -->
                         <button type="button"
                                 onclick="toggleFavorite(event, {{ product.id }}, this)"
                                 class="detail-fav-btn {% if is_favorited %}favorited{% endif %}">
@@ -171,10 +185,8 @@
                             <span>{% if is_favorited %}{{ 'Wishlisted'|t }}{% else %}{{ 'Wishlist'|t }}{% endif %}</span>
                         </button>
                     {% endif %}
-                    <a href="{% url 'store:product_list' %}"
-                       class="btn-catalog"
-                       style="text-decoration:none; padding:14px 28px; border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:8px; font-weight:bold; text-transform:uppercase; font-size:0.9rem;">
-                        {{ 'RETURN TO CATALOG'|t }}
+                    <a href="{% url 'store:product_list' %}" class="btn-catalog">
+                        <i class="bi bi-arrow-left"></i> {{ 'Back to Catalog'|t }}
                     </a>
                 </div>
 
@@ -202,6 +214,19 @@
                     </div>
                     <div class="review-total">{{ 'Based on'|t }} {{ total_reviews }} review{{ total_reviews|pluralize }}</div>
                 </div>
+                {% if rating_breakdown %}
+                <div class="review-breakdown">
+                    {% for item in rating_breakdown %}
+                    <div class="rb-row">
+                        <span class="rb-label">{{ item.star }}</span>
+                        <div class="rb-bar-track">
+                            <div class="rb-bar-fill" style="width:{{ item.percentage }}%"></div>
+                        </div>
+                        <span class="rb-count">{{ item.count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
             {% endif %}
 
@@ -284,42 +309,31 @@
         </div>
 
         <!-- You May Also Like -->
-        <div style="margin-top: 6rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 4rem;">
-            <h3 style="font-size: 1.3rem; font-weight: bold; margin-bottom: 2.5rem; text-transform: uppercase; letter-spacing: 1.5px; color: #fff;">
-                {{ 'You May Also Like'|t }}
-            </h3>
-            <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
+        <div class="pd-recommendations">
+            <h3 class="pd-rec-title">{{ 'You May Also Like'|t }}</h3>
+            <div class="pd-rec-grid">
                 {% for rec in recommendations %}
-                <div class="rec-card-item" style="flex: 1 1 220px; max-width: 265px; background: #121212; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;">
-                    <div style="height: 220px; background: #0d0d0d; overflow: hidden;">
+                <a href="{% url 'store:product_detail' rec.id %}" class="rec-card-item">
+                    <div class="rec-card-img">
                         {% if rec.image %}
-                            <img loading="lazy" src="{% if 'http' in rec.image.name or 'http' in rec.image %}{% if rec.image.name %}{{ rec.image.name }}{% else %}{{ rec.image }}{% endif %}{% else %}{{ rec.image.url }}{% endif %}" alt="{{ rec.name|t }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img loading="lazy" src="{% if 'http' in rec.image.name or 'http' in rec.image %}{% if rec.image.name %}{{ rec.image.name }}{% else %}{{ rec.image }}{% endif %}{% else %}{{ rec.image.url }}{% endif %}" alt="{{ rec.name|t }}">
                         {% else %}
-                            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #333; font-size: 2rem;">📦</div>
+                            <div class="rec-card-placeholder">📦</div>
                         {% endif %}
                     </div>
-                    <div style="padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1;">
-                        <div style="margin-bottom: 1.25rem;">
-                            <h5 style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.35rem 0;">{{ rec.name|t }}</h5>
-                            {% include 'partials/star_rating.html' with product=rec %}
-                            <span style="color: #d4af37; font-weight: bold; font-size: 1.05rem;">{{ rec.price|currency }}</span>
-                        </div>
-                        <a href="{% url 'store:product_detail' rec.id %}"
-                           style="display: block; width: 100%; text-align: center; text-decoration: none; color: #fff; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1); padding: 0.6rem 0; border-radius: 8px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">
-                            {{ 'View Item'|t }}
-                        </a>
+                    <div class="rec-card-body">
+                        <h5 class="rec-card-name">{{ rec.name|t }}</h5>
+                        {% include 'partials/star_rating.html' with product=rec %}
+                        <span class="rec-card-price">{{ rec.price|currency }}</span>
                         <button type="button"
-                                onclick="toggleFavorite(event, {{ rec.id }}, this)"
-                                class="btn-fav {% if rec.id in global_favorited_ids %}favorited{% endif %}"
-                                style="width: 100%; margin-top: 8px; padding: 0.6rem 0; border-radius: 8px; cursor: pointer; background: {% if rec.id in global_favorited_ids %}#ef4444{% else %}rgba(255,255,255,0.03){% endif %}; border: 1px solid {% if rec.id in global_favorited_ids %}#ef4444{% else %}rgba(255,255,255,0.12){% endif %}; color: {% if rec.id in global_favorited_ids %}white{% else %}rgba(255,255,255,0.85){% endif %};">
+                                onclick="event.stopPropagation(); toggleFavorite(event, {{ rec.id }}, this)"
+                                class="btn-fav rec-fav-btn {% if rec.id in global_favorited_ids %}favorited{% endif %}">
                             <i class="bi {% if rec.id in global_favorited_ids %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
                         </button>
                     </div>
-                </div>
+                </a>
                 {% empty %}
-                <div style="color: #555; font-style: italic; padding: 0.5rem 0;">
-                    {{ 'No alternative items available in stock right now.'|t }}
-                </div>
+                <div class="rec-empty">{{ 'No alternative items available in stock right now.'|t }}</div>
                 {% endfor %}
             </div>
         </div>

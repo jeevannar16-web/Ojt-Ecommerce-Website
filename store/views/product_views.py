@@ -189,14 +189,15 @@ def product_detail(request, product_id):
     rating_counts = reviews.values('rating').annotate(count=Count('id'))
     counts_dict = {item['rating']: item['count'] for item in rating_counts}
 
-    rating_breakdown = {}
-    for i in range(1, 6):
+    rating_breakdown = []
+    for i in range(5, 0, -1):
         count = counts_dict.get(i, 0)
         percentage = round((count / total_reviews) * 100) if total_reviews > 0 else 0
-        rating_breakdown[i] = {
+        rating_breakdown.append({
+            'star': i,
             'count': count,
             'percentage': percentage
-        }
+        })
 
     sizes = product.sizes.all()
     if not sizes.exists() and product.size:

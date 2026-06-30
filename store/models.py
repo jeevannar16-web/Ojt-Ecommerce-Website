@@ -94,6 +94,16 @@ class Product(models.Model):
             return int((1 - self.price / self.original_price) * 100)
         return 0
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['is_sale']),
+            models.Index(fields=['is_featured']),
+            models.Index(fields=['rating']),
+            models.Index(fields=['created_at']),
+            models.Index(fields=['stock']),
+            models.Index(fields=['original_price']),
+        ]
+
 
 
 class ProductSize(models.Model):
@@ -146,6 +156,7 @@ class Order(models.Model):
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="latitude")
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="longitude")
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    delivery_charge = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     coupon_code = models.CharField(max_length=50, blank=True, null=True)
     discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')

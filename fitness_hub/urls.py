@@ -6,6 +6,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.contrib.sitemaps.views import sitemap
+from .sitemaps import StaticViewSitemap
+
+
+sitemaps = {
+    'static': StaticViewSitemap,
+}
 
 
 urlpatterns = [
@@ -16,6 +23,7 @@ urlpatterns = [
     path('store/', include('store.urls')),
     path('verify/', include('verification.urls')),
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]
 
 

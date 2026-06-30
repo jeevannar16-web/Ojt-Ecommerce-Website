@@ -5,4 +5,4 @@ Disallow: /store/seller/
 Disallow: /accounts/
 Disallow: /verification/
 Disallow: /password-reset/
-Sitemap: https://fitnesshub.com/sitemap.xml
+Sitemap: https://{{ request.get_host }}/sitemap.xml

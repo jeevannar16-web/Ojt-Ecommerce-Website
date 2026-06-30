@@ -72,6 +72,9 @@
             hasMore = true;
             if (loader) loader.style.display = 'none';
             if (skeleton) skeleton.style.display = 'block';
+            grid.style.opacity = '0.4';
+            grid.style.transition = 'opacity 0.15s';
+            grid.style.pointerEvents = 'none';
         } else {
             if (loader) loader.style.display = 'flex';
         }
@@ -93,6 +96,8 @@
             if (skeleton) skeleton.style.display = 'none';
             if (loader && !append) loader.style.display = 'none';
             if (loader && append) loader.style.display = 'none';
+            grid.style.opacity = '1';
+            grid.style.pointerEvents = '';
 
             if (data.cards_html && data.cards_html.trim()) {
                 const temp = document.createElement('div');
@@ -147,6 +152,8 @@
             console.warn('Load error:', e);
             if (skeleton) skeleton.style.display = 'none';
             if (loader) loader.style.display = 'none';
+            grid.style.opacity = '1';
+            grid.style.pointerEvents = '';
             if (!append) {
                 hasMore = false;
                 grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><h3>Something went wrong</h3><p>Please try again.</p></div>';

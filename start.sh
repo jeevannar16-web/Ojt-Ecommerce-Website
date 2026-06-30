@@ -27,6 +27,9 @@ if command -v lsof &>/dev/null; then
 fi
 
 echo ""
+echo "  Applying migrations..."
+python manage.py migrate --run-syncdb 2>&1 | tail -2
+echo ""
 echo "  Starting server..."
 echo ""
 

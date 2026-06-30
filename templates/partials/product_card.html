@@ -1,6 +1,7 @@
 <!-- ========================================================================= -->
 <!-- Partials: Product Card (Reusable Grid / List Item)                      -->
 <!-- ========================================================================= -->
+{% load store_extras %}
 <div class="pcard catalog-fade-in" style="animation-delay:calc(0.05s * {{ index }});">
     <div class="pcard-img">
         {% if product.is_sale %}
@@ -13,7 +14,7 @@
         {% endif %}
         <div class="pcard-img-inner">
             {% if product.image %}
-                <img src="{% if 'http' in product.image.name or 'http' in product.image %}{% if product.image.name %}{{ product.image.name }}{% else %}{{ product.image }}{% endif %}{% else %}{{ product.image.url }}{% endif %}" alt="{{ product.name|t }}" loading="lazy">
+                <img src="{{ product.image|img_url:'300x300' }}" alt="{{ product.name|t }}" loading="lazy">
             {% else %}
                 <div class="pcard-img-placeholder">🏋️</div>
             {% endif %}

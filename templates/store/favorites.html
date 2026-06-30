@@ -3,6 +3,7 @@
 <!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
+{% load store_extras %}
 
 {% block title %}My Wishlist — FITNESS HUB{% endblock %}
 
@@ -38,7 +39,7 @@
 
         <div class="card-img-wrap">
           {% if fav_item.product.image %}
-            <img loading="lazy" src="{{ fav_item.product.image.url }}" alt="{{ fav_item.product.name|t }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <img loading="lazy" src="{{ fav_item.product.image|img_url:'300x300' }}" alt="{{ fav_item.product.name|t }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
             <div style="font-size: 3rem; display: none;">📦</div>
           {% else %}
             <div style="font-size: 3rem;">📦</div>

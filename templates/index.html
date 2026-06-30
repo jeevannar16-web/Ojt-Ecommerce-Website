@@ -4,6 +4,7 @@
 {% extends 'layout/base.html' %}
 {% load static %}
 {% load cache %}
+{% load store_extras %}
 
 {% block title %}FITNESS HUB — {{ 'home.hero_title'|t }}{% endblock %}
 
@@ -33,7 +34,7 @@
         </div>
         <div class="mega-image">
           {% if product.image %}
-          <img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name|t }}">
+          <img loading="lazy" src="{{ product.image|img_url:'300x300' }}" alt="{{ product.name|t }}">
           {% else %}
           <div class="mega-placeholder">🏋️</div>
           {% endif %}
@@ -110,7 +111,7 @@
       {% for product in on_sale %}
       <a href="{% url 'store:product_detail' product.id %}" class="h-card">
         <div class="hc-img">
-          {% if product.image %}<img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name|t }}">
+          {% if product.image %}<img loading="lazy" src="{{ product.image|img_url:'300x300' }}" alt="{{ product.name|t }}">
           {% else %}<div class="cat-card-placeholder" style="height:100%;font-size:2.5rem;">🏋️</div>{% endif %}
           {% if product.discount_percent > 0 %}<span class="hc-badge sale">-{{ product.discount_percent }}%</span>{% endif %}
         </div>
@@ -141,7 +142,7 @@
       {% for product in best_deals %}
       <a href="{% url 'store:product_detail' product.id %}" class="h-card">
         <div class="hc-img">
-          {% if product.image %}<img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name|t }}">
+          {% if product.image %}<img loading="lazy" src="{{ product.image|img_url:'300x300' }}" alt="{{ product.name|t }}">
           {% else %}<div class="cat-card-placeholder" style="height:100%;font-size:2.5rem;">🏋️</div>{% endif %}
           <span class="hc-badge sale">-{{ product.discount_percent }}%</span>
         </div>
@@ -171,7 +172,7 @@
     {% for product in trending %}
     <a href="{% url 'store:product_detail' product.id %}" class="h-card">
       <div class="hc-img">
-        {% if product.image %}<img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name|t }}">
+        {% if product.image %}<img loading="lazy" src="{{ product.image|img_url:'300x300' }}" alt="{{ product.name|t }}">
         {% else %}<div class="cat-card-placeholder" style="height:100%;font-size:2.5rem;">🏋️</div>{% endif %}
         {% if product.discount_percent > 0 %}<span class="hc-badge sale">-{{ product.discount_percent }}%</span>{% else %}<span class="hc-badge hot">{{ 'Hot'|t }}</span>{% endif %}
       </div>
@@ -200,7 +201,7 @@
     {% for product in section.products %}
     <a href="{% url 'store:product_detail' product.id %}" class="h-card">
       <div class="hc-img">
-        {% if product.image %}<img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name|t }}">
+        {% if product.image %}<img loading="lazy" src="{{ product.image|img_url:'300x300' }}" alt="{{ product.name|t }}">
         {% else %}<div class="cat-card-placeholder" style="height:100%;font-size:2.5rem;">🏋️</div>{% endif %}
         {% if product.discount_percent > 0 %}<span class="hc-badge sale">-{{ product.discount_percent }}%</span>{% endif %}
       </div>
@@ -229,7 +230,7 @@
     {% for product in top_rated %}
     <a href="{% url 'store:product_detail' product.id %}" class="h-card">
       <div class="hc-img">
-        {% if product.image %}<img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name|t }}">
+        {% if product.image %}<img loading="lazy" src="{{ product.image|img_url:'300x300' }}" alt="{{ product.name|t }}">
         {% else %}<div class="cat-card-placeholder" style="height:100%;font-size:2.5rem;">🏋️</div>{% endif %}
         {% if product.discount_percent > 0 %}<span class="hc-badge sale">-{{ product.discount_percent }}%</span>{% else %}<span class="hc-badge hot">{{ 'Hot'|t }}</span>{% endif %}
       </div>
@@ -259,7 +260,7 @@
     {% for product in new_arrivals %}
     <a href="{% url 'store:product_detail' product.id %}" class="h-card">
       <div class="hc-img">
-        {% if product.image %}<img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name|t }}">
+        {% if product.image %}<img loading="lazy" src="{{ product.image|img_url:'300x300' }}" alt="{{ product.name|t }}">
         {% else %}<div class="cat-card-placeholder" style="height:100%;font-size:2.5rem;">🏋️</div>{% endif %}
         {% if product.discount_percent > 0 %}<span class="hc-badge sale">-{{ product.discount_percent }}%</span>{% else %}<span class="hc-badge new">{{ 'New'|t }}</span>{% endif %}
       </div>
@@ -288,7 +289,7 @@
     {% for product in low_price %}
     <a href="{% url 'store:product_detail' product.id %}" class="h-card">
       <div class="hc-img">
-        {% if product.image %}<img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name|t }}">
+        {% if product.image %}<img loading="lazy" src="{{ product.image|img_url:'300x300' }}" alt="{{ product.name|t }}">
         {% else %}<div class="cat-card-placeholder" style="height:100%;font-size:2.5rem;">🏋️</div>{% endif %}
         {% if product.discount_percent > 0 %}<span class="hc-badge sale">-{{ product.discount_percent }}%</span>{% endif %}
       </div>
@@ -314,7 +315,7 @@
     {% for product in low_stock_items %}
     <a href="{% url 'store:product_detail' product.id %}" class="h-card">
       <div class="hc-img">
-        {% if product.image %}<img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name|t }}">
+        {% if product.image %}<img loading="lazy" src="{{ product.image|img_url:'300x300' }}" alt="{{ product.name|t }}">
         {% else %}<div class="cat-card-placeholder" style="height:100%;font-size:2.5rem;">🏋️</div>{% endif %}
         <span class="hc-badge low">{{ 'Only'|t }} {{ product.stock }}</span>
         {% if product.discount_percent > 0 %}<span class="hc-badge sale" style="right:8px;left:auto;">-{{ product.discount_percent }}%</span>{% endif %}
@@ -366,7 +367,7 @@
         <a href="{% url 'store:product_detail' product.id %}" class="h-card inspire-card">
           <div class="hc-img">
             {% if product.image %}
-            <img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name|t }}">
+            <img loading="lazy" src="{{ product.image|img_url:'300x300' }}" alt="{{ product.name|t }}">
             {% else %}
             <div class="cat-card-placeholder" style="height:100%;font-size:2.5rem;">🏋️</div>
             {% endif %}
@@ -416,7 +417,7 @@
     {% for product in recommendations %}
     <a href="{% url 'store:product_detail' product.id %}" class="h-card">
       <div class="hc-img">
-        {% if product.image %}<img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name|t }}">
+        {% if product.image %}<img loading="lazy" src="{{ product.image|img_url:'300x300' }}" alt="{{ product.name|t }}">
         {% else %}<div class="cat-card-placeholder" style="height:100%;font-size:2.5rem;">🏋️</div>{% endif %}
         {% if product.discount_percent > 0 %}<span class="hc-badge sale">-{{ product.discount_percent }}%</span>{% endif %}
       </div>
@@ -444,7 +445,7 @@
     <div class="fcard {% if forloop.counter > 10 %}hidden-product{% endif %}" onclick="window.location.href='{% url 'store:product_detail' product.id %}'">
       <div class="fcard-img">
         {% if product.image %}
-        <img loading="lazy" src="{{ product.image.url }}" alt="{{ product.name|t }}">
+        <img loading="lazy" src="{{ product.image|img_url:'300x300' }}" alt="{{ product.name|t }}">
         {% else %}
         <div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:3.2rem;">🏋️</div>
         {% endif %}

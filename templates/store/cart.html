@@ -3,6 +3,7 @@
 <!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
+{% load store_extras %}
 
 {% block title %}My Cart — FITNESS HUB{% endblock %}
 
@@ -107,7 +108,7 @@
                 </div>
                 <div class="cart-image-col">
                   {% if item.product.image %}
-                  <img src="{% if 'http' in item.product.image.name or 'http' in item.product.image %}{% if item.product.image.name %}{{ item.product.image.name }}{% else %}{{ item.product.image }}{% endif %}{% else %}{{ item.product.image.url }}{% endif %}" alt="{{ item.product.name|t }}" class="cart-product-img" loading="lazy">
+                  <img src="{{ item.product.image|img_url:'200x200' }}" alt="{{ item.product.name|t }}" class="cart-product-img" loading="lazy">
                   {% else %}
                   <div class="cart-product-img-placeholder">
                     <i class="bi bi-box"></i>

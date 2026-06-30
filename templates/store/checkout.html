@@ -3,6 +3,7 @@
 <!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
+{% load store_extras %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/checkout.css' %}?v=3">
@@ -181,7 +182,7 @@
                         <div class="summary-item">
                             <div class="summary-img">
                                 {% if item.product.image %}
-                                <img loading="lazy" src="{% if 'http' in item.product.image.name or 'http' in item.product.image %}{% if item.product.image.name %}{{ item.product.image.name }}{% else %}{{ item.product.image }}{% endif %}{% else %}{{ item.product.image.url }}{% endif %}"
+                                <img loading="lazy" src="{{ item.product.image|img_url:'100x100' }}"
                                      alt="{{ item.product.name|t }}">
                                 {% else %}
                                 <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#333;font-size:1.2rem;">📦</div>

@@ -3,6 +3,7 @@
 <!-- ========================================================================= -->
 {% extends 'layout/base.html' %}
 {% load static %}
+{% load store_extras %}
 
 {% block title %}My Account — FITNESS HUB{% endblock %}
 
@@ -181,7 +182,7 @@
         {% for fav in favorites %}
         <a href="{% url 'store:product_detail' fav.product.id %}" class="fav-card" style="text-decoration:none;">
           {% if fav.product.image %}
-            <img loading="lazy" src="{{ fav.product.image.url }}" alt="{{ fav.product.name|t }}">
+            <img loading="lazy" src="{{ fav.product.image|img_url:'300x300' }}" alt="{{ fav.product.name|t }}">
           {% else %}
             <div style="height:140px;background:var(--clr-surface);display:flex;align-items:center;justify-content:center;color:var(--clr-muted);font-size:2rem;"><i class="bi bi-image"></i></div>
           {% endif %}

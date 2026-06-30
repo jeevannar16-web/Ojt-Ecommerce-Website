@@ -1,6 +1,7 @@
 <!-- ========================================================================= -->
 <!-- Store: Curated Store Landing (Standalone HTML, No Django Extends)       -->
 <!-- ========================================================================= -->
+{% load store_extras %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -675,7 +676,7 @@
                     <div class="img-corner img-corner-bl"></div>
                     <div class="img-corner img-corner-br"></div>
                     <img loading="lazy" id="previewImage"
-                         src="{% if product.image %}{{ product.image.url }}{% else %}https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600{% endif %}"
+                         src="{% if product.image %}{{ product.image|img_url:'600x600' }}{% else %}https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600{% endif %}"
                          class="product-img-focus" alt="Product">
                 </div>
                 <div class="img-divider"></div>

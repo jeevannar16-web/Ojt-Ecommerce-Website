@@ -22,7 +22,6 @@ def _home_context(language_code):
     seed = today.toordinal()
     rng = random.Random(seed)
 
-    all_product_ids = set(Product.objects.values_list('id', flat=True))
     used_ids = set()
 
     def pick_products(queryset, count, exclude=None):

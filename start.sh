@@ -29,6 +29,8 @@ fi
 echo ""
 echo "  Applying migrations..."
 python manage.py migrate --run-syncdb 2>&1 | tail -2
+echo "  Loading seed data..."
+python manage.py loaddata fixtures/seed_data.json 2>/dev/null && echo "  ✅ Seed data loaded" || echo "  ⚠️  Seed data skipped (already exists or unavailable)"
 echo ""
 echo "  Collecting static files..."
 python manage.py collectstatic --noinput 2>&1 | tail -2

@@ -29,8 +29,18 @@ fi
 echo ""
 echo "  Applying migrations..."
 python manage.py migrate --run-syncdb 2>&1 | tail -2
-echo "  Loading seed data..."
-python manage.py loaddata fixtures/seed_data.json 2>/dev/null && echo "  ✅ Seed data loaded" || echo "  ⚠️  Seed data skipped (already exists or unavailable)"
+
+# Load seed data only on fresh database
+SEED_FLAG="venv/.seed_loaded"
+if [ ! -f "$SEED_FLAG" ]; then
+  echo "  Loading seed data..."
+  python manage.py loaddata fixtures/seed_data.json 2>&1 | tail -3
+  touch "$SEED_FLAG"
+  echo "  ✅ Seed data loaded"
+else
+  echo "  Seed data already loaded, skipping."
+fi
+
 echo ""
 echo "  Collecting static files..."
 python manage.py collectstatic --noinput 2>&1 | tail -2

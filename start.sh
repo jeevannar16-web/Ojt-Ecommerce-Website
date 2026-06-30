@@ -27,30 +27,6 @@ if command -v lsof &>/dev/null; then
 fi
 
 echo ""
-echo "  Applying migrations..."
-python manage.py migrate --run-syncdb 2>&1 | tail -2
-
-# Load seed data only on fresh database
-SEED_FLAG="venv/.seed_loaded"
-if [ ! -f "$SEED_FLAG" ]; then
-  echo "  Loading seed data..."
-  python manage.py loaddata fixtures/seed_data.json > /tmp/seed_load.log 2>&1
-  if [ $? -eq 0 ]; then
-    touch "$SEED_FLAG"
-    echo "  ✅ Seed data loaded"
-  else
-    echo "  ⚠️  Seed data load failed:"
-    tail -3 /tmp/seed_load.log
-    echo "  (Delete venv/.seed_loaded and re-run to retry)"
-  fi
-else
-  echo "  Seed data already loaded, skipping."
-fi
-
-echo ""
-echo "  Collecting static files..."
-python manage.py collectstatic --noinput 2>&1 | tail -2
-echo ""
 echo "  Starting server..."
 echo ""
 

@@ -4,6 +4,8 @@ Full-stack Django ecommerce platform with seller marketplace, admin dashboard, r
 
 **Live:** https://ojt-ecommerce-website.onrender.com
 
+> Screenshots: add your own screenshots to `screenshots/` folder and reference them here.
+
 ---
 
 ## Features

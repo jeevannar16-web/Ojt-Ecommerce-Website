@@ -214,9 +214,9 @@ To use a real SMTP server, uncomment the email section in `.env` and set your SM
 SECRET_KEY=<django secret key>
 DEBUG=False
 BASE_URL=https://ojt-ecommerce-website.onrender.com
-CLOUD_NAME=your-cloud-name
-CLOUD_API_KEY=your-api-key
-CLOUD_API_SECRET=your-api-secret
+CLOUD_NAME=<your-cloud-name>
+CLOUD_API_KEY=<your-api-key>
+CLOUD_API_SECRET=<your-api-secret>
 DEFAULT_FROM_EMAIL=Fitness Hub <noreply@fitnesshub.com>
 ```
 

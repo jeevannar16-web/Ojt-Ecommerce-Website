@@ -1,0 +1,41 @@
+name: Brevo API Keepalive
+
+on:
+  schedule:
+    # Runs at 09:00 UTC on the 1st day of every month
+    - cron: "0 9 1 * *"
+  workflow_dispatch:
+
+jobs:
+  keepalive:
+    name: Ping Brevo API
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check Brevo API key activity
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+        run: |
+          if [ -z "$BREVO_API_KEY" ]; then
+            echo "BREVO_API_KEY secret is not set."
+            exit 1
+          fi
+
+          # Lightweight authenticated request to register API usage.
+          # This does not send emails.
+          http_code=$(curl -sS -o /tmp/brevo-account.json -w "%{http_code}" \
+            -H "accept: application/json" \
+            -H "api-key: $BREVO_API_KEY" \
+            https://api.brevo.com/v3/account)
+
+          echo "HTTP status: $http_code"
+
+          if [ "$http_code" -ge 200 ] && [ "$http_code" -lt 300 ]; then
+            echo "Brevo API key keepalive succeeded."
+            exit 0
+          fi
+
+          echo "Brevo API key keepalive failed."
+          cat /tmp/brevo-account.json || true
+          exit 1

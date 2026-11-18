@@ -67,11 +67,11 @@
   <script>document.addEventListener('turbolinks:before-render',function(e){e.data.newBody.style.opacity='0'});document.addEventListener('turbolinks:render',function(){requestAnimationFrame(function(){document.body.style.transition='opacity 0.12s ease';document.body.style.opacity='1'})})</script>
   <style>.turbolinks-progress-bar{display:none!important}body{background:#0d0d0d!important}#page-loader{transition:none!important;height:5px!important}#page-loader.active{opacity:1!important}#page-loader.active::after{background:#ff2222!important;box-shadow:0 0 12px rgba(255,34,34,0.8),0 0 40px rgba(255,34,34,0.3)!important;animation:loaderBar 0.8s cubic-bezier(.4,0,.2,1) infinite!important}.elite-nav-arrow{background:rgba(255,255,255,0.04)!important;border:1px solid rgba(255,255,255,0.08)!important;border-radius:8px!important;margin:0 4px!important;color:#999!important;font-size:1.1rem!important;width:44px!important}.elite-nav-arrow:hover{background:rgba(212,175,55,0.12)!important;border-color:rgba(212,175,55,0.35)!important;color:#d4af37!important}</style>
   <!-- Head: Core JS (loaded once; Turbolinks tracks for cache-bust) -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
 <script src="{% static 'js/base/loading.js' %}?v=25" data-turbolinks-track="reload" defer></script>
 <script src="{% static 'js/base/navigation.js' %}?v=2" data-turbolinks-track="reload" defer></script>
 <script src="{% static 'js/base/map.js' %}?v=2" data-turbolinks-track="reload" defer></script>
 <script src="{% static 'js/main.min.js' %}?v=16" data-turbolinks-track="reload" defer></script>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
 </head>
 <body>
 

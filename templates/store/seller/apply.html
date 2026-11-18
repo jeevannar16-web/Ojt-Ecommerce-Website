@@ -200,6 +200,30 @@ document.querySelectorAll('.sa-recent-item').forEach(function(item) {
   var container = document.getElementById('seller-map');
   if (!container) return;
 
+  function showMapError(el, msg) {
+    if (!el) return;
+    el.style.display = 'flex';
+    el.style.alignItems = 'center';
+    el.style.justifyContent = 'center';
+    el.style.padding = '12px';
+    el.style.color = '#888';
+    el.style.fontSize = '0.82rem';
+    el.style.textAlign = 'center';
+    el.textContent = msg;
+  }
+
+  function waitForLeaflet(cb, attempt) {
+    attempt = attempt || 0;
+    if (typeof L !== 'undefined') { cb(); return; }
+    if (attempt < 50) {
+      setTimeout(function(){ waitForLeaflet(cb, attempt + 1); }, 100);
+    } else {
+      showMapError(container, 'Map could not be loaded. Please refresh the page.');
+    }
+  }
+
+  waitForLeaflet(function(){
+
   var latInput = document.getElementById('seller-latitude');
   var lngInput = document.getElementById('seller-longitude');
   if (!latInput || !lngInput) return;
@@ -228,7 +252,7 @@ document.querySelectorAll('.sa-recent-item').forEach(function(item) {
       center: [lat, lng], zoom: 14,
       zoomControl: true, attributionControl: true,
     });
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://www.openstreetmap.fr/" target="_blank">OpenStreetMap France</a>' }).addTo(map);
 
     var searchBox = document.getElementById('seller-location-search');
     var searchBtn = document.getElementById('seller-location-search-btn');
@@ -297,6 +321,7 @@ document.querySelectorAll('.sa-recent-item').forEach(function(item) {
     if (typeof enhanceMap === 'function') {
       enhanceMap(map, { fullscreen: true, panArrows: false, myLocation: false });
     }
+  });
   });
 })();
 </script>

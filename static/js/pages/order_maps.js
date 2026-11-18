@@ -16,8 +16,10 @@
       scrollWheelZoom: true,
       attributionControl: false,
     });
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
+    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      maxZoom: 20,
+      subdomains: 'abcd',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://www.openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
     }).addTo(map);
     L.marker([lat, lng]).addTo(map)
       .bindPopup('Delivery Location');

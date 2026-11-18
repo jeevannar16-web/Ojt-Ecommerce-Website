@@ -8,8 +8,32 @@
 // ==============================================================================
 
 (function(){
+  function showMapError(container, msg) {
+    if (!container) return;
+    container.style.display = 'flex';
+    container.style.alignItems = 'center';
+    container.style.justifyContent = 'center';
+    container.style.padding = '12px';
+    container.style.color = '#888';
+    container.style.fontSize = '0.82rem';
+    container.style.textAlign = 'center';
+    container.textContent = msg;
+  }
+
+  function waitForLeaflet(container, cb, attempt) {
+    attempt = attempt || 0;
+    if (typeof L !== 'undefined') { cb(); return; }
+    if (attempt < 50) {
+      setTimeout(function(){ waitForLeaflet(container, cb, attempt + 1); }, 100);
+    } else {
+      showMapError(container, 'Map could not be loaded. Please refresh the page.');
+    }
+  }
+
   var container = document.getElementById('profile-map');
   if (!container) return;
+
+  waitForLeaflet(container, function(){
 
   var latInput = document.getElementById('profile-latitude');
   var lngInput = document.getElementById('profile-longitude');
@@ -68,9 +92,10 @@
       attributionControl: true,
     });
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>',
+    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      maxZoom: 20,
+      subdomains: 'abcd',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://www.openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
     }).addTo(map);
 
     if (hasSaved) {
@@ -216,5 +241,6 @@
         fullscreen: true, panArrows: false, myLocation: false
       });
     }
+  });
   });
 })();
